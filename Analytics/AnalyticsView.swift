@@ -16,6 +16,7 @@ struct AnalyticsView: View {
 
     @EnvironmentObject var appState: AppState
     @EnvironmentObject var theme: ThemeManager
+    @EnvironmentObject var currency: CurrencyManager
 
     // MARK: - DATA
 
@@ -399,13 +400,11 @@ struct AnalyticsView: View {
 
     // MARK: - FORMATTERS
 
-    private func currency(_ value: Double) -> String {
+    private func currency(
+        _ value: Double
+    ) -> String {
 
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        formatter.currencyCode = "EUR"
-
-        return formatter.string(from: NSNumber(value: value)) ?? "€0"
+        currency.format(value)
     }
 }
 

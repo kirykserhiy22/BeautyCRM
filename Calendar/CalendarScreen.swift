@@ -9,15 +9,33 @@ import SwiftUI
 import SwiftData
 
 struct CalendarScreen: View {
-    
+    @EnvironmentObject var localization: LocalizationManager
+    @Environment(\.modelContext) private var context
     @EnvironmentObject var appState: AppState
     @EnvironmentObject var theme: ThemeManager
     
     @Query private var appointments: [Appointment]
+    @Query private var dayOffs: [DayOff]
     
     @State private var selectedDate = Date()
+    @State private var selectedDates: Set<Date> = []   // 👈 ВАЖЛИВО
     @State private var showCreate = false
+    @State private var expandedAppointmentID: UUID?
     
+    private var userDayOffs: [DayOff] {
+        guard let userID = appState.session.userID else { return [] }
+        return dayOffs.filter { $0.userID == userID }
+    }
+    private var userAppointments: [Appointment] {
+
+        guard let userID = appState.session.userID else {
+            return []
+        }
+
+        return appointments.filter {
+            $0.userID == userID
+        }
+    }
     private var colors: ThemeColors {
         theme.colors(for: theme.currentTheme)
     }
@@ -26,11 +44,17 @@ struct CalendarScreen: View {
         
         ZStack(alignment: .bottomTrailing) {
             
+            colors.background
+                .ignoresSafeArea()
+            
             VStack {
                 
                 CalendarPagerView(
-                    appointments: appointments,
-                    selectedDay: $selectedDate
+                    appointments: userAppointments,
+                    dayOffs: userDayOffs,          // 👈 НЕ пустий масив
+                    selectedDay: $selectedDate,
+                    selectedDates: $selectedDates,
+                    isEditingDayOff: false
                 )
                 
                 Divider()
@@ -38,18 +62,18 @@ struct CalendarScreen: View {
                 ScrollView {
                     LazyVStack(spacing: 12) {
                         ForEach(filteredAppointments) { appt in
-                            AppointmentRow(appt: appt)
+                            AppointmentRow(
+                                appt: appt,
+                                expandedAppointmentID: $expandedAppointmentID
+                            )
                         }
                     }
                     .padding()
                 }
             }
-            
-            // 🔥 FLOATING BUTTON
             Button {
                 showCreate = true
             } label: {
-                
                 Image(systemName: "plus")
                     .font(.title2.bold())
                     .foregroundColor(colors.background)
@@ -62,17 +86,16 @@ struct CalendarScreen: View {
                         y: 4
                     )
             }
-            .padding()
+            .padding(.trailing, 20)
+            .padding(.bottom, 20)
         }
-        .navigationTitle("Calendar")
         
+        .navigationTitle("Calendar")
         .sheet(isPresented: $showCreate) {
             AppointmentFormView(initialDate: selectedDate)
         }
-        
         .onAppear {
             selectedDate = Date()
-            NotificationCenter.default.post(name: .resetCalendar, object: nil)
         }
     }
     

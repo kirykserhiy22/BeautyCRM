@@ -12,16 +12,20 @@ final class AppointmentServiceItem {
 
     var id: UUID
 
-    // SERVICE SNAPSHOT
     var serviceID: UUID
     var serviceName: String
 
-    // PRICE SNAPSHOT
     var plannedPrice: Double
+
+    // FINAL OVERRIDE (editable only in FINALIZE state)
     var finalPrice: Double?
 
-    // OPTIONAL DURATION
+    var isDeleted: Bool = false
+
     var duration: Int?
+
+   
+
 
     init(
         serviceID: UUID,

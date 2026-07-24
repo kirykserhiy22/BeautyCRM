@@ -6,13 +6,13 @@
 //
 
 import Foundation
+import Combine
 
 final class AppState: ObservableObject {
-    
-    @Published var session = SessionManager()
-    @Published var theme = ThemeManager()
-    
+
+    let session: SessionManager
+
     init() {
-        theme.loadSavedTheme()
+        session = SessionManager()
     }
 }

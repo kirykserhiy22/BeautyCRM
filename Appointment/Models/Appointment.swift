@@ -12,48 +12,37 @@ enum AppointmentStatus: String, Codable {
     case active
     case completed
     case cancelled
+    case archived
 }
 
 @Model
 final class Appointment {
-    
+
     var id: UUID
-    
-    // OWNER
     var userID: String
-    
-    // CLIENT SNAPSHOT
+
     var clientID: UUID
     var clientName: String
-    
-    // SERVICE SNAPSHOT
-    var serviceName: String
-    var servicePrice: Double
-    
-    // TIME
+
+    var services: [AppointmentServiceItem]
+
     var startDate: Date
     var duration: Int
-    
-    // STATUS
-    var status: AppointmentStatus
-    
-    // 💰 MONEY MODEL
-    var plannedPrice: Double
-    var finalPrice: Double?
-    
-    // NOTES
     var notes: String?
-    
-    // META
+    var status: AppointmentStatus
+
     var createdAt: Date
     var completedAt: Date?
+
+    // CACHE ONLY (НЕ business truth)
+    var finalPrice: Double?
+    
+    
     
     init(
         userID: String,
         clientID: UUID,
         clientName: String,
-        serviceName: String,
-        servicePrice: Double,
         startDate: Date,
         duration: Int,
         notes: String? = nil
@@ -62,13 +51,13 @@ final class Appointment {
         self.userID = userID
         self.clientID = clientID
         self.clientName = clientName
-        self.serviceName = serviceName
-        self.servicePrice = servicePrice
-        self.plannedPrice = servicePrice
-        self.finalPrice = nil
+
+        self.services = []
+
         self.startDate = startDate
         self.duration = duration
         self.status = .active
+
         self.notes = notes
         self.createdAt = Date()
     }
@@ -78,4 +67,12 @@ extension Appointment {
     var endDate: Date {
         Calendar.current.date(byAdding: .minute, value: duration, to: startDate) ?? startDate
     }
-}
+    var totalPlannedPrice: Double {
+        services.reduce(0) { $0 + $1.plannedPrice }
+    }
+
+    var totalFinalPrice: Double {
+        services.reduce(0) {
+            $0 + ($1.finalPrice ?? $1.plannedPrice)
+        }
+    }}

@@ -4,29 +4,39 @@
 //
 //  Created by Serhii Kiryk on 30.04.26.
 //
-
 import SwiftUI
 import SwiftData
 
 @main
 struct BeautyCRMApp: App {
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Item.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
+    
+    @StateObject private var appState = AppState()
+    @StateObject private var router = AppRouter()
+    @StateObject private var theme = ThemeManager()
+    @StateObject private var localization = LocalizationManager()
+    @StateObject private var currency = CurrencyManager()
 
     var body: some Scene {
+        
         WindowGroup {
-            ContentView()
+            
+            RootView()
+                .environment(\.locale, localization.locale)
+                .environmentObject(appState)
+                .environmentObject(router)
+                .environmentObject(theme)
+                .environmentObject(localization)
+                .environmentObject(currency)
+                .modelContainer(for: [
+                    UserProfile.self,
+                    Client.self,
+                    Appointment.self,
+                    Service.self,
+                    DayOff.self
+                ])
+                .onAppear {
+                    theme.loadSavedTheme()
+                }
         }
-        .modelContainer(sharedModelContainer)
     }
 }

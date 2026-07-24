@@ -9,10 +9,16 @@ import SwiftUI
 struct CalendarPagerView: View {
     
     let appointments: [Appointment]
+    let dayOffs: [DayOff]
+    
     @Binding var selectedDay: Date
+    @Binding var selectedDates: Set<Date>
+    let isEditingDayOff: Bool
     
     @State private var monthIndex: Int = 0
-    private let baseDate = Date()
+    @State private var baseDate: Date = Date()
+    
+    @Environment(\.scenePhase) private var scenePhase
     
     var body: some View {
         
@@ -23,6 +29,10 @@ struct CalendarPagerView: View {
                 onPrev: { monthIndex -= 1 },
                 onNext: { monthIndex += 1 }
             )
+            .padding(.horizontal)
+            
+            CalendarWeekdayHeaderView()
+                .padding(.horizontal)
             
             TabView(selection: $monthIndex) {
                 
@@ -31,22 +41,43 @@ struct CalendarPagerView: View {
                     CalendarMonthGrid(
                         selectedDate: month(for: offset),
                         appointments: appointments,
-                        selectedDay: $selectedDay
+                        dayOffs: dayOffs,
+                        selectedDay: $selectedDay,
+                        selectedDates: $selectedDates,
+                        isEditingDayOff: isEditingDayOff
                     )
                     .tag(offset)
                 }
             }
+            .frame(height: 420)
             .tabViewStyle(.page(indexDisplayMode: .never))
         }
-        .onReceive(NotificationCenter.default.publisher(for: .resetCalendar)) { _ in
-            monthIndex = 0
+        .onAppear {
+            resetToToday()
+        }
+        .onChange(of: scenePhase) { _, newPhase in
+            if newPhase == .active {
+                resetToToday()
+            }
         }
     }
     
-    private func month(for offset: Int) -> Date {
-        Calendar.current.date(byAdding: .month, value: offset, to: baseDate)!
+    // MARK: - RESET
+    
+    private func resetToToday() {
+        let now = Date()
+        baseDate = now
+        monthIndex = 0
+        selectedDay = now
     }
-}
-extension Notification.Name {
-    static let resetCalendar = Notification.Name("resetCalendar")
+    
+    // MARK: - MONTH
+    
+    private func month(for offset: Int) -> Date {
+        Calendar.current.date(
+            byAdding: .month,
+            value: offset,
+            to: baseDate
+        )!
+    }
 }

@@ -1,3 +1,11 @@
+//
+//  TodayStatsCard.swift
+//  BeautyCRM
+//
+//  Created by Serhii Kiryk on 15.07.26.
+//
+
+
 import SwiftUI
 
 struct TodayStatsCard: View {

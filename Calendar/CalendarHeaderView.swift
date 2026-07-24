@@ -13,6 +13,7 @@ struct CalendarHeaderView: View {
     let onPrev: () -> Void
     let onNext: () -> Void
     
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var theme: ThemeManager
     
     private var colors: ThemeColors {
@@ -41,8 +42,32 @@ struct CalendarHeaderView: View {
     }
     
     private var monthTitle: String {
+
         let formatter = DateFormatter()
-        formatter.dateFormat = "MMMM yyyy"
-        return formatter.string(from: selectedDate)
+
+        switch localization.languageCode {
+
+        case "uk":
+            formatter.locale = Locale(identifier: "uk_UA")
+
+        case "de":
+            formatter.locale = Locale(identifier: "de_DE")
+
+        case "pl":
+            formatter.locale = Locale(identifier: "pl_PL")
+
+        case "cs":
+            formatter.locale = Locale(identifier: "cs_CZ")
+
+        default:
+            formatter.locale = Locale(identifier: "en_US")
+        }
+
+
+        formatter.dateFormat = "LLLL yyyy"
+
+        return formatter.string(
+            from: selectedDate
+        )
     }
 }

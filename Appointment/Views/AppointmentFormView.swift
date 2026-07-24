@@ -7,402 +7,676 @@
 import SwiftUI
 import SwiftData
 
-struct CreateAppointmentView: View {
-    init(initialDate: Date = Date()) {
+struct AppointmentFormView: View {
+    @EnvironmentObject var currency: CurrencyManager
+
+    @FocusState private var isClientFieldFocused: Bool
+
+    let mode: AppointmentFormMode
+
+    init(
+        mode: AppointmentFormMode = .create,
+        initialDate: Date = Date()
+    ) {
+        self.mode = mode
+
         _date = State(initialValue: initialDate)
+
+        _serviceState = State(
+            initialValue: AppointmentCreateState(
+                client: nil,
+                selectedServices: [],
+                customPrices: [:],
+                startDate: initialDate,
+                duration: 60,
+                notes: ""
+            )
+        )
     }
-    
+
     // MARK: - ENV
-    
+
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
+
     @EnvironmentObject var appState: AppState
-    
+    @EnvironmentObject var theme: ThemeManager
+
     // MARK: - DATA
-    
+
     @Query private var clients: [Client]
     @Query private var services: [Service]
     @Query private var appointments: [Appointment]
-    
+
     // MARK: - CLIENT
-    
+
     @State private var selectedClient: Client?
     @State private var clientSearch = ""
     @State private var showClientCreate = false
     @State private var showSuggestions = false
-    
+
     // MARK: - SERVICES
-    
-    @State private var selectedServiceIDs: Set<UUID> = []
-    @State private var customPrices: [UUID: Double] = [:]
-    
+
+    @State private var serviceState: AppointmentCreateState
     @State private var showServicePicker = false
-    
+
     // MARK: - APPOINTMENT
-    
+
     @State private var date: Date
     @State private var duration = 60
     @State private var notes = ""
-    
+
     // MARK: - UI
-    
+
     @State private var errorMessage = ""
+
+    private var colors: ThemeColors {
+        theme.colors(for: theme.currentTheme)
+    }
     
+    
+    
+    
+    private var userClients: [Client] {
+
+        guard let userID = appState.session.userID else {
+            print("NO USER")
+            return []
+        }
+
+        return clients.filter {
+            $0.userID == userID
+        }
+    }
+
+
+    private var userServices: [Service] {
+
+        guard let userID = appState.session.userID else {
+            return []
+        }
+
+        return services.filter {
+            $0.userID == userID
+        }
+    }
+
+
+    private var userAppointments: [Appointment] {
+
+        guard let userID = appState.session.userID else {
+            return []
+        }
+
+        return appointments.filter {
+            $0.userID == userID
+        }
+    }
+
+
     // MARK: - BODY
-    
+
     var body: some View {
-        
+
         NavigationStack {
-            
+
             ScrollView {
-                
+
                 VStack(spacing: 24) {
-                    
-                    // CLIENT
-                    
-                    VStack(alignment: .leading, spacing: 10) {
-                        
-                        Text("Client")
-                            .font(.headline)
-                        
-                        TextField(
-                            "Enter client name",
-                            text: $clientSearch
-                        )
-                        .onChange(of: clientSearch) {
-                            showSuggestions = true
-                        }
-                        .textFieldStyle(.plain)
-                        .padding()
-                        .background(Color.gray.opacity(0.08))
-                        .cornerRadius(14)
-                        
-                        // SUGGESTIONS
-                        
-                        if showSuggestions && !clientSearch.isEmpty {
-                            
-                            VStack(spacing: 6) {
-                                
-                                ForEach(filteredClients.prefix(5)) { client in
-                                    
-                                    Button {
-                                        selectedClient = client
-                                        clientSearch = client.name
-                                        showSuggestions = false
-                                        
-                                    } label: {
-                                        
-                                        HStack {
-                                            
-                                            VStack(alignment: .leading) {
-                                                
-                                                Text(client.name)
-                                                    .foregroundColor(.primary)
-                                                
-                                                if let phone = client.phone {
-                                                    Text(phone)
-                                                        .font(.caption)
-                                                        .foregroundColor(.gray)
-                                                }
-                                            }
-                                            
-                                            Spacer()
-                                        }
-                                        .padding()
-                                        .background(Color.gray.opacity(0.05))
-                                        .cornerRadius(12)
-                                    }
-                                }
-                                
-                                // CREATE NEW CLIENT
-                                
-                                if filteredClients.isEmpty {
-                                    
-                                    Button {
-                                        showClientCreate = true
-                                        
-                                    } label: {
-                                        
-                                        HStack {
-                                            
-                                            Image(systemName: "plus.circle.fill")
-                                            
-                                            Text("Create \"\(clientSearch)\"")
-                                            
-                                            Spacer()
-                                        }
-                                        .padding()
-                                        .background(Color.blue.opacity(0.1))
-                                        .cornerRadius(12)
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    .sheet(isPresented: $showClientCreate) {
-                        CreateClientView(prefilledName: clientSearch)
-                    }
-                    
-                    // SERVICES
-                    
-                    VStack(alignment: .leading, spacing: 12) {
-                        
-                        Text("Services")
-                            .font(.headline)
-                        
-                        Button {
-                            showServicePicker = true
-                        } label: {
-                            
-                            HStack {
-                                
-                                Image(systemName: "plus")
-                                
-                                Text("Add services")
-                                
-                                Spacer()
-                            }
-                            .padding()
-                            .background(Color.blue.opacity(0.1))
-                            .cornerRadius(14)
-                        }
-                        
-                        // SELECTED SERVICES
-                        
-                        if !selectedServices.isEmpty {
-                            
-                            VStack(spacing: 10) {
-                                
-                                ForEach(selectedServices) { service in
-                                    
-                                    VStack(spacing: 8) {
-                                        
-                                        HStack {
-                                            
-                                            Text(service.name)
-                                                .font(.subheadline.weight(.medium))
-                                            
-                                            Spacer()
-                                            
-                                            if service.pricingType == .fixed {
-                                                
-                                                Text(
-                                                    "\(service.price ?? 0, specifier: "%.0f") €"
-                                                )
-                                                .foregroundColor(.gray)
-                                                
-                                            } else {
-                                                
-                                                TextField(
-                                                    "Price",
-                                                    value: Binding(
-                                                        get: {
-                                                            customPrices[service.id] ?? 0
-                                                        },
-                                                        set: {
-                                                            customPrices[service.id] = $0
-                                                        }
-                                                    ),
-                                                    format: .number
-                                                )
-                                                .keyboardType(.decimalPad)
-                                                .frame(width: 90)
-                                                .textFieldStyle(.roundedBorder)
-                                            }
-                                        }
-                                    }
-                                    .padding()
-                                    .background(Color.gray.opacity(0.06))
-                                    .cornerRadius(12)
-                                }
-                            }
-                        }
-                    }
-                    
-                    // TOTAL
-                    
-                    VStack(spacing: 6) {
-                        
-                        Text("Total")
-                            .font(.subheadline)
-                            .foregroundColor(.gray)
-                        
-                        Text("\(totalPrice, specifier: "%.2f") €")
-                            .font(.system(size: 34, weight: .bold))
-                    }
-                    .padding(.top, 8)
-                    
-                    // DATE
-                    
-                    VStack(alignment: .leading, spacing: 12) {
-                        
-                        Text("Date & Time")
-                            .font(.headline)
-                        
-                        DatePicker(
-                            "Start",
-                            selection: $date
-                        )
-                        
-                        Stepper(
-                            "Duration: \(duration) min",
-                            value: $duration,
-                            in: 15...240,
-                            step: 15
-                        )
-                    }
-                    
-                    // NOTES
-                    
-                    VStack(alignment: .leading, spacing: 8) {
-                        
-                        Text("Notes")
-                            .font(.headline)
-                        
-                        TextField(
-                            "Optional notes...",
-                            text: $notes,
-                            axis: .vertical
-                        )
-                        .lineLimit(4)
-                        .padding()
-                        .background(Color.gray.opacity(0.08))
-                        .cornerRadius(14)
-                    }
-                    
-                    // ERROR
-                    
+
+                    clientSection
+
+                    servicesSection
+
+                    totalSection
+
+                    dateTimeSection
+
+                    notesSection
+
                     if !errorMessage.isEmpty {
-                        
-                        Text(errorMessage)
-                            .foregroundColor(.red)
-                            .font(.subheadline)
+                        errorSection
                     }
-                    
-                    // BUTTON
-                    
-                    Button {
-                        createAppointment()
-                    } label: {
-                        
-                        Text("Create Appointment")
-                            .font(.headline)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(
-                                isValid
-                                ? Color.blue
-                                : Color.gray.opacity(0.3)
-                            )
-                            .foregroundColor(.white)
-                            .cornerRadius(16)
-                    }
-                    .disabled(!isValid)
+
+                    actionButton
                 }
                 .padding()
             }
-            .navigationTitle("New Appointment")
-            
-            
-            
-            // SERVICE PICKER
-            
+            .navigationTitle(modeTitle)
+            .onAppear {
+                loadAppointmentIfNeeded()
+            }
             .sheet(isPresented: $showServicePicker) {
-                
+
                 ServicePickerView(
-                    selectedIDs: $selectedServiceIDs,
-                    customPrices: $customPrices
+                    selectedIDs: Binding(
+                        get: {
+                            Set(serviceState.selectedServices.map { $0.id })
+                        },
+                        set: { newIDs in
+                            serviceState.selectedServices = userServices.filter {
+                                newIDs.contains($0.id)
+                            }
+                        }
+                    ),
+                    customPrices: $serviceState.customPrices
                 )
+                .environmentObject(appState)
+                .environmentObject(theme)
             }
         }
     }
 }
 
-// MARK: - EXTENSIONS
-private extension CreateAppointmentView {
-    
+// MARK: - CLIENT SECTION
+
+private extension AppointmentFormView {
+
+    var clientSection: some View {
+
+        VStack(alignment: .leading, spacing: 10) {
+
+            Text("Client")
+                .font(.headline)
+
+            TextField(
+                "Enter client name",
+                text: $clientSearch
+            )
+            .onChange(of: clientSearch) { oldValue, newValue in
+
+                guard oldValue != newValue else {
+                    return
+                }
+
+                switch mode {
+
+                case .create:
+                    showSuggestions = true
+
+                case .edit(let appointment):
+
+                    if newValue == appointment.clientName {
+                        return
+                    }
+
+                    showSuggestions = true
+                }
+            }
+            .textFieldStyle(.plain)
+            .padding()
+            .background(colors.card)
+            .cornerRadius(14)
+
+            if showSuggestions && !clientSearch.isEmpty {
+
+                VStack(spacing: 6) {
+
+                    ForEach(
+                        Array(filteredClients.prefix(5)),
+                        id: \.id
+                    ) { client in
+
+                        Button {
+
+                            selectedClient = client
+                            clientSearch = client.name
+
+                            showSuggestions = false
+
+                            UIApplication.shared.sendAction(
+                                #selector(UIResponder.resignFirstResponder),
+                                to: nil,
+                                from: nil,
+                                for: nil
+                            )
+
+                        } label: {
+
+                            HStack {
+
+                                VStack(
+                                    alignment: .leading,
+                                    spacing: 4
+                                ) {
+
+                                    Text(client.name)
+                                        .foregroundColor(colors.textPrimary)
+
+                                    if let phone = client.phone {
+
+                                        Text(phone)
+                                            .font(.caption)
+                                            .foregroundColor(colors.textSecondary)
+                                    }
+                                }
+
+                                Spacer()
+                            }
+                            .padding()
+                            .background(colors.card)
+                            .cornerRadius(12)
+                        }
+                        .buttonStyle(.plain)
+                    }
+
+                    if filteredClients.isEmpty {
+
+                        Button {
+                            showClientCreate = true
+                        } label: {
+
+                            HStack {
+
+                                Image(systemName: "plus.circle.fill")
+
+                                Text("Create \"\(clientSearch)\"")
+
+                                Spacer()
+                            }
+                            .padding()
+                            .background(colors.cardSecondary)
+                            .cornerRadius(12)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+            }
+        }
+        .sheet(isPresented: $showClientCreate) {
+
+            ClientFormView(
+                mode: .create,
+                prefilledName: clientSearch
+            )
+        }
+    }
+}
+
+// MARK: - SERVICES SECTION
+
+private extension AppointmentFormView {
+
+    var servicesSection: some View {
+
+        VStack(alignment: .leading, spacing: 12) {
+
+            Text("Services")
+                .font(.headline)
+
+            Button {
+                showServicePicker = true
+            } label: {
+
+                HStack {
+                    Image(systemName: "plus")
+                    Text("Add services")
+                    Spacer()
+                }
+                .padding()
+                .background(colors.card)
+                .cornerRadius(14)
+            }
+
+            if !serviceState.selectedServices.isEmpty {
+
+                VStack(spacing: 10) {
+
+                    ForEach(serviceState.selectedServices, id: \.id) { service in
+
+                        VStack(spacing: 8) {
+
+                            HStack {
+
+                                Text(service.name)
+                                    .font(.subheadline.weight(.medium))
+
+                                Spacer()
+
+                                if service.pricingType == .fixed {
+
+                                    Text(
+                                     currency.format(service.price ?? 0)
+                                    )
+                                    .foregroundColor(colors.textSecondary)
+                                    
+
+                                } else {
+
+                                    TextField(
+                                        "Price",
+                                        value: Binding(
+                                            get: {
+                                                serviceState.customPrices[service.id] ?? 0
+                                            },
+                                            set: {
+                                                serviceState.customPrices[service.id] = $0
+                                            }
+                                        ),
+                                        format: .number
+                                    )
+                                    .keyboardType(.decimalPad)
+                                    .frame(width: 90)
+                                    .textFieldStyle(.roundedBorder)
+                                }
+                            }
+                        }
+                        .padding()
+                        .background(colors.card)
+                        .cornerRadius(12)
+                    }
+                }
+            }
+        }
+    }
+}
+
+// MARK: - TOTAL SECTION
+
+private extension AppointmentFormView {
+
+    var totalSection: some View {
+
+        VStack(spacing: 6) {
+
+            Text("Total")
+                .font(.subheadline)
+                .foregroundColor(colors.textSecondary)
+
+            Text(
+             currency.format(
+                serviceState.computedPlannedTotal
+             )
+            )
+            .font(.system(size: 34, weight: .bold))
+        }
+        .padding(.top, 8)
+    }
+}
+
+// MARK: - DATE SECTION
+
+private extension AppointmentFormView {
+
+    var dateTimeSection: some View {
+
+        VStack(alignment: .leading, spacing: 12) {
+
+            Text("Date & Time")
+                .font(.headline)
+
+            DatePicker(
+                "Start",
+                selection: $date
+            )
+
+            Stepper(
+                "Duration: \(duration) min",
+                value: $duration,
+                in: 15...600,
+                step: 15
+            )
+
+            if conflictInfo.hasConflict {
+
+                VStack(alignment: .leading, spacing: 6) {
+
+                    Label(
+                        "Selected time is occupied",
+                        systemImage: "exclamationmark.triangle.fill"
+                    )
+                    .foregroundColor(.red)
+
+                    if let start = conflictInfo.suggestedStart,
+                       let end = conflictInfo.suggestedEnd {
+
+                        Text(
+                            "Nearest free slot: \(time(start)) - \(time(end))"
+                        )
+                        .font(.caption)
+                        .foregroundColor(colors.textSecondary)
+                    }
+                }
+            }
+        }
+    }
+}
+
+// MARK: - NOTES SECTION
+
+private extension AppointmentFormView {
+
+    var notesSection: some View {
+
+        VStack(alignment: .leading, spacing: 8) {
+
+            Text("Notes")
+                .font(.headline)
+
+            TextField(
+                "Optional notes...",
+                text: $notes,
+                axis: .vertical
+            )
+            .lineLimit(4)
+            .padding()
+            .background(colors.card)
+            .cornerRadius(14)
+        }
+    }
+}
+
+// MARK: - ERROR SECTION
+
+private extension AppointmentFormView {
+
+    var errorSection: some View {
+
+        Text(errorMessage)
+            .foregroundColor(.red)
+            .font(.subheadline)
+    }
+}
+
+// MARK: - ACTION BUTTON
+
+private extension AppointmentFormView {
+
+    var actionButton: some View {
+
+        Button {
+            saveAppointment()
+        } label: {
+
+            Text(buttonTitle)
+                .font(.headline)
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background(
+                    isValid
+                    ? Color.blue
+                    : Color.gray.opacity(0.3)
+                )
+                .foregroundColor(.white)
+                .cornerRadius(16)
+        }
+        .disabled(!isValid)
+    }
+
+    var buttonTitle: String {
+
+        switch mode {
+
+        case .create:
+            return "Create Appointment"
+
+        case .edit:
+            return "Save Changes"
+        }
+    }
+}
+
+// MARK: - HELPERS
+
+
+private extension AppointmentFormView {
+
     var filteredClients: [Client] {
-        
+
         if clientSearch.isEmpty {
             return []
         }
-        
-        return clients.filter {
+
+        return userClients.filter {
             $0.name
                 .lowercased()
                 .contains(clientSearch.lowercased())
         }
     }
-}
-private extension CreateAppointmentView {
-    
-    var selectedServices: [Service] {
-        services.filter {
-            selectedServiceIDs.contains($0.id)
-        }
-    }
-    
+
     var totalPrice: Double {
-        
-        AppointmentEngine.calculateTotal(
-            services: services,
-            selectedIDs: selectedServiceIDs,
-            customPrices: customPrices
+        serviceState.computedPlannedTotal
+    }
+
+    private var conflictInfo: ConflictResult {
+
+        AppointmentEngine.conflictResult(
+            newStart: date,
+            duration: duration,
+            existing: userAppointments,
+            ignoring: editingAppointmentID
         )
     }
-    
+
+    private var editingAppointmentID: UUID? {
+
+        switch mode {
+
+        case .create:
+            return nil
+
+        case .edit(let appointment):
+            return appointment.id
+        }
+    }
+
     var isValid: Bool {
-        
+
         guard selectedClient != nil else {
             return false
         }
-        
-        guard !selectedServiceIDs.isEmpty else {
+
+        guard !serviceState.selectedServices.isEmpty else {
             return false
         }
-        
-        let endDate = Calendar.current.date(
-            byAdding: .minute,
-            value: duration,
-            to: date
-        )!
-        
-        return !AppointmentEngine.hasConflict(
-            newStart: date,
-            newEnd: endDate,
-            existing: appointments
-        )
+
+        return !conflictInfo.hasConflict
     }
-    
-    
-    func createAppointment() {
-        
+
+    func saveAppointment() {
+
         guard let userID = appState.session.userID,
               let client = selectedClient
         else {
             return
         }
-        
-        let result = AppointmentEngine.createAppointment(
-            context: context,
-            userID: userID,
-            client: client,
-            services: services,
-            selectedServiceIDs: selectedServiceIDs,
-            customPrices: customPrices,
-            startDate: date,
-            duration: duration,
-            notes: notes,
-            existingAppointments: appointments
-        )
-        
-        switch result {
-            
-        case .success:
-            dismiss()
-            
-        case .failure(let error):
-            errorMessage = error.localizedDescription
+
+        switch mode {
+
+        case .create:
+
+            let result = AppointmentEngine.createAppointment(
+                context: context,
+                userID: userID,
+                client: client,
+                services: userServices,
+                selectedServiceIDs: serviceState.selectedServiceIDs,
+                customPrices: serviceState.customPrices,
+                startDate: date,
+                duration: duration,
+                notes: notes,
+                existingAppointments: userAppointments
+            )
+
+            switch result {
+
+            case .success:
+                dismiss()
+
+            case .failure(let error):
+                errorMessage = error.localizedDescription
+            }
+
+        case .edit(let appointment):
+
+            let result = AppointmentEngine.updateAppointment(
+                appointment: appointment,
+                client: client,
+                services: userServices,
+                selectedServiceIDs: serviceState.selectedServiceIDs,
+                customPrices: serviceState.customPrices,
+                startDate: date,
+                duration: duration,
+                notes: notes,
+                existingAppointments: userAppointments
+            )
+
+            switch result {
+
+            case .success:
+                dismiss()
+
+            case .failure(let error):
+                errorMessage = error.localizedDescription
+            }
         }
+    }
+
+    var modeTitle: String {
+
+        switch mode {
+
+        case .create:
+            return "New Appointment"
+
+        case .edit:
+            return "Edit Appointment"
+        }
+    }
+
+    func loadAppointmentIfNeeded() {
+
+        guard case .edit(let appointment) = mode else {
+            return
+        }
+
+        clientSearch = appointment.clientName
+        showSuggestions = false
+
+        selectedClient = userClients.first {
+            $0.id == appointment.clientID
+        }
+
+        serviceState.selectedServices = appointment.services.compactMap { item in
+            userServices.first { $0.id == item.serviceID }
+        }
+
+        serviceState.customPrices = Dictionary(
+            uniqueKeysWithValues: appointment.services.map {
+                ($0.serviceID, $0.plannedPrice)
+            }
+        )
+
+        date = appointment.startDate
+        duration = appointment.duration
+        notes = appointment.notes ?? ""
+    }
+
+    func time(_ date: Date) -> String {
+
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+
+        return formatter.string(from: date)
     }
 }

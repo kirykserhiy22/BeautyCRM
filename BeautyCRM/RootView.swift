@@ -7,22 +7,46 @@
 
 import SwiftUI
 
+
 struct RootView: View {
-    
-    @EnvironmentObject var appState: AppState
-    
+
+
+    @EnvironmentObject var router: AppRouter
+
+
     var body: some View {
-        
-        ZStack {
-            
-            appState.theme.colors().background
-                .ignoresSafeArea()
-            
-            if appState.session.isLoggedIn {
-                Text("MAIN APP")
-            } else {
-                Text("AUTH SCREEN")
-            }
+
+
+        switch router.currentScreen {
+
+
+        case .splash:
+
+            SplashView()
+
+
+
+        case .welcome:
+
+            WelcomeView()
+
+
+
+        case .login:
+
+            LoginView()
+
+
+
+        case .signUp:
+
+            SignUpFlowView()
+
+
+
+        case .main:
+
+            MainTabView()
         }
     }
 }
