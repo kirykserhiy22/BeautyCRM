@@ -45,4 +45,9 @@ struct ThemeColors {
 
     // FLOATING BUTTON
     let floatingButton: Color
+    
+    // TAB BAR
+
+    let tabBarBackground: Color
+    let tabBarInactive: Color
 }

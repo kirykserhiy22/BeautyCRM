@@ -279,7 +279,7 @@
 				3D32E7602FA6AC2E00A746A5 /* Appointment */,
 				3D32E75F2FA6AB6600A746A5 /* Settings */,
 				3D32E75E2FA6AB4200A746A5 /* Client */,
-				3D32E7452FA3BD8C00A746A5 /* New Group */,
+				3D32E7452FA3BD8C00A746A5 /* MainTabBar */,
 				3D2023842FA3B2190078D26B /* Auth */,
 				3D2023822FA3B20E0078D26B /* Theme */,
 				3D2023812FA3B20B0078D26B /* Utils */,
@@ -342,12 +342,12 @@
 			path = Auth;
 			sourceTree = "<group>";
 		};
-		3D32E7452FA3BD8C00A746A5 /* New Group */ = {
+		3D32E7452FA3BD8C00A746A5 /* MainTabBar */ = {
 			isa = PBXGroup;
 			children = (
 				3D32E7472FA3BDBD00A746A5 /* MainTabView.swift */,
 			);
-			path = "New Group";
+			path = MainTabBar;
 			sourceTree = "<group>";
 		};
 		3D32E75E2FA6AB4200A746A5 /* Client */ = {

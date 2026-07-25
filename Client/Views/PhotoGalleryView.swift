@@ -19,7 +19,7 @@ struct PhotoGalleryView: View {
 
         ZStack {
 
-            Color.black.ignoresSafeArea()
+           
 
             TabView(selection: $selectedIndex) {
 

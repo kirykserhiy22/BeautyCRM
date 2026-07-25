@@ -53,6 +53,7 @@ struct ClientRowView: View {
                 .font(.caption.bold())
                 .foregroundColor(colors.textSecondary)
         }
+        
         .padding()
     }
 }

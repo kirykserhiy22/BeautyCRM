@@ -7,7 +7,7 @@
 import Foundation
 
 enum AppTheme: String, CaseIterable {
-    case spaceGray
-    case black
-    case eliteLight
+    case classic
+    case graphite
+    case pearlivory
 }

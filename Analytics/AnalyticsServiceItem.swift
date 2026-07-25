@@ -29,6 +29,6 @@ struct AnalyticsChartItem: Identifiable {
 
     let id = UUID()
 
-    let label: String
+    let date: Date
     let value: Double
 }

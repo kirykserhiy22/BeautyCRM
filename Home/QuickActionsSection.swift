@@ -32,7 +32,7 @@ struct QuickActionsSection: View {
 
                 } label: {
                     actionCard(
-                        title: "Clients",
+                        title: "Add Clients",
                         icon: "person.3"
                     )
                 }
@@ -91,10 +91,13 @@ struct QuickActionsSection: View {
 
             Image(systemName: icon)
                 .font(.title2)
+                .foregroundColor(colors.accent)
+                
 
 
             Text(title)
                 .font(.caption)
+                .foregroundColor(colors.textPrimary)
         }
         .frame(maxWidth: .infinity)
         .padding()

@@ -33,8 +33,7 @@ struct ClientProfileView: View {
     var body: some View {
 
         ScrollView {
-            colors.background
-                .ignoresSafeArea()
+            
 
             VStack(spacing: 24) {
 

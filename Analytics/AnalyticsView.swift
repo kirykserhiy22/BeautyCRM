@@ -131,7 +131,12 @@ struct AnalyticsView: View {
             )
         }
         .sorted {
-            $0.revenue > $1.revenue
+
+            if $0.count == $1.count {
+                return $0.revenue > $1.revenue
+            }
+
+            return $0.count > $1.count
         }
     }
 
@@ -156,7 +161,12 @@ struct AnalyticsView: View {
             )
         }
         .sorted {
-            $0.spent > $1.spent
+
+            if $0.visits == $1.visits {
+                return $0.spent > $1.spent
+            }
+
+            return $0.visits > $1.visits
         }
     }
 
@@ -185,6 +195,7 @@ struct AnalyticsView: View {
                 }
                 .padding()
             }
+            .background(colors.background)
             .navigationTitle("Analytics")
         }
     }
@@ -202,6 +213,7 @@ struct AnalyticsView: View {
             }
         }
         .pickerStyle(.segmented)
+        .tint(colors.accent)
     }
 
     // MARK: - REVENUE CARD
@@ -223,13 +235,79 @@ struct AnalyticsView: View {
 
                 ForEach(chartData) { item in
 
-                    BarMark(
-                        x: .value("Label", item.label),
-                        y: .value("Revenue", item.value)
+
+                    AreaMark(
+
+                        x:
+                            .value(
+                                "Date",
+                                item.date
+                            ),
+
+                        y:
+                            .value(
+                                "Revenue",
+                                item.value
+                            )
+                    )
+                    .foregroundStyle(
+                        colors.accent.opacity(0.15)
+                    )
+
+
+
+                    LineMark(
+
+                        x:
+                            .value(
+                                "Date",
+                                item.date
+                            ),
+
+                        y:
+                            .value(
+                                "Revenue",
+                                item.value
+                            )
+                    )
+                    .foregroundStyle(
+                        colors.accent
+                    )
+                    .lineStyle(
+                        StrokeStyle(
+                            lineWidth: 3
+                        )
+                    )
+
+
+
+                    PointMark(
+
+                        x:
+                            .value(
+                                "Date",
+                                item.date
+                            ),
+
+                        y:
+                            .value(
+                                "Revenue",
+                                item.value
+                            )
+                    )
+                    .foregroundStyle(
+                        colors.accent
                     )
                 }
             }
-            .frame(height: 180)
+            .chartXAxis {
+
+                AxisMarks {
+
+                    AxisValueLabel()
+                }
+            }
+            .frame(height: 200)
         }
         .padding()
         .background(colors.card)
@@ -280,10 +358,10 @@ struct AnalyticsView: View {
 
         VStack(alignment: .leading, spacing: 14) {
 
-            Text("Top Services")
+            Text("Most Popular Services")
                 .font(.title3.bold())
 
-            ForEach(topServices.prefix(5)) { item in
+            ForEach(topServices.prefix(3)) { item in
 
                 HStack {
 
@@ -315,10 +393,10 @@ struct AnalyticsView: View {
 
         VStack(alignment: .leading, spacing: 14) {
 
-            Text("Top Clients")
+            Text("Most Loyal Clients")
                 .font(.title3.bold())
 
-            ForEach(topClients.prefix(5)) { item in
+            ForEach(topClients.prefix(3)) { item in
 
                 HStack {
 
@@ -375,26 +453,62 @@ struct AnalyticsView: View {
 
         let calendar = Calendar.current
 
-        let grouped = Dictionary(grouping: completedAppointments) {
-            calendar.startOfDay(for: $0.startDate)
-        }
+        var grouped: [Date: Double] = [:]
 
-        return grouped.map { key, value in
 
-            let total = value.reduce(0) {
-                $0 + ($1.finalPrice ?? 0)
+        for appointment in completedAppointments {
+
+            let date: Date
+
+
+            switch selectedPeriod {
+
+
+            case .week:
+
+                date = calendar.startOfDay(
+                    for: appointment.startDate
+                )
+
+
+            case .month:
+
+                date = calendar.startOfDay(
+                    for: appointment.startDate
+                )
+
+
+            case .year:
+
+                let components =
+                calendar.dateComponents(
+                    [.year,.month],
+                    from: appointment.startDate
+                )
+
+                date =
+                calendar.date(
+                    from: components
+                ) ?? appointment.startDate
+
             }
 
-            let formatter = DateFormatter()
-            formatter.dateFormat = "dd MMM"
 
-            return AnalyticsChartItem(
-                label: formatter.string(from: key),
-                value: total
+            grouped[date, default: 0] +=
+            appointment.finalPrice ?? 0
+        }
+
+
+        return grouped.map {
+
+            AnalyticsChartItem(
+                date: $0.key,
+                value: $0.value
             )
+
         }
         .sorted {
-            $0.label < $1.label
+            $0.date < $1.date
         }
     }
 
