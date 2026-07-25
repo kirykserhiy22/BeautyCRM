@@ -46,7 +46,11 @@ struct ThemeSettingsView: View {
                         ) {
                             
                             withAnimation(.easeInOut) {
+
                                 theme.setTheme(themeCase)
+
+
+                               
                             }
                         }
                     }
@@ -199,14 +203,14 @@ struct ThemePreviewCard: View {
         
         switch themeCase {
             
-        case .spaceGray:
-            return "Space Gray"
+        case .classic:
+            return "Classic"
             
-        case .black:
-            return "Black"
+        case .graphite:
+            return "Graphite"
             
-        case .eliteLight:
-            return "Elite Light"
+        case .pearlivory:
+            return "Pearl Ivory"
         }
     }
 }

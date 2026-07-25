@@ -44,8 +44,7 @@ struct CalendarScreen: View {
         
         ZStack(alignment: .bottomTrailing) {
             
-            colors.background
-                .ignoresSafeArea()
+            
             
             VStack {
                 
@@ -89,7 +88,7 @@ struct CalendarScreen: View {
             .padding(.trailing, 20)
             .padding(.bottom, 20)
         }
-        
+        .background(colors.background)
         .navigationTitle("Calendar")
         .sheet(isPresented: $showCreate) {
             AppointmentFormView(initialDate: selectedDate)

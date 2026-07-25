@@ -142,6 +142,7 @@ struct AppointmentFormView: View {
                 }
                 .padding()
             }
+            .background(colors.secondaryBackground)
             .navigationTitle(modeTitle)
             .onAppear {
                 loadAppointmentIfNeeded()

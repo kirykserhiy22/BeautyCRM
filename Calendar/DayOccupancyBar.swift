@@ -104,9 +104,11 @@ private extension DayOccupancyBar {
 
     
     var hasEarly: Bool {
-        
+
         activeAppointments.contains {
-            
+
+            $0.status == .active &&
+
             Calendar.current.component(
                 .hour,
                 from: $0.startDate
@@ -115,9 +117,11 @@ private extension DayOccupancyBar {
     }
     
     var hasLate: Bool {
-        
+
         activeAppointments.contains {
-            
+
+            $0.status == .active &&
+
             Calendar.current.component(
                 .hour,
                 from: $0.endDate

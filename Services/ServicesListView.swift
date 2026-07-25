@@ -55,8 +55,7 @@ struct ServicesListView: View {
             
             ZStack(alignment: .bottomTrailing) {
                 
-                colors.background
-                    .ignoresSafeArea()
+                
                 
                 ScrollView {
                     
