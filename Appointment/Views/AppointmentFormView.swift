@@ -552,7 +552,7 @@ private extension AppointmentFormView {
         }
     }
 
-    var totalPrice: Double {
+    var totalPrice: Decimal {
         serviceState.computedPlannedTotal
     }
 

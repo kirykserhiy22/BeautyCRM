@@ -56,7 +56,7 @@ final class CurrencyManager: ObservableObject {
 
 
     func format(
-        _ amount: Double
+        _ amount: Decimal
     ) -> String {
 
 
@@ -72,7 +72,7 @@ final class CurrencyManager: ObservableObject {
 
 
         return formatter.string(
-            from: NSNumber(value: amount)
+            from: NSDecimalNumber(decimal: amount)
         )
         ?? "\(amount) \(symbol)"
     }

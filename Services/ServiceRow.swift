@@ -140,7 +140,7 @@ private extension ServiceRow {
         switch service.pricingType {
 
         case .fixed:
-            return "\(service.price ?? 0, default: "%.0f") \(currencyManager.symbol)"
+            return currencyManager.format(service.price ?? 0)
 
         case .variable:
             return localization.localizedString(

@@ -157,7 +157,7 @@ private extension CreateServiceView {
             name: name,
             pricingType: type,
             price: type == .fixed
-            ? Double(price)
+            ? AppFormatting.parseMoney(price)
             : nil
         )
         

@@ -48,7 +48,7 @@ struct AppointmentRow: View {
                 completionItems.map {
                     (
                         $0.serviceID,
-                        String(format: "%.0f", $0.plannedPrice)
+                        AppFormatting.moneyInput($0.plannedPrice)
                     )
                 }
         )
@@ -173,7 +173,7 @@ struct AppointmentRow: View {
                                 .foregroundColor(colors.textSecondary)
                             
                             Text(
-                                "\(displayPrice(appt), specifier: "%.0f") \(currencyManager.symbol)"
+                                currencyManager.format(displayPrice(appt))
                             )
                             .font(.subheadline)
                             .foregroundColor(colors.textPrimary)
@@ -398,7 +398,7 @@ struct AppointmentRow: View {
                             Spacer()
                             
                             Text(
-                                "\(finalTotal, specifier: "%.0f") \(currencyManager.symbol)"
+                                currencyManager.format(finalTotal)
                             )
                             .font(.title3.bold())
                         }
@@ -411,7 +411,7 @@ struct AppointmentRow: View {
                                     finalServicePrices.map {
                                         (
                                             $0.key,
-                                            Double($0.value) ?? 0
+                                            AppFormatting.parseMoney($0.value) ?? 0
                                         )
                                     }
                             )
@@ -495,7 +495,7 @@ private extension AppointmentRow {
         }
     }
     
-    private func displayPrice(_ appt: Appointment) -> Double {
+    private func displayPrice(_ appt: Appointment) -> Decimal {
         
         if appt.status == .completed {
             
@@ -531,10 +531,10 @@ private extension AppointmentRow {
         return formatter.string(from: date)
     }
     
-    var finalTotal: Double {
+    var finalTotal: Decimal {
         
-        finalServicePrices.values.reduce(0) {
-            $0 + (Double($1) ?? 0)
+        finalServicePrices.values.reduce(Decimal(0)) {
+            $0 + (AppFormatting.parseMoney($1) ?? 0)
         }
     }
 }

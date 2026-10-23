@@ -13,8 +13,8 @@ struct ClientAnalytics {
     let completedVisits: Int
     let cancelledVisits: Int
 
-    let revenue: Double
-    let averageCheck: Double
+    let revenue: Decimal
+    let averageCheck: Decimal
 
     let lastVisitDate: Date?
 }
@@ -50,13 +50,13 @@ enum ClientAnalyticsCalculator {
 
         // revenue
 
-        let revenue = completed.reduce(0) {
+        let revenue = completed.reduce(Decimal(0)) {
             $0 + ($1.finalPrice ?? 0)
         }
 
         // average
 
-        let averageCheck: Double
+        let averageCheck: Decimal
 
         if completed.isEmpty {
 
@@ -64,7 +64,7 @@ enum ClientAnalyticsCalculator {
 
         } else {
 
-            averageCheck = revenue / Double(completed.count)
+            averageCheck = revenue / Decimal(completed.count)
         }
 
         // last visit

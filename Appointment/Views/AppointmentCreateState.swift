@@ -9,7 +9,7 @@ struct AppointmentCreateState {
 
     var client: Client?
     var selectedServices: [Service]
-    var customPrices: [UUID: Double]
+    var customPrices: [UUID: Decimal]
 
     var startDate: Date
     var duration: Int
@@ -21,7 +21,7 @@ struct AppointmentCreateState {
         Set(selectedServices.map { $0.id })
     }
 
-    var computedPlannedTotal: Double {
+    var computedPlannedTotal: Decimal {
         selectedServices.reduce(0) { sum, service in
             switch service.pricingType {
             case .fixed:

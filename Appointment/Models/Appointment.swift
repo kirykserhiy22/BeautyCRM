@@ -35,7 +35,7 @@ final class Appointment {
     var completedAt: Date?
 
     // CACHE ONLY (НЕ business truth)
-    var finalPrice: Double?
+    var finalPrice: Decimal?
     
     
     
@@ -67,11 +67,11 @@ extension Appointment {
     var endDate: Date {
         Calendar.current.date(byAdding: .minute, value: duration, to: startDate) ?? startDate
     }
-    var totalPlannedPrice: Double {
+    var totalPlannedPrice: Decimal {
         services.reduce(0) { $0 + $1.plannedPrice }
     }
 
-    var totalFinalPrice: Double {
+    var totalFinalPrice: Decimal {
         services.reduce(0) {
             $0 + ($1.finalPrice ?? $1.plannedPrice)
         }
