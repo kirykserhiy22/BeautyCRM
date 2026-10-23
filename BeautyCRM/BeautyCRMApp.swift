@@ -16,6 +16,11 @@ struct BeautyCRMApp: App {
     @StateObject private var localization = LocalizationManager()
     @StateObject private var currency = CurrencyManager()
 
+
+    init() {
+        SyncTracking.start()
+    }
+
     var body: some Scene {
         
         WindowGroup {

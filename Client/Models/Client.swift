@@ -8,7 +8,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class Client {
+final class Client: SyncTrackable {
 
     // MARK: - ID
 
@@ -42,6 +42,12 @@ final class Client {
     // MARK: - META
 
     var createdAt: Date
+
+    // MARK: - SYNC
+
+    var workspaceID: UUID? = nil
+    var updatedAt: Date? = nil
+    var deletedAt: Date? = nil
 
     // MARK: - INIT
 

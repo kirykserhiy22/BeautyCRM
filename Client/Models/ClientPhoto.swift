@@ -8,7 +8,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class ClientPhoto {
+final class ClientPhoto: SyncTrackable {
 
     var id: UUID
 
@@ -18,6 +18,12 @@ final class ClientPhoto {
     var fileName: String
 
     var createdAt: Date
+
+    // MARK: - SYNC
+
+    var workspaceID: UUID? = nil
+    var updatedAt: Date? = nil
+    var deletedAt: Date? = nil
 
     init(
         clientID: UUID,

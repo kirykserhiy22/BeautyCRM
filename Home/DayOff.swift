@@ -8,7 +8,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class DayOff {
+final class DayOff: SyncTrackable {
 
     var id: UUID
 
@@ -17,6 +17,12 @@ final class DayOff {
     var date: Date
 
     var createdAt: Date
+
+    // MARK: - SYNC
+
+    var workspaceID: UUID? = nil
+    var updatedAt: Date? = nil
+    var deletedAt: Date? = nil
 
     init(
         userID: String,
