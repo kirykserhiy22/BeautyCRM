@@ -30,6 +30,7 @@ final class SessionManager: ObservableObject {
     func logout() {
         self.userID = nil
         self.isLoggedIn = false
+        SyncTracking.currentWorkspaceID = nil
         
         UserDefaults.standard.removeObject(forKey: key)
     }

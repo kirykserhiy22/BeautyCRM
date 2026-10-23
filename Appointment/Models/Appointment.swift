@@ -16,7 +16,7 @@ enum AppointmentStatus: String, Codable {
 }
 
 @Model
-final class Appointment {
+final class Appointment: SyncTrackable {
 
     var id: UUID
     var userID: String
@@ -36,6 +36,12 @@ final class Appointment {
 
     // CACHE ONLY (НЕ business truth)
     var finalPrice: Decimal?
+
+    // MARK: - SYNC
+
+    var workspaceID: UUID? = nil
+    var updatedAt: Date? = nil
+    var deletedAt: Date? = nil
     
     
     

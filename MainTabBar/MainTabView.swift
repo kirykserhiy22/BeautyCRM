@@ -50,5 +50,13 @@ struct MainTabView: View {
                 }
         }
         .tint(colors.accent)
+        .task {
+            if let userID = appState.session.userID {
+                SyncTracking.prepareWorkspace(
+                    context: context,
+                    userID: userID
+                )
+            }
+        }
     }
 }

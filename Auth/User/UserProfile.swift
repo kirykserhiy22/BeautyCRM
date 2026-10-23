@@ -10,7 +10,7 @@ import SwiftData
 
 
 @Model
-final class UserProfile {
+final class UserProfile: SyncTrackable {
 
     var id: UUID
 
@@ -32,6 +32,12 @@ final class UserProfile {
 
     // APP
     var createdAt: Date
+
+    // MARK: - SYNC
+
+    var workspaceID: UUID? = nil
+    var updatedAt: Date? = nil
+    var deletedAt: Date? = nil
 
     init(
         authUserID: String,
@@ -57,5 +63,8 @@ final class UserProfile {
    
 
         self.createdAt = Date()
+
+        // Новий користувач одразу отримує власний робочий простір
+        self.workspaceID = UUID()
     }
 }

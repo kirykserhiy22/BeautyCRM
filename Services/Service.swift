@@ -13,7 +13,7 @@ enum ServicePricingType: String, Codable {
 }
 
 @Model
-final class Service {
+final class Service: SyncTrackable {
     
     var id: UUID
     var userID: String
@@ -25,7 +25,13 @@ final class Service {
     var price: Decimal? // fixed price
     
     var createdAt: Date
-    
+
+    // MARK: - SYNC
+
+    var workspaceID: UUID? = nil
+    var updatedAt: Date? = nil
+    var deletedAt: Date? = nil
+
     init(
         userID: String,
         name: String,
