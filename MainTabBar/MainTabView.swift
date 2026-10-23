@@ -24,49 +24,29 @@ struct MainTabView: View {
     var body: some View {
 
         TabView {
-
             HomeView()
                 .tabItem {
-                    Label(
-                        "Home",
-                        systemImage: "house"
-                    )
+                    Label("tab.home", systemImage: "house")
                 }
-
 
             ClientsListView()
                 .tabItem {
-                    Label(
-                        "Clients",
-                        systemImage: "person.3"
-                    )
+                    Label("tab.clients", systemImage: "person.3")
                 }
-
 
             CalendarScreen()
                 .tabItem {
-                    Label(
-                        "Calendar",
-                        systemImage: "calendar"
-                    )
+                    Label("tab.calendar", systemImage: "calendar")
                 }
-
 
             AnalyticsView()
                 .tabItem {
-                    Label(
-                        "Analytics",
-                        systemImage: "chart.bar"
-                    )
+                    Label("tab.analytics", systemImage: "chart.bar")
                 }
-
 
             SettingsView()
                 .tabItem {
-                    Label(
-                        "Settings",
-                        systemImage: "gear"
-                    )
+                    Label("tab.settings", systemImage: "gear")
                 }
         }
         .tint(colors.accent)

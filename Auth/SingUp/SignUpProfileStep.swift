@@ -23,26 +23,14 @@ struct SignUpProfileStep: View {
         ) {
 
 
-            Text(
-                "About you"
-            )
-            .font(.title2.bold())
+            Text("signup.profile.title")
+                .font(.title2.bold())
 
+            TextField("signup.firstName", text: $state.firstName)
+                .textFieldStyle(.roundedBorder)
 
-
-            TextField(
-                "First name",
-                text: $state.firstName
-            )
-            .textFieldStyle(.roundedBorder)
-
-
-
-            TextField(
-                "Last name",
-                text: $state.lastName
-            )
-            .textFieldStyle(.roundedBorder)
+            TextField("signup.lastName", text: $state.lastName)
+                .textFieldStyle(.roundedBorder)
         }
     }
 }

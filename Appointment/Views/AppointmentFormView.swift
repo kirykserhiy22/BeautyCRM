@@ -9,7 +9,7 @@ import SwiftData
 
 struct AppointmentFormView: View {
     @EnvironmentObject var currency: CurrencyManager
-
+    @EnvironmentObject var localization: LocalizationManager
     @FocusState private var isClientFieldFocused: Bool
 
     let mode: AppointmentFormMode
@@ -177,13 +177,15 @@ private extension AppointmentFormView {
 
         VStack(alignment: .leading, spacing: 10) {
 
-            Text("Client")
+            Text(localization.localizedString(for: "appointment.client"))
                 .font(.headline)
 
+            
             TextField(
-                "Enter client name",
+                localization.localizedString(for: "appointment.clientNamePlaceholder"),
                 text: $clientSearch
             )
+            .focused($isClientFieldFocused)
             .onChange(of: clientSearch) { oldValue, newValue in
 
                 guard oldValue != newValue else {
@@ -208,6 +210,7 @@ private extension AppointmentFormView {
             .padding()
             .background(colors.card)
             .cornerRadius(14)
+
 
             if showSuggestions && !clientSearch.isEmpty {
 
@@ -271,7 +274,13 @@ private extension AppointmentFormView {
 
                                 Image(systemName: "plus.circle.fill")
 
-                                Text("Create \"\(clientSearch)\"")
+                                Text(
+                                    String(
+                                        format: localization.localizedString(for: "appointment.createClient"),
+                                        locale: localization.locale,
+                                        clientSearch
+                                    )
+                                )
 
                                 Spacer()
                             }
@@ -302,7 +311,7 @@ private extension AppointmentFormView {
 
         VStack(alignment: .leading, spacing: 12) {
 
-            Text("Services")
+            Text(localization.localizedString(for: "appointment.services"))
                 .font(.headline)
 
             Button {
@@ -311,7 +320,7 @@ private extension AppointmentFormView {
 
                 HStack {
                     Image(systemName: "plus")
-                    Text("Add services")
+                    Text(localization.localizedString(for: "appointment.addServices"))
                     Spacer()
                 }
                 .padding()
@@ -380,7 +389,7 @@ private extension AppointmentFormView {
 
         VStack(spacing: 6) {
 
-            Text("Total")
+            Text(localization.localizedString(for: "appointment.total"))
                 .font(.subheadline)
                 .foregroundColor(colors.textSecondary)
 
@@ -403,27 +412,30 @@ private extension AppointmentFormView {
 
         VStack(alignment: .leading, spacing: 12) {
 
-            Text("Date & Time")
+            Text(localization.localizedString(for: "appointment.dateTime"))
                 .font(.headline)
 
             DatePicker(
-                "Start",
+                localization.localizedString(for: "appointment.start"),
                 selection: $date
             )
 
             Stepper(
-                "Duration: \(duration) min",
+                String(
+                    format: localization.localizedString(for: "appointment.duration"),
+                    locale: localization.locale,
+                    duration
+                ),
                 value: $duration,
                 in: 15...600,
                 step: 15
             )
-
             if conflictInfo.hasConflict {
 
                 VStack(alignment: .leading, spacing: 6) {
 
                     Label(
-                        "Selected time is occupied",
+                        localization.localizedString(for: "appointment.timeOccupied"),
                         systemImage: "exclamationmark.triangle.fill"
                     )
                     .foregroundColor(.red)
@@ -432,7 +444,12 @@ private extension AppointmentFormView {
                        let end = conflictInfo.suggestedEnd {
 
                         Text(
-                            "Nearest free slot: \(time(start)) - \(time(end))"
+                            String(
+                                format: localization.localizedString(for: "appointment.nearestFreeSlot"),
+                                locale: localization.locale,
+                                time(start),
+                                time(end)
+                            )
                         )
                         .font(.caption)
                         .foregroundColor(colors.textSecondary)
@@ -451,11 +468,11 @@ private extension AppointmentFormView {
 
         VStack(alignment: .leading, spacing: 8) {
 
-            Text("Notes")
+            Text(localization.localizedString(for: "appointment.notes"))
                 .font(.headline)
 
             TextField(
-                "Optional notes...",
+                localization.localizedString(for: "appointment.notesPlaceholder"),
                 text: $notes,
                 axis: .vertical
             )
@@ -509,10 +526,10 @@ private extension AppointmentFormView {
         switch mode {
 
         case .create:
-            return "Create Appointment"
+            return localization.localizedString(for: "appointment.createButton")
 
         case .edit:
-            return "Save Changes"
+            return localization.localizedString(for: "appointment.saveChanges")
         }
     }
 }
@@ -634,14 +651,12 @@ private extension AppointmentFormView {
     }
 
     var modeTitle: String {
-
         switch mode {
-
         case .create:
-            return "New Appointment"
+            return localization.localizedString(for: "appointment.createTitle")
 
         case .edit:
-            return "Edit Appointment"
+            return localization.localizedString(for: "appointment.editTitle")
         }
     }
 

@@ -12,7 +12,7 @@ struct EditServiceView: View {
     
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
-    
+    @EnvironmentObject var localization: LocalizationManager
     @Bindable var service: Service
     @EnvironmentObject var theme: ThemeManager
     private var colors: ThemeColors {
@@ -24,25 +24,29 @@ struct EditServiceView: View {
             
             Form {
                 
-                TextField("Service name", text: $service.name)
+                TextField("services.name", text: $service.name)
                 
                 if service.pricingType == .fixed {
-                    TextField("Price", value: $service.price, format: .number)
+                    TextField(
+                        "services.price",
+                        value: $service.price,
+                        format: .number
+                    )
                 }
                 
-                Toggle("Variable price", isOn: Binding(
+                Toggle("services.variablePrice", isOn: Binding(
                     get: { service.pricingType == .variable },
                     set: { isOn in
                         service.pricingType = isOn ? .variable : .fixed
                     }
                 ))
                 
-                Button("Save") {
+                Button("services.save") {
                     try? context.save()
                     dismiss()
                 }
             }
-            .navigationTitle("Edit Service")
+            .navigationTitle("services.editTitle")
         }
     }
 }

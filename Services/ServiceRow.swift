@@ -13,6 +13,7 @@ struct ServiceRow: View {
     @EnvironmentObject var currencyManager: CurrencyManager
     @Environment(\.modelContext) private var context
     @EnvironmentObject var theme: ThemeManager
+    @EnvironmentObject var localization: LocalizationManager
 
     // MARK: - DATA
 
@@ -96,10 +97,7 @@ struct ServiceRow: View {
 
                         } label: {
 
-                            Label(
-                                "Edit",
-                                systemImage: "pencil"
-                            )
+                            Label("services.edit", systemImage: "pencil")
                         }
                         .buttonStyle(.bordered)
 
@@ -111,10 +109,7 @@ struct ServiceRow: View {
 
                         } label: {
 
-                            Label(
-                                "Delete",
-                                systemImage: "trash"
-                            )
+                            Label("services.delete", systemImage: "trash")
                         }
                         .buttonStyle(.bordered)
                         .tint(colors.buttonDestructive)
@@ -148,7 +143,9 @@ private extension ServiceRow {
             return "\(service.price ?? 0, default: "%.0f") \(currencyManager.symbol)"
 
         case .variable:
-            return "Variable price"
+            return localization.localizedString(
+                for: "services.variablePrice"
+            )
         }
     }
 

@@ -9,7 +9,7 @@ import SwiftData
 
 struct AppointmentRow: View {
     @EnvironmentObject var currencyManager: CurrencyManager
-    
+    @EnvironmentObject var localization: LocalizationManager
     @Environment(\.modelContext) private var context
     
     let appt: Appointment
@@ -201,89 +201,91 @@ struct AppointmentRow: View {
                         }
                     }
                     
-                    // ACTIONS
                     
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        
-                        HStack(spacing: 12) {
-                            
-                            // COMPLETE
-                            
+                    // ACTIONS
+
+                    VStack(spacing: 10) {
+
+                        // Перший ряд кнопок
+
+                        HStack(spacing: 10) {
+
                             if appt.status == .active {
-                                
+
                                 Button {
                                     showComplete = true
                                 } label: {
-                                    Label("Complete", systemImage: "checkmark.circle.fill")
+                                    Label(
+                                        localization.localizedString(for: "appointment.complete"),
+                                        systemImage: "checkmark.circle.fill"
+                                    )
+                                    .frame(maxWidth: .infinity)
+                                    .multilineTextAlignment(.center)
                                 }
                                 .buttonStyle(.borderedProminent)
                                 .tint(.green)
-                            }
-                            
-                            // EDIT
-                            
-                            if appt.status == .active {
-                                
+                                .frame(maxWidth: .infinity)
+
                                 Button {
                                     showEdit = true
-                                    
                                 } label: {
-                                    
                                     Label(
-                                        "Edit",
+                                        localization.localizedString(for: "appointment.edit"),
                                         systemImage: "pencil"
                                     )
+                                    .frame(maxWidth: .infinity)
+                                    .multilineTextAlignment(.center)
                                 }
                                 .buttonStyle(.bordered)
-                            }
-                            
-                            // CANCEL
-                            
-                            if appt.status == .active {
-                                
-                                Button {
-                                    
-                                    AppointmentEngine.cancel(
-                                        appointment: appt
-                                    )
-                                    
-                                    try? context.save()
-                                    
-                                } label: {
-                                    
-                                    Label(
-                                        "Cancel",
-                                        systemImage: "xmark.circle"
-                                    )
-                                }
-                                .buttonStyle(.bordered)
-                                .tint(.red)
-                            }
-                            
-                            // ARCHIVE
-                            
-                            if appt.status == .cancelled {
-                                
-                                Button {
-                                    
-                                    appt.status = .archived
-                                    
-                                    try? context.save()
-                                    
-                                } label: {
-                                    
-                                    Label(
-                                        "Hide",
-                                        systemImage: "archivebox"
-                                    )
-                                }
-                                .buttonStyle(.bordered)
-                                .tint(.gray)
+                                .frame(maxWidth: .infinity)
                             }
                         }
-                        .padding(.vertical, 2)
+
+                        // Другий ряд — скасування або архівування
+
+                        if appt.status == .active {
+
+                            Button {
+                                AppointmentEngine.cancel(
+                                    appointment: appt
+                                )
+
+                                try? context.save()
+                            } label: {
+                                Label(
+                                    localization.localizedString(for: "appointment.cancel"),
+                                    systemImage: "xmark.circle"
+                                )
+                                .frame(maxWidth: .infinity)
+                                .multilineTextAlignment(.center)
+                            }
+                            .buttonStyle(.bordered)
+                            .tint(.red)
+                            .frame(maxWidth: .infinity)
+
+                        } else if appt.status == .cancelled {
+
+                            Button {
+                                appt.status = .archived
+                                try? context.save()
+                            } label: {
+                                Label(
+                                    localization.localizedString(for: "appointment.hide"),
+                                    systemImage: "archivebox"
+                                )
+                                .frame(maxWidth: .infinity)
+                                .multilineTextAlignment(.center)
+                            }
+                            .buttonStyle(.bordered)
+                            .tint(.gray)
+                            .frame(maxWidth: .infinity)
+                        }
                     }
-                }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 2)
+
+                    }
+                
                 .transition(
                     .asymmetric(
                         insertion: .opacity.combined(
@@ -308,7 +310,7 @@ struct AppointmentRow: View {
         // NOTES
         
         .alert(
-            "Notes",
+            localization.localizedString(for: "appointment.notesTitle"),
             isPresented: $showNotes
         ) {
             
@@ -341,8 +343,10 @@ struct AppointmentRow: View {
                         spacing: 20
                     ) {
                         
-                        Text("Finalize Services")
-                            .font(.title2.bold())
+                        Text(
+                            localization.localizedString(for: "appointment.finalizeServices")
+                        )
+                        .font(.title2.bold())
                         
                         LazyVStack(spacing: 16) {
                             
@@ -360,7 +364,7 @@ struct AppointmentRow: View {
                                         .font(.headline)
                                     
                                     TextField(
-                                        "Price",
+                                        localization.localizedString(for: "appointment.price"),
                                         text: Binding(
                                             get: {
                                                 finalServicePrices[
@@ -388,7 +392,7 @@ struct AppointmentRow: View {
                         
                         HStack {
                             
-                            Text("Total")
+                            Text(localization.localizedString(for: "appointment.total"))
                                 .font(.headline)
                             
                             Spacer()
@@ -423,7 +427,7 @@ struct AppointmentRow: View {
                             
                         } label: {
                             
-                            Text("Confirm")
+                            Text(localization.localizedString(for: "appointment.confirm"))
                                 .frame(maxWidth: .infinity)
                                 .padding()
                                 .background(Color.green)
@@ -456,20 +460,20 @@ struct AppointmentRow: View {
 private extension AppointmentRow {
     
     var statusText: String {
-        
+
         switch appt.status {
-            
+
         case .active:
-            return "ACTIVE"
-            
+            return localization.localizedString(for: "appointment.status.active")
+
         case .completed:
-            return "DONE"
-            
+            return localization.localizedString(for: "appointment.status.completed")
+
         case .cancelled:
-            return "CANCELLED"
-            
+            return localization.localizedString(for: "appointment.status.cancelled")
+
         case .archived:
-            return "ARCHIVED"
+            return localization.localizedString(for: "appointment.status.archived")
         }
     }
     

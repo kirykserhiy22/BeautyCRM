@@ -14,7 +14,7 @@ struct SignUpFlowView: View {
 
     @EnvironmentObject var router: AppRouter
     @EnvironmentObject var appState: AppState
-
+    @EnvironmentObject var localization: LocalizationManager
 
     @Environment(\.modelContext)
     private var context
@@ -85,7 +85,7 @@ struct SignUpFlowView: View {
             Spacer()
             if !errorMessage.isEmpty {
 
-                Text(errorMessage)
+                Text(LocalizedStringKey(errorMessage))
                     .foregroundColor(.red)
                     .font(.caption)
                     .multilineTextAlignment(.center)
@@ -107,48 +107,40 @@ private extension SignUpFlowView {
 
 
     var progress: some View {
-
-
         VStack {
+            Text("signup.title")
+                .font(.largeTitle.bold())
 
-            Text(
-                "Create account"
-            )
-            .font(.largeTitle.bold())
-
-
-            Text(
-                "Step \(step + 1) of 4"
-            )
+            HStack(spacing: 4) {
+                Text("signup.step")
+                Text("\(step + 1)")
+                Text("signup.ofFour")
+            }
             .foregroundColor(.secondary)
-
         }
     }
 
 
 
     var navigationButtons: some View {
-
         HStack {
-
             if step > 0 {
-
-                Button("Back") {
+                Button("signup.back") {
                     step -= 1
                 }
-
             }
 
             Spacer()
 
-            Button(step == 3 ? "Create account" : "Next") {
-
+            Button(
+                step == 3
+                    ? "signup.createAccount"
+                    : "signup.next"
+            ) {
                 nextStep()
             }
             .buttonStyle(.borderedProminent)
-
         }
-
     }
 
 
@@ -161,12 +153,12 @@ private extension SignUpFlowView {
         case 0:
 
             guard AuthValidator.validateEmail(state.email) else {
-                errorMessage = "Enter a valid email."
+                errorMessage = "signup.error.email"
                 return
             }
 
             guard AuthValidator.validatePassword(state.password) else {
-                errorMessage = "Password must contain at least 8 characters."
+                errorMessage = "signup.error.password"
                 return
             }
 
@@ -175,12 +167,12 @@ private extension SignUpFlowView {
         case 1:
 
             guard AuthValidator.validateName(state.firstName) else {
-                errorMessage = "Enter your first name."
+                errorMessage = "signup.error.firstName"
                 return
             }
 
             guard AuthValidator.validateName(state.lastName) else {
-                errorMessage = "Enter your last name."
+                errorMessage = "signup.error.lastName"
                 return
             }
 
@@ -229,7 +221,7 @@ private extension SignUpFlowView {
                 lastName: state.lastName,
                 businessName: state.businessName,
                 currencyCode: state.currencyCode,
-                languageCode: "en"
+                languageCode: localization.languageCode
             )
 
 
@@ -248,9 +240,9 @@ private extension SignUpFlowView {
                 userID: userID
             )
 
-
-       
-
+            localization.setLanguage(
+                profile.languageCode
+            )
 
             router.currentScreen = .main
 

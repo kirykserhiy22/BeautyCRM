@@ -12,7 +12,7 @@ struct ClientNotesSection: View {
     let notes: String
 
     @EnvironmentObject var theme: ThemeManager
-
+    @EnvironmentObject var localization: LocalizationManager
     private var colors: ThemeColors {
         theme.colors(for: theme.currentTheme)
     }
@@ -22,7 +22,7 @@ struct ClientNotesSection: View {
         VStack(alignment: .leading, spacing: 12) {
 
             Label(
-                "Client Notes",
+                localization.localizedString(for: "clients.clientNotes"),
                 systemImage: "note.text"
             )
             .font(.headline)

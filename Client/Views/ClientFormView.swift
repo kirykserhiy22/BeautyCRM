@@ -20,7 +20,7 @@ struct ClientFormView: View {
 
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
-
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var appState: AppState
     @EnvironmentObject var theme: ThemeManager
 
@@ -31,6 +31,7 @@ struct ClientFormView: View {
     @State private var instagram = ""
     @State private var telegram = ""
     @State private var notes = ""
+    @State private var showDuplicateNameAlert = false
 
     // MARK: - THEME
 
@@ -46,22 +47,22 @@ struct ClientFormView: View {
 
             Form {
 
-                Section("Client Info") {
+                Section(localization.localizedString(for: "clients.info")) {
 
-                    TextField("Name", text: $name)
+                    TextField(localization.localizedString(for: "clients.name"), text: $name)
 
-                    TextField("Phone", text: $phone)
+                    TextField(localization.localizedString(for: "clients.phone"), text: $phone)
                         .keyboardType(.phonePad)
 
-                    TextField("Instagram", text: $instagram)
+                    TextField(localization.localizedString(for: "clients.instagram"), text: $instagram)
 
-                    TextField("Telegram", text: $telegram)
+                    TextField(localization.localizedString(for: "clients.telegram"), text: $telegram)
                 }
 
-                Section("Notes") {
+                Section(localization.localizedString(for: "clients.notes")) {
 
                     TextField(
-                        "Client notes...",
+                        localization.localizedString(for: "clients.notesPlaceholder"),
                         text: $notes,
                         axis: .vertical
                     )
@@ -82,11 +83,21 @@ struct ClientFormView: View {
                     .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty)
                 }
             }
+            .alert(
+                localization.localizedString(for: "clients.duplicateNameTitle"),
+                isPresented: $showDuplicateNameAlert
+            ) {
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text(localization.localizedString(for: "clients.duplicateNameMessage"))
+            }
+            .background(colors.secondaryBackground)
             .navigationTitle(title)
             .onAppear {
                 loadClientIfNeeded()
             }
         }
+        .background(colors.secondaryBackground)
     }
 }
 
@@ -99,10 +110,10 @@ private extension ClientFormView {
         switch mode {
 
         case .create:
-            return "New Client"
+            return localization.localizedString(for: "clients.newTitle")
 
         case .edit:
-            return "Edit Client"
+            return localization.localizedString(for: "clients.editTitle")
         }
     }
 
@@ -111,10 +122,10 @@ private extension ClientFormView {
         switch mode {
 
         case .create:
-            return "Create Client"
+            return localization.localizedString(for: "clients.createButton")
 
         case .edit:
-            return "Save Changes"
+            return localization.localizedString(for: "clients.saveChanges")
         }
     }
 
@@ -137,23 +148,66 @@ private extension ClientFormView {
             notes = client.notes ?? ""
         }
     }
+    
+    func hasDuplicateName(_ name: String, userID: String) throws -> Bool {
+        let normalizedName = name
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .folding(options: [.caseInsensitive, .diacriticInsensitive], locale: .current)
+
+        var descriptor = FetchDescriptor<Client>(
+            predicate: #Predicate { client in
+                client.userID == userID
+            }
+        )
+
+        descriptor.fetchLimit = 500
+
+        let clients = try context.fetch(descriptor)
+
+        let currentClientID: UUID?
+        if case .edit(let client) = mode {
+            currentClientID = client.id
+        } else {
+            currentClientID = nil
+        }
+
+        return clients.contains { client in
+            guard client.id != currentClientID else { return false }
+
+            let existingName = client.name
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+                .folding(options: [.caseInsensitive, .diacriticInsensitive], locale: .current)
+
+            return existingName == normalizedName
+        }
+    }
 
     private func saveClient() {
 
         do {
+            guard let userID = appState.session.userID else {
+                print("NO SESSION USER ID")
+                return
+            }
+
+            do {
+                if try hasDuplicateName(name, userID: userID) {
+                    showDuplicateNameAlert = true
+                    return
+                }
+            } catch {
+                print("Duplicate client check error:", error)
+                return
+            }
 
             switch mode {
+                
 
             // CREATE
 
             case .create:
 
-                guard let userID = appState.session.userID else {
-
-                    print("NO SESSION USER ID")
-
-                    return
-                }
+                
 
                 let client = Client(
                     userID: userID,

@@ -15,6 +15,7 @@ struct ServicesListView: View {
     @EnvironmentObject var currency: CurrencyManager
     @Environment(\.modelContext) private var context
     @EnvironmentObject var theme: ThemeManager
+    @EnvironmentObject var localization: LocalizationManager
     
     // MARK: - DATA
     
@@ -89,7 +90,7 @@ struct ServicesListView: View {
                 }
                 .padding()
             }
-            .navigationTitle("Services")
+            .navigationTitle("services.title")
             
             // CREATE
             
@@ -194,10 +195,7 @@ private extension ServicesListView {
                             
                         } label: {
                             
-                            Label(
-                                "Edit",
-                                systemImage: "pencil"
-                            )
+                            Label("services.edit", systemImage: "pencil")
                             .frame(maxWidth: .infinity)
                         }
                         .buttonStyle(.bordered)
@@ -213,10 +211,7 @@ private extension ServicesListView {
                             
                         } label: {
                             
-                            Label(
-                                "Delete",
-                                systemImage: "trash"
-                            )
+                            Label("services.delete", systemImage: "trash")
                             .frame(maxWidth: .infinity)
                         }
                         .buttonStyle(.bordered)
@@ -261,6 +256,7 @@ private extension ServicesListView {
         _ service: Service
     ) -> String {
         
+        
         switch service.pricingType {
             
         case .fixed:
@@ -270,8 +266,9 @@ private extension ServicesListView {
             )
             
         case .variable:
-            
-            return "Variable price"
+            return localization.localizedString(
+                for: "services.variablePrice"
+            )
         }
     }
 }

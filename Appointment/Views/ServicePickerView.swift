@@ -13,7 +13,7 @@ struct ServicePickerView: View {
     // MARK: - ENV
     @EnvironmentObject var currencyManager: CurrencyManager
     @Environment(\.dismiss) private var dismiss
-    
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var theme: ThemeManager
     @EnvironmentObject var appState: AppState
     
@@ -90,14 +90,18 @@ struct ServicePickerView: View {
                     }
                 }
             }
-            .navigationTitle("Select Services")
+            .navigationTitle(
+                localization.localizedString(for: "services.selectTitle")
+            )
             .toolbar {
                 
                 ToolbarItem(
                     placement: .topBarTrailing
                 ) {
                     
-                    Button("Done") {
+                    Button(
+                        localization.localizedString(for: "services.done")
+                    ) {
                         dismiss()
                     }
                     .foregroundColor(colors.accent)
@@ -147,7 +151,9 @@ private extension ServicePickerView {
 
                 Image(systemName: "plus.circle.fill")
 
-                Text("Add new service")
+                Text(
+                    localization.localizedString(for: "services.addNew")
+                )
 
                 Spacer()
 
@@ -170,7 +176,7 @@ private extension ServicePickerView {
                 .foregroundColor(colors.textMuted)
             
             TextField(
-                "Search service...",
+                localization.localizedString(for: "services.searchPlaceholder"),
                 text: $search
             )
             .foregroundColor(colors.textPrimary)
@@ -248,8 +254,14 @@ private extension ServicePickerView {
                 )
                 .foregroundColor(colors.accent)
                 
-                Text("Create \"\(search)\"")
-                    .foregroundColor(colors.textPrimary)
+                Text(
+                    String(
+                        format: localization.localizedString(for: "services.createNamed"),
+                        locale: localization.locale,
+                        search
+                    )
+                )
+                .foregroundColor(colors.textPrimary)
                 
                 Spacer()
             }
@@ -317,8 +329,9 @@ private extension ServicePickerView {
             return "\(service.price ?? 0, default: "%.0f") \(currencyManager.symbol)"
             
         case .variable:
-            
-            return "Variable price"
+            return localization.localizedString(
+                for: "services.variablePrice"
+            )
         }
     }
 }

@@ -24,7 +24,7 @@ struct TodayStatsCard: View {
 
         VStack(alignment: .leading, spacing: 16) {
 
-            Text("TODAY")
+            Text("home.today")
                 .font(.caption.weight(.bold))
                 .foregroundColor(colors.textSecondary)
 
@@ -32,21 +32,20 @@ struct TodayStatsCard: View {
 
                 statView(
                     value: totalAppointments,
-                    title: "Appointments"
+                    title: "home.appointments"
                 )
-
                 Divider()
 
                 statView(
                     value: completedAppointments,
-                    title: "Completed"
+                    title: "home.completed"
                 )
 
                 Divider()
 
                 statView(
                     value: remainingAppointments,
-                    title: "Remaining"
+                    title: "home.remaining"
                 )
             }
         }
@@ -79,7 +78,7 @@ struct TodayStatsCard: View {
                 .font(.title.bold())
                 .foregroundColor(colors.textPrimary)
 
-            Text(title)
+            Text(LocalizedStringKey(title))
                 .font(.caption)
                 .foregroundColor(colors.textSecondary)
                 .multilineTextAlignment(.center)

@@ -22,7 +22,7 @@ struct SignUpCurrencyStep: View {
         ) {
 
 
-            Text("Choose currency")
+            Text("signup.currency.title")
                 .font(.title2.bold())
 
 
@@ -33,13 +33,13 @@ struct SignUpCurrencyStep: View {
             ) {
 
 
-                Text("Currency")
+                Text("signup.currency.label")
                     .font(.headline)
 
 
 
                 Picker(
-                    "Currency",
+                    "signup.currency.label",
                     selection: $state.currencyCode
                 ) {
 

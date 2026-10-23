@@ -23,34 +23,24 @@ struct SignUpAccountStep: View {
         ) {
 
 
-            Text(
-                "Create your account"
-            )
-            .font(.title2.bold())
+            Text("signup.account.title")
+                .font(.title2.bold())
 
 
 
-            TextField(
-                "Email",
-                text: $state.email
-            )
-            .textFieldStyle(.roundedBorder)
+            TextField("signup.email", text: $state.email)
+                .textFieldStyle(.roundedBorder)
 
 
 
-            SecureField(
-                "Password",
-                text: $state.password
-            )
-            .textFieldStyle(.roundedBorder)
+            SecureField("signup.password", text: $state.password)
+                .textFieldStyle(.roundedBorder)
 
 
 
-            Text(
-                "Use at least 8 characters"
-            )
-            .font(.caption)
-            .foregroundColor(.gray)
+            Text("signup.password.hint")
+                .font(.caption)
+                .foregroundColor(.gray)
         }
     }
 }

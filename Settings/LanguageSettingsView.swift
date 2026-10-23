@@ -84,42 +84,27 @@ struct LanguageSettingsView: View {
         }
 
 
-        .navigationTitle("Language")
+        .navigationTitle("settings.language.title")
 
 
         .alert(
-            "Change language?",
+            "settings.language.confirm.title",
             isPresented: $showConfirmation
         ) {
-
-
             Button(
-                "Cancel",
+                "common.cancel",
                 role: .cancel
             ) { }
 
-
-            Button(
-                "Change"
-            ) {
-
+            Button("common.change") {
                 applyLanguageChange()
-
             }
-
-
         } message: {
-
-
-            if let language = selectedLanguage {
-
-                Text(
-                    "The application language will be changed to \(language.title)."
-                )
-            }
+            Text("settings.language.confirm.message")
+        }
         }
     }
-}
+
 
 
 

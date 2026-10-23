@@ -13,7 +13,7 @@ struct ClientAnalyticsSection: View {
     let client: Client
 
     @EnvironmentObject var currency: CurrencyManager
-
+    @EnvironmentObject var localization: LocalizationManager
     @Query private var appointments: [Appointment]
 
     // MARK: - ANALYTICS
@@ -43,25 +43,25 @@ struct ClientAnalyticsSection: View {
             ) {
 
                 ClientStatCard(
-                    title: "Visits",
+                    title: "clients.visits",
                     value: "\(analytics.totalVisits)",
                     icon: "calendar"
                 )
 
                 ClientStatCard(
-                    title: "Completed",
+                    title: "clients.completed",
                     value: "\(analytics.completedVisits)",
                     icon: "checkmark.circle"
                 )
 
                 ClientStatCard(
-                    title: "Revenue",
+                    title: "clients.revenue",
                     value: currency.format(analytics.revenue),
                     icon: "eurosign.circle"
                 )
 
                 ClientStatCard(
-                    title: "Cancelled",
+                    title: "clients.cancelled",
                     value: "\(analytics.cancelledVisits)",
                     icon: "xmark.circle"
                 )
@@ -72,14 +72,14 @@ struct ClientAnalyticsSection: View {
             VStack(spacing: 12) {
 
                 analyticsRow(
-                    title: "Average Check",
+                    title: localization.localizedString(for: "clients.averageCheck"),
                     value: currency.format(
                         analytics.averageCheck
                     )
                 )
 
                 analyticsRow(
-                    title: "Last Visit",
+                    title: localization.localizedString(for: "clients.lastVisit"),
                     value: formattedLastVisit
                 )
             }
@@ -99,13 +99,14 @@ private extension ClientAnalyticsSection {
     var formattedLastVisit: String {
 
         guard let date = analytics.lastVisitDate else {
-            return "No visits yet"
+            return localization.localizedString(for: "clients.noVisitsYet")
         }
 
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-
-        return formatter.string(from: date)
+        return AppFormatting.date(
+            date,
+            locale: localization.locale,
+            format: .medium
+        )
     }
 
     func analyticsRow(

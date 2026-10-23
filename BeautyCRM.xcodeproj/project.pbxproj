@@ -103,6 +103,8 @@
 		3DE40DA72FA7837E004491EA /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE40DA62FA7837E004491EA /* HomeView.swift */; };
 		3DE40DA92FA78A9F004491EA /* EditServiceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE40DA82FA78A9A004491EA /* EditServiceView.swift */; };
 		3DE40DAB2FA7F82F004491EA /* ServicePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE40DAA2FA7F82E004491EA /* ServicePickerView.swift */; };
+		3DEF1E8B3088C2BF009E3F13 /* AppFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DEF1E8A3088C2BC009E3F13 /* AppFormatting.swift */; };
+		3DEF1E8D3088CA43009E3F13 /* CountFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DEF1E8C3088CA41009E3F13 /* CountFormatting.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -224,6 +226,8 @@
 		3DE40DA62FA7837E004491EA /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		3DE40DA82FA78A9A004491EA /* EditServiceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditServiceView.swift; sourceTree = "<group>"; };
 		3DE40DAA2FA7F82E004491EA /* ServicePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicePickerView.swift; sourceTree = "<group>"; };
+		3DEF1E8A3088C2BC009E3F13 /* AppFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppFormatting.swift; sourceTree = "<group>"; };
+		3DEF1E8C3088CA41009E3F13 /* CountFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountFormatting.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -277,6 +281,7 @@
 				3DB845DA2FB62A9F00A4C698 /* Calendar */,
 				3DE40D9D2FA780DC004491EA /* Services */,
 				3D32E7602FA6AC2E00A746A5 /* Appointment */,
+				3D618F28300BAB8400D0685C /* Language */,
 				3D32E75F2FA6AB6600A746A5 /* Settings */,
 				3D32E75E2FA6AB4200A746A5 /* Client */,
 				3D32E7452FA3BD8C00A746A5 /* MainTabBar */,
@@ -303,6 +308,7 @@
 		3D2023812FA3B20B0078D26B /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				3DEF1E8A3088C2BC009E3F13 /* AppFormatting.swift */,
 				3D2023952FA3B43E0078D26B /* DateFormatter.swift */,
 				3D2023942FA3B42A0078D26B /* Constants.swift */,
 			);
@@ -324,7 +330,6 @@
 			isa = PBXGroup;
 			children = (
 				3D618F433010E26400D0685C /* User */,
-				3D618F28300BAB8400D0685C /* Language */,
 				3DD3D4053008E2600037BD57 /* SingUp */,
 				3DD3D4033008E1400037BD57 /* AuthValidator.swift */,
 				3DD3D4013008E12B0037BD57 /* AuthResult.swift */,
@@ -387,6 +392,7 @@
 			children = (
 				3D618F37300BC35100D0685C /* Localizable.strings */,
 				3D618F29300BAB9B00D0685C /* SupportedLanguage.swift */,
+				3DEF1E8C3088CA41009E3F13 /* CountFormatting.swift */,
 				3D618F26300BA9CD00D0685C /* LocalizationManager.swift */,
 			);
 			path = Language;
@@ -729,6 +735,7 @@
 				3D62D6102FBDC50A00E259CF /* AnalyticsView.swift in Sources */,
 				3D62D61A2FC0559500E259CF /* CompletionServiceItem.swift in Sources */,
 				3DB845E42FBA0D1000A4C698 /* DayOffPickerView.swift in Sources */,
+				3DEF1E8D3088CA43009E3F13 /* CountFormatting.swift in Sources */,
 				3D62D64F2FCB1A0300E259CF /* PhotoRenderService.swift in Sources */,
 				3D62D6252FC1CEB200E259CF /* ClientPhotoStorage.swift in Sources */,
 				3D62D6322FC1D32300E259CF /* ClientAnalyticsSection.swift in Sources */,
@@ -803,6 +810,7 @@
 				3DE40DAB2FA7F82F004491EA /* ServicePickerView.swift in Sources */,
 				3DE40D992FA77EEC004491EA /* AppointmentEngine.swift in Sources */,
 				3DE40DA12FA7812F004491EA /* ServiceEngine.swift in Sources */,
+				3DEF1E8B3088C2BF009E3F13 /* AppFormatting.swift in Sources */,
 				3D62D6302FC1D32000E259CF /* ClientNotesSection.swift in Sources */,
 				3D62D6182FBDEAD900E259CF /* AppointmentCreateState.swift in Sources */,
 				3DB845D92FB5FE4400A4C698 /* CalendarPagerView.swift in Sources */,

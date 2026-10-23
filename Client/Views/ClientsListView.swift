@@ -11,11 +11,19 @@ struct ClientsListView: View {
 
     @EnvironmentObject var theme: ThemeManager
     @EnvironmentObject var appState: AppState
-
+    @EnvironmentObject var localization: LocalizationManager
     private var colors: ThemeColors {
         theme.colors(for: theme.currentTheme)
     }
+    @State private var selectedClientIDs: Set<UUID> = []
+    @State private var clientToOpen: Client?
+    @State private var showDeleteConfirmation = false
 
+    @Environment(\.modelContext) private var modelContext
+
+    private var isSelectionMode: Bool {
+        !selectedClientIDs.isEmpty
+    }
     @Query(sort: \Client.createdAt, order: .reverse)
     private var clients: [Client]
 
@@ -62,19 +70,35 @@ struct ClientsListView: View {
                         LazyVStack(spacing: 14) {
 
                             ForEach(filteredClients) { client in
-
-                                NavigationLink {
-
-                                    ClientProfileView(client: client)
-
-                                } label: {
-
-                                    ClientRowView(client: client)
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                        .background(colors.card)
-                                        .cornerRadius(18)
-                                }
-                                .buttonStyle(.plain)
+                                ClientRowView(client: client)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .background(
+                                        selectedClientIDs.contains(client.id)
+                                            ? colors.accent.opacity(0.18)
+                                            : colors.card
+                                    )
+                                    .cornerRadius(18)
+                                    .overlay(alignment: .trailing) {
+                                        if selectedClientIDs.contains(client.id) {
+                                            Image(systemName: "checkmark.circle.fill")
+                                                .font(.title2)
+                                                .foregroundColor(colors.accent)
+                                                .padding(.trailing, 14)
+                                        }
+                                    }
+                                    .contentShape(Rectangle())
+                                    .onTapGesture {
+                                        if isSelectionMode {
+                                            toggleSelection(for: client)
+                                        } else {
+                                            clientToOpen = client
+                                        }
+                                    }
+                                    .onLongPressGesture(minimumDuration: 0.5) {
+                                        if !isSelectionMode {
+                                            toggleSelection(for: client)
+                                        }
+                                    }
                             }
                         }
                         .padding(.horizontal)
@@ -82,31 +106,78 @@ struct ClientsListView: View {
                     }
                 }
 
-                Button {
+                if isSelectionMode {
+                    HStack(spacing: 16) {
+                        Button {
+                            selectedClientIDs.removeAll()
+                        } label: {
+                            Text(localization.localizedString(for: "common.cancel"))
+                        }
 
-                    showAddClient = true
+                        Spacer()
 
-                } label: {
+                        Text("\(selectedClientIDs.count)")
+                            .font(.headline)
 
-                    Image(systemName: "plus")
-                        .font(.title2.bold())
-                        .foregroundColor(colors.background)
-                        .padding()
-                        .background(colors.floatingButton)
-                        .clipShape(Circle())
-                        .shadow(
-                            color: colors.shadow,
-                            radius: 8,
-                            y: 4
-                        )
+                        Button(role: .destructive) {
+                            showDeleteConfirmation = true
+                        } label: {
+                            Label(
+                                localization.localizedString(for: "common.delete"),
+                                systemImage: "trash"
+                            )
+                        }
+                    }
+                    .padding()
+                    .background(colors.card)
+                    .cornerRadius(18)
+                    .padding()
+                } else {
+                    Button {
+                        showAddClient = true
+                    } label: {
+                        Image(systemName: "plus")
+                            .font(.title2.bold())
+                            .foregroundColor(colors.background)
+                            .padding()
+                            .background(colors.floatingButton)
+                            .clipShape(Circle())
+                            .shadow(
+                                color: colors.shadow,
+                                radius: 8,
+                                y: 4
+                            )
+                    }
+                    .padding()
                 }
-                .padding()
             }
-            .navigationTitle("Clients")
+            .navigationTitle(localization.localizedString(for: "clients.title"))
             .sheet(isPresented: $showAddClient) {
-
                 ClientFormView(mode: .create)
+            }
+            .navigationDestination(item: $clientToOpen) { client in
+                ClientProfileView(client: client)
+            }
+            .confirmationDialog(
+                localization.localizedString(for: "clients.deleteConfirmationTitle"),
+                isPresented: $showDeleteConfirmation,
+                titleVisibility: .visible
+            ) {
+                Button(
+                    localization.localizedString(for: "common.delete"),
+                    role: .destructive
+                ) {
+                    deleteSelectedClients()
+                }
 
+                Button(
+                    localization.localizedString(for: "common.cancel"),
+                    role: .cancel
+                ) {}
+            } message: {
+                Text(
+                    localization.localizedString(for: "clients.deleteConfirmationMessage")
+                )
             }
         }
     }
@@ -122,7 +193,7 @@ private extension ClientsListView {
                 .foregroundColor(colors.textSecondary)
 
             TextField(
-                "Search clients...",
+                localization.localizedString(for: "clients.search"),
                 text: $searchText
             )
             .foregroundColor(colors.textPrimary)
@@ -132,4 +203,31 @@ private extension ClientsListView {
         .cornerRadius(18)
         .padding(.horizontal)
     }
-}
+   
+
+        func toggleSelection(for client: Client) {
+            if selectedClientIDs.contains(client.id) {
+                selectedClientIDs.remove(client.id)
+            } else {
+                selectedClientIDs.insert(client.id)
+            }
+        }
+
+        func deleteSelectedClients() {
+            let clientsToDelete = userClients.filter {
+                selectedClientIDs.contains($0.id)
+            }
+
+            for client in clientsToDelete {
+                modelContext.delete(client)
+            }
+
+            do {
+                try modelContext.save()
+                selectedClientIDs.removeAll()
+            } catch {
+                print("Delete clients error:", error)
+            }
+        }
+    }
+

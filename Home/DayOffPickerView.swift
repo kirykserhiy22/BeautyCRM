@@ -54,7 +54,7 @@ struct DayOffPickerView: View {
 
                 } label: {
 
-                    Text("Save")
+                    Text("common.save")
                         .font(.headline)
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
@@ -65,7 +65,7 @@ struct DayOffPickerView: View {
                 .padding(.horizontal)
             }
             .padding(.top)
-            .navigationTitle("Day Off")
+            .navigationTitle("dayOff.title")
             .onAppear {
                 loadExisting()
             }

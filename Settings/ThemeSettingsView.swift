@@ -10,7 +10,7 @@ import SwiftUI
 struct ThemeSettingsView: View {
     
     @EnvironmentObject var theme: ThemeManager
-    
+    @EnvironmentObject var localization: LocalizationManager
     private var colors: ThemeColors {
         theme.colors(for: theme.currentTheme)
     }
@@ -24,11 +24,11 @@ struct ThemeSettingsView: View {
                 spacing: 20
             ) {
                 
-                Text("Appearance")
+                Text("settings.appearance")
                     .font(.largeTitle.bold())
                     .foregroundColor(colors.textPrimary)
                 
-                Text("Choose app theme")
+                Text("settings.theme.description")
                     .font(.subheadline)
                     .foregroundColor(colors.textSecondary)
                 
@@ -67,7 +67,7 @@ struct ThemeSettingsView: View {
 struct ThemePreviewCard: View {
     
     @EnvironmentObject var themeManager: ThemeManager
-    
+    @EnvironmentObject var localization: LocalizationManager
     let themeCase: AppTheme
     let isSelected: Bool
     let onTap: () -> Void
@@ -93,7 +93,7 @@ struct ThemePreviewCard: View {
                 
                 HStack {
                     
-                    Text(title)
+                    Text(localization.localizedString(for: title))
                         .font(.headline)
                         .foregroundColor(colors.textPrimary)
                     
@@ -204,13 +204,11 @@ struct ThemePreviewCard: View {
         switch themeCase {
             
         case .classic:
-            return "Classic"
-            
+            "settings.theme.classic"
         case .graphite:
-            return "Graphite"
-            
+            "settings.theme.graphite"
         case .pearlivory:
-            return "Pearl Ivory"
+            "settings.theme.pearlivory"
         }
     }
 }

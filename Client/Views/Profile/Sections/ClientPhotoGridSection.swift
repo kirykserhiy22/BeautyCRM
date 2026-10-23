@@ -14,7 +14,7 @@ struct ClientPhotoGridSection: View {
 
     @EnvironmentObject var theme: ThemeManager
     @Environment(\.modelContext) private var context
-
+    @EnvironmentObject var localization: LocalizationManager
     private var colors: ThemeColors {
         theme.colors(for: theme.currentTheme)
     }
@@ -54,18 +54,27 @@ struct ClientPhotoGridSection: View {
                 }) ?? 0
             )
         }
-        .alert("Delete photo?", isPresented: $showDeleteAlert) {
+        .alert(
+            localization.localizedString(for: "clients.deletePhotoTitle"),
+            isPresented: $showDeleteAlert
+        ) {
 
-            Button("Cancel", role: .cancel) { }
+            Button(
+                localization.localizedString(for: "clients.cancel"),
+                role: .cancel
+            ) { }
 
-            Button("Delete", role: .destructive) {
+            Button(
+                localization.localizedString(for: "clients.delete"),
+                role: .destructive
+            ) {
                 if let photo = selectedPhoto {
                     deletePhoto(photo)
                 }
             }
 
         } message: {
-            Text("This action cannot be undone.")
+            Text(localization.localizedString(for: "clients.deletePhotoMessage"))
         }
     }
 
@@ -75,8 +84,9 @@ struct ClientPhotoGridSection: View {
 
         HStack {
 
-            Text("Photos")
+            Text(localization.localizedString(for: "clients.photos"))
                 .font(.headline)
+                
 
             Spacer()
 
@@ -151,13 +161,19 @@ struct ClientPhotoGridSection: View {
                 Button {
                     savePhotoToLibrary(photo)
                 } label: {
-                    Label("Save to Photos", systemImage: "square.and.arrow.down")
+                    Label(
+                        localization.localizedString(for: "clients.saveToPhotos"),
+                        systemImage: "square.and.arrow.down"
+                    )
                 }
 
                 Button {
                     sharePhoto(photo)
                 } label: {
-                    Label("Share", systemImage: "square.and.arrow.up")
+                    Label(
+                        localization.localizedString(for: "clients.share"),
+                        systemImage: "square.and.arrow.up"
+                    )
                 }
 
                 Divider()
@@ -166,7 +182,10 @@ struct ClientPhotoGridSection: View {
                     selectedPhoto = photo
                     showDeleteAlert = true
                 } label: {
-                    Label("Delete", systemImage: "trash")
+                    Label(
+                        localization.localizedString(for: "clients.delete"),
+                        systemImage: "trash"
+                    )
                 }
             }
     }

@@ -42,32 +42,11 @@ struct CalendarHeaderView: View {
     }
     
     private var monthTitle: String {
-
         let formatter = DateFormatter()
-
-        switch localization.languageCode {
-
-        case "uk":
-            formatter.locale = Locale(identifier: "uk_UA")
-
-        case "de":
-            formatter.locale = Locale(identifier: "de_DE")
-
-        case "pl":
-            formatter.locale = Locale(identifier: "pl_PL")
-
-        case "cs":
-            formatter.locale = Locale(identifier: "cs_CZ")
-
-        default:
-            formatter.locale = Locale(identifier: "en_US")
-        }
-
-
+        formatter.locale = localization.locale
+        formatter.calendar = Calendar(identifier: .gregorian)
         formatter.dateFormat = "LLLL yyyy"
 
-        return formatter.string(
-            from: selectedDate
-        )
+        return formatter.string(from: selectedDate)
     }
 }

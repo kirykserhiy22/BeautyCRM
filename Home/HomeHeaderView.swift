@@ -9,7 +9,7 @@ import SwiftUI
 struct HomeHeaderView: View {
 
     @EnvironmentObject var theme: ThemeManager
-
+    @EnvironmentObject var localization: LocalizationManager
     private var colors: ThemeColors {
         theme.colors(for: theme.currentTheme)
     }
@@ -30,11 +30,10 @@ struct HomeHeaderView: View {
     }
 
     private var formattedDate: String {
-
-        let formatter = DateFormatter()
-        formatter.dateFormat = "EEEE, d MMMM"
-
-        return formatter.string(from: Date())
+        AppFormatting.homeDate(
+            Date(),
+            locale: localization.locale
+        )
     }
 }
 

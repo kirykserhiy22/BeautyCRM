@@ -51,4 +51,23 @@ final class LocalizationManager: ObservableObject {
             identifier: languageCode
         )
     }
+    func localizedString(for key: String) -> String {
+        let bundlePath = Bundle.main.path(
+            forResource: languageCode,
+            ofType: "lproj"
+        )
+
+        guard
+            let bundlePath,
+            let languageBundle = Bundle(path: bundlePath)
+        else {
+            return key
+        }
+
+        return languageBundle.localizedString(
+            forKey: key,
+            value: key,
+            table: "Localizable"
+        )
+    }
 }

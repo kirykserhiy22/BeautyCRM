@@ -14,7 +14,7 @@ struct CreateServiceView: View {
     
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
-    
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var appState: AppState
     @EnvironmentObject var theme: ThemeManager
     
@@ -66,7 +66,7 @@ struct CreateServiceView: View {
                 // NAME
                 
                 TextField(
-                    "Service name",
+                    "services.name",
                     text: $name
                 )
                 .padding()
@@ -76,14 +76,13 @@ struct CreateServiceView: View {
                 // TYPE
                 
                 Picker(
-                    "Type",
+                    "services.type",
                     selection: $type
                 ) {
-                    
-                    Text("Fixed")
+                    Text("services.fixed")
                         .tag(ServicePricingType.fixed)
-                    
-                    Text("Variable")
+
+                    Text("services.variable")
                         .tag(ServicePricingType.variable)
                 }
                 .pickerStyle(.segmented)
@@ -93,7 +92,7 @@ struct CreateServiceView: View {
                 if type == .fixed {
                     
                     TextField(
-                        "Price",
+                        "services.price",
                         text: $price
                     )
                     .keyboardType(.decimalPad)
@@ -106,7 +105,7 @@ struct CreateServiceView: View {
                 
                 if !error.isEmpty {
                     
-                    Text(error)
+                    Text(LocalizedStringKey(error))
                         .foregroundColor(colors.danger)
                         .font(.caption)
                 }
@@ -121,7 +120,7 @@ struct CreateServiceView: View {
                     
                 } label: {
                     
-                    Text("Save")
+                    Text("services.save")
                         .font(.headline)
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
@@ -132,7 +131,7 @@ struct CreateServiceView: View {
             }
             .padding()
             .background(colors.background)
-            .navigationTitle("New Service")
+            .navigationTitle("services.createTitle")
         }
     }
 }
@@ -145,7 +144,7 @@ private extension CreateServiceView {
         
         guard ServiceEngine.validate(name: name) else {
             
-            error = "Name required"
+            error = "services.nameRequired"
             return
         }
         

@@ -20,7 +20,7 @@ struct QuickActionsSection: View {
 
         VStack(alignment: .leading, spacing: 12) {
 
-            Text("Quick actions")
+            Text("home.quickActions")
                 .font(.headline)
                 .foregroundColor(colors.textPrimary)
 
@@ -28,11 +28,11 @@ struct QuickActionsSection: View {
             HStack(spacing: 12) {
 
                 NavigationLink {
-                    ClientsListView()
+                    ClientFormView(mode: .create)
 
                 } label: {
                     actionCard(
-                        title: "Add Clients",
+                        title: "home.addClients",
                         icon: "person.3"
                     )
                 }
@@ -43,7 +43,7 @@ struct QuickActionsSection: View {
 
                 } label: {
                     actionCard(
-                        title: "Services",
+                        title: "home.services",
                         icon: "scissors"
                     )
                 }
@@ -59,7 +59,7 @@ struct QuickActionsSection: View {
                 } label: {
 
                     actionCard(
-                        title: "Appointments",
+                        title: "home.appointments",
                         icon: "calendar"
                     )
                 }
@@ -72,7 +72,7 @@ struct QuickActionsSection: View {
                 } label: {
 
                     actionCard(
-                        title: "Day Off",
+                        title: "home.dayOff",
                         icon: "moon"
                     )
                 }
@@ -95,7 +95,7 @@ struct QuickActionsSection: View {
                 
 
 
-            Text(title)
+            Text(LocalizedStringKey(title))
                 .font(.caption)
                 .foregroundColor(colors.textPrimary)
         }

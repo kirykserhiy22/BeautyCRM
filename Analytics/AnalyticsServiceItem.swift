@@ -16,6 +16,7 @@ struct AnalyticsServiceItem: Identifiable {
     let count: Int
 }
 
+
 struct AnalyticsClientItem: Identifiable {
 
     let id = UUID()
@@ -24,6 +25,7 @@ struct AnalyticsClientItem: Identifiable {
     let spent: Double
     let visits: Int
 }
+
 
 struct AnalyticsChartItem: Identifiable {
 

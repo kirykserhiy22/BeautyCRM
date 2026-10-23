@@ -23,15 +23,11 @@ struct SignUpBusinessStep: View {
         ) {
 
 
-            Text(
-                "Your business"
-            )
-            .font(.title2.bold())
-
-
+            Text("signup.business.title")
+                .font(.title2.bold())
 
             TextField(
-                "Salon or brand name (optional)",
+                "signup.business.name",
                 text: $state.businessName
             )
             .textFieldStyle(.roundedBorder)

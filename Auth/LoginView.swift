@@ -54,7 +54,7 @@ struct LoginView: View {
 
                 if !errorMessage.isEmpty {
 
-                    Text(errorMessage)
+                    Text(LocalizedStringKey(errorMessage))
                         .foregroundColor(.red)
                         .font(.caption)
                 }
@@ -84,14 +84,11 @@ private extension LoginView {
                 .foregroundColor(.pink)
 
 
-            Text("Welcome back")
+            Text("login.title")
                 .font(.largeTitle.bold())
 
-
-            Text(
-                "Manage your beauty business smarter"
-            )
-            .foregroundColor(.secondary)
+            Text("login.subtitle")
+                .foregroundColor(.secondary)
         }
     }
 }
@@ -108,10 +105,7 @@ private extension LoginView {
         VStack(spacing: 16) {
 
 
-            TextField(
-                "Email",
-                text: $email
-            )
+            TextField("login.email", text: $email)
             .keyboardType(.emailAddress)
             .textInputAutocapitalization(.never)
             .padding()
@@ -120,10 +114,7 @@ private extension LoginView {
 
 
 
-            SecureField(
-                "Password",
-                text: $password
-            )
+            SecureField("login.password", text: $password)
             .padding()
             .background(.white)
             .cornerRadius(14)
@@ -146,7 +137,7 @@ private extension LoginView {
 
         } label: {
 
-            Text("Log In")
+            Text("login.button")
                 .frame(maxWidth: .infinity)
                 .padding()
                 .background(Color.pink)
@@ -165,7 +156,7 @@ private extension LoginView {
 
         } label: {
 
-            Text("Create new account")
+            Text("login.createAccount")
                 .font(.subheadline)
         }
     }
@@ -202,7 +193,7 @@ private extension LoginView {
 
         guard isValid else {
 
-            errorMessage = "Fill all fields"
+            errorMessage = "login.error.fillFields"
             return
         }
 
@@ -215,9 +206,7 @@ private extension LoginView {
 
         guard result.isSuccess else {
 
-            errorMessage =
-            result.error?.localizedDescription
-            ?? "Login failed"
+            errorMessage = "login.error.failed"
 
             return
         }
@@ -225,7 +214,7 @@ private extension LoginView {
 
         guard let userID = result.userID else {
 
-            errorMessage = "Missing user ID"
+            errorMessage = "login.error.missingUserID"
             return
         }
 

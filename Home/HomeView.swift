@@ -16,7 +16,7 @@ struct HomeView: View {
 
     @EnvironmentObject var appState: AppState
     @EnvironmentObject var theme: ThemeManager
-
+    @EnvironmentObject var localization: LocalizationManager
 
     private var colors: ThemeColors {
         theme.colors(for: theme.currentTheme)
@@ -61,20 +61,27 @@ struct HomeView: View {
                             title: dashboardTitle,
                             clientName: dashboardAppointment.clientName,
                             services: servicesText(dashboardAppointment),
+                            dateText: dateText(dashboardAppointment),
                             timeText: timeText(dashboardAppointment),
                             statusText: dashboardStatus,
-                            accentColor: dashboardColor
+                            accentColor: dashboardColor,
+                            titleIsLocalized: true,
+                            statusIsLocalized: true
                         )
 
                     } else {
 
                         DashboardAppointmentCard(
-                            title: "No Appointments",
-                            clientName: "You're free today 🎉",
+                            title: "home.noAppointments",
+                            clientName: "home.freeToday",
                             services: "",
+                            dateText: "",
                             timeText: "",
-                            statusText: "No upcoming appointments",
-                            accentColor: colors.textSecondary
+                            statusText: "home.noUpcomingAppointments",
+                            accentColor: colors.textSecondary,
+                            titleIsLocalized: true,
+                            clientNameIsLocalized: true,
+                            statusIsLocalized: true
                         )
                     }
 
@@ -223,17 +230,17 @@ private extension HomeView {
         if appointment.startDate <= now &&
             appointment.endDate >= now {
 
-            return "Current Appointment"
+            return "home.currentAppointment"
         }
 
 
         if appointment.endDate < now {
 
-            return "Needs Completion"
+            return "home.needsCompletion"
         }
 
 
-        return "Next Appointment"
+        return "home.nextAppointment"
     }
 
 
@@ -252,17 +259,17 @@ private extension HomeView {
 
         if appointment.endDate < now {
 
-            return "Waiting for completion"
+            return "home.waitingForCompletion"
         }
 
 
         if appointment.startDate <= now {
 
-            return "In Progress"
+            return "home.inProgress"
         }
 
 
-        return "Upcoming"
+        return "home.upcoming"
     }
 
 
@@ -322,7 +329,25 @@ private extension HomeView {
 
 
 
+    func dateText(_ appointment: Appointment) -> String {
+        let calendar = Calendar.current
+        let date = appointment.startDate
 
+        if calendar.isDateInToday(date) {
+            return localization.localizedString(for: "home.dateToday")
+        }
+
+        if calendar.isDateInTomorrow(date) {
+            return localization.localizedString(for: "home.dateTomorrow")
+        }
+
+        let formatter = DateFormatter()
+        formatter.locale = localization.locale
+        formatter.dateStyle = .long
+        formatter.timeStyle = .none
+
+        return formatter.string(from: date)
+    }
 
     func timeText(
         _ appointment: Appointment

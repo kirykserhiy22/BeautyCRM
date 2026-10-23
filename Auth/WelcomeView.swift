@@ -11,7 +11,7 @@ struct WelcomeView: View {
 
     @EnvironmentObject var router: AppRouter
     @EnvironmentObject var theme: ThemeManager
-
+    @EnvironmentObject var localization: LocalizationManager
     private var colors: ThemeColors {
         theme.colors(for: theme.currentTheme)
     }
@@ -26,6 +26,41 @@ struct WelcomeView: View {
                     .ignoresSafeArea()
 
                 VStack {
+                    HStack {
+                        Spacer()
+
+                        Menu {
+                            ForEach(SupportedLanguage.all) { language in
+                                Button {
+                                    localization.setLanguage(language.code)
+                                } label: {
+                                    Text("\(language.flag) \(language.title)")
+                                }
+                            }
+                        } label: {
+                            HStack(spacing: 8) {
+                                Text(
+                                    SupportedLanguage.all.first {
+                                        $0.code == localization.languageCode
+                                    }.map {
+                                        "\($0.flag) \($0.title)"
+                                    } ?? "🌐 Language"
+                                )
+
+                                Image(systemName: "chevron.down")
+                                    .font(.caption)
+                            }
+                            .font(.subheadline.weight(.medium))
+                            .foregroundColor(colors.textPrimary)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 9)
+                            .background(colors.card)
+                            .clipShape(Capsule())
+                        }
+                    }
+                    .padding(.horizontal)
+                    .padding(.top, 8)
+
 
                     Spacer()
 
@@ -40,7 +75,7 @@ struct WelcomeView: View {
                         .foregroundColor(colors.textPrimary)
                         .padding(.top, 12)
 
-                    Text("Manage clients, appointments and business in one place.")
+                    Text("welcome.description")
                         .font(.body)
                         .foregroundColor(colors.textSecondary)
                         .multilineTextAlignment(.center)
@@ -57,7 +92,7 @@ struct WelcomeView: View {
 
                         } label: {
 
-                            Text("Create Account")
+                            Text("welcome.createAccount")
                                 .font(.headline)
                                 .foregroundColor(.white)
                                 .frame(maxWidth: .infinity)
@@ -72,7 +107,7 @@ struct WelcomeView: View {
 
                         } label: {
 
-                            Text("I already have an account")
+                            Text("welcome.login")
                                 .font(.headline)
                                 .foregroundColor(colors.accent)
                                 .frame(maxWidth: .infinity)
@@ -83,7 +118,7 @@ struct WelcomeView: View {
                     }
                     .padding(.horizontal)
 
-                    Text("Start managing your beauty business in minutes.")
+                    Text("welcome.tagline")
                         .font(.caption)
                         .foregroundColor(colors.textMuted)
                         .padding(.top, 20)

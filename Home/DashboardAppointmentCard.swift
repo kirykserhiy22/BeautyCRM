@@ -11,9 +11,14 @@ struct DashboardAppointmentCard: View {
     let title: String
     let clientName: String
     let services: String
+    let dateText: String
     let timeText: String
     let statusText: String
     let accentColor: Color
+
+    var titleIsLocalized = false
+    var clientNameIsLocalized = false
+    var statusIsLocalized = false
 
     @EnvironmentObject var theme: ThemeManager
 
@@ -28,16 +33,27 @@ struct DashboardAppointmentCard: View {
 
             // MARK: - HEADER
 
-            Text(title.uppercased())
-                .font(.caption.weight(.bold))
-                .foregroundColor(colors.textSecondary)
-
+            Group {
+                if titleIsLocalized {
+                    Text(LocalizedStringKey(title)).textCase(.uppercase)
+                } else {
+                    Text(title.uppercased())
+                }
+            }
+            .font(.caption.weight(.bold))
+            .foregroundColor(colors.textSecondary)
 
             // MARK: - CLIENT
 
-            Text(clientName)
-                .font(.title2.bold())
-                .foregroundColor(colors.textPrimary)
+            Group {
+                if clientNameIsLocalized {
+                    Text(LocalizedStringKey(clientName))
+                } else {
+                    Text(clientName)
+                }
+            }
+            .font(.title2.bold())
+            .foregroundColor(colors.textPrimary)
 
 
             // MARK: - SERVICES
@@ -48,8 +64,12 @@ struct DashboardAppointmentCard: View {
                     .font(.subheadline)
                     .foregroundColor(colors.textSecondary)
             }
-
-
+            // MARK: - DATE
+            if !dateText.isEmpty {
+                Text(dateText)
+                    .font(.subheadline.weight(.medium))
+                    .foregroundColor(colors.textSecondary)
+            }
             // MARK: - TIME
 
             Text(timeText)
@@ -69,9 +89,15 @@ struct DashboardAppointmentCard: View {
                     )
 
 
-                Text(statusText)
-                    .font(.subheadline.weight(.medium))
-                    .foregroundColor(accentColor)
+                Group {
+                    if statusIsLocalized {
+                        Text(LocalizedStringKey(statusText))
+                    } else {
+                        Text(statusText)
+                    }
+                }
+                .font(.subheadline.weight(.medium))
+                .foregroundColor(accentColor)
             }
 
         }
@@ -103,7 +129,8 @@ struct DashboardAppointmentCard: View {
         title: "Current Appointment",
         clientName: "Anna Johnson",
         services: "Hair Coloring • Haircut",
-        timeText: "Today • 10:00 – 11:30",
+        dateText: "Tomorrow",
+        timeText: "10:00 – 11:30",
         statusText: "In Progress",
         accentColor: .green
     )

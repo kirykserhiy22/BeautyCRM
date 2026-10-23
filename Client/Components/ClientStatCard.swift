@@ -14,7 +14,7 @@ struct ClientStatCard: View {
     let icon: String
 
     @EnvironmentObject var theme: ThemeManager
-
+    @EnvironmentObject var localization: LocalizationManager
     private var colors: ThemeColors {
         theme.colors(for: theme.currentTheme)
     }
@@ -29,7 +29,7 @@ struct ClientStatCard: View {
             Text(value)
                 .font(.title2.bold())
 
-            Text(title)
+            Text(localization.localizedString(for: title))
                 .font(.caption)
                 .foregroundColor(colors.textSecondary)
         }

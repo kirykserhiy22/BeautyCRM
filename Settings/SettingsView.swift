@@ -41,10 +41,7 @@ struct SettingsView: View {
                     
                 } label: {
                     
-                    settingsRow(
-                        title: "Appearance",
-                        icon: "paintbrush"
-                    )
+                    settingsRow(title: "settings.appearance", icon: "paintbrush")
                 }
                 
                 
@@ -57,10 +54,7 @@ struct SettingsView: View {
                     
                 } label: {
                     
-                    settingsRow(
-                        title: "Language",
-                        icon: "globe"
-                    )
+                    settingsRow(title: "settings.language", icon: "globe")
                 }
                 
                 
@@ -77,15 +71,12 @@ struct SettingsView: View {
                     
                 } label: {
                     
-                    settingsRow(
-                        title: "Logout",
-                        icon: "rectangle.portrait.and.arrow.right"
-                    )
+                    settingsRow(title: "settings.logout", icon: "rectangle.portrait.and.arrow.right")
                 }
             }
             .padding()
             .background(colors.background)
-            .navigationTitle("Settings")
+            .navigationTitle("settings.title")
         }
     }
     
@@ -106,7 +97,7 @@ struct SettingsView: View {
                 .frame(width: 24)
             
             
-            Text(title)
+            Text(localization.localizedString(for: title))
                 .foregroundColor(colors.textPrimary)
             
             
