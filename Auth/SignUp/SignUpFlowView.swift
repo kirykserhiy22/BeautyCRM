@@ -124,10 +124,8 @@ private extension SignUpFlowView {
 
     var navigationButtons: some View {
         HStack {
-            if step > 0 {
-                Button("signup.back") {
-                    step -= 1
-                }
+            Button("signup.back") {
+                goBack()
             }
 
             Spacer()
@@ -140,6 +138,19 @@ private extension SignUpFlowView {
                 nextStep()
             }
             .buttonStyle(.borderedProminent)
+        }
+    }
+
+
+    // На першому кроці «Назад» веде на стартовий екран (вибір: створити акаунт чи увійти)
+    func goBack() {
+
+        errorMessage = ""
+
+        if step > 0 {
+            step -= 1
+        } else {
+            router.currentScreen = .welcome
         }
     }
 
@@ -159,6 +170,11 @@ private extension SignUpFlowView {
 
             guard AuthValidator.validatePassword(state.password) else {
                 errorMessage = "signup.error.password"
+                return
+            }
+
+            guard !LocalAuthService().isEmailRegistered(state.email) else {
+                errorMessage = AuthError.userAlreadyExists.localizationKey
                 return
             }
 
@@ -251,9 +267,11 @@ private extension SignUpFlowView {
         case .failure(let error):
 
 
-            print(
-                error.localizedDescription
-            )
+            // Показуємо помилку на екрані і повертаємо на крок з email/паролем,
+            // щоб майстер міг одразу її виправити
+            errorMessage = error.localizationKey
+
+            step = 0
 
         }
 

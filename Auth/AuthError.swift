@@ -8,7 +8,7 @@
 import Foundation
 
 
-enum AuthError: LocalizedError {
+enum AuthError: Error {
 
 
     case emptyEmail
@@ -25,7 +25,8 @@ enum AuthError: LocalizedError {
 
 
 
-    var errorDescription: String? {
+    // Ключ з Localizable.strings — текст перекладається на мову додатку
+    var localizationKey: String {
 
 
         switch self {
@@ -33,37 +34,37 @@ enum AuthError: LocalizedError {
 
         case .emptyEmail:
 
-            return "Email cannot be empty"
+            return "auth.error.emptyEmail"
 
 
 
         case .invalidEmail:
 
-            return "Invalid email format"
+            return "auth.error.invalidEmail"
 
 
 
         case .weakPassword:
 
-            return "Password must contain at least 8 characters"
+            return "auth.error.weakPassword"
 
 
 
         case .userAlreadyExists:
 
-            return "User already exists"
+            return "auth.error.userAlreadyExists"
 
 
 
         case .userNotFound:
 
-            return "User not found"
+            return "auth.error.userNotFound"
 
 
 
         case .wrongPassword:
 
-            return "Wrong password"
+            return "auth.error.wrongPassword"
         }
     }
 }

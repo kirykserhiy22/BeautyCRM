@@ -59,7 +59,7 @@
 "auth.error.emptyEmail" = "E-mail nesmí být prázdný";
 "auth.error.invalidEmail" = "Neplatný formát e-mailu";
 "auth.error.weakPassword" = "Heslo musí obsahovat alespoň 8 znaků";
-"auth.error.userAlreadyExists" = "Uživatel již existuje";
+"auth.error.userAlreadyExists" = "Tato e-mailová adresa se již používá";
 "auth.error.userNotFound" = "Uživatel nebyl nalezen";
 "auth.error.wrongPassword" = "Nesprávné heslo";
 

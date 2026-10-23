@@ -59,7 +59,7 @@
 "auth.error.emptyEmail" = "Введіть електронну пошту";
 "auth.error.invalidEmail" = "Некоректний формат електронної пошти";
 "auth.error.weakPassword" = "Пароль має містити щонайменше 8 символів";
-"auth.error.userAlreadyExists" = "Користувач уже існує";
+"auth.error.userAlreadyExists" = "Ця електронна адреса вже використовується";
 "auth.error.userNotFound" = "Користувача не знайдено";
 "auth.error.wrongPassword" = "Неправильний пароль";
 

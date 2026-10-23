@@ -52,6 +52,32 @@ final class LocalAuthService {
 
 
 
+    // MARK: EMAIL CHECK
+
+
+    // Чи вже є акаунт з таким email — щоб зупинити реєстрацію ще на першому кроці
+    func isEmailRegistered(
+        _ email: String
+    ) -> Bool {
+
+
+        let email =
+        email
+            .lowercased()
+            .trimmingCharacters(
+                in: .whitespacesAndNewlines
+            )
+
+
+        return loadUsers().contains(
+            where: {
+                $0.email == email
+            }
+        )
+    }
+
+
+
     // MARK: SIGN UP
 
 

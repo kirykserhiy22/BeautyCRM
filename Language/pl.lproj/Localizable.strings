@@ -59,7 +59,7 @@
 "auth.error.emptyEmail" = "Adres e-mail nie może być pusty";
 "auth.error.invalidEmail" = "Nieprawidłowy format adresu e-mail";
 "auth.error.weakPassword" = "Hasło musi zawierać co najmniej 8 znaków";
-"auth.error.userAlreadyExists" = "Użytkownik już istnieje";
+"auth.error.userAlreadyExists" = "Ten adres e-mail jest już używany";
 "auth.error.userNotFound" = "Nie znaleziono użytkownika";
 "auth.error.wrongPassword" = "Nieprawidłowe hasło";
 

@@ -59,7 +59,7 @@
 "auth.error.emptyEmail" = "Die E-Mail-Adresse darf nicht leer sein";
 "auth.error.invalidEmail" = "Ungültiges E-Mail-Format";
 "auth.error.weakPassword" = "Das Passwort muss mindestens 8 Zeichen enthalten";
-"auth.error.userAlreadyExists" = "Der Benutzer existiert bereits";
+"auth.error.userAlreadyExists" = "Diese E-Mail-Adresse wird bereits verwendet";
 "auth.error.userNotFound" = "Benutzer nicht gefunden";
 "auth.error.wrongPassword" = "Falsches Passwort";
 
