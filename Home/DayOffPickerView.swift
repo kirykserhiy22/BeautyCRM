@@ -21,7 +21,8 @@ struct DayOffPickerView: View {
 
     // MARK: - DATA
 
-    @Query private var dayOffs: [DayOff]
+    @Query(filter: #Predicate<DayOff> { $0.deletedAt == nil })
+    private var dayOffs: [DayOff]
 
     // MARK: - UI
 
@@ -108,7 +109,7 @@ struct DayOffPickerView: View {
         for item in existing {
             let day = calendar.startOfDay(for: item.date)
             if !newDates.contains(day) {
-                context.delete(item)
+                item.markDeleted()
             }
         }
 

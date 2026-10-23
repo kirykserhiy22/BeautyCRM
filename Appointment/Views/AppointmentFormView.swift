@@ -44,8 +44,10 @@ struct AppointmentFormView: View {
 
     // MARK: - DATA
 
-    @Query private var clients: [Client]
-    @Query private var services: [Service]
+    @Query(filter: #Predicate<Client> { $0.deletedAt == nil })
+    private var clients: [Client]
+    @Query(filter: #Predicate<Service> { $0.deletedAt == nil })
+    private var services: [Service]
     @Query private var appointments: [Appointment]
 
     // MARK: - CLIENT

@@ -48,14 +48,11 @@ enum ClientPhotoService {
 
         ClientPhotoStorage.deleteImage(at: photo.fileName)
 
-        client.photos.removeAll {
-            $0.id == photo.id
-        }
         PhotoThumbnailCache.remove(
             for: photo.fileName
         )
 
-        context.delete(photo)
+        photo.markDeleted()
 
         try? context.save()
     }

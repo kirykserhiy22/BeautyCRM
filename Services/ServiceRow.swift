@@ -151,7 +151,7 @@ private extension ServiceRow {
 
     func deleteService() {
 
-        context.delete(service)
+        service.markDeleted()
 
         try? context.save()
     }

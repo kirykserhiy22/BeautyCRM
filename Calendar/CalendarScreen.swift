@@ -15,7 +15,8 @@ struct CalendarScreen: View {
     @EnvironmentObject var theme: ThemeManager
     
     @Query private var appointments: [Appointment]
-    @Query private var dayOffs: [DayOff]
+    @Query(filter: #Predicate<DayOff> { $0.deletedAt == nil })
+    private var dayOffs: [DayOff]
     
     @State private var selectedDate = Date()
     @State private var selectedDates: Set<Date> = []   // 👈 ВАЖЛИВО

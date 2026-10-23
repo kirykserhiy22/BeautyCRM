@@ -63,4 +63,29 @@ final class SyncTrackingTests: XCTestCase {
         XCTAssertEqual(ownService.workspaceID, workspaceID)
         XCTAssertNotEqual(otherService.workspaceID, workspaceID)
     }
+
+    func testDeleteClientIsSoftAndHidesFromQueries() throws {
+        let kept = Client(userID: "user-1", name: "Kept")
+        let removed = Client(userID: "user-1", name: "Removed")
+        let photo = ClientPhoto(clientID: removed.id, fileName: "missing.jpg")
+        context.insert(kept)
+        context.insert(removed)
+        removed.photos.append(photo)
+        try context.save()
+
+        ClientManager.delete(client: removed, context: context)
+        try context.save()
+
+        // Record stays in the database, only marked
+        let all = try context.fetch(FetchDescriptor<Client>())
+        XCTAssertEqual(all.count, 2)
+        XCTAssertNotNil(removed.deletedAt)
+        XCTAssertNotNil(photo.deletedAt)
+
+        // Screens use this filter, so the deleted client is hidden
+        let visible = try context.fetch(
+            FetchDescriptor<Client>(predicate: #Predicate { $0.deletedAt == nil })
+        )
+        XCTAssertEqual(visible.map(\.name), ["Kept"])
+    }
 }
