@@ -19,7 +19,8 @@ struct ServicePickerView: View {
     
     // MARK: - DATA
     
-    @Query private var services: [Service]
+    @Query(filter: #Predicate<Service> { $0.deletedAt == nil })
+    private var services: [Service]
     private var userServices: [Service] {
 
         guard let userID = appState.session.userID else {

@@ -24,7 +24,11 @@ struct ClientsListView: View {
     private var isSelectionMode: Bool {
         !selectedClientIDs.isEmpty
     }
-    @Query(sort: \Client.createdAt, order: .reverse)
+    @Query(
+        filter: #Predicate<Client> { $0.deletedAt == nil },
+        sort: \Client.createdAt,
+        order: .reverse
+    )
     private var clients: [Client]
 
     @State private var searchText = ""
@@ -219,7 +223,7 @@ private extension ClientsListView {
             }
 
             for client in clientsToDelete {
-                modelContext.delete(client)
+                ClientManager.delete(client: client, context: modelContext)
             }
 
             do {

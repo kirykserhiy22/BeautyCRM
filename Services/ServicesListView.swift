@@ -19,7 +19,11 @@ struct ServicesListView: View {
     
     // MARK: - DATA
     
-    @Query(sort: \Service.createdAt, order: .reverse)
+    @Query(
+        filter: #Predicate<Service> { $0.deletedAt == nil },
+        sort: \Service.createdAt,
+        order: .reverse
+    )
     private var services: [Service]
 
     @EnvironmentObject var appState: AppState
@@ -247,7 +251,7 @@ private extension ServicesListView {
         _ service: Service
     ) {
         
-        context.delete(service)
+        service.markDeleted()
         
         try? context.save()
     }

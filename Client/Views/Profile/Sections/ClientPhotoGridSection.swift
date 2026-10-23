@@ -20,7 +20,9 @@ struct ClientPhotoGridSection: View {
     }
 
     private var sortedPhotos: [ClientPhoto] {
-        client.photos.sorted { $0.createdAt > $1.createdAt }
+        client.photos
+            .filter { $0.deletedAt == nil }
+            .sorted { $0.createdAt > $1.createdAt }
     }
 
     // MARK: - STATE

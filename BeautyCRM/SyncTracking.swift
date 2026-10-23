@@ -17,6 +17,16 @@ protocol SyncTrackable: AnyObject {
 }
 
 
+extension SyncTrackable {
+
+    // М'яке видалення: запис лишається в базі з позначкою часу,
+    // щоб сервер потім дізнався про видалення. Екрани такі записи не показують.
+    func markDeleted() {
+        deletedAt = Date()
+    }
+}
+
+
 enum SyncTracking {
 
 

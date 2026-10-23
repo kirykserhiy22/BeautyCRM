@@ -85,7 +85,7 @@ struct CalendarDayCell: View {
             $0.userID == userID &&
             calendar.isDate($0.date, inSameDayAs: day)
         }) {
-            context.delete(existing)
+            existing.markDeleted()
         } else {
             context.insert(DayOff(userID: userID, date: day))
         }

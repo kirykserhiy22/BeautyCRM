@@ -156,7 +156,8 @@ private extension ClientFormView {
 
         var descriptor = FetchDescriptor<Client>(
             predicate: #Predicate { client in
-                client.userID == userID
+                client.userID == userID &&
+                client.deletedAt == nil
             }
         )
 
