@@ -12,7 +12,7 @@ struct AnalyticsServiceItem: Identifiable {
     let id = UUID()
 
     let name: String
-    let revenue: Double
+    let revenue: Decimal
     let count: Int
 }
 
@@ -22,7 +22,7 @@ struct AnalyticsClientItem: Identifiable {
     let id = UUID()
 
     let name: String
-    let spent: Double
+    let spent: Decimal
     let visits: Int
 }
 

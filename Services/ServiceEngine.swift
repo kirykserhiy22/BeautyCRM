@@ -15,10 +15,10 @@ final class ServiceEngine {
     
     static func calculatePrice(
         services: [Service],
-        variablePrices: [UUID: Double]
-    ) -> Double {
+        variablePrices: [UUID: Decimal]
+    ) -> Decimal {
         
-        var total: Double = 0
+        var total: Decimal = 0
         
         for service in services {
             

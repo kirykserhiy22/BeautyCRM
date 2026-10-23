@@ -32,7 +32,7 @@ struct ServicePickerView: View {
     }
     
     @Binding var selectedIDs: Set<UUID>
-    @Binding var customPrices: [UUID: Double]
+    @Binding var customPrices: [UUID: Decimal]
     
     // MARK: - UI
     
@@ -326,7 +326,7 @@ private extension ServicePickerView {
             
         case .fixed:
             
-            return "\(service.price ?? 0, default: "%.0f") \(currencyManager.symbol)"
+            return currencyManager.format(service.price ?? 0)
             
         case .variable:
             return localization.localizedString(

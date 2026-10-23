@@ -181,9 +181,9 @@ struct AnalyticsView: View {
 
     // MARK: - TOTAL REVENUE
 
-    private var totalRevenue: Double {
+    private var totalRevenue: Decimal {
 
-        completedAppointments.reduce(0) {
+        completedAppointments.reduce(Decimal(0)) {
 
             $0 + ($1.finalPrice ?? 0)
         }
@@ -204,14 +204,14 @@ struct AnalyticsView: View {
 
     // MARK: - AVERAGE CHECK
 
-    private var averageCheck: Double {
+    private var averageCheck: Decimal {
 
         guard !completedAppointments.isEmpty else {
             return 0
         }
 
         return totalRevenue /
-            Double(completedAppointments.count)
+            Decimal(completedAppointments.count)
     }
 
 
@@ -231,13 +231,20 @@ struct AnalyticsView: View {
 
     // MARK: - PROFIT PER HOUR
 
-    private var hourlyIncome: Double {
+    private var hourlyIncome: Decimal {
 
         guard totalHours > 0 else {
             return 0
         }
 
-        return totalRevenue / totalHours
+        // Рахуємо через хвилини, щоб не втрачати точність на дробових годинах
+        let totalMinutes =
+            completedAppointments.reduce(0) {
+
+                $0 + $1.duration
+            }
+
+        return totalRevenue * 60 / Decimal(totalMinutes)
     }
 
 
@@ -247,7 +254,7 @@ struct AnalyticsView: View {
 
         var grouped:
             [String: (
-                revenue: Double,
+                revenue: Decimal,
                 count: Int
             )] = [:]
 
@@ -311,7 +318,7 @@ struct AnalyticsView: View {
         return grouped.map { key, value in
 
             let spent =
-                value.reduce(0) {
+                value.reduce(Decimal(0)) {
 
                     $0 + ($1.finalPrice ?? 0)
                 }
@@ -944,7 +951,7 @@ struct AnalyticsView: View {
 
     private var chartData: [AnalyticsChartItem] {
 
-        var grouped: [Date: Double] = [:]
+        var grouped: [Date: Decimal] = [:]
 
 
         for appointment in completedAppointments {
@@ -999,7 +1006,7 @@ struct AnalyticsView: View {
 
             AnalyticsChartItem(
                 date: $0.key,
-                value: $0.value
+                value: $0.value.doubleValue
             )
 
         }
@@ -1013,7 +1020,7 @@ struct AnalyticsView: View {
     // MARK: - FORMATTERS
 
     private func currency(
-        _ value: Double
+        _ value: Decimal
     ) -> String {
 
         currency.format(

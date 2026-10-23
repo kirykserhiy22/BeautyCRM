@@ -12,7 +12,7 @@ struct CurrencyFormatter {
 
 
     static func string(
-        amount: Double,
+        amount: Decimal,
         currencyCode: String
     ) -> String {
 
@@ -28,7 +28,7 @@ struct CurrencyFormatter {
 
 
         return formatter.string(
-            from: NSNumber(value: amount)
+            from: NSDecimalNumber(decimal: amount)
         )
         ?? "\(amount)"
     }

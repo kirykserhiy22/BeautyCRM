@@ -100,4 +100,37 @@ enum AppFormatting {
         case abbreviated
         case veryShort
     }
+
+    // MARK: - Money
+
+    // Ціна з поля вводу: приймає і крапку, і кому ("12.5" або "12,5")
+    static func parseMoney(_ text: String) -> Decimal? {
+        let normalized = text
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .replacingOccurrences(of: " ", with: "")
+            .replacingOccurrences(of: ",", with: ".")
+
+        guard !normalized.isEmpty else {
+            return nil
+        }
+
+        return Decimal(
+            string: normalized,
+            locale: Locale(identifier: "en_US_POSIX")
+        )
+    }
+
+    // Ціна для підстановки в поле вводу (без символу валюти)
+    static func moneyInput(_ value: Decimal) -> String {
+        NSDecimalNumber(decimal: value).stringValue
+    }
+}
+
+
+extension Decimal {
+
+    // Тільки для показу (графіки), не для розрахунків
+    var doubleValue: Double {
+        NSDecimalNumber(decimal: self).doubleValue
+    }
 }

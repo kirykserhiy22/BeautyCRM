@@ -13,5 +13,5 @@ struct CompletionServiceItem: Identifiable {
 
     let serviceID: UUID
     let serviceName: String
-    let plannedPrice: Double
+    let plannedPrice: Decimal
 }

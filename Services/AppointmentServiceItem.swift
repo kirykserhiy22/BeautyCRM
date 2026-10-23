@@ -15,10 +15,10 @@ final class AppointmentServiceItem {
     var serviceID: UUID
     var serviceName: String
 
-    var plannedPrice: Double
+    var plannedPrice: Decimal
 
     // FINAL OVERRIDE (editable only in FINALIZE state)
-    var finalPrice: Double?
+    var finalPrice: Decimal?
 
     var isDeleted: Bool = false
 
@@ -30,7 +30,7 @@ final class AppointmentServiceItem {
     init(
         serviceID: UUID,
         serviceName: String,
-        plannedPrice: Double,
+        plannedPrice: Decimal,
         duration: Int? = nil
     ) {
 

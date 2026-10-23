@@ -22,7 +22,7 @@ final class Service {
     
     // 💰 pricing
     var pricingType: ServicePricingType
-    var price: Double? // fixed price
+    var price: Decimal? // fixed price
     
     var createdAt: Date
     
@@ -30,7 +30,7 @@ final class Service {
         userID: String,
         name: String,
         pricingType: ServicePricingType,
-        price: Double? = nil
+        price: Decimal? = nil
     ) {
         self.id = UUID()
         self.userID = userID

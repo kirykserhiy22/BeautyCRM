@@ -102,7 +102,7 @@ final class AppointmentEngine {
         client: Client,
         services: [Service],
         selectedServiceIDs: Set<UUID>,
-        customPrices: [UUID: Double],
+        customPrices: [UUID: Decimal],
         startDate: Date,
         duration: Int,
         notes: String,
@@ -159,7 +159,7 @@ final class AppointmentEngine {
         client: Client,
         services: [Service],
         selectedServiceIDs: Set<UUID>,
-        customPrices: [UUID: Double],
+        customPrices: [UUID: Decimal],
         startDate: Date,
         duration: Int,
         notes: String,
@@ -211,10 +211,10 @@ final class AppointmentEngine {
 
     static func complete(
         appointment: Appointment,
-        finalServicePrices: [UUID: Double]
+        finalServicePrices: [UUID: Decimal]
     ) {
 
-        var total: Double = 0
+        var total: Decimal = 0
 
         for index in appointment.services.indices {
 
