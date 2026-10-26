@@ -12,6 +12,9 @@ struct CalendarHeaderView: View {
     let selectedDate: Date
     let onPrev: () -> Void
     let onNext: () -> Void
+
+    // Дотик до назви місяця (напр. розгорнути календар із тижня)
+    var onTitleTap: (() -> Void)? = nil
     
     @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var theme: ThemeManager
@@ -29,8 +32,19 @@ struct CalendarHeaderView: View {
             
             Spacer()
             
-            Text(monthTitle)
-                .font(.title2.bold())
+            if let onTitleTap {
+                Button(action: onTitleTap) {
+                    HStack(spacing: 6) {
+                        Text(monthTitle)
+                            .font(.title2.bold())
+                        Image(systemName: "chevron.down")
+                            .font(.caption.bold())
+                    }
+                }
+            } else {
+                Text(monthTitle)
+                    .font(.title2.bold())
+            }
             
             Spacer()
             

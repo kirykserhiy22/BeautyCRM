@@ -23,6 +23,11 @@ struct CalendarScreen: View {
     @State private var selectedDates: Set<Date> = []   // 👈 ВАЖЛИВО
     @State private var showCreate = false
     @State private var expandedAppointmentID: UUID?
+
+    // Календар згорнутий в один тиждень (коли список записів прокручено вгору)
+    @State private var isCalendarCollapsed = false
+
+    private let listSpace = "appointmentsList"
     
     private var userDayOffs: [DayOff] {
         guard let userID = appState.session.userID else { return [] }
@@ -55,19 +60,34 @@ struct CalendarScreen: View {
             
             
             
-            VStack {
-                
-                CalendarPagerView(
-                    appointments: userAppointments,
-                    dayOffs: userDayOffs,          // 👈 НЕ пустий масив
-                    selectedDay: $selectedDate,
-                    selectedDates: $selectedDates,
-                    isEditingDayOff: false,
-                    workingHours: workingHours
-                )
-                
-                Divider()
-                
+            VStack(spacing: 0) {
+
+                if isCalendarCollapsed {
+
+                    CalendarWeekStrip(
+                        appointments: userAppointments,
+                        dayOffs: userDayOffs,
+                        selectedDay: $selectedDate,
+                        workingHours: workingHours,
+                        onExpand: { setCalendarCollapsed(false) }
+                    )
+                    .transition(.opacity.combined(with: .move(edge: .top)))
+
+                } else {
+
+                    CalendarPagerView(
+                        appointments: userAppointments,
+                        dayOffs: userDayOffs,          // 👈 НЕ пустий масив
+                        selectedDay: $selectedDate,
+                        selectedDates: $selectedDates,
+                        isEditingDayOff: false,
+                        workingHours: workingHours
+                    )
+                    .transition(.opacity)
+                }
+
+                collapseHandle
+
                 ScrollView {
                     LazyVStack(spacing: 12) {
                         ForEach(filteredAppointments) { appt in
@@ -78,6 +98,18 @@ struct CalendarScreen: View {
                         }
                     }
                     .padding()
+                    .background(
+                        GeometryReader { geo in
+                            Color.clear.preference(
+                                key: AppointmentListOffsetKey.self,
+                                value: geo.frame(in: .named(listSpace)).minY
+                            )
+                        }
+                    )
+                }
+                .coordinateSpace(name: listSpace)
+                .onListScroll { offset in
+                    handleListOffset(offset)
                 }
             }
             Button {
@@ -99,7 +131,7 @@ struct CalendarScreen: View {
             .padding(.bottom, 20)
         }
         .background(colors.background)
-        .navigationTitle("Calendar")
+        .navigationTitle(localization.localizedString(for: "tab.calendar"))
         .sheet(isPresented: $showCreate) {
             AppointmentFormView(initialDate: newAppointmentDate)
         }
@@ -108,6 +140,46 @@ struct CalendarScreen: View {
         }
     }
     
+    // MARK: - COLLAPSE
+
+    // Смужка-ручка між календарем і списком: дотик згортає / розгортає календар
+    private var collapseHandle: some View {
+
+        Button {
+            setCalendarCollapsed(!isCalendarCollapsed)
+        } label: {
+            Capsule()
+                .fill(colors.textSecondary.opacity(0.35))
+                .frame(width: 36, height: 5)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 8)
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+    }
+
+    // Прокрутка списку вгору згортає календар у тиждень;
+    // потягнути список вниз на самому верху — розгортає назад
+    private func handleListOffset(_ offset: CGFloat) {
+
+        if !isCalendarCollapsed && offset < -24 {
+            setCalendarCollapsed(true)
+        } else if isCalendarCollapsed && offset > 48 {
+            setCalendarCollapsed(false)
+        }
+    }
+
+    private func setCalendarCollapsed(_ collapsed: Bool) {
+
+        guard collapsed != isCalendarCollapsed else {
+            return
+        }
+
+        withAnimation(.snappy(duration: 0.3)) {
+            isCalendarCollapsed = collapsed
+        }
+    }
+
     // Час нового запису: сьогодні — найближча кругла година,
     // інший день — початок робочого дня (а не 00:00)
     private var newAppointmentDate: Date {
@@ -138,5 +210,40 @@ struct CalendarScreen: View {
             Calendar.current.isDate($0.startDate, inSameDayAs: selectedDate)
         }
         .sorted { $0.startDate < $1.startDate }
+    }
+}
+
+
+
+// Положення верху списку записів (від'ємне, коли список прокручено вгору)
+private struct AppointmentListOffsetKey: PreferenceKey {
+
+    static let defaultValue: CGFloat = 0
+
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
+    }
+}
+
+
+
+private extension View {
+
+    // Повідомляє, наскільки список прокручено (від'ємне — прокручено вгору).
+    // На iOS 18+ — через системне API прокрутки; на iOS 17 — через GeometryReader.
+    @ViewBuilder
+    func onListScroll(_ action: @escaping (CGFloat) -> Void) -> some View {
+
+        if #available(iOS 18.0, *) {
+            self.onScrollGeometryChange(for: CGFloat.self) { geometry in
+                -(geometry.contentOffset.y + geometry.contentInsets.top)
+            } action: { _, offset in
+                action(offset)
+            }
+        } else {
+            self.onPreferenceChange(AppointmentListOffsetKey.self) { offset in
+                action(offset)
+            }
+        }
     }
 }
