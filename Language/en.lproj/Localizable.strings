@@ -130,6 +130,9 @@
 "analytics.selectedYearOverview" = "Selected year overview";
 "analytics.appointmentCount" = "appointments";
 "analytics.visitCount" = "visits";
+"analytics.chart.tapHint" = "Tap a bar to see the amount";
+"analytics.chart.date" = "Date";
+"analytics.chart.revenue" = "Revenue";
 "clients.duplicateNameTitle" = "Duplicate client";
 "clients.duplicateNameMessage" = "A client with this name already exists.";
 "clients.title" = "Clients";
