@@ -45,11 +45,17 @@ struct CalendarMonthBuilder {
             }
         }
 
-        // ALWAYS return exactly 42 cells (6 weeks)
-        while result.count < 42 {
+        // Доповнити до повного тижня (5 або 6 рядків — скільки потрібно місяцю)
+        while result.count % 7 != 0 {
             result.append(nil)
         }
 
         return result
+    }
+
+
+    // Скільки тижнів (рядків) займає місяць у сітці
+    static func numberOfWeeks(for date: Date) -> Int {
+        buildMonth(for: date).count / 7
     }
 }

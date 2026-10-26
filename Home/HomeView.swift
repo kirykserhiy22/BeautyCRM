@@ -69,6 +69,22 @@ struct HomeView: View {
                             statusIsLocalized: true
                         )
 
+                    } else if !todayAppointments.isEmpty && remainingToday == 0 {
+
+                        // Сьогодні записи були, і всі вже завершені
+                        DashboardAppointmentCard(
+                            title: "home.dayComplete",
+                            clientName: "home.allDoneToday",
+                            services: "",
+                            dateText: "",
+                            timeText: "",
+                            statusText: "home.noUpcomingAppointments",
+                            accentColor: colors.success,
+                            titleIsLocalized: true,
+                            clientNameIsLocalized: true,
+                            statusIsLocalized: true
+                        )
+
                     } else {
 
                         DashboardAppointmentCard(

@@ -90,6 +90,11 @@ struct CalendarScreen: View {
 
                 ScrollView {
                     LazyVStack(spacing: 12) {
+
+                        if filteredAppointments.isEmpty {
+                            emptyDayView
+                        }
+
                         ForEach(filteredAppointments) { appt in
                             AppointmentRow(
                                 appt: appt,
@@ -140,6 +145,38 @@ struct CalendarScreen: View {
         }
     }
     
+    // MARK: - EMPTY DAY
+
+    // Підказка, коли на вибраний день немає записів
+    private var emptyDayView: some View {
+
+        VStack(spacing: 12) {
+
+            Image(systemName: "calendar.badge.plus")
+                .font(.system(size: 32))
+                .foregroundColor(colors.textSecondary.opacity(0.6))
+
+            Text(localization.localizedString(for: "calendar.emptyDay"))
+                .font(.subheadline)
+                .foregroundColor(colors.textSecondary)
+
+            Button {
+                showCreate = true
+            } label: {
+                Text(localization.localizedString(for: "calendar.addAppointment"))
+                    .font(.subheadline.weight(.semibold))
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 8)
+                    .background(colors.accent.opacity(0.12))
+                    .foregroundColor(colors.accent)
+                    .clipShape(Capsule())
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 32)
+    }
+
+
     // MARK: - COLLAPSE
 
     // Смужка-ручка між календарем і списком: дотик згортає / розгортає календар

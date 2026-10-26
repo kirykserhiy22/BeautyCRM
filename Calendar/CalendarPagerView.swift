@@ -50,10 +50,14 @@ struct CalendarPagerView: View {
                         isEditingDayOff: isEditingDayOff
                     )
                     .padding(.horizontal)
+                    .frame(maxHeight: .infinity, alignment: .top)
                     .tag(offset)
                 }
             }
-            .frame(height: 420)
+            // Висота під кількість тижнів поточного місяця (5 або 6),
+            // тож жоден місяць не обрізається і немає зайвого порожнього рядка
+            .frame(height: gridHeight(for: month(for: monthIndex)))
+            .animation(.snappy(duration: 0.25), value: monthIndex)
             .tabViewStyle(.page(indexDisplayMode: .never))
         }
         .onAppear {
@@ -86,6 +90,12 @@ struct CalendarPagerView: View {
     }
     
     // MARK: - MONTH
+
+    // Висота клітинки дня 58 + відступ між рядками 8
+    private func gridHeight(for month: Date) -> CGFloat {
+        let weeks = CGFloat(CalendarMonthBuilder.numberOfWeeks(for: month))
+        return weeks * 58 + (weeks - 1) * 8
+    }
 
     private func monthOffset(of date: Date) -> Int {
         let calendar = Calendar.current

@@ -76,6 +76,8 @@
 "home.noAppointments" = "Žádné objednávky";
 "home.freeToday" = "Dnes máš volno 🎉";
 "home.noUpcomingAppointments" = "Žádné nadcházející objednávky";
+"home.dayComplete" = "Den dokončen";
+"home.allDoneToday" = "Všechny dnešní rezervace jsou hotové 🎉";
 
 "home.currentAppointment" = "Aktuální objednávka";
 "home.needsCompletion" = "Čeká na dokončení";
@@ -184,6 +186,8 @@
 "common.change" = "Změnit";
 
 "calendar.title" = "Kalendář";
+"calendar.emptyDay" = "Na tento den nejsou žádné rezervace";
+"calendar.addAppointment" = "Přidat rezervaci";
 
 "appointment.client" = "Klient";
 "appointment.clientNamePlaceholder" = "Zadejte jméno klienta";

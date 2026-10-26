@@ -76,6 +76,8 @@
 "home.noAppointments" = "Brak wizyt";
 "home.freeToday" = "Dziś masz wolne 🎉";
 "home.noUpcomingAppointments" = "Brak nadchodzących wizyt";
+"home.dayComplete" = "Dzień zakończony";
+"home.allDoneToday" = "Wszystkie dzisiejsze wizyty zakończone 🎉";
 
 "home.currentAppointment" = "Bieżąca wizyta";
 "home.needsCompletion" = "Wymaga zakończenia";
@@ -183,6 +185,8 @@
 "common.cancel" = "Anuluj";
 "common.change" = "Zmień";
 "calendar.title" = "Kalendarz";
+"calendar.emptyDay" = "Brak wizyt w tym dniu";
+"calendar.addAppointment" = "Dodaj wizytę";
 
 "appointment.client" = "Klient";
 "appointment.clientNamePlaceholder" = "Wpisz imię klienta";

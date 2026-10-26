@@ -78,6 +78,8 @@
 "home.noAppointments" = "Немає записів";
 "home.freeToday" = "Сьогодні нічого 🎉";
 "home.noUpcomingAppointments" = "Немає наступних записів";
+"home.dayComplete" = "День завершено";
+"home.allDoneToday" = "Усі записи на сьогодні виконано 🎉";
 
 "home.currentAppointment" = "Поточний запис";
 "home.needsCompletion" = "Потрібно завершити";
@@ -184,6 +186,8 @@
 "common.cancel" = "Скасувати";
 "common.change" = "Змінити";
 "calendar.title" = "Календар";
+"calendar.emptyDay" = "На цей день записів немає";
+"calendar.addAppointment" = "Додати запис";
 
 "appointment.client" = "Клієнт";
 "appointment.clientNamePlaceholder" = "Введіть ім’я клієнта";

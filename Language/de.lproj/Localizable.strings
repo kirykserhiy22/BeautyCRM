@@ -76,6 +76,8 @@
 "home.noAppointments" = "Keine Termine";
 "home.freeToday" = "Heute hast du frei 🎉";
 "home.noUpcomingAppointments" = "Keine bevorstehenden Termine";
+"home.dayComplete" = "Tag abgeschlossen";
+"home.allDoneToday" = "Alle heutigen Termine sind erledigt 🎉";
 
 "home.currentAppointment" = "Aktueller Termin";
 "home.needsCompletion" = "Abschluss erforderlich";
@@ -183,6 +185,8 @@
 "common.cancel" = "Abbrechen";
 "common.change" = "Ändern";
 "calendar.title" = "Kalender";
+"calendar.emptyDay" = "Keine Termine an diesem Tag";
+"calendar.addAppointment" = "Termin hinzufügen";
 
 "appointment.client" = "Kunde";
 "appointment.clientNamePlaceholder" = "Kundennamen eingeben";
