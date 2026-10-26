@@ -93,6 +93,7 @@
 
 "dayOff.title" = "Dzień wolny";
 "common.save" = "Zapisz";
+"common.done" = "Gotowe";
 /* Services */
 "services.selectTitle" = "Wybór usług";
 "services.done" = "Gotowe";
@@ -167,6 +168,10 @@
 "settings.title" = "Ustawienia";
 "settings.appearance" = "Wygląd";
 "settings.language" = "Język";
+"settings.workingHours" = "Godziny pracy";
+"settings.workingHours.start" = "Początek";
+"settings.workingHours.end" = "Koniec";
+"settings.workingHours.description" = "Pasek zajętości w kalendarzu pokazuje ten przedział. Wizyty poza nim też będą widoczne: skala miesiąca rozszerzy się automatycznie.";
 "settings.logout" = "Wyloguj się";
 "settings.theme.description" = "Wybierz motyw aplikacji";
 "settings.theme.classic" = "Classic";

@@ -14,6 +14,8 @@ struct CalendarPagerView: View {
     @Binding var selectedDay: Date
     @Binding var selectedDates: Set<Date>
     let isEditingDayOff: Bool
+
+    var workingHours: DayTimeScale = .defaultWorkingHours
     
     @State private var monthIndex: Int = 0
     @State private var baseDate: Date = Date()
@@ -42,6 +44,7 @@ struct CalendarPagerView: View {
                         selectedDate: month(for: offset),
                         appointments: appointments,
                         dayOffs: dayOffs,
+                        workingHours: workingHours,
                         selectedDay: $selectedDay,
                         selectedDates: $selectedDates,
                         isEditingDayOff: isEditingDayOff

@@ -17,6 +17,7 @@ struct CalendarDayCell: View {
     let isSelected: Bool
     let appointments: [Appointment]
     let dayOffs: [DayOff]
+    let scale: DayTimeScale
 
     let onTap: () -> Void
     let isEditingDayOff: Bool
@@ -52,7 +53,8 @@ struct CalendarDayCell: View {
 
                 DayOccupancyBar(
                     appointments: appointments,
-                    day: date
+                    day: date,
+                    scale: scale
                 )
             }
             .frame(maxWidth: .infinity)

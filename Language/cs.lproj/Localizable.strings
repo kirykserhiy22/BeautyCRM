@@ -93,6 +93,7 @@
 
 "dayOff.title" = "Volný den";
 "common.save" = "Uložit";
+"common.done" = "Hotovo";
 /* Services */
 "services.selectTitle" = "Výběr služeb";
 "services.done" = "Hotovo";
@@ -167,6 +168,10 @@
 "settings.title" = "Nastavení";
 "settings.appearance" = "Vzhled";
 "settings.language" = "Jazyk";
+"settings.workingHours" = "Pracovní doba";
+"settings.workingHours.start" = "Začátek";
+"settings.workingHours.end" = "Konec";
+"settings.workingHours.description" = "Lišta obsazenosti v kalendáři ukazuje tento čas. Rezervace mimo něj budou také vidět: měsíční škála se automaticky rozšíří.";
 "settings.logout" = "Odhlásit se";
 "settings.theme.description" = "Vyberte motiv aplikace";
 "settings.theme.classic" = "Classic";

@@ -15,6 +15,7 @@ struct CalendarScreen: View {
     @EnvironmentObject var theme: ThemeManager
     
     @Query private var appointments: [Appointment]
+    @Query private var profiles: [UserProfile]
     @Query(filter: #Predicate<DayOff> { $0.deletedAt == nil })
     private var dayOffs: [DayOff]
     
@@ -40,6 +41,13 @@ struct CalendarScreen: View {
     private var colors: ThemeColors {
         theme.colors(for: theme.currentTheme)
     }
+
+    private var workingHours: DayTimeScale {
+        let profile = profiles.first {
+            $0.authUserID == appState.session.userID
+        }
+        return .workingHours(profile)
+    }
     
     var body: some View {
         
@@ -54,7 +62,8 @@ struct CalendarScreen: View {
                     dayOffs: userDayOffs,          // 👈 НЕ пустий масив
                     selectedDay: $selectedDate,
                     selectedDates: $selectedDates,
-                    isEditingDayOff: false
+                    isEditingDayOff: false,
+                    workingHours: workingHours
                 )
                 
                 Divider()
@@ -92,13 +101,34 @@ struct CalendarScreen: View {
         .background(colors.background)
         .navigationTitle("Calendar")
         .sheet(isPresented: $showCreate) {
-            AppointmentFormView(initialDate: selectedDate)
+            AppointmentFormView(initialDate: newAppointmentDate)
         }
         .onAppear {
             selectedDate = Date()
         }
     }
     
+    // Час нового запису: сьогодні — найближча кругла година,
+    // інший день — початок робочого дня (а не 00:00)
+    private var newAppointmentDate: Date {
+
+        let calendar = Calendar.current
+
+        if calendar.isDateInToday(selectedDate) {
+            return calendar.nextDate(
+                after: Date(),
+                matching: DateComponents(minute: 0),
+                matchingPolicy: .nextTime
+            ) ?? Date()
+        }
+
+        return calendar.date(
+            byAdding: .minute,
+            value: workingHours.startMinute,
+            to: calendar.startOfDay(for: selectedDate)
+        ) ?? selectedDate
+    }
+
     private var filteredAppointments: [Appointment] {
         guard let userID = appState.session.userID else { return [] }
         
