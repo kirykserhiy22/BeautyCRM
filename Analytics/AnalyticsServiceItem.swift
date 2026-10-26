@@ -27,10 +27,15 @@ struct AnalyticsClientItem: Identifiable {
 }
 
 
+// Один стовпчик графіка доходу: день (тиждень, місяць) або місяць (рік)
 struct AnalyticsChartItem: Identifiable {
 
-    let id = UUID()
+    var id: Date { date }
 
     let date: Date
-    let value: Double
+    let revenue: Decimal
+    let count: Int
+
+    // Тільки для малювання графіка
+    var value: Double { revenue.doubleValue }
 }

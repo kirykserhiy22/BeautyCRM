@@ -131,6 +131,9 @@
 "analytics.selectedYearOverview" = "Огляд вибраного року";
 "analytics.appointmentCount" = "записів";
 "analytics.visitCount" = "відвідувань";
+"analytics.chart.tapHint" = "Натисніть на стовпчик, щоб побачити суму";
+"analytics.chart.date" = "Дата";
+"analytics.chart.revenue" = "Дохід";
 "clients.duplicateNameTitle" = "Клієнт уже існує";
 "clients.duplicateNameMessage" = "Клієнт із таким ім’ям уже існує.";
 "clients.title" = "Клієнти";

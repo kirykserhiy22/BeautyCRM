@@ -66,7 +66,8 @@ enum AppFormatting {
         let formatter = DateFormatter()
         formatter.locale = locale
         formatter.calendar = Calendar(identifier: .gregorian)
-        return formatter.monthSymbols
+        // Називний відмінок: «жовтень», а не «жовтня»
+        return formatter.standaloneMonthSymbols
     }
 
     // MARK: - Weekday names, Monday first

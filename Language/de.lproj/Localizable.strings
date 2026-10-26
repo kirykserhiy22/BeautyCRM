@@ -130,6 +130,9 @@
 "analytics.selectedYearOverview" = "Übersicht des ausgewählten Jahres";
 "analytics.appointmentCount" = "Termine";
 "analytics.visitCount" = "Besuche";
+"analytics.chart.tapHint" = "Tippe auf einen Balken, um den Betrag zu sehen";
+"analytics.chart.date" = "Datum";
+"analytics.chart.revenue" = "Umsatz";
 "clients.duplicateNameTitle" = "Kunde existiert bereits";
 "clients.duplicateNameMessage" = "Ein Kunde mit diesem Namen existiert bereits.";
 "clients.title" = "Kunden";

@@ -130,6 +130,9 @@
 "analytics.selectedYearOverview" = "Přehled vybraného roku";
 "analytics.appointmentCount" = "rezervací";
 "analytics.visitCount" = "návštěv";
+"analytics.chart.tapHint" = "Klepněte na sloupec a uvidíte částku";
+"analytics.chart.date" = "Datum";
+"analytics.chart.revenue" = "Tržby";
 "clients.duplicateNameTitle" = "Klient již existuje";
 "clients.duplicateNameMessage" = "Klient s tímto jménem již existuje.";
 "clients.title" = "Klienti";
