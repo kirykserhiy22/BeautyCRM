@@ -93,6 +93,7 @@
 
 "dayOff.title" = "Freier Tag";
 "common.save" = "Speichern";
+"common.done" = "Fertig";
 /* Services */
 "services.selectTitle" = "Dienstleistungen auswählen";
 "services.done" = "Fertig";
@@ -167,6 +168,10 @@
 "settings.title" = "Einstellungen";
 "settings.appearance" = "Erscheinungsbild";
 "settings.language" = "Sprache";
+"settings.workingHours" = "Arbeitszeiten";
+"settings.workingHours.start" = "Beginn";
+"settings.workingHours.end" = "Ende";
+"settings.workingHours.description" = "Die Auslastungsleiste im Kalender zeigt diesen Zeitraum. Termine außerhalb werden trotzdem angezeigt: Die Monatsskala erweitert sich automatisch.";
 "settings.logout" = "Abmelden";
 "settings.theme.description" = "App-Design auswählen";
 "settings.theme.classic" = "Classic";

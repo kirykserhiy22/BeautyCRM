@@ -28,6 +28,10 @@ final class UserProfile: SyncTrackable {
 
     var currencyCode: String
     var languageCode: String
+
+    // WORK HOURS — хвилини від 00:00; nil = за замовчуванням (9:00–19:00)
+    var workStartMinute: Int? = nil
+    var workEndMinute: Int? = nil
     
 
     // APP

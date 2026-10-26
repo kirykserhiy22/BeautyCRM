@@ -94,6 +94,7 @@
 
 "dayOff.title" = "Вихідний";
 "common.save" = "Зберегти";
+"common.done" = "Готово";
 /* Services */
 "services.selectTitle" = "Вибір послуг";
 "services.done" = "Готово";
@@ -168,6 +169,10 @@
 "settings.title" = "Налаштування";
 "settings.appearance" = "Зовнішній вигляд";
 "settings.language" = "Мова";
+"settings.workingHours" = "Робочі години";
+"settings.workingHours.start" = "Початок";
+"settings.workingHours.end" = "Кінець";
+"settings.workingHours.description" = "Смужка зайнятості в календарі показує цей час. Записи поза ним теж буде видно: шкала місяця розшириться сама.";
 "settings.logout" = "Вийти";
 "settings.theme.description" = "Оберіть тему застосунку";
 "settings.theme.classic" = "Classic";

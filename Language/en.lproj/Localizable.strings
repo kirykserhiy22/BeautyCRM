@@ -93,6 +93,7 @@
 
 "dayOff.title" = "Day Off";
 "common.save" = "Save";
+"common.done" = "Done";
 /* Services */
 "services.selectTitle" = "Select Services";
 "services.done" = "Done";
@@ -167,6 +168,10 @@
 "settings.title" = "Settings";
 "settings.appearance" = "Appearance";
 "settings.language" = "Language";
+"settings.workingHours" = "Working hours";
+"settings.workingHours.start" = "Start";
+"settings.workingHours.end" = "End";
+"settings.workingHours.description" = "The occupancy bar in the calendar shows this time range. Appointments outside it are still shown: the month scale extends automatically.";
 "settings.logout" = "Log Out";
 "settings.theme.description" = "Choose app theme";
 "settings.theme.classic" = "Classic";

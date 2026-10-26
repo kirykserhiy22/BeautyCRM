@@ -11,6 +11,7 @@ struct CalendarMonthGrid: View {
     let selectedDate: Date
     let appointments: [Appointment]
     let dayOffs: [DayOff]
+    let workingHours: DayTimeScale
 
     @Binding var selectedDay: Date
     @Binding var selectedDates: Set<Date>
@@ -26,6 +27,12 @@ struct CalendarMonthGrid: View {
 
         let days = CalendarMonthBuilder.buildMonth(for: selectedDate)
 
+        let scale = DayTimeScale.forMonth(
+            selectedDate,
+            appointments: appointments,
+            workingHours: workingHours
+        )
+
         LazyVGrid(columns: columns, spacing: 8) {
 
             ForEach(Array(days.enumerated()), id: \.offset) { _, date in
@@ -37,6 +44,7 @@ struct CalendarMonthGrid: View {
                         isSelected: Calendar.current.isDate(date, inSameDayAs: selectedDay),
                         appointments: appointments,
                         dayOffs: dayOffs,
+                        scale: scale,
                         onTap: {
                             handleTap(date)
                         },
