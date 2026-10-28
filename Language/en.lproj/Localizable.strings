@@ -76,6 +76,8 @@
 "home.noAppointments" = "No Appointments";
 "home.freeToday" = "You're free today 🎉";
 "home.noUpcomingAppointments" = "No upcoming appointments";
+"home.dayComplete" = "Day complete";
+"home.allDoneToday" = "All of today's appointments are done 🎉";
 
 "home.currentAppointment" = "Current Appointment";
 "home.needsCompletion" = "Needs Completion";
@@ -183,6 +185,8 @@
 "common.cancel" = "Cancel";
 "common.change" = "Change";
 "calendar.title" = "Calendar";
+"calendar.emptyDay" = "No appointments on this day";
+"calendar.addAppointment" = "Add appointment";
 
 "appointment.client" = "Client";
 "appointment.clientNamePlaceholder" = "Enter client name";
