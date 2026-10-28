@@ -20,8 +20,8 @@
 "welcome.login" = "Ich habe bereits ein Konto";
 "welcome.tagline" = "Beginne in wenigen Minuten, dein Beauty-Business zu verwalten.";
 "signup.title" = "Konto erstellen";
-"signup.step" = "Schritt";
-"signup.ofFour" = "von 4";
+"signup.stepOf" = "Schritt %d von %d";
+"signup.error.profession" = "Wähle deine Spezialisierung.";
 "signup.back" = "Zurück";
 "signup.next" = "Weiter";
 "signup.createAccount" = "Konto erstellen";

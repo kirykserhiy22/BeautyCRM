@@ -26,8 +26,6 @@ struct SignUpFlowView: View {
     SignUpState()
 
 
-    @State private var step = 0
-    @State private var errorMessage = ""
 
 
 
@@ -45,49 +43,53 @@ struct SignUpFlowView: View {
 
 
 
-            switch step {
+            switch state.step {
 
 
-            case 0:
+            case .account:
 
                 SignUpAccountStep(
                     state: state
                 )
 
 
-            case 1:
+            case .profile:
 
                 SignUpProfileStep(
                     state: state
                 )
 
 
-            case 2:
+            case .profession:
+
+                ScrollView {
+                    ProfessionPickerView(
+                        selection: $state.profession
+                    )
+                    .padding(.vertical, 8)
+                }
+
+
+            case .business:
 
                 SignUpBusinessStep(
                     state: state
                 )
 
 
-            case 3:
+            case .currency:
 
                 SignUpCurrencyStep(
                     state: state
                 )
-
-
-            default:
-
-                EmptyView()
-
             }
 
 
 
             Spacer()
-            if !errorMessage.isEmpty {
+            if !state.errorMessage.isEmpty {
 
-                Text(LocalizedStringKey(errorMessage))
+                Text(LocalizedStringKey(state.errorMessage))
                     .foregroundColor(.red)
                     .font(.caption)
                     .multilineTextAlignment(.center)
@@ -113,11 +115,14 @@ private extension SignUpFlowView {
             Text("signup.title")
                 .font(.largeTitle.bold())
 
-            HStack(spacing: 4) {
-                Text("signup.step")
-                Text("\(step + 1)")
-                Text("signup.ofFour")
-            }
+            // «Крок 3 з 5» — кількість кроків береться з SignUpStep
+            Text(
+                String(
+                    format: localization.localizedString(for: "signup.stepOf"),
+                    state.step.number,
+                    SignUpStep.allCases.count
+                )
+            )
             .foregroundColor(.secondary)
         }
     }
@@ -133,7 +138,7 @@ private extension SignUpFlowView {
             Spacer()
 
             Button(
-                step == 3
+                state.step.isLast
                     ? "signup.createAccount"
                     : "signup.next"
             ) {
@@ -147,69 +152,21 @@ private extension SignUpFlowView {
     // На першому кроці «Назад» веде на стартовий екран (вибір: створити акаунт чи увійти)
     func goBack() {
 
-        errorMessage = ""
-
-        if step > 0 {
-            step -= 1
-        } else {
+        if !state.goBack() {
             router.currentScreen = .welcome
         }
     }
 
 
+    // Перевірка й перехід — у SignUpState; тут лише створення акаунта в кінці
     func nextStep() {
 
-        errorMessage = ""
-
-        switch step {
-
-        case 0:
-
-            guard AuthValidator.validateEmail(state.email) else {
-                errorMessage = "signup.error.email"
-                return
-            }
-
-            guard AuthValidator.validatePassword(state.password) else {
-                errorMessage = "signup.error.password"
-                return
-            }
-
-            guard !LocalAuthService().isEmailRegistered(state.email) else {
-                errorMessage = AuthError.userAlreadyExists.localizationKey
-                return
-            }
-
-            step += 1
-
-        case 1:
-
-            guard AuthValidator.validateName(state.firstName) else {
-                errorMessage = "signup.error.firstName"
-                return
-            }
-
-            guard AuthValidator.validateName(state.lastName) else {
-                errorMessage = "signup.error.lastName"
-                return
-            }
-
-            step += 1
-
-        case 2:
-
-            
-            step += 1
-
-        case 3:
-
-            
+        if state.goNext() {
             finishRegistration()
-
-        default:
-            break
         }
     }
+
+
     func finishRegistration() {
 
 
@@ -241,6 +198,8 @@ private extension SignUpFlowView {
                 currencyCode: state.currencyCode,
                 languageCode: localization.languageCode
             )
+
+            profile.profession = state.profession
 
 
             context.insert(profile)
@@ -276,9 +235,9 @@ private extension SignUpFlowView {
 
             // Показуємо помилку на екрані і повертаємо на крок з email/паролем,
             // щоб майстер міг одразу її виправити
-            errorMessage = error.localizationKey
+            state.errorMessage = error.localizationKey
 
-            step = 0
+            state.step = .account
 
         }
 

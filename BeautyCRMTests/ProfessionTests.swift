@@ -20,6 +20,7 @@ final class ProfessionTests: XCTestCase {
             keys += config.suggestedServiceKeys
         }
         keys += ["profession.picker.title", "profession.picker.subtitle"]
+        keys += ["signup.stepOf", "signup.error.profession"]
         return keys
     }
 
@@ -145,6 +146,42 @@ final class ProfessionTests: XCTestCase {
 
         XCTAssertEqual(manager.current, .hairStylist)
         XCTAssertEqual(currency.currencyCode, "UAH")
+    }
+
+    // MARK: - Sign up
+
+    func testSignUpHasProfessionAsThirdOfFiveSteps() {
+        XCTAssertEqual(SignUpStep.allCases.count, 5)
+        XCTAssertEqual(SignUpStep.profession.number, 3)
+        XCTAssertTrue(SignUpStep.currency.isLast)
+        XCTAssertNil(SignUpStep.account.previous)
+    }
+
+    func testProfessionStepRequiresSelection() {
+        let state = SignUpState()
+        state.step = .profession
+
+        XCTAssertFalse(state.goNext())
+        XCTAssertEqual(state.step, .profession)
+        XCTAssertEqual(state.errorMessage, "signup.error.profession")
+
+        state.profession = .nailArtist
+        XCTAssertFalse(state.goNext())
+        XCTAssertEqual(state.step, .business)
+        XCTAssertEqual(state.errorMessage, "")
+    }
+
+    // «Крок %d з %d» з двома числами в кожній мові
+    func testStepOfFormatHasTwoNumbersInAllLanguages() throws {
+        for language in languages {
+            let path = try XCTUnwrap(
+                Bundle.main.path(forResource: "Localizable", ofType: "strings", inDirectory: nil, forLocalization: language)
+            )
+            let strings = try XCTUnwrap(NSDictionary(contentsOfFile: path) as? [String: String])
+            let format = try XCTUnwrap(strings["signup.stepOf"])
+            XCTAssertEqual(format.components(separatedBy: "%d").count - 1, 2, language)
+            XCTAssertTrue(String(format: format, 3, 5).contains("3"), language)
+        }
     }
 
     func testAllKeysExistInAllLanguages() throws {

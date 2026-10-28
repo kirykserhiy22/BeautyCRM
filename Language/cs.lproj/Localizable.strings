@@ -20,8 +20,8 @@
 "welcome.login" = "Už mám účet";
 "welcome.tagline" = "Začněte spravovat své podnikání v oblasti krásy během několika minut.";
 "signup.title" = "Vytvořit účet";
-"signup.step" = "Krok";
-"signup.ofFour" = "ze 4";
+"signup.stepOf" = "Krok %d z %d";
+"signup.error.profession" = "Vyberte specializaci.";
 "signup.back" = "Zpět";
 "signup.next" = "Další";
 "signup.createAccount" = "Vytvořit účet";

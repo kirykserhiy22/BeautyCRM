@@ -20,8 +20,8 @@
 "welcome.login" = "У мене вже є акаунт";
 "welcome.tagline" = "Почніть керувати своїм б’юті-бізнесом за лічені хвилини.";
 "signup.title" = "Створити акаунт";
-"signup.step" = "Крок";
-"signup.ofFour" = "із 4";
+"signup.stepOf" = "Крок %d з %d";
+"signup.error.profession" = "Оберіть спеціалізацію.";
 "signup.back" = "Назад";
 "signup.next" = "Далі";
 "signup.createAccount" = "Створити акаунт";
