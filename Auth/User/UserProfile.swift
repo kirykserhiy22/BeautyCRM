@@ -32,6 +32,9 @@ final class UserProfile: SyncTrackable {
     // WORK HOURS — хвилини від 00:00; nil = за замовчуванням (9:00–19:00)
     var workStartMinute: Int? = nil
     var workEndMinute: Int? = nil
+
+    // PROFESSION — зберігається rawValue; nil = не обрано (старі акаунти)
+    var professionRaw: String? = nil
     
 
     // APP
@@ -70,5 +73,16 @@ final class UserProfile: SyncTrackable {
 
         // Новий користувач одразу отримує власний робочий простір
         self.workspaceID = UUID()
+    }
+}
+
+
+extension UserProfile {
+
+    // Спеціалізація майстра. Невідоме значення в базі читається як nil
+    // і не ламає додаток.
+    var profession: Profession? {
+        get { professionRaw.flatMap(Profession.init(rawValue:)) }
+        set { professionRaw = newValue?.rawValue }
     }
 }

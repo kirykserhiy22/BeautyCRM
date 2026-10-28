@@ -5,6 +5,7 @@
 
 import XCTest
 import UIKit
+import SwiftData
 @testable import BeautyCRM
 
 final class ProfessionTests: XCTestCase {
@@ -56,6 +57,54 @@ final class ProfessionTests: XCTestCase {
                 }
             }
         }
+    }
+
+    // MARK: - UserProfile
+
+    private func makeContext() throws -> ModelContext {
+        let container = try ModelContainer(
+            for: UserProfile.self, Client.self, Appointment.self, Service.self, DayOff.self,
+            configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+        )
+        SyncTracking.start()
+        return ModelContext(container)
+    }
+
+    private func makeProfile() -> UserProfile {
+        UserProfile(authUserID: "u1", firstName: "A", lastName: "B", currencyCode: "EUR", languageCode: "uk")
+    }
+
+    // Старий користувач без професії читається як nil
+    func testProfileWithoutProfessionReadsAsNil() throws {
+        let context = try makeContext()
+        context.insert(makeProfile())
+        try context.save()
+
+        let saved = try XCTUnwrap(context.fetch(FetchDescriptor<UserProfile>()).first)
+        XCTAssertNil(saved.professionRaw)
+        XCTAssertNil(saved.profession)
+    }
+
+    func testUnknownStoredValueReadsAsNil() {
+        let profile = makeProfile()
+        profile.professionRaw = "something_new"
+        XCTAssertNil(profile.profession)
+    }
+
+    // Зміна професії зберігає rawValue і оновлює updatedAt (для синхронізації)
+    func testSettingProfessionStoresRawValueAndUpdatesTimestamp() throws {
+        let context = try makeContext()
+        let profile = makeProfile()
+        context.insert(profile)
+        try context.save()
+        let before = try XCTUnwrap(profile.updatedAt)
+
+        profile.profession = .nailArtist
+        try context.save()
+
+        XCTAssertEqual(profile.professionRaw, "nail_artist")
+        XCTAssertEqual(profile.profession, .nailArtist)
+        XCTAssertGreaterThan(try XCTUnwrap(profile.updatedAt), before)
     }
 
     func testAllKeysExistInAllLanguages() throws {
