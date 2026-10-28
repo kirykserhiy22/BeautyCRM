@@ -55,7 +55,7 @@
 |---|---|---|
 | hairStylist | `scissors` | `scissors` |
 | nailArtist | `hand.raised.fingers.spread` | `paintbrush.pointed` |
-| lashBrowArtist | `eye` | `eyebrow` |
+| lashBrowArtist | `eyebrow` | `eyebrow` |
 | generic | `sparkles` | `scissors` |
 
 ## Збереження

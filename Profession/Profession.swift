@@ -69,7 +69,7 @@ enum Profession: String, CaseIterable, Identifiable, Codable {
                 titleKey: "profession.lash_brow_artist.title",
                 descriptionKey: "profession.lash_brow_artist.description",
                 examplesKey: "profession.lash_brow_artist.examples",
-                icon: .system("eye"),
+                icon: .system("eyebrow"),
                 serviceIcon: .system("eyebrow"),
                 suggestedServiceKeys: [
                     "service.suggestion.lashExtensions",
