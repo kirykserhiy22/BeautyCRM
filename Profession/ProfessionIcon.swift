@@ -9,7 +9,7 @@ import SwiftUI
 // Іконка професії. Зараз — SF Symbols (.system).
 // Пізніше їх замінять власні іконки в стилі логотипа (.asset з Assets.xcassets),
 // і View, які показують `icon.image`, при цьому не зміняться.
-enum ProfessionIcon: Equatable {
+enum ProfessionIcon: nonisolated Equatable {
 
     case system(String)
     case asset(String)

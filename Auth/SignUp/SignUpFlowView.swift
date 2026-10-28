@@ -15,6 +15,8 @@ struct SignUpFlowView: View {
     @EnvironmentObject var router: AppRouter
     @EnvironmentObject var appState: AppState
     @EnvironmentObject var localization: LocalizationManager
+    @EnvironmentObject var currency: CurrencyManager
+    @EnvironmentObject var profession: ProfessionManager
 
     @Environment(\.modelContext)
     private var context
@@ -256,8 +258,13 @@ private extension SignUpFlowView {
                 userID: userID
             )
 
-            localization.setLanguage(
-                profile.languageCode
+            // Мова, валюта і професія з щойно створеного профілю
+            UserProfileLoader.load(
+                context: context,
+                userID: userID,
+                localization: localization,
+                currency: currency,
+                profession: profession
             )
 
             router.currentScreen = .main

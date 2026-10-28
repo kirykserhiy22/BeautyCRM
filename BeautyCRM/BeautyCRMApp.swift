@@ -15,6 +15,7 @@ struct BeautyCRMApp: App {
     @StateObject private var theme = ThemeManager()
     @StateObject private var localization = LocalizationManager()
     @StateObject private var currency = CurrencyManager()
+    @StateObject private var profession = ProfessionManager()
 
 
     init() {
@@ -32,6 +33,7 @@ struct BeautyCRMApp: App {
                 .environmentObject(theme)
                 .environmentObject(localization)
                 .environmentObject(currency)
+                .environmentObject(profession)
                 .modelContainer(for: [
                     UserProfile.self,
                     Client.self,

@@ -107,6 +107,45 @@ final class ProfessionTests: XCTestCase {
         XCTAssertGreaterThan(try XCTUnwrap(profile.updatedAt), before)
     }
 
+    // MARK: - Manager
+
+    func testManagerUsesGenericUntilApplyAndAfterReset() {
+        let manager = ProfessionManager()
+        XCTAssertNil(manager.current)
+        XCTAssertEqual(manager.config.serviceIcon, ProfessionConfig.generic.serviceIcon)
+
+        manager.apply(.lashBrowArtist)
+        XCTAssertEqual(manager.current, .lashBrowArtist)
+        XCTAssertEqual(manager.config.serviceIcon, .system("eyebrow"))
+
+        manager.reset()
+        XCTAssertNil(manager.current)
+        XCTAssertEqual(manager.config.titleKey, ProfessionConfig.generic.titleKey)
+    }
+
+    // Loader відновлює професію разом з мовою і валютою
+    func testLoaderAppliesProfessionAndCurrency() throws {
+        let context = try makeContext()
+        let profile = makeProfile()
+        profile.currencyCode = "UAH"
+        profile.profession = .hairStylist
+        context.insert(profile)
+        try context.save()
+
+        let currency = CurrencyManager()
+        let manager = ProfessionManager()
+        UserProfileLoader.load(
+            context: context,
+            userID: "u1",
+            localization: LocalizationManager(),
+            currency: currency,
+            profession: manager
+        )
+
+        XCTAssertEqual(manager.current, .hairStylist)
+        XCTAssertEqual(currency.currencyCode, "UAH")
+    }
+
     func testAllKeysExistInAllLanguages() throws {
         for language in languages {
             let path = try XCTUnwrap(

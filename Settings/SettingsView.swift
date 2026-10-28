@@ -14,6 +14,7 @@ struct SettingsView: View {
     @EnvironmentObject var router: AppRouter
     @EnvironmentObject var theme: ThemeManager
     @EnvironmentObject var localization: LocalizationManager
+    @EnvironmentObject var profession: ProfessionManager
     
     @Environment(\.modelContext)
     private var context
@@ -78,6 +79,8 @@ struct SettingsView: View {
                 Button {
                     
                     appState.session.logout()
+
+                    profession.reset()
                     
                     router.currentScreen = .welcome
                     
