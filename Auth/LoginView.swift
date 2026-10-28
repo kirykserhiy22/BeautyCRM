@@ -12,6 +12,8 @@ struct LoginView: View {
     @EnvironmentObject var appState: AppState
     @EnvironmentObject var router: AppRouter
     @EnvironmentObject var localization: LocalizationManager
+    @EnvironmentObject var currency: CurrencyManager
+    @EnvironmentObject var profession: ProfessionManager
 
     private let authService = LocalAuthService()
     @Environment(\.modelContext)
@@ -174,16 +176,16 @@ private extension LoginView {
         !password.isEmpty
     }
 
-    func loadUserLanguage(userID: String) {
+    // Мова, валюта і професія з профілю користувача
+    func loadUserProfile(userID: String) {
 
-        guard let profile = UserProfileManager.profile(
+        UserProfileLoader.load(
             context: context,
-            userID: userID
-        ) else {
-            return
-        }
-
-        localization.setLanguage(profile.languageCode)
+            userID: userID,
+            localization: localization,
+            currency: currency,
+            profession: profession
+        )
     }
 
 
@@ -222,7 +224,7 @@ private extension LoginView {
         appState.session.login(
             userID: userID
         )
-        loadUserLanguage(
+        loadUserProfile(
             userID: userID
         )
 

@@ -17,7 +17,8 @@ enum UserProfileLoader {
         context: ModelContext,
         userID: String,
         localization: LocalizationManager,
-        currency: CurrencyManager
+        currency: CurrencyManager,
+        profession: ProfessionManager
     ) -> UserProfile? {
 
 
@@ -44,6 +45,11 @@ enum UserProfileLoader {
 
         currency.setCurrency(
             profile.currencyCode
+        )
+
+
+        profession.apply(
+            profile.profession
         )
 
 

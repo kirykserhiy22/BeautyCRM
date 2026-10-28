@@ -15,6 +15,10 @@ struct MainTabView: View {
     @EnvironmentObject var currency: CurrencyManager
     @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var theme: ThemeManager
+    @EnvironmentObject var profession: ProfessionManager
+
+    // Старий акаунт без спеціалізації — один раз попросити обрати
+    @State private var showProfessionPrompt = false
 
     private var colors: ThemeColors {
         theme.colors(for: theme.currentTheme)
@@ -56,7 +60,23 @@ struct MainTabView: View {
                     context: context,
                     userID: userID
                 )
+
+                if let profile = UserProfileManager.profile(context: context, userID: userID),
+                   profile.profession == nil {
+                    showProfessionPrompt = true
+                }
             }
+        }
+        .fullScreenCover(isPresented: $showProfessionPrompt) {
+            ProfessionPromptView { chosen in
+                if let userID = appState.session.userID,
+                   let profile = UserProfileManager.profile(context: context, userID: userID) {
+                    profession.choose(chosen, for: profile, context: context)
+                }
+                showProfessionPrompt = false
+            }
+            .environmentObject(theme)
+            .environmentObject(localization)
         }
     }
 }
