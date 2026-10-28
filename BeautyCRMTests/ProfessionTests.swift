@@ -21,6 +21,7 @@ final class ProfessionTests: XCTestCase {
         }
         keys += ["profession.picker.title", "profession.picker.subtitle"]
         keys += ["signup.stepOf", "signup.error.profession"]
+        keys += ["settings.profession", "settings.profession.notSelected", "profession.prompt.continue"]
         return keys
     }
 
@@ -123,6 +124,22 @@ final class ProfessionTests: XCTestCase {
         manager.reset()
         XCTAssertNil(manager.current)
         XCTAssertEqual(manager.config.titleKey, ProfessionConfig.generic.titleKey)
+    }
+
+    // Вибір у Налаштуваннях / для старого акаунта: зберігає в профіль і застосовує
+    func testChooseSavesToProfileAndApplies() throws {
+        let context = try makeContext()
+        let profile = makeProfile()
+        context.insert(profile)
+        try context.save()
+
+        let manager = ProfessionManager()
+        manager.choose(.lashBrowArtist, for: profile, context: context)
+
+        XCTAssertEqual(manager.current, .lashBrowArtist)
+        XCTAssertFalse(context.hasChanges)
+        let saved = try XCTUnwrap(context.fetch(FetchDescriptor<UserProfile>()).first)
+        XCTAssertEqual(saved.professionRaw, "lash_brow_artist")
     }
 
     // Loader відновлює професію разом з мовою і валютою

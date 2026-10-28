@@ -5,6 +5,7 @@
 
 import Foundation
 import Combine
+import SwiftData
 
 
 // Поточна спеціалізація майстра для всього додатку.
@@ -22,6 +23,19 @@ final class ProfessionManager: ObservableObject {
 
     func apply(_ profession: Profession?) {
         current = profession
+    }
+
+
+    // Вибір майстра: зберегти в профіль (updatedAt оновить SyncTracking) і застосувати.
+    // Одне місце для Налаштувань і екрана для старих акаунтів.
+    func choose(
+        _ profession: Profession,
+        for profile: UserProfile,
+        context: ModelContext
+    ) {
+        profile.profession = profession
+        try? context.save()
+        apply(profession)
     }
 
 

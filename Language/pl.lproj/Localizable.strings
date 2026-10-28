@@ -238,6 +238,9 @@
 "profession.generic.examples" = "wybierz specjalizację w ustawieniach";
 "profession.picker.title" = "Twoja specjalizacja";
 "profession.picker.subtitle" = "Wybierz, czym się zajmujesz. Aplikacja dopasuje ikony i podpowiedzi. Możesz to zmienić w ustawieniach.";
+"settings.profession" = "Specjalizacja";
+"settings.profession.notSelected" = "Nie wybrano";
+"profession.prompt.continue" = "Dalej";
 "service.suggestion.haircut" = "Strzyżenie";
 "service.suggestion.coloring" = "Koloryzacja";
 "service.suggestion.highlights" = "Pasemka";

@@ -10,6 +10,7 @@ import SwiftUI
 struct QuickActionsSection: View {
 
     @EnvironmentObject var theme: ThemeManager
+    @EnvironmentObject var profession: ProfessionManager
 
     private var colors: ThemeColors {
         theme.colors(for: theme.currentTheme)
@@ -33,7 +34,7 @@ struct QuickActionsSection: View {
                 } label: {
                     actionCard(
                         title: "home.addClients",
-                        icon: "person.3"
+                        icon: Image(systemName: "person.3")
                     )
                 }
 
@@ -42,9 +43,10 @@ struct QuickActionsSection: View {
                     ServicesListView()
 
                 } label: {
+                    // Іконка послуг залежить від спеціалізації майстра
                     actionCard(
                         title: "home.services",
-                        icon: "scissors"
+                        icon: profession.config.serviceIcon.image
                     )
                 }
             }
@@ -60,7 +62,7 @@ struct QuickActionsSection: View {
 
                     actionCard(
                         title: "home.appointments",
-                        icon: "calendar"
+                        icon: Image(systemName: "calendar")
                     )
                 }
 
@@ -73,7 +75,7 @@ struct QuickActionsSection: View {
 
                     actionCard(
                         title: "home.dayOff",
-                        icon: "moon"
+                        icon: Image(systemName: "moon")
                     )
                 }
             }
@@ -84,12 +86,12 @@ struct QuickActionsSection: View {
 
     private func actionCard(
         title: String,
-        icon: String
+        icon: Image
     ) -> some View {
 
         VStack {
 
-            Image(systemName: icon)
+            icon
                 .font(.title2)
                 .foregroundColor(colors.accent)
                 

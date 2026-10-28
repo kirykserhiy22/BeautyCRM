@@ -46,6 +46,22 @@ struct SettingsView: View {
                 }
                 
                 
+                // MARK: - PROFESSION
+
+                NavigationLink {
+
+                    ProfessionSettingsView()
+
+                } label: {
+
+                    settingsRow(
+                        title: "settings.profession",
+                        icon: "person.text.rectangle",
+                        value: professionTitle
+                    )
+                }
+
+
                 // MARK: - WORKING HOURS
 
                 NavigationLink {
@@ -97,11 +113,20 @@ struct SettingsView: View {
     
     
     // MARK: - ROW
+
+    // Поточна спеціалізація для рядка налаштувань
+    private var professionTitle: String {
+        guard let current = profession.current else {
+            return localization.localizedString(for: "settings.profession.notSelected")
+        }
+        return localization.localizedString(for: current.config.titleKey)
+    }
     
     
     private func settingsRow(
         title: String,
-        icon: String
+        icon: String,
+        value: String? = nil
     ) -> some View {
         
         HStack(spacing: 14) {
@@ -117,6 +142,12 @@ struct SettingsView: View {
             
             
             Spacer()
+
+            if let value {
+                Text(value)
+                    .font(.subheadline)
+                    .foregroundColor(colors.textSecondary)
+            }
             
             
             Image(systemName: "chevron.right")
@@ -235,5 +266,60 @@ struct WorkingHoursSettingsView: View {
 
     private func timeText(_ minute: Int) -> String {
         String(format: "%02d:%02d", minute / 60, minute % 60)
+    }
+}
+
+
+// MARK: - PROFESSION
+
+// Зміна спеціалізації: вибір одразу зберігається в профіль
+struct ProfessionSettingsView: View {
+
+    @EnvironmentObject var appState: AppState
+    @EnvironmentObject var theme: ThemeManager
+    @EnvironmentObject var localization: LocalizationManager
+    @EnvironmentObject var profession: ProfessionManager
+
+    @Environment(\.modelContext)
+    private var context
+
+    @Environment(\.dismiss)
+    private var dismiss
+
+    @State private var selection: Profession?
+
+    private var colors: ThemeColors {
+        theme.colors(for: theme.currentTheme)
+    }
+
+    var body: some View {
+
+        ScrollView {
+            ProfessionPickerView(selection: $selection, showsHeader: false)
+                .padding()
+        }
+        .background(colors.background)
+        .navigationTitle(localization.localizedString(for: "settings.profession"))
+        .toolbar {
+            ToolbarItem(placement: .confirmationAction) {
+                Button(localization.localizedString(for: "common.done")) {
+                    dismiss()
+                }
+            }
+        }
+        .onAppear {
+            selection = profession.current
+        }
+        .onChange(of: selection) {
+            guard
+                let selection,
+                selection != profession.current,
+                let userID = appState.session.userID,
+                let profile = UserProfileManager.profile(context: context, userID: userID)
+            else {
+                return
+            }
+            profession.choose(selection, for: profile, context: context)
+        }
     }
 }

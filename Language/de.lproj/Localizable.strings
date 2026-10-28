@@ -238,6 +238,9 @@
 "profession.generic.examples" = "Spezialisierung in den Einstellungen wählen";
 "profession.picker.title" = "Deine Spezialisierung";
 "profession.picker.subtitle" = "Wähle deinen Bereich. Die App passt Symbole und Hinweise an. Du kannst das in den Einstellungen ändern.";
+"settings.profession" = "Spezialisierung";
+"settings.profession.notSelected" = "Nicht gewählt";
+"profession.prompt.continue" = "Weiter";
 "service.suggestion.haircut" = "Haarschnitt";
 "service.suggestion.coloring" = "Färben";
 "service.suggestion.highlights" = "Strähnchen";
