@@ -237,6 +237,8 @@
 "profession.generic.title" = "Майстер";
 "profession.generic.description" = "Спеціалізацію не обрано";
 "profession.generic.examples" = "оберіть спеціалізацію в налаштуваннях";
+"profession.picker.title" = "Ваша спеціалізація";
+"profession.picker.subtitle" = "Оберіть, чим ви займаєтесь. Додаток підлаштує іконки й підказки. Змінити можна в налаштуваннях.";
 "service.suggestion.haircut" = "Стрижка";
 "service.suggestion.coloring" = "Фарбування";
 "service.suggestion.highlights" = "Мелірування";

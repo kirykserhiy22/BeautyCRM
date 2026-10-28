@@ -19,6 +19,7 @@ final class ProfessionTests: XCTestCase {
             keys += [config.titleKey, config.descriptionKey, config.examplesKey]
             keys += config.suggestedServiceKeys
         }
+        keys += ["profession.picker.title", "profession.picker.subtitle"]
         return keys
     }
 

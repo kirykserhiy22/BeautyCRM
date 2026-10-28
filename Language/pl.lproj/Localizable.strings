@@ -236,6 +236,8 @@
 "profession.generic.title" = "Specjalista beauty";
 "profession.generic.description" = "Nie wybrano specjalizacji";
 "profession.generic.examples" = "wybierz specjalizację w ustawieniach";
+"profession.picker.title" = "Twoja specjalizacja";
+"profession.picker.subtitle" = "Wybierz, czym się zajmujesz. Aplikacja dopasuje ikony i podpowiedzi. Możesz to zmienić w ustawieniach.";
 "service.suggestion.haircut" = "Strzyżenie";
 "service.suggestion.coloring" = "Koloryzacja";
 "service.suggestion.highlights" = "Pasemka";

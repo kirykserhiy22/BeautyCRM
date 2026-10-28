@@ -236,6 +236,8 @@
 "profession.generic.title" = "Beauty professional";
 "profession.generic.description" = "No specialization selected";
 "profession.generic.examples" = "choose a specialization in settings";
+"profession.picker.title" = "Your specialization";
+"profession.picker.subtitle" = "Choose what you do. The app will adapt icons and hints. You can change it in settings.";
 "service.suggestion.haircut" = "Haircut";
 "service.suggestion.coloring" = "Coloring";
 "service.suggestion.highlights" = "Highlights";

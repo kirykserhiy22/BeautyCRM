@@ -236,6 +236,8 @@
 "profession.generic.title" = "Beauty-Profi";
 "profession.generic.description" = "Keine Spezialisierung gewählt";
 "profession.generic.examples" = "Spezialisierung in den Einstellungen wählen";
+"profession.picker.title" = "Deine Spezialisierung";
+"profession.picker.subtitle" = "Wähle deinen Bereich. Die App passt Symbole und Hinweise an. Du kannst das in den Einstellungen ändern.";
 "service.suggestion.haircut" = "Haarschnitt";
 "service.suggestion.coloring" = "Färben";
 "service.suggestion.highlights" = "Strähnchen";

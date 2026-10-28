@@ -237,6 +237,8 @@
 "profession.generic.title" = "Beauty specialista";
 "profession.generic.description" = "Specializace není vybrána";
 "profession.generic.examples" = "vyberte specializaci v nastavení";
+"profession.picker.title" = "Vaše specializace";
+"profession.picker.subtitle" = "Vyberte, čemu se věnujete. Aplikace přizpůsobí ikony a nápovědy. Změnit to můžete v nastavení.";
 "service.suggestion.haircut" = "Střih";
 "service.suggestion.coloring" = "Barvení";
 "service.suggestion.highlights" = "Melír";
