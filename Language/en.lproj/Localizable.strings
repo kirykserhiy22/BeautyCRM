@@ -222,3 +222,32 @@
 "clients.deleteConfirmationMessage" = "This action cannot be undone. All selected clients and their associated photos will be deleted.";
 "common.delete" = "Delete";
 "common.cancel" = "Cancel";
+
+/* Profession */
+"profession.hair_stylist.title" = "Hair stylist";
+"profession.hair_stylist.description" = "Haircuts, coloring, styling";
+"profession.hair_stylist.examples" = "hairdresser, colorist, stylist";
+"profession.nail_artist.title" = "Nail artist";
+"profession.nail_artist.description" = "Manicure, pedicure, nail design";
+"profession.nail_artist.examples" = "manicure, pedicure, nail services";
+"profession.lash_brow_artist.title" = "Lash & brow artist";
+"profession.lash_brow_artist.description" = "Lash extensions, lifting, brow shaping";
+"profession.lash_brow_artist.examples" = "lash maker, brow artist";
+"profession.generic.title" = "Beauty professional";
+"profession.generic.description" = "No specialization selected";
+"profession.generic.examples" = "choose a specialization in settings";
+"service.suggestion.haircut" = "Haircut";
+"service.suggestion.coloring" = "Coloring";
+"service.suggestion.highlights" = "Highlights";
+"service.suggestion.styling" = "Styling";
+"service.suggestion.keratin" = "Keratin treatment";
+"service.suggestion.manicure" = "Manicure";
+"service.suggestion.pedicure" = "Pedicure";
+"service.suggestion.gelPolish" = "Gel polish";
+"service.suggestion.nailExtensions" = "Nail extensions";
+"service.suggestion.nailDesign" = "Nail design";
+"service.suggestion.lashExtensions" = "Lash extensions";
+"service.suggestion.lashLift" = "Lash lift";
+"service.suggestion.browShaping" = "Brow shaping";
+"service.suggestion.browTint" = "Brow tint";
+"service.suggestion.browLamination" = "Brow lamination";

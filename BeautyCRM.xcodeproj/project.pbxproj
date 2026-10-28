@@ -242,6 +242,11 @@
 			path = BeautyCRMUITests;
 			sourceTree = "<group>";
 		};
+		3D77D184309203D4003B6D95 /* Profession */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Profession;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -272,6 +277,7 @@
 		3D20234B2FA3B1D30078D26B = {
 			isa = PBXGroup;
 			children = (
+				3D77D184309203D4003B6D95 /* Profession */,
 				3D62D6452FCA32C000E259CF /* Analytics */,
 				3D62D61B2FC062E800E259CF /* Home */,
 				3DB845DA2FB62A9F00A4C698 /* Calendar */,
@@ -593,6 +599,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				3D2023562FA3B1D30078D26B /* BeautyCRM */,
+				3D77D184309203D4003B6D95 /* Profession */,
 			);
 			name = BeautyCRM;
 			packageProductDependencies = (

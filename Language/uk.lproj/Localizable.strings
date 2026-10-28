@@ -223,3 +223,32 @@
 "clients.deleteConfirmationMessage" = "Дію неможливо скасувати. Усі дані вибраних клієнтів і пов’язані фотографії будуть видалені.";
 "common.delete" = "Видалити";
 "common.cancel" = "Скасувати";
+
+/* Profession */
+"profession.hair_stylist.title" = "Перукар";
+"profession.hair_stylist.description" = "Стрижки, фарбування, укладки";
+"profession.hair_stylist.examples" = "перукар, колорист, стиліст";
+"profession.nail_artist.title" = "Нігтьовий майстер";
+"profession.nail_artist.description" = "Манікюр, педикюр, дизайн нігтів";
+"profession.nail_artist.examples" = "манікюр, педикюр, нігтьовий сервіс";
+"profession.lash_brow_artist.title" = "Майстер вій і брів";
+"profession.lash_brow_artist.description" = "Нарощення вій, ламінування, корекція брів";
+"profession.lash_brow_artist.examples" = "лешмейкер, бровист";
+"profession.generic.title" = "Майстер";
+"profession.generic.description" = "Спеціалізацію не обрано";
+"profession.generic.examples" = "оберіть спеціалізацію в налаштуваннях";
+"service.suggestion.haircut" = "Стрижка";
+"service.suggestion.coloring" = "Фарбування";
+"service.suggestion.highlights" = "Мелірування";
+"service.suggestion.styling" = "Укладка";
+"service.suggestion.keratin" = "Кератинове випрямлення";
+"service.suggestion.manicure" = "Манікюр";
+"service.suggestion.pedicure" = "Педикюр";
+"service.suggestion.gelPolish" = "Покриття гель-лаком";
+"service.suggestion.nailExtensions" = "Нарощення нігтів";
+"service.suggestion.nailDesign" = "Дизайн нігтів";
+"service.suggestion.lashExtensions" = "Нарощення вій";
+"service.suggestion.lashLift" = "Ламінування вій";
+"service.suggestion.browShaping" = "Корекція брів";
+"service.suggestion.browTint" = "Фарбування брів";
+"service.suggestion.browLamination" = "Ламінування брів";

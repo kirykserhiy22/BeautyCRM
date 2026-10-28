@@ -223,3 +223,32 @@
 "clients.deleteConfirmationMessage" = "Tuto akci nelze vrátit zpět. Všichni vybraní klienti a jejich související fotografie budou smazáni.";
 "common.delete" = "Smazat";
 "common.cancel" = "Zrušit";
+
+/* Profession */
+"profession.hair_stylist.title" = "Kadeřník";
+"profession.hair_stylist.description" = "Střihy, barvení, styling";
+"profession.hair_stylist.examples" = "kadeřník, kolorista, stylista";
+"profession.nail_artist.title" = "Nehtová designérka";
+"profession.nail_artist.description" = "Manikúra, pedikúra, nehtový design";
+"profession.nail_artist.examples" = "manikúra, pedikúra, nehtové služby";
+"profession.lash_brow_artist.title" = "Specialistka na řasy a obočí";
+"profession.lash_brow_artist.description" = "Prodlužování řas, liftink, úprava obočí";
+"profession.lash_brow_artist.examples" = "řasová stylistka, obočí";
+"profession.generic.title" = "Beauty specialista";
+"profession.generic.description" = "Specializace není vybrána";
+"profession.generic.examples" = "vyberte specializaci v nastavení";
+"service.suggestion.haircut" = "Střih";
+"service.suggestion.coloring" = "Barvení";
+"service.suggestion.highlights" = "Melír";
+"service.suggestion.styling" = "Styling";
+"service.suggestion.keratin" = "Keratinové narovnání";
+"service.suggestion.manicure" = "Manikúra";
+"service.suggestion.pedicure" = "Pedikúra";
+"service.suggestion.gelPolish" = "Gel lak";
+"service.suggestion.nailExtensions" = "Prodlužování nehtů";
+"service.suggestion.nailDesign" = "Nehtový design";
+"service.suggestion.lashExtensions" = "Prodlužování řas";
+"service.suggestion.lashLift" = "Liftink řas";
+"service.suggestion.browShaping" = "Úprava obočí";
+"service.suggestion.browTint" = "Barvení obočí";
+"service.suggestion.browLamination" = "Laminace obočí";
