@@ -330,9 +330,36 @@ private extension AppointmentFormView {
                 .cornerRadius(14)
             }
 
-            if !serviceState.selectedServices.isEmpty {
+            if !serviceState.selectedServices.isEmpty || !serviceState.retainedItems.isEmpty {
 
                 VStack(spacing: 10) {
+
+                    // Послуги, видалені з прайсу: лишаються з погодженою ціною,
+                    // прибрати можна лише вручну
+                    ForEach(serviceState.retainedItems, id: \.id) { item in
+
+                        HStack {
+
+                            Text(item.serviceName)
+                                .font(.subheadline.weight(.medium))
+
+                            Spacer()
+
+                            Text(currency.format(item.plannedPrice))
+                                .foregroundColor(colors.textSecondary)
+
+                            Button {
+                                serviceState.retainedItems.removeAll { $0.id == item.id }
+                            } label: {
+                                Image(systemName: "xmark.circle.fill")
+                                    .foregroundColor(colors.textSecondary)
+                            }
+                            .buttonStyle(.plain)
+                        }
+                        .padding()
+                        .background(colors.card)
+                        .cornerRadius(12)
+                    }
 
                     ForEach(serviceState.selectedServices, id: \.id) { service in
 
@@ -348,7 +375,7 @@ private extension AppointmentFormView {
                                 if service.pricingType == .fixed {
 
                                     Text(
-                                     currency.format(service.price ?? 0)
+                                     currency.format(serviceState.price(for: service))
                                     )
                                     .foregroundColor(colors.textSecondary)
                                     
@@ -586,7 +613,7 @@ private extension AppointmentFormView {
             return false
         }
 
-        guard !serviceState.selectedServices.isEmpty else {
+        guard !serviceState.selectedServiceIDs.isEmpty else {
             return false
         }
 
@@ -679,11 +706,18 @@ private extension AppointmentFormView {
             userServices.first { $0.id == item.serviceID }
         }
 
-        serviceState.customPrices = Dictionary(
-            uniqueKeysWithValues: appointment.services.map {
-                ($0.serviceID, $0.plannedPrice)
-            }
+        // Послуги, яких уже немає в прайсі, не губляться
+        serviceState.retainedItems = appointment.services.filter { item in
+            !userServices.contains { $0.id == item.serviceID }
+        }
+
+        // Погоджені ціни запису — і для фіксованих, і для змінних послуг
+        let prices = Dictionary(
+            appointment.services.map { ($0.serviceID, $0.plannedPrice) },
+            uniquingKeysWith: { first, _ in first }
         )
+        serviceState.agreedPrices = prices
+        serviceState.customPrices = prices
 
         date = appointment.startDate
         duration = appointment.duration

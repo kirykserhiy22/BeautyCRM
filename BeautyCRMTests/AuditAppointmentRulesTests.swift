@@ -157,7 +157,7 @@ final class AuditAppointmentRulesTests: XCTestCase {
 
     func testUpdateKeepsServiceDeletedFromPriceList() throws {
         // Запис з двома послугами; одну потім видалили з прайсу.
-        // Форма редагування бере послуги лише з НЕвидалених, тож видалена зникає з запису.
+        // Форма тримає таку послугу в retainedItems, і вона лишається в записі.
         let cut = Service(userID: F.userID, name: "Cut", pricingType: .fixed, price: 30)
         let color = Service(userID: F.userID, name: "Color", pricingType: .fixed, price: 70)
         let client = Client(userID: F.userID, name: "Demo Client")
@@ -168,31 +168,19 @@ final class AuditAppointmentRulesTests: XCTestCase {
         ]
         color.markDeleted()
 
-        // Так, як це робить AppointmentFormView: лише невидалені послуги
         let visibleServices = [cut, color].filter { $0.deletedAt == nil }
-        let selectedIDs = Set(appointment.services.compactMap { item in
-            visibleServices.first { $0.id == item.serviceID }?.id
-        })
+        let state = formState(for: appointment, visibleServices: visibleServices)
 
-        _ = AppointmentEngine.updateAppointment(
-            appointment: appointment,
-            client: client,
-            services: visibleServices,
-            selectedServiceIDs: selectedIDs,
-            customPrices: [:],
-            startDate: appointment.startDate,
-            duration: appointment.duration,
-            notes: "",
-            existingAppointments: []
-        )
+        let result = update(appointment, client: client, services: visibleServices, state: state)
 
-        XCTExpectFailure("AUDIT: редагування запису мовчки прибирає послугу, яку видалили з прайсу")
-        XCTAssertEqual(appointment.services.count, 2)
+        XCTAssertNoThrow(try result.get())
+        XCTAssertEqual(appointment.services.map(\.serviceName).sorted(), ["Color", "Cut"])
+        XCTAssertEqual(appointment.totalPlannedPrice, 100)
     }
 
-    func testUpdateRepricesFromCurrentPriceList() {
-        // Ціну стрижки підняли з 30 до 35 вже після запису. Редагування часу запису
-        // перераховує ціну за новим прайсом.
+    func testUpdateKeepsAgreedPrice() {
+        // Ціну стрижки підняли з 30 до 35 вже після запису.
+        // Перенесення запису на іншу годину не змінює погоджену ціну.
         let cut = Service(userID: F.userID, name: "Cut", pricingType: .fixed, price: 30)
         let client = Client(userID: F.userID, name: "Demo Client")
         let appointment = F.appointment(start: F.date(hour: 10), minutes: 60)
@@ -200,20 +188,121 @@ final class AuditAppointmentRulesTests: XCTestCase {
 
         cut.price = 35
 
-        _ = AppointmentEngine.updateAppointment(
+        var state = formState(for: appointment, visibleServices: [cut])
+        state.startDate = F.date(hour: 11)
+
+        _ = update(appointment, client: client, services: [cut], state: state)
+
+        XCTAssertEqual(appointment.startDate, F.date(hour: 11))
+        XCTAssertEqual(appointment.totalPlannedPrice, 30)
+        XCTAssertEqual(state.computedPlannedTotal, 30, "Форма показує погоджену ціну, а не новий прайс")
+    }
+
+    func testUpdateAddsNewServiceAtCurrentPrice() {
+        let cut = Service(userID: F.userID, name: "Cut", pricingType: .fixed, price: 35)
+        let styling = Service(userID: F.userID, name: "Styling", pricingType: .fixed, price: 25)
+        let client = Client(userID: F.userID, name: "Demo Client")
+        let appointment = F.appointment(start: F.date(hour: 10), minutes: 60)
+        appointment.services = [AppointmentServiceItem(serviceID: cut.id, serviceName: "Cut", plannedPrice: 30)]
+
+        var state = formState(for: appointment, visibleServices: [cut, styling])
+        state.selectedServices.append(styling)
+
+        _ = update(appointment, client: client, services: [cut, styling], state: state)
+
+        XCTAssertEqual(appointment.services.first { $0.serviceID == cut.id }?.plannedPrice, 30)
+        XCTAssertEqual(appointment.services.first { $0.serviceID == styling.id }?.plannedPrice, 25)
+        XCTAssertEqual(appointment.totalPlannedPrice, 55)
+        XCTAssertEqual(state.computedPlannedTotal, 55)
+    }
+
+    func testUpdateRemovesDeselectedServices() {
+        let cut = Service(userID: F.userID, name: "Cut", pricingType: .fixed, price: 30)
+        let color = Service(userID: F.userID, name: "Color", pricingType: .fixed, price: 70)
+        let client = Client(userID: F.userID, name: "Demo Client")
+        let appointment = F.appointment(start: F.date(hour: 10), minutes: 90)
+        appointment.services = [
+            AppointmentServiceItem(serviceID: cut.id, serviceName: "Cut", plannedPrice: 30),
+            AppointmentServiceItem(serviceID: color.id, serviceName: "Color", plannedPrice: 70)
+        ]
+        color.markDeleted()
+
+        // Майстер прибрав і видалену з прайсу послугу (хрестиком), і звичайну — лишилось порожньо
+        var state = formState(for: appointment, visibleServices: [cut])
+        state.retainedItems = []
+        XCTAssertEqual(state.selectedServiceIDs, [cut.id])
+
+        _ = update(appointment, client: client, services: [cut], state: state)
+        XCTAssertEqual(appointment.services.map(\.serviceName), ["Cut"])
+
+        state.selectedServices = []
+        let result = update(appointment, client: client, services: [cut], state: state)
+
+        if case .failure(let error) = result {
+            XCTAssertEqual(error, .noServices)
+        } else {
+            XCTFail("Запис без послуг не можна зберегти")
+        }
+        XCTAssertEqual(appointment.services.count, 1, "Невдале збереження нічого не змінює")
+    }
+
+    func testUpdateAppliesChangedVariablePrice() {
+        let color = Service(userID: F.userID, name: "Color", pricingType: .variable)
+        let client = Client(userID: F.userID, name: "Demo Client")
+        let appointment = F.appointment(start: F.date(hour: 10), minutes: 120)
+        appointment.services = [AppointmentServiceItem(serviceID: color.id, serviceName: "Color", plannedPrice: 80)]
+
+        var state = formState(for: appointment, visibleServices: [color])
+        XCTAssertEqual(state.computedPlannedTotal, 80)
+
+        state.customPrices[color.id] = Decimal(string: "95.50")!
+        _ = update(appointment, client: client, services: [color], state: state)
+
+        XCTAssertEqual(appointment.totalPlannedPrice, Decimal(string: "95.50"))
+    }
+
+
+    // Стан форми так, як його заповнює AppointmentFormView.loadAppointmentIfNeeded
+    private func formState(for appointment: Appointment, visibleServices: [Service]) -> AppointmentCreateState {
+        var state = AppointmentCreateState(
+            client: nil,
+            selectedServices: appointment.services.compactMap { item in
+                visibleServices.first { $0.id == item.serviceID }
+            },
+            customPrices: [:],
+            startDate: appointment.startDate,
+            duration: appointment.duration,
+            notes: ""
+        )
+        state.retainedItems = appointment.services.filter { item in
+            !visibleServices.contains { $0.id == item.serviceID }
+        }
+        let prices = Dictionary(
+            appointment.services.map { ($0.serviceID, $0.plannedPrice) },
+            uniquingKeysWith: { first, _ in first }
+        )
+        state.agreedPrices = prices
+        state.customPrices = prices
+        return state
+    }
+
+    private func update(
+        _ appointment: Appointment,
+        client: Client,
+        services: [Service],
+        state: AppointmentCreateState
+    ) -> Result<Void, AppointmentError> {
+        AppointmentEngine.updateAppointment(
             appointment: appointment,
             client: client,
-            services: [cut],
-            selectedServiceIDs: [cut.id],
-            customPrices: [cut.id: 30],
-            startDate: F.date(hour: 11),
-            duration: 60,
+            services: services,
+            selectedServiceIDs: state.selectedServiceIDs,
+            customPrices: state.customPrices,
+            startDate: state.startDate,
+            duration: state.duration,
             notes: "",
             existingAppointments: []
         )
-
-        // Фіксуємо поточну поведінку: ціна оновилася до нового прайсу
-        XCTAssertEqual(appointment.totalPlannedPrice, 35)
     }
 
 

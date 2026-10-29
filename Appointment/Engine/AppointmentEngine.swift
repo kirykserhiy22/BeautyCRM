@@ -181,22 +181,41 @@ final class AppointmentEngine {
             return .failure(.timeConflict)
         }
 
-        let selected = services.filter { selectedServiceIDs.contains($0.id) }
+        // Послуги, що вже є в записі, лишаються з погодженою ціною —
+        // навіть якщо їх змінили чи видалили в прайсі.
+        // Змінна ціна оновлюється лише тим, що майстер ввів у формі.
+        let kept: [AppointmentServiceItem] = appointment.services
+            .filter { selectedServiceIDs.contains($0.serviceID) }
+            .map { item in
+                let service = services.first { $0.id == item.serviceID }
+                if service?.pricingType == .variable,
+                   let custom = customPrices[item.serviceID] {
+                    item.plannedPrice = custom
+                }
+                return item
+            }
 
-        guard !selected.isEmpty else {
+        let keptIDs = Set(kept.map(\.serviceID))
+
+        // Нові послуги — з поточного прайсу
+        let added = services
+            .filter { selectedServiceIDs.contains($0.id) && !keptIDs.contains($0.id) }
+            .map {
+                AppointmentServiceItem(
+                    serviceID: $0.id,
+                    serviceName: $0.name,
+                    plannedPrice: ($0.pricingType == .fixed)
+                        ? ($0.price ?? 0)
+                        : (customPrices[$0.id] ?? 0),
+                    duration: nil
+                )
+            }
+
+        guard !(kept.isEmpty && added.isEmpty) else {
             return .failure(.noServices)
         }
 
-        appointment.services = selected.map {
-            AppointmentServiceItem(
-                serviceID: $0.id,
-                serviceName: $0.name,
-                plannedPrice: ($0.pricingType == .fixed)
-                    ? ($0.price ?? 0)
-                    : (customPrices[$0.id] ?? 0),
-                duration: nil
-            )
-        }
+        appointment.services = kept + added
 
         appointment.clientID = client.id
         appointment.clientName = client.name
