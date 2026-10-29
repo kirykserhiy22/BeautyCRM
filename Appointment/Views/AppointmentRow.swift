@@ -266,7 +266,7 @@ struct AppointmentRow: View {
                         } else if appt.status == .cancelled {
 
                             Button {
-                                appt.status = .archived
+                                AppointmentEngine.archive(appointment: appt)
                                 try? context.save()
                             } label: {
                                 Label(

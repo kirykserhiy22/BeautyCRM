@@ -13,6 +13,24 @@ enum AppointmentStatus: String, Codable {
     case completed
     case cancelled
     case archived
+
+
+    // Дозволені переходи між статусами — одне місце для всього додатку
+    // (екрани, а пізніше синхронізація і веб-версія):
+    //   active    → completed, cancelled
+    //   cancelled → active (відновити), archived (приховати)
+    // Завершений і прихований записи — кінцеві.
+    func canChange(to newStatus: AppointmentStatus) -> Bool {
+        switch (self, newStatus) {
+        case (.active, .completed),
+             (.active, .cancelled),
+             (.cancelled, .active),
+             (.cancelled, .archived):
+            return true
+        default:
+            return false
+        }
+    }
 }
 
 @Model
