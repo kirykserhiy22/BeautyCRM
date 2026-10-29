@@ -12,6 +12,8 @@ enum AppointmentError: Error {
     case timeConflict
     case noClient
     case noServices
+    // Дія не дозволена для поточного статусу запису
+    case invalidStatus
 }
 
 struct ConflictResult {
@@ -166,6 +168,12 @@ final class AppointmentEngine {
         existingAppointments: [Appointment]
     ) -> Result<Void, AppointmentError> {
 
+        // Змінювати можна лише запланований запис:
+        // завершений уже в доході, скасований треба спершу відновити
+        guard appointment.status == .active else {
+            return .failure(.invalidStatus)
+        }
+
         let endDate = Calendar.current.date(
             byAdding: .minute,
             value: duration,
@@ -228,10 +236,15 @@ final class AppointmentEngine {
 
     // MARK: - COMPLETE
 
+    @discardableResult
     static func complete(
         appointment: Appointment,
         finalServicePrices: [UUID: Decimal]
-    ) {
+    ) -> Result<Void, AppointmentError> {
+
+        guard appointment.status.canChange(to: .completed) else {
+            return .failure(.invalidStatus)
+        }
 
         var total: Decimal = 0
 
@@ -252,12 +265,60 @@ final class AppointmentEngine {
         appointment.finalPrice = total
         appointment.status = .completed
         appointment.completedAt = Date()
+
+        return .success(())
     }
 
     // MARK: - CANCEL
 
-    static func cancel(appointment: Appointment) {
+    @discardableResult
+    static func cancel(appointment: Appointment) -> Result<Void, AppointmentError> {
+
+        guard appointment.status.canChange(to: .cancelled) else {
+            return .failure(.invalidStatus)
+        }
+
         appointment.status = .cancelled
+        return .success(())
     }
-    
+
+    // MARK: - RESTORE
+
+    // Повертає скасований запис у заплановані, якщо його час досі вільний
+    @discardableResult
+    static func restore(
+        appointment: Appointment,
+        existingAppointments: [Appointment]
+    ) -> Result<Void, AppointmentError> {
+
+        guard appointment.status.canChange(to: .active) else {
+            return .failure(.invalidStatus)
+        }
+
+        if hasConflict(
+            newStart: appointment.startDate,
+            newEnd: appointment.endDate,
+            existing: existingAppointments,
+            ignoring: appointment.id
+        ) {
+            return .failure(.timeConflict)
+        }
+
+        appointment.status = .active
+        return .success(())
+    }
+
+    // MARK: - ARCHIVE
+
+    // Ховає скасований запис з календаря
+    @discardableResult
+    static func archive(appointment: Appointment) -> Result<Void, AppointmentError> {
+
+        guard appointment.status.canChange(to: .archived) else {
+            return .failure(.invalidStatus)
+        }
+
+        appointment.status = .archived
+        return .success(())
+    }
 }

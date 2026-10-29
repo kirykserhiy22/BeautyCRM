@@ -257,3 +257,13 @@
 "service.suggestion.browShaping" = "Úprava obočí";
 "service.suggestion.browTint" = "Barvení obočí";
 "service.suggestion.browLamination" = "Laminace obočí";
+
+/* Cancel confirmation and restore (#27) */
+"appointment.cancelConfirm.title" = "Zrušit rezervaci?";
+"appointment.cancelConfirm.message" = "Čas se uvolní pro další rezervace. Rezervaci lze později obnovit, pokud bude čas stále volný.";
+"appointment.cancelConfirm.confirm" = "Zrušit rezervaci";
+"appointment.cancelConfirm.keep" = "Ponechat";
+"appointment.restore" = "Obnovit";
+"appointment.restoreConflict.title" = "Čas je obsazený";
+"appointment.restoreConflict.message" = "V tomto čase už je jiná rezervace. Vytvořte novou rezervaci na volný čas.";
+"common.ok" = "OK";

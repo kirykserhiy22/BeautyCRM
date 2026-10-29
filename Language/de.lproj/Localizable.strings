@@ -256,3 +256,13 @@
 "service.suggestion.browShaping" = "Augenbrauenformung";
 "service.suggestion.browTint" = "Augenbrauen färben";
 "service.suggestion.browLamination" = "Brow Lifting";
+
+/* Cancel confirmation and restore (#27) */
+"appointment.cancelConfirm.title" = "Termin stornieren?";
+"appointment.cancelConfirm.message" = "Die Zeit wird für andere Termine frei. Der Termin kann später wiederhergestellt werden, wenn die Zeit noch frei ist.";
+"appointment.cancelConfirm.confirm" = "Termin stornieren";
+"appointment.cancelConfirm.keep" = "Behalten";
+"appointment.restore" = "Wiederherstellen";
+"appointment.restoreConflict.title" = "Zeit bereits belegt";
+"appointment.restoreConflict.message" = "Zu dieser Zeit gibt es bereits einen anderen Termin. Bitte einen neuen Termin zu einer freien Zeit anlegen.";
+"common.ok" = "OK";

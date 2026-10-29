@@ -256,3 +256,13 @@
 "service.suggestion.browShaping" = "Regulacja brwi";
 "service.suggestion.browTint" = "Henna brwi";
 "service.suggestion.browLamination" = "Laminacja brwi";
+
+/* Cancel confirmation and restore (#27) */
+"appointment.cancelConfirm.title" = "Anulować wizytę?";
+"appointment.cancelConfirm.message" = "Czas zostanie zwolniony dla innych wizyt. Wizytę można później przywrócić, jeśli ten czas będzie nadal wolny.";
+"appointment.cancelConfirm.confirm" = "Anuluj wizytę";
+"appointment.cancelConfirm.keep" = "Zostaw";
+"appointment.restore" = "Przywróć";
+"appointment.restoreConflict.title" = "Termin jest zajęty";
+"appointment.restoreConflict.message" = "W tym czasie jest już inna wizyta. Utwórz nową wizytę w wolnym terminie.";
+"common.ok" = "OK";

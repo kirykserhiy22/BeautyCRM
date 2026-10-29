@@ -23,6 +23,8 @@ struct AppointmentRow: View {
     @State private var showEdit = false
     @State private var showComplete = false
     @State private var showNotes = false
+    @State private var showCancelConfirm = false
+    @State private var showRestoreConflict = false
     @State private var finalServicePrices: [UUID: String] = [:]
     @State private var completionItems: [CompletionServiceItem] = []
     
@@ -245,12 +247,9 @@ struct AppointmentRow: View {
 
                         if appt.status == .active {
 
+                            // Скасування — лише після підтвердження
                             Button {
-                                AppointmentEngine.cancel(
-                                    appointment: appt
-                                )
-
-                                try? context.save()
+                                showCancelConfirm = true
                             } label: {
                                 Label(
                                     localization.localizedString(for: "appointment.cancel"),
@@ -265,20 +264,38 @@ struct AppointmentRow: View {
 
                         } else if appt.status == .cancelled {
 
-                            Button {
-                                appt.status = .archived
-                                try? context.save()
-                            } label: {
-                                Label(
-                                    localization.localizedString(for: "appointment.hide"),
-                                    systemImage: "archivebox"
-                                )
+                            HStack(spacing: 10) {
+
+                                // Повернути випадково скасований запис
+                                Button {
+                                    restore()
+                                } label: {
+                                    Label(
+                                        localization.localizedString(for: "appointment.restore"),
+                                        systemImage: "arrow.uturn.backward.circle"
+                                    )
+                                    .frame(maxWidth: .infinity)
+                                    .multilineTextAlignment(.center)
+                                }
+                                .buttonStyle(.bordered)
+                                .tint(colors.accent)
                                 .frame(maxWidth: .infinity)
-                                .multilineTextAlignment(.center)
+
+                                Button {
+                                    AppointmentEngine.archive(appointment: appt)
+                                    try? context.save()
+                                } label: {
+                                    Label(
+                                        localization.localizedString(for: "appointment.hide"),
+                                        systemImage: "archivebox"
+                                    )
+                                    .frame(maxWidth: .infinity)
+                                    .multilineTextAlignment(.center)
+                                }
+                                .buttonStyle(.bordered)
+                                .tint(.gray)
+                                .frame(maxWidth: .infinity)
                             }
-                            .buttonStyle(.bordered)
-                            .tint(.gray)
-                            .frame(maxWidth: .infinity)
                         }
                     }
                     .frame(maxWidth: .infinity)
@@ -306,7 +323,41 @@ struct AppointmentRow: View {
                 .stroke(colors.border, lineWidth: 1)
         )
         .shadow(color: colors.shadow, radius: 6, y: 2)
-        
+
+        // CANCEL CONFIRMATION
+
+        .confirmationDialog(
+            localization.localizedString(for: "appointment.cancelConfirm.title"),
+            isPresented: $showCancelConfirm,
+            titleVisibility: .visible
+        ) {
+            Button(
+                localization.localizedString(for: "appointment.cancelConfirm.confirm"),
+                role: .destructive
+            ) {
+                AppointmentEngine.cancel(appointment: appt)
+                try? context.save()
+            }
+
+            Button(
+                localization.localizedString(for: "appointment.cancelConfirm.keep"),
+                role: .cancel
+            ) { }
+        } message: {
+            Text(localization.localizedString(for: "appointment.cancelConfirm.message"))
+        }
+
+        // RESTORE CONFLICT
+
+        .alert(
+            localization.localizedString(for: "appointment.restoreConflict.title"),
+            isPresented: $showRestoreConflict
+        ) {
+            Button(localization.localizedString(for: "common.ok"), role: .cancel) { }
+        } message: {
+            Text(localization.localizedString(for: "appointment.restoreConflict.message"))
+        }
+
         // NOTES
         
         .alert(
@@ -458,7 +509,29 @@ struct AppointmentRow: View {
 
 
 private extension AppointmentRow {
-    
+
+    // Відновлення скасованого запису: якщо його час уже зайняли — пояснюємо чому ні
+    func restore() {
+
+        let userID = appt.userID
+        let descriptor = FetchDescriptor<Appointment>(
+            predicate: #Predicate { $0.userID == userID }
+        )
+        let existing = (try? context.fetch(descriptor)) ?? []
+
+        switch AppointmentEngine.restore(appointment: appt, existingAppointments: existing) {
+
+        case .success:
+            try? context.save()
+
+        case .failure(.timeConflict):
+            showRestoreConflict = true
+
+        case .failure:
+            break
+        }
+    }
+
     var statusText: String {
 
         switch appt.status {

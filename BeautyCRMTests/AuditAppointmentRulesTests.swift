@@ -327,22 +327,23 @@ final class AuditAppointmentRulesTests: XCTestCase {
     func testCannotCompleteCancelledAppointment() {
         let appointment = F.appointment(start: F.date(hour: 10), minutes: 60, status: .cancelled)
 
-        AppointmentEngine.complete(appointment: appointment, finalServicePrices: [:])
+        let result = AppointmentEngine.complete(appointment: appointment, finalServicePrices: [:])
 
-        XCTExpectFailure("AUDIT: рушій не перевіряє статус — скасований запис можна «завершити» (захист лише в UI)")
+        XCTAssertEqual(failure(of: result), .invalidStatus)
         XCTAssertEqual(appointment.status, .cancelled)
+        XCTAssertNil(appointment.finalPrice)
     }
 
     func testCannotCancelCompletedAppointment() {
         let appointment = F.appointment(start: F.date(hour: 10), minutes: 60, status: .completed)
 
-        AppointmentEngine.cancel(appointment: appointment)
+        let result = AppointmentEngine.cancel(appointment: appointment)
 
-        XCTExpectFailure("AUDIT: рушій дозволяє скасувати вже завершений запис (захист лише в UI)")
+        XCTAssertEqual(failure(of: result), .invalidStatus)
         XCTAssertEqual(appointment.status, .completed)
     }
 
-    func testEditingCompletedAppointmentKeepsTotalsConsistent() {
+    func testEditingCompletedAppointmentIsRejected() {
         let cut = Service(userID: F.userID, name: "Cut", pricingType: .fixed, price: 30)
         let client = Client(userID: F.userID, name: "Demo Client")
         let appointment = F.appointment(start: F.date(hour: 10), minutes: 60)
@@ -355,16 +356,89 @@ final class AuditAppointmentRulesTests: XCTestCase {
             services: [cut],
             selectedServiceIDs: [cut.id],
             customPrices: [:],
-            startDate: appointment.startDate,
+            startDate: F.date(hour: 12),
             duration: 60,
             notes: "",
             existingAppointments: []
         )
 
-        XCTExpectFailure("AUDIT: завершений запис можна змінити через рушій; фінальні ціни послуг губляться, а finalPrice лишається старим")
-        if case .success = result {
-            XCTAssertEqual(appointment.totalFinalPrice, appointment.finalPrice)
-            XCTFail("Завершений запис змінено")
+        XCTAssertEqual(failure(of: result), .invalidStatus)
+        XCTAssertEqual(appointment.startDate, F.date(hour: 10), "Завершений запис не змінився")
+        XCTAssertEqual(appointment.totalFinalPrice, 45)
+        XCTAssertEqual(appointment.finalPrice, 45)
+    }
+
+    func testAllowedStatusTransitions() {
+        let all: [AppointmentStatus] = [.active, .completed, .cancelled, .archived]
+        let allowed: Set<String> = ["active→completed", "active→cancelled", "cancelled→active", "cancelled→archived"]
+
+        for from in all {
+            for to in all {
+                XCTAssertEqual(
+                    from.canChange(to: to),
+                    allowed.contains("\(from.rawValue)→\(to.rawValue)"),
+                    "\(from) → \(to)"
+                )
+            }
         }
+    }
+
+    func testRestoreCancelledAppointment() {
+        let appointment = F.appointment(start: F.date(hour: 10), minutes: 60)
+        AppointmentEngine.cancel(appointment: appointment)
+
+        let result = AppointmentEngine.restore(appointment: appointment, existingAppointments: [appointment])
+
+        XCTAssertNoThrow(try result.get())
+        XCTAssertEqual(appointment.status, .active)
+    }
+
+    func testRestoreFailsWhenTimeIsTaken() {
+        // Поки запис був скасований, на його час записали іншого клієнта
+        let cancelled = F.appointment(start: F.date(hour: 10), minutes: 60, status: .cancelled)
+        let newOne = F.appointment(start: F.date(hour: 10, 30), minutes: 60)
+
+        let result = AppointmentEngine.restore(appointment: cancelled, existingAppointments: [cancelled, newOne])
+
+        XCTAssertEqual(failure(of: result), .timeConflict)
+        XCTAssertEqual(cancelled.status, .cancelled)
+    }
+
+    func testOnlyCancelledCanBeArchived() {
+        let active = F.appointment(start: F.date(hour: 10), minutes: 60)
+        XCTAssertEqual(failure(of: AppointmentEngine.archive(appointment: active)), .invalidStatus)
+        XCTAssertEqual(active.status, .active)
+
+        AppointmentEngine.cancel(appointment: active)
+        XCTAssertNoThrow(try AppointmentEngine.archive(appointment: active).get())
+        XCTAssertEqual(active.status, .archived)
+        XCTAssertEqual(failure(of: AppointmentEngine.restore(appointment: active, existingAppointments: [])), .invalidStatus)
+    }
+
+
+    func testCancelAndRestoreTextsAreTranslated() {
+        let keys = [
+            "appointment.cancelConfirm.title", "appointment.cancelConfirm.message",
+            "appointment.cancelConfirm.confirm", "appointment.cancelConfirm.keep",
+            "appointment.restore", "appointment.restoreConflict.title",
+            "appointment.restoreConflict.message", "common.ok"
+        ]
+
+        for language in SupportedLanguage.all.map(\.code) {
+            let path = Bundle.main.path(forResource: language, ofType: "lproj")
+            let bundle = path.flatMap(Bundle.init(path:))
+            for key in keys {
+                let text = bundle?.localizedString(forKey: key, value: nil, table: "Localizable")
+                XCTAssertNotEqual(text, key, "\(language): \(key)")
+            }
+        }
+    }
+
+
+    private func failure(of result: Result<Void, AppointmentError>) -> AppointmentError? {
+        if case .failure(let error) = result {
+            return error
+        }
+        return nil
     }
 }
