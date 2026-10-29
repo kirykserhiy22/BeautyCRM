@@ -416,6 +416,25 @@ final class AuditAppointmentRulesTests: XCTestCase {
     }
 
 
+    func testCancelAndRestoreTextsAreTranslated() {
+        let keys = [
+            "appointment.cancelConfirm.title", "appointment.cancelConfirm.message",
+            "appointment.cancelConfirm.confirm", "appointment.cancelConfirm.keep",
+            "appointment.restore", "appointment.restoreConflict.title",
+            "appointment.restoreConflict.message", "common.ok"
+        ]
+
+        for language in SupportedLanguage.all.map(\.code) {
+            let path = Bundle.main.path(forResource: language, ofType: "lproj")
+            let bundle = path.flatMap(Bundle.init(path:))
+            for key in keys {
+                let text = bundle?.localizedString(forKey: key, value: nil, table: "Localizable")
+                XCTAssertNotEqual(text, key, "\(language): \(key)")
+            }
+        }
+    }
+
+
     private func failure(of result: Result<Void, AppointmentError>) -> AppointmentError? {
         if case .failure(let error) = result {
             return error

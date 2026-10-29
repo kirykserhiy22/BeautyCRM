@@ -256,3 +256,13 @@
 "service.suggestion.browShaping" = "Brow shaping";
 "service.suggestion.browTint" = "Brow tint";
 "service.suggestion.browLamination" = "Brow lamination";
+
+/* Cancel confirmation and restore (#27) */
+"appointment.cancelConfirm.title" = "Cancel appointment?";
+"appointment.cancelConfirm.message" = "The time will be freed for other appointments. The appointment can be restored later if this time is still free.";
+"appointment.cancelConfirm.confirm" = "Cancel appointment";
+"appointment.cancelConfirm.keep" = "Keep";
+"appointment.restore" = "Restore";
+"appointment.restoreConflict.title" = "Time is taken";
+"appointment.restoreConflict.message" = "Another appointment already takes this time. Create a new appointment at a free time.";
+"common.ok" = "OK";

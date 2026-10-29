@@ -257,3 +257,13 @@
 "service.suggestion.browShaping" = "Корекція брів";
 "service.suggestion.browTint" = "Фарбування брів";
 "service.suggestion.browLamination" = "Ламінування брів";
+
+/* Cancel confirmation and restore (#27) */
+"appointment.cancelConfirm.title" = "Скасувати запис?";
+"appointment.cancelConfirm.message" = "Час звільниться для інших записів. Запис можна буде відновити, якщо цей час лишиться вільним.";
+"appointment.cancelConfirm.confirm" = "Скасувати запис";
+"appointment.cancelConfirm.keep" = "Залишити";
+"appointment.restore" = "Відновити";
+"appointment.restoreConflict.title" = "Час уже зайнятий";
+"appointment.restoreConflict.message" = "На цей час уже є інший запис. Створіть новий запис на вільний час.";
+"common.ok" = "OK";
