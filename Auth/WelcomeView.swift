@@ -70,7 +70,7 @@ struct WelcomeView: View {
                         .font(.system(size: 70))
                         .foregroundColor(colors.accent)
 
-                    Text("Beauty CRM")
+                    Text(Constants.appName)
                         .font(.system(size: 34, weight: .bold))
                         .foregroundColor(colors.textPrimary)
                         .padding(.top, 12)

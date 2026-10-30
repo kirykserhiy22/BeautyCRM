@@ -7,5 +7,6 @@
 import Foundation
 
 enum Constants {
-    static let appName = "BeautyCRM"
+    // Назва продукту для екранів — єдине місце, де вона записана (#35)
+    static let appName = "Beauty Base"
 }
