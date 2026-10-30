@@ -136,8 +136,6 @@
 "analytics.chart.tapHint" = "Tap a bar to see the amount";
 "analytics.chart.date" = "Date";
 "analytics.chart.revenue" = "Revenue";
-"clients.duplicateNameTitle" = "Duplicate client";
-"clients.duplicateNameMessage" = "A client with this name already exists.";
 "clients.title" = "Clients";
 "clients.search" = "Search clients...";
 "clients.info" = "Client Info";
@@ -282,3 +280,8 @@
 /* Profile settings (#34) */
 "settings.profile" = "Profile";
 "settings.profile.currencyNote" = "Amounts are not converted — only the currency sign changes.";
+
+/* Possible duplicate client (#28) */
+"clients.possibleDuplicate.title" = "Same client?";
+"clients.possibleDuplicate.message" = "A client named “%@” is already in your list. Save anyway?";
+"clients.possibleDuplicate.save" = "Save anyway";

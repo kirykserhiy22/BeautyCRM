@@ -31,7 +31,8 @@ struct ClientFormView: View {
     @State private var instagram = ""
     @State private var telegram = ""
     @State private var notes = ""
-    @State private var showDuplicateNameAlert = false
+    // Ім'я наявного клієнта, схожого на цього (показуємо попередження)
+    @State private var possibleDuplicateName: String?
 
     // MARK: - THEME
 
@@ -84,12 +85,23 @@ struct ClientFormView: View {
                 }
             }
             .alert(
-                localization.localizedString(for: "clients.duplicateNameTitle"),
-                isPresented: $showDuplicateNameAlert
+                localization.localizedString(for: "clients.possibleDuplicate.title"),
+                isPresented: Binding(
+                    get: { possibleDuplicateName != nil },
+                    set: { if !$0 { possibleDuplicateName = nil } }
+                )
             ) {
-                Button("OK", role: .cancel) {}
+                Button(localization.localizedString(for: "clients.possibleDuplicate.save")) {
+                    saveClient(allowDuplicate: true)
+                }
+                Button(localization.localizedString(for: "common.cancel"), role: .cancel) {}
             } message: {
-                Text(localization.localizedString(for: "clients.duplicateNameMessage"))
+                Text(
+                    String(
+                        format: localization.localizedString(for: "clients.possibleDuplicate.message"),
+                        possibleDuplicateName ?? ""
+                    )
+                )
             }
             .background(colors.secondaryBackground)
             .navigationTitle(title)
@@ -129,6 +141,13 @@ private extension ClientFormView {
         }
     }
 
+    var editingClientID: UUID? {
+        if case .edit(let client) = mode {
+            return client.id
+        }
+        return nil
+    }
+
     func loadClientIfNeeded() {
 
         switch mode {
@@ -149,56 +168,39 @@ private extension ClientFormView {
         }
     }
     
-    func hasDuplicateName(_ name: String, userID: String) throws -> Bool {
-        let normalizedName = name
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-            .folding(options: [.caseInsensitive, .diacriticInsensitive], locale: .current)
-
-        var descriptor = FetchDescriptor<Client>(
-            predicate: #Predicate { client in
-                client.userID == userID &&
-                client.deletedAt == nil
-            }
-        )
-
-        descriptor.fetchLimit = 500
-
-        let clients = try context.fetch(descriptor)
-
-        let currentClientID: UUID?
-        if case .edit(let client) = mode {
-            currentClientID = client.id
-        } else {
-            currentClientID = nil
-        }
-
-        return clients.contains { client in
-            guard client.id != currentClientID else { return false }
-
-            let existingName = client.name
-                .trimmingCharacters(in: .whitespacesAndNewlines)
-                .folding(options: [.caseInsensitive, .diacriticInsensitive], locale: .current)
-
-            return existingName == normalizedName
-        }
-    }
-
-    private func saveClient() {
+    // Схожий клієнт — не заборона, а питання: майстер вирішує сам
+    private func saveClient(allowDuplicate: Bool = false) {
 
         guard let userID = appState.session.userID else {
             print("NO SESSION USER ID")
             return
         }
 
-        do {
-            if try hasDuplicateName(name, userID: userID) {
-                showDuplicateNameAlert = true
+        if !allowDuplicate {
+            do {
+                if let existing = try ClientManager.possibleDuplicate(
+                    name: name,
+                    phone: phone,
+                    instagram: instagram,
+                    telegram: telegram,
+                    userID: userID,
+                    excluding: editingClientID,
+                    context: context
+                ) {
+                    possibleDuplicateName = existing.name
+                    return
+                }
+            } catch {
+                SaveErrorReporter.report(error)
                 return
             }
-        } catch {
-            SaveErrorReporter.report(error)
-            return
         }
+
+        let name = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        let phone = phone.trimmingCharacters(in: .whitespacesAndNewlines)
+        let instagram = instagram.trimmingCharacters(in: .whitespacesAndNewlines)
+        let telegram = telegram.trimmingCharacters(in: .whitespacesAndNewlines)
+        let notes = notes.trimmingCharacters(in: .whitespacesAndNewlines)
 
         switch mode {
 

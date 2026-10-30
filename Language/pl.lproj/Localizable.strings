@@ -136,8 +136,6 @@
 "analytics.chart.tapHint" = "Dotknij słupka, aby zobaczyć kwotę";
 "analytics.chart.date" = "Data";
 "analytics.chart.revenue" = "Przychód";
-"clients.duplicateNameTitle" = "Klient już istnieje";
-"clients.duplicateNameMessage" = "Klient o tym imieniu już istnieje.";
 "clients.title" = "Klienci";
 "clients.search" = "Szukaj klientów...";
 "clients.info" = "Informacje o kliencie";
@@ -282,3 +280,8 @@
 /* Profile settings (#34) */
 "settings.profile" = "Profil";
 "settings.profile.currencyNote" = "Kwoty nie są przeliczane – zmienia się tylko symbol waluty.";
+
+/* Possible duplicate client (#28) */
+"clients.possibleDuplicate.title" = "Ten sam klient?";
+"clients.possibleDuplicate.message" = "Klient „%@” jest już na liście. Zapisać mimo to?";
+"clients.possibleDuplicate.save" = "Zapisz mimo to";
