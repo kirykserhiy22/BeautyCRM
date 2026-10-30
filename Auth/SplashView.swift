@@ -24,7 +24,7 @@ struct SplashView: View {
     var body: some View {
         
         VStack {
-            Text("Beauty CRM")
+            Text(Constants.appName)
                 .font(.largeTitle)
         }
         .onAppear {

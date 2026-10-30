@@ -1004,8 +1004,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = GWK8SK6DCL;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Beauty Base";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Allow saving client photos to your photo library.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Allow selecting client photos from your photo library.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -1038,8 +1041,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = GWK8SK6DCL;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Beauty Base";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Allow saving client photos to your photo library.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Allow selecting client photos from your photo library.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

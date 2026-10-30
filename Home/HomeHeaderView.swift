@@ -18,7 +18,7 @@ struct HomeHeaderView: View {
 
         VStack(alignment: .leading, spacing: 6) {
 
-            Text("BeautyBook")
+            Text(Constants.appName)
                 .font(.largeTitle.bold())
                 .foregroundColor(colors.textPrimary)
 
