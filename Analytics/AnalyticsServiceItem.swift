@@ -9,7 +9,8 @@ import Foundation
 
 struct AnalyticsServiceItem: Identifiable {
 
-    let id = UUID()
+    // serviceID — одна послуга навіть після перейменування
+    let id: UUID
 
     let name: String
     let revenue: Decimal
@@ -19,7 +20,8 @@ struct AnalyticsServiceItem: Identifiable {
 
 struct AnalyticsClientItem: Identifiable {
 
-    let id = UUID()
+    // clientID — однофамільці не зливаються в одного
+    let id: UUID
 
     let name: String
     let spent: Decimal

@@ -24,6 +24,10 @@ struct AnalyticsView: View {
 
     @Query private var appointments: [Appointment]
 
+    // Актуальні імена клієнтів і назви послуг для топів (і видалені теж)
+    @Query private var clients: [Client]
+    @Query private var services: [Service]
+
 
     // MARK: - FILTER
 
@@ -60,11 +64,7 @@ struct AnalyticsView: View {
     // MARK: - CALENDAR
 
     private var calendar: Calendar {
-
-        // Тиждень починається з понеділка (ринок — Європа)
-        var calendar = Calendar.current
-        calendar.firstWeekday = 2
-        return calendar
+        AnalyticsEngine.calendar()
     }
 
 
@@ -118,234 +118,36 @@ struct AnalyticsView: View {
     }
 
 
-    // MARK: - FILTERED APPOINTMENTS
+    // MARK: - SUMMARY
 
-    private var completedAppointments: [Appointment] {
+    // Усі цифри екрана рахує AnalyticsEngine — один раз на оновлення екрана
+    private func makeSummary() -> AnalyticsSummary? {
 
-        guard let userID = appState.session.userID else {
-            return []
-        }
-
-        return appointments.filter { appointment in
-
-            guard
-                appointment.userID == userID,
-                appointment.status == .completed,
-                appointment.finalPrice != nil
-            else {
-                return false
-            }
-
-            return isDateIncluded(
-                appointment.startDate
+        guard
+            let userID = appState.session.userID,
+            let interval = AnalyticsEngine.interval(
+                for: selectedPeriod,
+                reference: now,
+                month: selectedMonth,
+                year: selectedYear,
+                calendar: calendar
             )
-        }
-    }
-
-
-    // MARK: - PERIOD FILTER
-
-    private func isDateIncluded(
-        _ date: Date
-    ) -> Bool {
-
-        switch selectedPeriod {
-
-        case .week:
-
-            return calendar.isDate(
-                date,
-                equalTo: now,
-                toGranularity: .weekOfYear
-            )
-
-
-        case .month:
-
-            let components =
-                calendar.dateComponents(
-                    [.year, .month],
-                    from: date
-                )
-
-            return components.year == selectedYear &&
-                   components.month == selectedMonth
-
-
-        case .year:
-
-            let year =
-                calendar.component(
-                    .year,
-                    from: date
-                )
-
-            return year == selectedYear
-        }
-    }
-
-
-    // MARK: - TOTAL REVENUE
-
-    private var totalRevenue: Decimal {
-
-        completedAppointments.reduce(Decimal(0)) {
-
-            $0 + ($1.finalPrice ?? 0)
-        }
-    }
-
-
-    // MARK: - TOTAL CLIENTS
-
-    private var totalClients: Int {
-
-        Set(
-            completedAppointments.map {
-                $0.clientID
-            }
-        ).count
-    }
-
-
-    // MARK: - AVERAGE CHECK
-
-    private var averageCheck: Decimal {
-
-        guard !completedAppointments.isEmpty else {
-            return 0
+        else {
+            return nil
         }
 
-        return totalRevenue /
-            Decimal(completedAppointments.count)
-    }
+        let ownClients = clients.filter { $0.userID == userID }
+        let ownServices = services.filter { $0.userID == userID }
 
-
-    // MARK: - TOTAL HOURS
-
-    private var totalHours: Double {
-
-        let totalMinutes =
-            completedAppointments.reduce(0) {
-
-                $0 + $1.duration
-            }
-
-        return Double(totalMinutes) / 60
-    }
-
-
-    // MARK: - PROFIT PER HOUR
-
-    private var hourlyIncome: Decimal {
-
-        guard totalHours > 0 else {
-            return 0
-        }
-
-        // Рахуємо через хвилини, щоб не втрачати точність на дробових годинах
-        let totalMinutes =
-            completedAppointments.reduce(0) {
-
-                $0 + $1.duration
-            }
-
-        return totalRevenue * 60 / Decimal(totalMinutes)
-    }
-
-
-    // MARK: - TOP SERVICES
-
-    private var topServices: [AnalyticsServiceItem] {
-
-        var grouped:
-            [String: (
-                revenue: Decimal,
-                count: Int
-            )] = [:]
-
-
-        for appointment in completedAppointments {
-
-            for service in appointment.services {
-
-                let revenue =
-                    service.finalPrice
-                    ?? service.plannedPrice
-
-
-                grouped[
-                    service.serviceName,
-                    default: (0, 0)
-                ].revenue += revenue
-
-
-                grouped[
-                    service.serviceName,
-                    default: (0, 0)
-                ].count += 1
-            }
-        }
-
-
-        return grouped.map { key, value in
-
-            AnalyticsServiceItem(
-                name: key,
-                revenue: value.revenue,
-                count: value.count
-            )
-
-        }
-        .sorted {
-
-            if $0.count == $1.count {
-
-                return $0.revenue > $1.revenue
-            }
-
-            return $0.count > $1.count
-        }
-    }
-
-
-    // MARK: - TOP CLIENTS
-
-    private var topClients: [AnalyticsClientItem] {
-
-        let grouped =
-            Dictionary(
-                grouping: completedAppointments
-            ) {
-                $0.clientName
-            }
-
-
-        return grouped.map { key, value in
-
-            let spent =
-                value.reduce(Decimal(0)) {
-
-                    $0 + ($1.finalPrice ?? 0)
-                }
-
-
-            return AnalyticsClientItem(
-                name: key,
-                spent: spent,
-                visits: value.count
-            )
-
-        }
-        .sorted {
-
-            if $0.visits == $1.visits {
-
-                return $0.spent > $1.spent
-            }
-
-            return $0.visits > $1.visits
-        }
+        return AnalyticsEngine.summary(
+            appointments: appointments,
+            userID: userID,
+            clientNames: Dictionary(ownClients.map { ($0.id, $0.name) }, uniquingKeysWith: { first, _ in first }),
+            serviceNames: Dictionary(ownServices.map { ($0.id, $0.name) }, uniquingKeysWith: { first, _ in first }),
+            period: selectedPeriod,
+            interval: interval,
+            calendar: calendar
+        )
     }
 
 
@@ -361,13 +163,16 @@ struct AnalyticsView: View {
 
                     headerSection
 
-                    revenueCard
+                    if let summary = makeSummary() {
 
-                    statsGrid
+                        revenueCard(summary)
 
-                    topServicesSection
+                        statsGrid(summary)
 
-                    topClientsSection
+                        topServicesSection(summary)
+
+                        topClientsSection(summary)
+                    }
                 }
                 .padding()
             }
@@ -611,7 +416,7 @@ struct AnalyticsView: View {
 
     // MARK: - REVENUE CARD
 
-    private var revenueCard: some View {
+    private func revenueCard(_ summary: AnalyticsSummary) -> some View {
 
         VStack(
             alignment: .leading,
@@ -623,7 +428,7 @@ struct AnalyticsView: View {
 
 
             Text(
-                currency(totalRevenue)
+                currency(summary.revenue)
             )
             .font(
                 .system(
@@ -641,10 +446,10 @@ struct AnalyticsView: View {
             )
 
 
-            chartSelectionInfo
+            chartSelectionInfo(summary.chart)
 
 
-            revenueChart
+            revenueChart(summary.chart)
         }
         .padding()
         .background(
@@ -679,7 +484,7 @@ struct AnalyticsView: View {
 
     // MARK: - STATS GRID
 
-    private var statsGrid: some View {
+    private func statsGrid(_ summary: AnalyticsSummary) -> some View {
 
         LazyVGrid(
 
@@ -695,28 +500,28 @@ struct AnalyticsView: View {
 
             analyticsCard(
                 title: "analytics.appointments",
-                value: "\(completedAppointments.count)",
+                value: "\(summary.appointmentCount)",
                 icon: "calendar"
             )
 
 
             analyticsCard(
                 title: "analytics.clients",
-                value: "\(totalClients)",
+                value: "\(summary.clientCount)",
                 icon: "person.2"
             )
 
 
             analyticsCard(
                 title: "analytics.avgCheck",
-                value: currency(averageCheck),
+                value: currency(summary.averageCheck),
                 icon: "eurosign.circle"
             )
 
 
             analyticsCard(
                 title: "analytics.perHour",
-                value: currency(hourlyIncome),
+                value: currency(summary.hourlyIncome),
                 icon: "clock"
             )
         }
@@ -725,7 +530,7 @@ struct AnalyticsView: View {
 
     // MARK: - TOP SERVICES
 
-    private var topServicesSection: some View {
+    private func topServicesSection(_ summary: AnalyticsSummary) -> some View {
 
         VStack(
             alignment: .leading,
@@ -740,7 +545,7 @@ struct AnalyticsView: View {
 
 
             ForEach(
-                topServices.prefix(3)
+                summary.topServices.prefix(3)
             ) { item in
 
                 HStack {
@@ -798,7 +603,7 @@ struct AnalyticsView: View {
 
     // MARK: - TOP CLIENTS
 
-    private var topClientsSection: some View {
+    private func topClientsSection(_ summary: AnalyticsSummary) -> some View {
 
         VStack(
             alignment: .leading,
@@ -812,7 +617,7 @@ struct AnalyticsView: View {
 
 
             ForEach(
-                topClients.prefix(3)
+                summary.topClients.prefix(3)
             ) { item in
 
                 HStack {
@@ -917,119 +722,15 @@ struct AnalyticsView: View {
     }
 
 
-    // MARK: - CHART DATA
+    // MARK: - CHART SELECTION
 
-    // Межі вибраного періоду: поточний тиждень, вибраний місяць або рік
-    private var periodInterval: DateInterval? {
-
-        switch selectedPeriod {
-
-        case .week:
-
-            return calendar.dateInterval(
-                of: .weekOfYear,
-                for: now
-            )
-
-
-        case .month:
-
-            guard let date = calendar.date(
-                from: DateComponents(
-                    year: selectedYear,
-                    month: selectedMonth
-                )
-            ) else {
-                return nil
-            }
-
-            return calendar.dateInterval(of: .month, for: date)
-
-
-        case .year:
-
-            guard let date = calendar.date(
-                from: DateComponents(year: selectedYear)
-            ) else {
-                return nil
-            }
-
-            return calendar.dateInterval(of: .year, for: date)
-        }
-    }
-
-
-    // Один стовпчик = день (тиждень, місяць) або місяць (рік)
-    private var chartUnit: Calendar.Component {
-
-        selectedPeriod == .year ? .month : .day
-    }
-
-
-    // Стовпчик на кожен день / місяць періоду, навіть якщо доходу не було,
-    // щоб графік завжди мав однакову, зрозумілу шкалу
-    private var chartData: [AnalyticsChartItem] {
-
-        guard let interval = periodInterval else {
-            return []
-        }
-
-
-        var buckets: [Date: (revenue: Decimal, count: Int)] = [:]
-
-        for appointment in completedAppointments {
-
-            guard let bucket = calendar.dateInterval(
-                of: chartUnit,
-                for: appointment.startDate
-            )?.start else {
-                continue
-            }
-
-            buckets[bucket, default: (0, 0)].revenue +=
-                appointment.finalPrice ?? 0
-
-            buckets[bucket, default: (0, 0)].count += 1
-        }
-
-
-        var items: [AnalyticsChartItem] = []
-        var date = interval.start
-
-        while date < interval.end {
-
-            let bucket = buckets[date] ?? (0, 0)
-
-            items.append(
-                AnalyticsChartItem(
-                    date: date,
-                    revenue: bucket.revenue,
-                    count: bucket.count
-                )
-            )
-
-            guard let next = calendar.date(
-                byAdding: chartUnit,
-                value: 1,
-                to: date
-            ) else {
-                break
-            }
-
-            date = next
-        }
-
-        return items
-    }
-
-
-    private var selectedChartItem: AnalyticsChartItem? {
+    private func selectedChartItem(in items: [AnalyticsChartItem]) -> AnalyticsChartItem? {
 
         guard let selectedChartDate else {
             return nil
         }
 
-        return chartData.first {
+        return items.first {
             $0.date == selectedChartDate
         }
     }
@@ -1039,9 +740,7 @@ struct AnalyticsView: View {
 
     // Кожен стовпчик — окрема «клітинка» на осі X (ключ = номер у періоді),
     // тому підписи завжди стоять рівно під своїм стовпчиком
-    private var revenueChart: some View {
-
-        let items = chartData
+    private func revenueChart(_ items: [AnalyticsChartItem]) -> some View {
 
         return Chart(Array(items.enumerated()), id: \.element.date) { index, item in
 
@@ -1197,11 +896,11 @@ struct AnalyticsView: View {
 
 
     // Рядок над графіком: дані вибраного стовпчика або підказка
-    private var chartSelectionInfo: some View {
+    private func chartSelectionInfo(_ items: [AnalyticsChartItem]) -> some View {
 
         HStack {
 
-            if let item = selectedChartItem {
+            if let item = selectedChartItem(in: items) {
 
                 VStack(
                     alignment: .leading,
