@@ -14,6 +14,8 @@ enum AppointmentError: Error {
     case noServices
     // Дія не дозволена для поточного статусу запису
     case invalidStatus
+    // Для послуги зі змінною ціною не введено суму
+    case missingPrice
 
 
     // Ключ з Localizable.strings — текст перекладається на мову додатку
@@ -27,6 +29,8 @@ enum AppointmentError: Error {
             return "appointment.error.noServices"
         case .invalidStatus:
             return "appointment.error.invalidStatus"
+        case .missingPrice:
+            return "appointment.error.missingPrice"
         }
     }
 }
@@ -38,6 +42,22 @@ struct ConflictResult {
 }
 
 final class AppointmentEngine {
+
+    // MARK: - PRICES
+
+    // Кожна вибрана послуга зі змінною ціною має мати введену суму
+    // (0 дозволений, якщо його ввели свідомо — тоді він є в customPrices)
+    static func hasMissingPrice(
+        services: [Service],
+        selectedServiceIDs: Set<UUID>,
+        customPrices: [UUID: Decimal]
+    ) -> Bool {
+        services.contains {
+            selectedServiceIDs.contains($0.id)
+                && $0.pricingType == .variable
+                && customPrices[$0.id] == nil
+        }
+    }
 
     // MARK: - CONFLICT
 
@@ -142,6 +162,10 @@ final class AppointmentEngine {
             return .failure(.noServices)
         }
 
+        if hasMissingPrice(services: services, selectedServiceIDs: selectedServiceIDs, customPrices: customPrices) {
+            return .failure(.missingPrice)
+        }
+
         let items = selected.map {
             AppointmentServiceItem(
                 serviceID: $0.id,
@@ -202,6 +226,10 @@ final class AppointmentEngine {
             ignoring: appointment.id
         ) {
             return .failure(.timeConflict)
+        }
+
+        if hasMissingPrice(services: services, selectedServiceIDs: selectedServiceIDs, customPrices: customPrices) {
+            return .failure(.missingPrice)
         }
 
         // Послуги, що вже є в записі, лишаються з погодженою ціною —

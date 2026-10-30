@@ -431,6 +431,19 @@ struct AppointmentRow: View {
                                     )
                                     .keyboardType(.decimalPad)
                                     .textFieldStyle(.roundedBorder)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 6)
+                                            .stroke(
+                                                isPriceInvalid(item.serviceID) ? colors.danger : .clear,
+                                                lineWidth: 1.5
+                                            )
+                                    )
+
+                                    if isPriceInvalid(item.serviceID) {
+                                        Text(localization.localizedString(for: "money.invalid"))
+                                            .font(.caption)
+                                            .foregroundColor(colors.danger)
+                                    }
                                 }
                                 .padding()
                                 .background(colors.card)
@@ -456,16 +469,10 @@ struct AppointmentRow: View {
                         
                         Button {
                             
-                            let mapped =
-                            Dictionary(
-                                uniqueKeysWithValues:
-                                    finalServicePrices.map {
-                                        (
-                                            $0.key,
-                                            AppFormatting.parseMoney($0.value) ?? 0
-                                        )
-                                    }
-                            )
+                            // Сюди доходимо лише з правильними сумами (кнопка інакше неактивна)
+                            let mapped = finalServicePrices.compactMapValues {
+                                AppFormatting.parseMoney($0)
+                            }
                             
                             AppointmentEngine.complete(
                                 appointment: appt,
@@ -481,10 +488,11 @@ struct AppointmentRow: View {
                             Text(localization.localizedString(for: "appointment.confirm"))
                                 .frame(maxWidth: .infinity)
                                 .padding()
-                                .background(Color.green)
+                                .background(canConfirmCompletion ? Color.green : Color.gray.opacity(0.4))
                                 .foregroundColor(.white)
                                 .cornerRadius(14)
                         }
+                        .disabled(!canConfirmCompletion)
                     }
                     .padding()
                 }
@@ -604,6 +612,15 @@ private extension AppointmentRow {
         return formatter.string(from: date)
     }
     
+    // Порожньо або не сума — не можна завершити (раніше ставало 0 €)
+    func isPriceInvalid(_ serviceID: UUID) -> Bool {
+        AppFormatting.parseMoney(finalServicePrices[serviceID] ?? "") == nil
+    }
+
+    var canConfirmCompletion: Bool {
+        completionItems.allSatisfy { !isPriceInvalid($0.serviceID) }
+    }
+
     var finalTotal: Decimal {
         
         finalServicePrices.values.reduce(Decimal(0)) {

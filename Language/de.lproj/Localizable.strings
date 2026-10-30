@@ -274,3 +274,7 @@
 "appointment.error.invalidStatus" = "Dieser Termin kann nicht mehr geändert werden.";
 "error.save.title" = "Speichern fehlgeschlagen";
 "error.save.message" = "Die Änderungen wurden nicht gespeichert. Bitte erneut versuchen. Wenn es wieder passiert, die App neu starten.";
+
+/* Money input (#32, #33) */
+"money.invalid" = "Betrag eingeben, z. B. 25 oder 25,50";
+"appointment.error.missingPrice" = "Für jede Leistung mit variablem Preis einen Preis eingeben.";

@@ -382,21 +382,19 @@ private extension AppointmentFormView {
 
                                 } else {
 
-                                    TextField(
-                                        "Price",
+                                    // Порожньо або не сума — ключ зникає, і запис не збережеться
+                                    MoneyField(
+                                        placeholder: localization.localizedString(for: "appointment.price"),
                                         value: Binding(
                                             get: {
-                                                serviceState.customPrices[service.id] ?? 0
+                                                serviceState.customPrices[service.id]
                                             },
                                             set: {
                                                 serviceState.customPrices[service.id] = $0
                                             }
-                                        ),
-                                        format: .number
+                                        )
                                     )
-                                    .keyboardType(.decimalPad)
-                                    .frame(width: 90)
-                                    .textFieldStyle(.roundedBorder)
+                                    .frame(width: 100)
                                 }
                             }
                         }
@@ -404,6 +402,12 @@ private extension AppointmentFormView {
                         .background(colors.card)
                         .cornerRadius(12)
                     }
+                }
+
+                if hasMissingPrice {
+                    Text(localization.localizedString(for: "appointment.error.missingPrice"))
+                        .font(.caption)
+                        .foregroundColor(colors.danger)
                 }
             }
         }
@@ -617,7 +621,20 @@ private extension AppointmentFormView {
             return false
         }
 
+        guard !hasMissingPrice else {
+            return false
+        }
+
         return !conflictInfo.hasConflict
+    }
+
+    // Є послуга зі змінною ціною без введеної суми
+    var hasMissingPrice: Bool {
+        AppointmentEngine.hasMissingPrice(
+            services: serviceState.selectedServices,
+            selectedServiceIDs: serviceState.selectedServiceIDs,
+            customPrices: serviceState.customPrices
+        )
     }
 
     func saveAppointment() {

@@ -27,10 +27,9 @@ struct EditServiceView: View {
                 TextField("services.name", text: $service.name)
                 
                 if service.pricingType == .fixed {
-                    TextField(
-                        "services.price",
-                        value: $service.price,
-                        format: .number
+                    MoneyField(
+                        placeholder: localization.localizedString(for: "services.price"),
+                        value: $service.price
                     )
                 }
                 
@@ -46,6 +45,8 @@ struct EditServiceView: View {
                         dismiss()
                     }
                 }
+                // Фіксована послуга без правильної ціни не зберігається
+                .disabled(service.pricingType == .fixed && service.price == nil)
             }
             .navigationTitle("services.editTitle")
         }

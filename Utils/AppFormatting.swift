@@ -104,16 +104,64 @@ enum AppFormatting {
 
     // MARK: - Money
 
-    // Ціна з поля вводу: приймає і крапку, і кому ("12.5" або "12,5")
+    // Ціна з поля вводу. Повертає nil, якщо це не сума — тоді поле
+    // підсвічується, а не перетворюється мовчки на 0.
+    //   "12,5", "12.50"        → 12,50   (кома або крапка — копійки)
+    //   "1 200", "1.200"       → 1200    (3 цифри після роздільника — тисячі)
+    //   "1.234,50", "1,234.50" → 1234,50 (останній роздільник — копійки)
+    //   "12abc", "12.5.3", "-5", "" → nil
     static func parseMoney(_ text: String) -> Decimal? {
-        let normalized = text
+        let compact = text
             .trimmingCharacters(in: .whitespacesAndNewlines)
-            .replacingOccurrences(of: " ", with: "")
-            .replacingOccurrences(of: ",", with: ".")
+            .filter { !$0.isWhitespace }
 
-        guard !normalized.isEmpty else {
+        guard
+            !compact.isEmpty,
+            compact.allSatisfy({ $0.isASCII && ($0.isNumber || $0 == "." || $0 == ",") })
+        else {
             return nil
         }
+
+        // Позиція останнього роздільника і що після нього
+        let separators: Set<Character> = [".", ","]
+        var integerPart = compact
+        var fraction = ""
+
+        if let last = compact.lastIndex(where: { separators.contains($0) }) {
+
+            let after = String(compact[compact.index(after: last)...])
+            let before = String(compact[..<last])
+            let separatorKinds = Set(compact.filter { separators.contains($0) })
+
+            if separatorKinds.count == 2 || (after.count <= 2 && !before.contains(compact[last])) {
+                // Останній роздільник — копійки ("1.234,50", "12,5")
+                guard after.count <= 2 else {
+                    return nil
+                }
+                integerPart = before
+                fraction = after
+            } else {
+                // Лише тисячі ("1.200", "1.234.567")
+                integerPart = compact
+            }
+        }
+
+        // Що лишилось у цілій частині — тільки групи тисяч по 3 цифри
+        let groups = integerPart.split(
+            omittingEmptySubsequences: false,
+            whereSeparator: { separators.contains($0) }
+        )
+
+        guard
+            let first = groups.first,
+            groups.dropFirst().allSatisfy({ $0.count == 3 }),
+            !(first.isEmpty && groups.count > 1)
+        else {
+            return nil
+        }
+
+        let digits = groups.joined()
+        let normalized = (digits.isEmpty ? "0" : digits) + (fraction.isEmpty ? "" : "." + fraction)
 
         return Decimal(
             string: normalized,

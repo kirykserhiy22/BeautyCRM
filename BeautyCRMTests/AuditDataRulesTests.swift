@@ -25,16 +25,27 @@ final class AuditDataRulesTests: XCTestCase {
         XCTAssertNil(AppFormatting.parseMoney("abc"))
     }
 
-    func testParseMoneyRejectsGarbageTail() {
-        XCTExpectFailure("AUDIT: parseMoney бере лише початок рядка — «12.5.3» і «12abc» стають 12.5 і 12 без помилки")
-        XCTAssertNil(AppFormatting.parseMoney("12.5.3"))
-        XCTAssertNil(AppFormatting.parseMoney("12abc"))
+    func testParseMoneyRejectsGarbage() {
+        for text in ["12.5.3", "12abc", "abc12", "-5", "1,23,45", "1.2345", "1,234.567", "12 €", "1,5.00"] {
+            XCTAssertNil(AppFormatting.parseMoney(text), text)
+        }
     }
 
-    func testParseMoneyGermanThousandsSeparator() {
-        // Німецький/чеський запис «1.234,50» = тисяча двісті тридцять чотири
-        XCTExpectFailure("AUDIT: «1.234,50» читається як 1.234, а не 1234.50")
+    func testParseMoneyThousandsSeparators() {
+        // Німецький/чеський «1.234,50» і англійський «1,234.50» — тисяча двісті тридцять чотири
         XCTAssertEqual(AppFormatting.parseMoney("1.234,50"), Decimal(string: "1234.5"))
+        XCTAssertEqual(AppFormatting.parseMoney("1,234.50"), Decimal(string: "1234.5"))
+        XCTAssertEqual(AppFormatting.parseMoney("1.200"), 1200)
+        XCTAssertEqual(AppFormatting.parseMoney("1.234.567"), 1234567)
+        XCTAssertEqual(AppFormatting.parseMoney("1 234,5"), Decimal(string: "1234.5"))
+    }
+
+    func testParseMoneyEdgeCases() {
+        XCTAssertEqual(AppFormatting.parseMoney("0"), 0)
+        XCTAssertEqual(AppFormatting.parseMoney(",5"), Decimal(string: "0.5"))
+        XCTAssertEqual(AppFormatting.parseMoney("12,"), 12)
+        XCTAssertEqual(AppFormatting.parseMoney("25,05"), Decimal(string: "25.05"))
+        XCTAssertNil(AppFormatting.parseMoney("   "))
     }
 
     func testDecimalSumsAreExact() {
@@ -47,7 +58,7 @@ final class AuditDataRulesTests: XCTestCase {
         XCTAssertEqual(appointment.totalPlannedPrice, 1)
     }
 
-    func testVariablePriceWithoutValueBecomesZero() throws {
+    func testVariablePriceWithoutValueIsRejected() throws {
         let context = try F.makeContext()
         let service = Service(userID: F.userID, name: "Color", pricingType: .variable)
         let client = Client(userID: F.userID, name: "Demo Client")
@@ -65,10 +76,33 @@ final class AuditDataRulesTests: XCTestCase {
             existingAppointments: []
         )
 
-        XCTExpectFailure("AUDIT: послуга зі змінною ціною без введеної суми зберігається з ціною 0 без попередження")
-        if case .success = result {
+        if case .failure(let error) = result {
+            XCTAssertEqual(error, .missingPrice)
+        } else {
             XCTFail("Запис з порожньою змінною ціною створено")
         }
+        XCTAssertTrue(try context.fetch(FetchDescriptor<Appointment>()).isEmpty)
+    }
+
+    func testVariablePriceZeroTypedOnPurposeIsAllowed() throws {
+        let context = try F.makeContext()
+        let service = Service(userID: F.userID, name: "Consultation", pricingType: .variable)
+        let client = Client(userID: F.userID, name: "Demo Client")
+
+        let result = AppointmentEngine.createAppointment(
+            context: context,
+            userID: F.userID,
+            client: client,
+            services: [service],
+            selectedServiceIDs: [service.id],
+            customPrices: [service.id: 0],
+            startDate: F.date(hour: 10),
+            duration: 30,
+            notes: "",
+            existingAppointments: []
+        )
+
+        XCTAssertEqual(try result.get().totalPlannedPrice, 0)
     }
 
 

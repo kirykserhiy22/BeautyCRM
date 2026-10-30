@@ -118,11 +118,8 @@ struct ServicePickerView: View {
                     
                     selectedIDs.insert(newService.id)
                     
-                    // variable service
-                    
-                    if newService.pricingType == .variable {
-                        customPrices[newService.id] = 0
-                    }
+                    // Змінну ціну майстер вводить сам у формі запису —
+                    // без автоматичного 0
                     
                     // clear search
                     
@@ -311,11 +308,6 @@ private extension ServicePickerView {
         } else {
             
             selectedIDs.insert(service.id)
-            
-            if service.pricingType == .variable {
-                
-                customPrices[service.id] = 0
-            }
         }
     }
     

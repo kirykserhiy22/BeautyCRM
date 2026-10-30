@@ -59,8 +59,8 @@ final class SaveErrorTests: XCTestCase {
     // MARK: - TEXTS
 
     func testAppointmentErrorsAndSaveErrorAreTranslated() {
-        let errors: [AppointmentError] = [.timeConflict, .noClient, .noServices, .invalidStatus]
-        let keys = errors.map(\.localizationKey) + ["error.save.title", "error.save.message", "common.ok"]
+        let errors: [AppointmentError] = [.timeConflict, .noClient, .noServices, .invalidStatus, .missingPrice]
+        let keys = errors.map(\.localizationKey) + ["error.save.title", "error.save.message", "common.ok", "money.invalid"]
 
         XCTAssertEqual(Set(keys).count, keys.count, "Кожна помилка має свій текст")
 

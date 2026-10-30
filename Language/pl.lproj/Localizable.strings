@@ -274,3 +274,7 @@
 "appointment.error.invalidStatus" = "Tej wizyty nie można już zmienić.";
 "error.save.title" = "Nie udało się zapisać";
 "error.save.message" = "Zmiany nie zostały zapisane. Spróbuj ponownie. Jeśli to się powtarza, uruchom aplikację ponownie.";
+
+/* Money input (#32, #33) */
+"money.invalid" = "Wpisz kwotę, np. 25 lub 25,50";
+"appointment.error.missingPrice" = "Podaj cenę dla każdej usługi o zmiennej cenie.";
