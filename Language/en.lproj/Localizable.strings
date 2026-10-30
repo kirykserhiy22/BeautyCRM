@@ -278,3 +278,7 @@
 /* Money input (#32, #33) */
 "money.invalid" = "Enter an amount, e.g. 25 or 25,50";
 "appointment.error.missingPrice" = "Enter a price for each service with a variable price.";
+
+/* Profile settings (#34) */
+"settings.profile" = "Profile";
+"settings.profile.currencyNote" = "Amounts are not converted — only the currency sign changes.";

@@ -278,3 +278,7 @@
 /* Money input (#32, #33) */
 "money.invalid" = "Wpisz kwotę, np. 25 lub 25,50";
 "appointment.error.missingPrice" = "Podaj cenę dla każdej usługi o zmiennej cenie.";
+
+/* Profile settings (#34) */
+"settings.profile" = "Profil";
+"settings.profile.currencyNote" = "Kwoty nie są przeliczane – zmienia się tylko symbol waluty.";

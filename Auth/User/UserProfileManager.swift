@@ -71,29 +71,44 @@ final class UserProfileManager {
 
 
 
+    // Перевірка полів профілю: ключ Localizable.strings або nil, якщо все гаразд
+    static func validationErrorKey(
+        firstName: String,
+        lastName: String
+    ) -> String? {
+
+        guard AuthValidator.validateName(firstName) else {
+            return "signup.error.firstName"
+        }
+
+        guard AuthValidator.validateName(lastName) else {
+            return "signup.error.lastName"
+        }
+
+        return nil
+    }
+
+
+    // Зміна профілю з екрана «Профіль». Пробіли по краях обрізаються,
+    // порожня назва салону зберігається як «немає».
+    // Повертає true, коли збережено.
+    @discardableResult
     static func update(
         profile: UserProfile,
         firstName: String,
         lastName: String,
-        businessName: String?,
+        businessName: String,
         currencyCode: String,
-        languageCode: String,
         context: ModelContext
-    ) {
+    ) -> Bool {
 
+        let business = businessName.trimmingCharacters(in: .whitespacesAndNewlines)
 
-        profile.firstName = firstName
-        profile.lastName = lastName
-        profile.businessName = businessName
-
+        profile.firstName = firstName.trimmingCharacters(in: .whitespacesAndNewlines)
+        profile.lastName = lastName.trimmingCharacters(in: .whitespacesAndNewlines)
+        profile.businessName = business.isEmpty ? nil : business
         profile.currencyCode = currencyCode
 
-        profile.languageCode = languageCode
-
-       
-
-
-
-        context.saveReportingErrors()
+        return context.saveReportingErrors()
     }
 }
