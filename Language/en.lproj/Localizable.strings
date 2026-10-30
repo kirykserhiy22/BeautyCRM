@@ -274,3 +274,7 @@
 "appointment.error.invalidStatus" = "This appointment can no longer be changed.";
 "error.save.title" = "Couldn't save";
 "error.save.message" = "The changes were not saved. Please try again. If it keeps happening, restart the app.";
+
+/* Money input (#32, #33) */
+"money.invalid" = "Enter an amount, e.g. 25 or 25,50";
+"appointment.error.missingPrice" = "Enter a price for each service with a variable price.";

@@ -275,3 +275,7 @@
 "appointment.error.invalidStatus" = "Tuto rezervaci už nelze změnit.";
 "error.save.title" = "Uložení se nezdařilo";
 "error.save.message" = "Změny nebyly uloženy. Zkuste to znovu. Pokud se to opakuje, restartujte aplikaci.";
+
+/* Money input (#32, #33) */
+"money.invalid" = "Zadejte částku, např. 25 nebo 25,50";
+"appointment.error.missingPrice" = "Zadejte cenu u každé služby s proměnnou cenou.";

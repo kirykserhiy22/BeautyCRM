@@ -99,6 +99,10 @@ struct CreateServiceView: View {
                     .padding()
                     .background(colors.card)
                     .cornerRadius(14)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 14)
+                            .stroke(MoneyField.isInvalid(price) ? colors.danger : .clear, lineWidth: 1.5)
+                    )
                 }
                 
                 // ERROR
@@ -145,6 +149,13 @@ private extension CreateServiceView {
         guard ServiceEngine.validate(name: name) else {
             
             error = "services.nameRequired"
+            return
+        }
+        
+        // Фіксована ціна має бути сумою, а не «порожньо» чи «12abc»
+        if type == .fixed && AppFormatting.parseMoney(price) == nil {
+            
+            error = "money.invalid"
             return
         }
         
