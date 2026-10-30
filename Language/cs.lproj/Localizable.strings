@@ -136,8 +136,6 @@
 "analytics.chart.tapHint" = "Klepněte na sloupec a uvidíte částku";
 "analytics.chart.date" = "Datum";
 "analytics.chart.revenue" = "Tržby";
-"clients.duplicateNameTitle" = "Klient již existuje";
-"clients.duplicateNameMessage" = "Klient s tímto jménem již existuje.";
 "clients.title" = "Klienti";
 "clients.search" = "Hledat klienty...";
 "clients.info" = "Informace o klientovi";
@@ -283,3 +281,8 @@
 /* Profile settings (#34) */
 "settings.profile" = "Profil";
 "settings.profile.currencyNote" = "Částky se nepřepočítávají – mění se jen symbol měny.";
+
+/* Possible duplicate client (#28) */
+"clients.possibleDuplicate.title" = "Stejný klient?";
+"clients.possibleDuplicate.message" = "Klient „%@“ už je v seznamu. Přesto uložit?";
+"clients.possibleDuplicate.save" = "Přesto uložit";

@@ -137,8 +137,6 @@
 "analytics.chart.tapHint" = "Натисніть на стовпчик, щоб побачити суму";
 "analytics.chart.date" = "Дата";
 "analytics.chart.revenue" = "Дохід";
-"clients.duplicateNameTitle" = "Клієнт уже існує";
-"clients.duplicateNameMessage" = "Клієнт із таким ім’ям уже існує.";
 "clients.title" = "Клієнти";
 "clients.search" = "Пошук клієнтів...";
 "clients.info" = "Інформація про клієнта";
@@ -283,3 +281,8 @@
 /* Profile settings (#34) */
 "settings.profile" = "Профіль";
 "settings.profile.currencyNote" = "Суми не перераховуються — змінюється лише позначка валюти.";
+
+/* Possible duplicate client (#28) */
+"clients.possibleDuplicate.title" = "Це той самий клієнт?";
+"clients.possibleDuplicate.message" = "Клієнт «%@» уже є у списку. Все одно зберегти?";
+"clients.possibleDuplicate.save" = "Все одно зберегти";
