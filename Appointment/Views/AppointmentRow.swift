@@ -283,7 +283,7 @@ struct AppointmentRow: View {
 
                                 Button {
                                     AppointmentEngine.archive(appointment: appt)
-                                    try? context.save()
+                                    context.saveReportingErrors()
                                 } label: {
                                     Label(
                                         localization.localizedString(for: "appointment.hide"),
@@ -336,7 +336,7 @@ struct AppointmentRow: View {
                 role: .destructive
             ) {
                 AppointmentEngine.cancel(appointment: appt)
-                try? context.save()
+                context.saveReportingErrors()
             }
 
             Button(
@@ -472,7 +472,7 @@ struct AppointmentRow: View {
                                 finalServicePrices: mapped
                             )
                             
-                            try? context.save()
+                            context.saveReportingErrors()
                             
                             showComplete = false
                             
@@ -522,7 +522,7 @@ private extension AppointmentRow {
         switch AppointmentEngine.restore(appointment: appt, existingAppointments: existing) {
 
         case .success:
-            try? context.save()
+            context.saveReportingErrors()
 
         case .failure(.timeConflict):
             showRestoreConflict = true

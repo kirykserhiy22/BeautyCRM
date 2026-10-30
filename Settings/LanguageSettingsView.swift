@@ -163,22 +163,6 @@ private extension LanguageSettingsView {
 
 
 
-        do {
-
-            try context.save()
-
-            print(
-                "LANGUAGE SAVED:",
-                code
-            )
-
-        }
-        catch {
-
-            print(
-                "LANGUAGE SAVE ERROR:",
-                error
-            )
-        }
+        context.saveReportingErrors()
     }
 }

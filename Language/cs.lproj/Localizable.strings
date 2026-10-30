@@ -267,3 +267,11 @@
 "appointment.restoreConflict.title" = "Čas je obsazený";
 "appointment.restoreConflict.message" = "V tomto čase už je jiná rezervace. Vytvořte novou rezervaci na volný čas.";
 "common.ok" = "OK";
+
+/* Errors: appointment form (#31) and saving (#30) */
+"appointment.error.timeConflict" = "Tento čas je již obsazen jinou rezervací.";
+"appointment.error.noClient" = "Vyberte klienta.";
+"appointment.error.noServices" = "Přidejte alespoň jednu službu.";
+"appointment.error.invalidStatus" = "Tuto rezervaci už nelze změnit.";
+"error.save.title" = "Uložení se nezdařilo";
+"error.save.message" = "Změny nebyly uloženy. Zkuste to znovu. Pokud se to opakuje, restartujte aplikaci.";

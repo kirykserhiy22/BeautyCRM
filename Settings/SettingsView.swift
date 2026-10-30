@@ -261,7 +261,7 @@ struct WorkingHoursSettingsView: View {
         }
         profile.workStartMinute = startMinute
         profile.workEndMinute = endMinute
-        try? context.save()
+        context.saveReportingErrors()
     }
 
     private func timeText(_ minute: Int) -> String {

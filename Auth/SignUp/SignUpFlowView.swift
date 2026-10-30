@@ -204,11 +204,10 @@ private extension SignUpFlowView {
 
             context.insert(profile)
 
-            do {
-                try context.save()
-            }
-            catch {
-                print("PROFILE SAVE ERROR:", error)
+            // Без збереженого профілю не входимо: майстер побачить помилку
+            // і зможе натиснути «Створити акаунт» ще раз
+            guard context.saveReportingErrors() else {
+                return
             }
 
 

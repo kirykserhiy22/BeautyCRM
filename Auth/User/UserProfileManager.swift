@@ -66,7 +66,7 @@ final class UserProfileManager {
         context.insert(profile)
 
 
-        try? context.save()
+        context.saveReportingErrors()
     }
 
 
@@ -94,6 +94,6 @@ final class UserProfileManager {
 
 
 
-        try? context.save()
+        context.saveReportingErrors()
     }
 }

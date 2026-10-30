@@ -253,7 +253,7 @@ private extension ServicesListView {
         
         service.markDeleted()
         
-        try? context.save()
+        context.saveReportingErrors()
     }
     
     func priceText(

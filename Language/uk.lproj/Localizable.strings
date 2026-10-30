@@ -267,3 +267,11 @@
 "appointment.restoreConflict.title" = "Час уже зайнятий";
 "appointment.restoreConflict.message" = "На цей час уже є інший запис. Створіть новий запис на вільний час.";
 "common.ok" = "OK";
+
+/* Errors: appointment form (#31) and saving (#30) */
+"appointment.error.timeConflict" = "Цей час уже зайнятий іншим записом.";
+"appointment.error.noClient" = "Оберіть клієнта.";
+"appointment.error.noServices" = "Додайте хоча б одну послугу.";
+"appointment.error.invalidStatus" = "Цей запис уже не можна змінити.";
+"error.save.title" = "Не вдалося зберегти";
+"error.save.message" = "Зміни не збережено. Спробуйте ще раз. Якщо помилка повторюється, перезапустіть додаток.";

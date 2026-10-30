@@ -154,9 +154,7 @@ enum SyncTracking {
         }
 
 
-        if context.hasChanges {
-            try? context.save()
-        }
+        context.saveReportingErrors()
     }
 
 

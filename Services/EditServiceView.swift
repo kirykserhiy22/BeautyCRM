@@ -42,8 +42,9 @@ struct EditServiceView: View {
                 ))
                 
                 Button("services.save") {
-                    try? context.save()
-                    dismiss()
+                    if context.saveReportingErrors() {
+                        dismiss()
+                    }
                 }
             }
             .navigationTitle("services.editTitle")

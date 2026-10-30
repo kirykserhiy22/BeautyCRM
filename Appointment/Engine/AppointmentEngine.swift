@@ -14,6 +14,21 @@ enum AppointmentError: Error {
     case noServices
     // Дія не дозволена для поточного статусу запису
     case invalidStatus
+
+
+    // Ключ з Localizable.strings — текст перекладається на мову додатку
+    var localizationKey: String {
+        switch self {
+        case .timeConflict:
+            return "appointment.error.timeConflict"
+        case .noClient:
+            return "appointment.error.noClient"
+        case .noServices:
+            return "appointment.error.noServices"
+        case .invalidStatus:
+            return "appointment.error.invalidStatus"
+        }
+    }
 }
 
 struct ConflictResult {
