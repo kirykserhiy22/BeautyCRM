@@ -92,7 +92,7 @@ struct CalendarDayCell: View {
             context.insert(DayOff(userID: userID, date: day))
         }
 
-        try? context.save()
+        context.saveReportingErrors()
     }
 
     // MARK: - UI

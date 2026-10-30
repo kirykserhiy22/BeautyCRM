@@ -163,7 +163,9 @@ private extension CreateServiceView {
         
         context.insert(service)
         
-        try? context.save()
+        guard context.saveReportingErrors() else {
+            return
+        }
         
         // CALLBACK
         

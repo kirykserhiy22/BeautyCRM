@@ -185,62 +185,53 @@ private extension ClientFormView {
 
     private func saveClient() {
 
+        guard let userID = appState.session.userID else {
+            print("NO SESSION USER ID")
+            return
+        }
+
         do {
-            guard let userID = appState.session.userID else {
-                print("NO SESSION USER ID")
+            if try hasDuplicateName(name, userID: userID) {
+                showDuplicateNameAlert = true
                 return
             }
-
-            do {
-                if try hasDuplicateName(name, userID: userID) {
-                    showDuplicateNameAlert = true
-                    return
-                }
-            } catch {
-                print("Duplicate client check error:", error)
-                return
-            }
-
-            switch mode {
-                
-
-            // CREATE
-
-            case .create:
-
-                
-
-                let client = Client(
-                    userID: userID,
-                    name: name,
-                    phone: phone.isEmpty ? nil : phone,
-                    instagram: instagram.isEmpty ? nil : instagram,
-                    telegram: telegram.isEmpty ? nil : telegram,
-                    notes: notes.isEmpty ? nil : notes
-                )
-
-                context.insert(client)
-
-            // EDIT
-
-            case .edit(let client):
-
-                client.name = name
-                client.phone = phone.isEmpty ? nil : phone
-                client.instagram = instagram.isEmpty ? nil : instagram
-                client.telegram = telegram.isEmpty ? nil : telegram
-                client.notes = notes.isEmpty ? nil : notes
-            }
-
-            // SAVE
-
-            try context.save()
-
-            dismiss()
-
         } catch {
+            SaveErrorReporter.report(error)
+            return
+        }
 
-            print("Save client error:", error)
+        switch mode {
+
+        // CREATE
+
+        case .create:
+
+            let client = Client(
+                userID: userID,
+                name: name,
+                phone: phone.isEmpty ? nil : phone,
+                instagram: instagram.isEmpty ? nil : instagram,
+                telegram: telegram.isEmpty ? nil : telegram,
+                notes: notes.isEmpty ? nil : notes
+            )
+
+            context.insert(client)
+
+        // EDIT
+
+        case .edit(let client):
+
+            client.name = name
+            client.phone = phone.isEmpty ? nil : phone
+            client.instagram = instagram.isEmpty ? nil : instagram
+            client.telegram = telegram.isEmpty ? nil : telegram
+            client.notes = notes.isEmpty ? nil : notes
+        }
+
+        // SAVE — форма закривається лише після успішного збереження
+
+        if context.saveReportingErrors() {
+            dismiss()
         }
     }
 }

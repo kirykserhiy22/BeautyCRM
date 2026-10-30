@@ -226,11 +226,8 @@ private extension ClientsListView {
                 ClientManager.delete(client: client, context: modelContext)
             }
 
-            do {
-                try modelContext.save()
+            if modelContext.saveReportingErrors() {
                 selectedClientIDs.removeAll()
-            } catch {
-                print("Delete clients error:", error)
             }
         }
     }

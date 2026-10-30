@@ -266,3 +266,11 @@
 "appointment.restoreConflict.title" = "Time is taken";
 "appointment.restoreConflict.message" = "Another appointment already takes this time. Create a new appointment at a free time.";
 "common.ok" = "OK";
+
+/* Errors: appointment form (#31) and saving (#30) */
+"appointment.error.timeConflict" = "This time is already taken by another appointment.";
+"appointment.error.noClient" = "Choose a client.";
+"appointment.error.noServices" = "Add at least one service.";
+"appointment.error.invalidStatus" = "This appointment can no longer be changed.";
+"error.save.title" = "Couldn't save";
+"error.save.message" = "The changes were not saved. Please try again. If it keeps happening, restart the app.";

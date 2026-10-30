@@ -153,6 +153,6 @@ private extension ServiceRow {
 
         service.markDeleted()
 
-        try? context.save()
+        context.saveReportingErrors()
     }
 }

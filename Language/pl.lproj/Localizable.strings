@@ -266,3 +266,11 @@
 "appointment.restoreConflict.title" = "Termin jest zajęty";
 "appointment.restoreConflict.message" = "W tym czasie jest już inna wizyta. Utwórz nową wizytę w wolnym terminie.";
 "common.ok" = "OK";
+
+/* Errors: appointment form (#31) and saving (#30) */
+"appointment.error.timeConflict" = "Ten czas jest już zajęty przez inną wizytę.";
+"appointment.error.noClient" = "Wybierz klienta.";
+"appointment.error.noServices" = "Dodaj co najmniej jedną usługę.";
+"appointment.error.invalidStatus" = "Tej wizyty nie można już zmienić.";
+"error.save.title" = "Nie udało się zapisać";
+"error.save.message" = "Zmiany nie zostały zapisane. Spróbuj ponownie. Jeśli to się powtarza, uruchom aplikację ponownie.";

@@ -648,10 +648,13 @@ private extension AppointmentFormView {
             switch result {
 
             case .success:
-                dismiss()
+                // Зберігаємо одразу, а не «колись автоматично»
+                if context.saveReportingErrors() {
+                    dismiss()
+                }
 
             case .failure(let error):
-                errorMessage = error.localizedDescription
+                errorMessage = localization.localizedString(for: error.localizationKey)
             }
 
         case .edit(let appointment):
@@ -671,10 +674,13 @@ private extension AppointmentFormView {
             switch result {
 
             case .success:
-                dismiss()
+                // Зберігаємо одразу, а не «колись автоматично»
+                if context.saveReportingErrors() {
+                    dismiss()
+                }
 
             case .failure(let error):
-                errorMessage = error.localizedDescription
+                errorMessage = localization.localizedString(for: error.localizationKey)
             }
         }
     }

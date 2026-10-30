@@ -266,3 +266,11 @@
 "appointment.restoreConflict.title" = "Zeit bereits belegt";
 "appointment.restoreConflict.message" = "Zu dieser Zeit gibt es bereits einen anderen Termin. Bitte einen neuen Termin zu einer freien Zeit anlegen.";
 "common.ok" = "OK";
+
+/* Errors: appointment form (#31) and saving (#30) */
+"appointment.error.timeConflict" = "Diese Zeit ist bereits durch einen anderen Termin belegt.";
+"appointment.error.noClient" = "Bitte einen Kunden wählen.";
+"appointment.error.noServices" = "Mindestens eine Leistung hinzufügen.";
+"appointment.error.invalidStatus" = "Dieser Termin kann nicht mehr geändert werden.";
+"error.save.title" = "Speichern fehlgeschlagen";
+"error.save.message" = "Die Änderungen wurden nicht gespeichert. Bitte erneut versuchen. Wenn es wieder passiert, die App neu starten.";

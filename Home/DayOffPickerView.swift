@@ -122,7 +122,8 @@ struct DayOffPickerView: View {
             }
         }
 
-        try? context.save()
-        dismiss()
+        if context.saveReportingErrors() {
+            dismiss()
+        }
     }
 }

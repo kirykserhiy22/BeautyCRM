@@ -34,7 +34,7 @@ final class ProfessionManager: ObservableObject {
         context: ModelContext
     ) {
         profile.profession = profession
-        try? context.save()
+        context.saveReportingErrors()
         apply(profession)
     }
 

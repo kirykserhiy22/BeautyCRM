@@ -35,7 +35,7 @@ enum ClientPhotoService {
         client.photos.append(photo)
         context.insert(photo)
 
-        try? context.save()
+        context.saveReportingErrors()
     }
 
     // MARK: - DELETE PHOTO
@@ -54,6 +54,6 @@ enum ClientPhotoService {
 
         photo.markDeleted()
 
-        try? context.save()
+        context.saveReportingErrors()
     }
 }
