@@ -279,3 +279,7 @@
 /* Money input (#32, #33) */
 "money.invalid" = "Zadejte částku, např. 25 nebo 25,50";
 "appointment.error.missingPrice" = "Zadejte cenu u každé služby s proměnnou cenou.";
+
+/* Profile settings (#34) */
+"settings.profile" = "Profil";
+"settings.profile.currencyNote" = "Částky se nepřepočítávají – mění se jen symbol měny.";

@@ -33,6 +33,22 @@ struct SettingsView: View {
                 spacing: 20
             ) {
                 
+                // MARK: - PROFILE
+
+                NavigationLink {
+
+                    ProfileSettingsView()
+
+                } label: {
+
+                    settingsRow(
+                        title: "settings.profile",
+                        icon: "person.crop.circle",
+                        value: profileName
+                    )
+                }
+
+
                 // MARK: - APPEARANCE
                 
                 NavigationLink {
@@ -113,6 +129,17 @@ struct SettingsView: View {
     
     
     // MARK: - ROW
+
+    // Ім'я майстра для рядка «Профіль»
+    private var profileName: String? {
+        guard
+            let userID = appState.session.userID,
+            let profile = UserProfileManager.profile(context: context, userID: userID)
+        else {
+            return nil
+        }
+        return "\(profile.firstName) \(profile.lastName)"
+    }
 
     // Поточна спеціалізація для рядка налаштувань
     private var professionTitle: String {
@@ -321,5 +348,135 @@ struct ProfessionSettingsView: View {
             }
             profession.choose(selection, for: profile, context: context)
         }
+    }
+}
+
+
+// MARK: - PROFILE
+
+// Ім'я, назва салону і валюта — те, що вводилось при реєстрації
+struct ProfileSettingsView: View {
+
+    @EnvironmentObject var appState: AppState
+    @EnvironmentObject var theme: ThemeManager
+    @EnvironmentObject var localization: LocalizationManager
+    @EnvironmentObject var currency: CurrencyManager
+
+    @Environment(\.modelContext)
+    private var context
+
+    @Environment(\.dismiss)
+    private var dismiss
+
+    @State private var firstName = ""
+    @State private var lastName = ""
+    @State private var businessName = ""
+    @State private var currencyCode = "EUR"
+
+    // Ключ Localizable.strings; порожній — помилки немає
+    @State private var errorKey = ""
+
+    private var colors: ThemeColors {
+        theme.colors(for: theme.currentTheme)
+    }
+
+    private var profile: UserProfile? {
+        guard let userID = appState.session.userID else {
+            return nil
+        }
+        return UserProfileManager.profile(context: context, userID: userID)
+    }
+
+    var body: some View {
+
+        Form {
+
+            Section(localization.localizedString(for: "signup.profile.title")) {
+
+                TextField(localization.localizedString(for: "signup.firstName"), text: $firstName)
+                    .textContentType(.givenName)
+
+                TextField(localization.localizedString(for: "signup.lastName"), text: $lastName)
+                    .textContentType(.familyName)
+            }
+
+            Section(localization.localizedString(for: "signup.business.title")) {
+
+                TextField(localization.localizedString(for: "signup.business.name"), text: $businessName)
+            }
+
+            Section {
+
+                Picker(
+                    localization.localizedString(for: "signup.currency.label"),
+                    selection: $currencyCode
+                ) {
+                    ForEach(SupportedCurrency.all) { item in
+                        Text("\(item.symbol) \(localization.localizedString(for: "currency.\(item.code)"))")
+                            .tag(item.code)
+                    }
+                }
+
+            } footer: {
+
+                Text(localization.localizedString(for: "settings.profile.currencyNote"))
+            }
+
+            if !errorKey.isEmpty {
+                Text(localization.localizedString(for: errorKey))
+                    .foregroundColor(colors.danger)
+                    .font(.caption)
+            }
+        }
+        .scrollContentBackground(.hidden)
+        .background(colors.background)
+        .navigationTitle(localization.localizedString(for: "settings.profile"))
+        .toolbar {
+            ToolbarItem(placement: .confirmationAction) {
+                Button(localization.localizedString(for: "common.save")) {
+                    save()
+                }
+            }
+        }
+        .onAppear {
+            guard let profile else {
+                return
+            }
+            firstName = profile.firstName
+            lastName = profile.lastName
+            businessName = profile.businessName ?? ""
+            currencyCode = profile.currencyCode
+        }
+    }
+
+    private func save() {
+
+        if let key = UserProfileManager.validationErrorKey(firstName: firstName, lastName: lastName) {
+            errorKey = key
+            return
+        }
+
+        guard let profile else {
+            return
+        }
+
+        errorKey = ""
+
+        let saved = UserProfileManager.update(
+            profile: profile,
+            firstName: firstName,
+            lastName: lastName,
+            businessName: businessName,
+            currencyCode: currencyCode,
+            context: context
+        )
+
+        guard saved else {
+            return
+        }
+
+        // Нова валюта — одразу в усьому додатку
+        currency.setCurrency(currencyCode)
+        dismiss()
     }
 }
