@@ -9,7 +9,8 @@ import UIKit
 
 enum ClientPhotoThumbnailGenerator {
 
-    static func generate(
+    // Без UI-стану: можна викликати у фоні (#39)
+    nonisolated static func generate(
         from image: UIImage,
         maxSize: CGFloat = 300
     ) -> UIImage? {

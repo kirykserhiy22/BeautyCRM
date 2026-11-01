@@ -270,16 +270,21 @@ struct ClientPhotoGridSection: View {
 
             for item in items {
 
-                if let data = try? await item.loadTransferable(type: Data.self),
-                   let uiImage = UIImage(data: data) {
+                guard let data = try? await item.loadTransferable(type: Data.self) else {
+                    continue
+                }
 
-                    await MainActor.run {
-                        ClientPhotoService.addPhoto(
-                            image: uiImage,
-                            client: client,
-                            context: context
-                        )
-                    }
+                // Розпаковка, JPEG і мініатюра — у фоні (#39)
+                let fileName = await Task.detached(priority: .userInitiated) {
+                    UIImage(data: data).flatMap { ClientPhotoService.storeFiles(for: $0) }
+                }.value
+
+                if let fileName {
+                    ClientPhotoService.addPhoto(
+                        fileName: fileName,
+                        client: client,
+                        context: context
+                    )
                 }
             }
 
