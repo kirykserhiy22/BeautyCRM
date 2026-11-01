@@ -275,3 +275,13 @@
 "clients.possibleDuplicate.title" = "Це той самий клієнт?";
 "clients.possibleDuplicate.message" = "Клієнт «%@» уже є у списку. Все одно зберегти?";
 "clients.possibleDuplicate.save" = "Все одно зберегти";
+
+/* Empty states (#49) */
+"empty.clients.title" = "Ще немає клієнтів";
+"empty.clients.message" = "Натисніть +, щоб додати першого клієнта.";
+"empty.search.title" = "Нічого не знайдено";
+"empty.search.message" = "Спробуйте інше ім'я.";
+"empty.services.title" = "Ще немає послуг";
+"empty.services.message" = "Натисніть +, щоб додати першу послугу і її ціну.";
+"empty.analytics.title" = "Немає завершених записів";
+"empty.analytics.message" = "Дохід і рейтинги з'являться тут, коли ви завершите записи в цьому періоді.";

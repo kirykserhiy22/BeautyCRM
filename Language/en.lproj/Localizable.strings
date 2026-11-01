@@ -274,3 +274,13 @@
 "clients.possibleDuplicate.title" = "Same client?";
 "clients.possibleDuplicate.message" = "A client named “%@” is already in your list. Save anyway?";
 "clients.possibleDuplicate.save" = "Save anyway";
+
+/* Empty states (#49) */
+"empty.clients.title" = "No clients yet";
+"empty.clients.message" = "Tap + to add your first client.";
+"empty.search.title" = "Nothing found";
+"empty.search.message" = "Try a different name.";
+"empty.services.title" = "No services yet";
+"empty.services.message" = "Tap + to add your first service and its price.";
+"empty.analytics.title" = "No completed appointments";
+"empty.analytics.message" = "Revenue and top lists appear here once you complete appointments in this period.";

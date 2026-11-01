@@ -108,7 +108,6 @@ struct ProfessionPickerView: View {
                         lineWidth: isSelected ? 2 : 1
                     )
             )
-            .scaleEffect(isSelected ? 1.02 : 1)
             .contentShape(RoundedRectangle(cornerRadius: 18))
         }
         .buttonStyle(.plain)

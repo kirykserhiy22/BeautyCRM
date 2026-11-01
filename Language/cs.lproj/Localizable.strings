@@ -275,3 +275,13 @@
 "clients.possibleDuplicate.title" = "Stejný klient?";
 "clients.possibleDuplicate.message" = "Klient „%@“ už je v seznamu. Přesto uložit?";
 "clients.possibleDuplicate.save" = "Přesto uložit";
+
+/* Empty states (#49) */
+"empty.clients.title" = "Zatím žádní klienti";
+"empty.clients.message" = "Klepněte na +, abyste přidali prvního klienta.";
+"empty.search.title" = "Nic nenalezeno";
+"empty.search.message" = "Zkuste jiné jméno.";
+"empty.services.title" = "Zatím žádné služby";
+"empty.services.message" = "Klepněte na +, abyste přidali první službu a její cenu.";
+"empty.analytics.title" = "Žádné dokončené termíny";
+"empty.analytics.message" = "Tržby a žebříčky se zde zobrazí, jakmile v tomto období dokončíte termíny.";
