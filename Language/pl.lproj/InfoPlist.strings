@@ -1,0 +1,3 @@
+/* Системні запити дозволів (#56) */
+"NSPhotoLibraryUsageDescription" = "Zezwól na wybieranie zdjęć klientów z biblioteki zdjęć.";
+"NSPhotoLibraryAddUsageDescription" = "Zezwól na zapisywanie zdjęć klientów w bibliotece zdjęć.";

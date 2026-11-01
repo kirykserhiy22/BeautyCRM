@@ -15,7 +15,7 @@ struct SupportedCurrency: Identifiable {
 
     let symbol: String
 
-    let title: String
+    // Назва валюти — ключ `currency.<code>` у Localizable.strings
 }
 extension SupportedCurrency {
 
@@ -23,38 +23,32 @@ extension SupportedCurrency {
 
         .init(
             code: "EUR",
-            symbol: "€",
-            title: "Euro"
+            symbol: "€"
         ),
 
         .init(
             code: "USD",
-            symbol: "$",
-            title: "US Dollar"
+            symbol: "$"
         ),
 
         .init(
             code: "UAH",
-            symbol: "₴",
-            title: "Ukrainian Hryvnia"
+            symbol: "₴"
         ),
 
         .init(
             code: "PLN",
-            symbol: "zł",
-            title: "Polish Zloty"
+            symbol: "zł"
         ),
 
         .init(
             code: "GBP",
-            symbol: "£",
-            title: "British Pound"
+            symbol: "£"
         ),
 
         .init(
             code: "CZK",
-            symbol: "Kč",
-            title: "Czech Koruna"
+            symbol: "Kč"
         )
     ]
 }
@@ -63,10 +57,5 @@ extension SupportedCurrency {
     static func symbol(for code: String) -> String {
 
         all.first(where: { $0.code == code })?.symbol ?? code
-    }
-
-    static func title(for code: String) -> String {
-
-        all.first(where: { $0.code == code })?.title ?? code
     }
 }
