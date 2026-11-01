@@ -12,20 +12,40 @@ enum ClientPhotoService {
 
     // MARK: - ADD PHOTO
 
+    // Важка частина: JPEG і мініатюра на диск. Викликати у фоні,
+    // щоб екран не «замерзав» на великих фото (#39)
+    nonisolated static func storeFiles(for image: UIImage) -> String? {
+
+        guard let fileName = ClientPhotoStorage.saveImage(image) else {
+            return nil
+        }
+
+        if let thumb = ClientPhotoThumbnailGenerator.generate(from: image) {
+            ClientPhotoStorage.saveThumbnail(thumb, fileName: fileName)
+        }
+
+        return fileName
+    }
+
     static func addPhoto(
         image: UIImage,
         client: Client,
         context: ModelContext
     ) {
 
-        guard let fileName = ClientPhotoStorage.saveImage(image) else {
+        guard let fileName = storeFiles(for: image) else {
             return
         }
 
-        // 1. Create thumbnail
-        if let thumb = ClientPhotoThumbnailGenerator.generate(from: image) {
-            ClientPhotoStorage.saveThumbnail(thumb, fileName: fileName)
-        }
+        addPhoto(fileName: fileName, client: client, context: context)
+    }
+
+    // Запис у базу — на головному потоці, коли файли вже на диску
+    static func addPhoto(
+        fileName: String,
+        client: Client,
+        context: ModelContext
+    ) {
 
         let photo = ClientPhoto(
             clientID: client.id,
@@ -47,10 +67,6 @@ enum ClientPhotoService {
     ) {
 
         ClientPhotoStorage.deleteImage(at: photo.fileName)
-
-        PhotoThumbnailCache.remove(
-            for: photo.fileName
-        )
 
         photo.markDeleted()
 

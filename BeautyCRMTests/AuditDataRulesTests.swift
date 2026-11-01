@@ -149,12 +149,30 @@ final class AuditDataRulesTests: XCTestCase {
         XCTAssertNotNil(ClientPhotoStorage.loadThumbnail(from: photo.fileName))
 
         ClientPhotoService.deletePhoto(photo: photo, client: client, context: context)
-        PhotoThumbnailCache.remove(for: photo.fileName)
 
         XCTAssertNil(ClientPhotoStorage.loadImage(from: photo.fileName), "Повне фото видалено")
+        XCTAssertNil(ClientPhotoStorage.loadThumbnail(from: photo.fileName), "Мініатюра теж (#38)")
+        XCTAssertNil(PhotoMemoryCache.shared.image(for: photo.fileName))
+    }
 
-        XCTExpectFailure("AUDIT: мініатюра в client_photos_thumbs лишається на диску після видалення фото")
-        XCTAssertNil(ClientPhotoStorage.loadThumbnail(from: photo.fileName))
+    func testClientDeletionRemovesPhotoFiles() throws {
+        let context = try F.makeContext()
+        let client = Client(userID: F.userID, name: "Demo Client")
+        context.insert(client)
+
+        let image = UIGraphicsImageRenderer(size: CGSize(width: 600, height: 400)).image { ctx in
+            UIColor.systemTeal.setFill()
+            ctx.fill(CGRect(x: 0, y: 0, width: 600, height: 400))
+        }
+
+        ClientPhotoService.addPhoto(image: image, client: client, context: context)
+        let photo = try XCTUnwrap(client.photos.first)
+
+        ClientManager.delete(client: client, context: context)
+
+        XCTAssertNil(ClientPhotoStorage.loadImage(from: photo.fileName))
+        XCTAssertNil(ClientPhotoStorage.loadThumbnail(from: photo.fileName), "Мініатюра видаляється разом із клієнтом (#38)")
+        XCTAssertNotNil(photo.deletedAt)
     }
 
     func testContactLinksDoNotCrashOnTypicalInput() {

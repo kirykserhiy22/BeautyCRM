@@ -105,7 +105,6 @@ final class ClientManager {
 
         for photo in client.photos where photo.deletedAt == nil {
             ClientPhotoStorage.deleteImage(at: photo.fileName)
-            PhotoThumbnailCache.remove(for: photo.fileName)
             photo.markDeleted()
         }
 

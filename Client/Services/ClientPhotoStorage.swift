@@ -11,7 +11,7 @@ final class ClientPhotoStorage {
 
     // MARK: - SAVE IMAGE
 
-    static func saveImage(_ image: UIImage) -> String? {
+    nonisolated static func saveImage(_ image: UIImage) -> String? {
 
         guard let data = image.jpegData(compressionQuality: 0.8) else {
             return nil
@@ -79,22 +79,20 @@ final class ClientPhotoStorage {
 
     // MARK: - DELETE IMAGE
 
+    // Прибирає повне фото, мініатюру і обидва кеші в пам'яті (#38)
     static func deleteImage(at path: String) {
 
-        let fileURL = photosFolderURL()
-            .appendingPathComponent(path)
-
-        do {
-
-            try FileManager.default.removeItem(at: fileURL)
-
-        } catch {
+        for folder in [photosFolderURL(), thumbnailsFolderURL()] {
             // Файлу вже немає — нічого робити не треба
+            try? FileManager.default.removeItem(at: folder.appendingPathComponent(path))
         }
+
+        PhotoThumbnailCache.remove(for: path)
+        PhotoMemoryCache.shared.remove(for: path)
     }
 
     // MARK: - Новий шлях для thumbnails
-    private static func thumbnailsFolderURL() -> URL {
+    nonisolated private static func thumbnailsFolderURL() -> URL {
         FileManager.default.urls(
             for: .documentDirectory,
             in: .userDomainMask
@@ -102,7 +100,7 @@ final class ClientPhotoStorage {
         .appendingPathComponent("client_photos_thumbs")
     }
     
-    static func saveThumbnail(
+    nonisolated static func saveThumbnail(
         _ image: UIImage,
         fileName: String
     ) {
@@ -135,7 +133,7 @@ final class ClientPhotoStorage {
     
     // MARK: - FOLDER URL
 
-    private static func photosFolderURL() -> URL {
+    nonisolated private static func photosFolderURL() -> URL {
 
         FileManager.default.urls(
             for: .documentDirectory,
