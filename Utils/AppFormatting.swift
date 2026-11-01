@@ -25,17 +25,6 @@ enum AppFormatting {
         return formatter.string(from: value)
     }
 
-    static func dateTime(
-        _ value: Date,
-        locale: Locale
-    ) -> String {
-        let formatter = DateFormatter()
-        formatter.locale = locale
-        formatter.dateStyle = .medium
-        formatter.timeStyle = .short
-        return formatter.string(from: value)
-    }
-
     static func time(
         _ value: Date,
         locale: Locale

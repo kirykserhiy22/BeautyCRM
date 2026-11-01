@@ -74,7 +74,6 @@
 - Відкриті знахідки аудиту — у GitHub Issues (критичні #21, #22; дрібниці #37–#63), подробиці — `docs/audit/REPORT.md`.
 - `LocalAuthService` зберігає email і пароль відкритим текстом в UserDefaults — замінити на Supabase Auth (#21).
 - Сесія (`SessionManager`) — userID в UserDefaults, без токена. Видалення акаунта й Sign in with Apple немає (#22).
-- `AppointmentServiceItem.isDeleted` — назва збігається з вбудованою властивістю SwiftData (#59).
 - Перевірка «email уже зайнятий» на 1-му кроці реєстрації зараз локальна; із Supabase її треба робити обережно (не розкривати чужі email).
 - Темний режим iPhone вимкнено (`.preferredColorScheme(.light)` у `BeautyCRMApp`), поки в тем немає темних палітр.
 - **Unit-тести падають на iOS 18.x і 26.2** (`malloc: pointer being freed was not allocated` у

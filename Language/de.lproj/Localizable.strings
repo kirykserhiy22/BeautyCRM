@@ -10,11 +10,6 @@
 "tab.calendar" = "Kalender";
 "tab.analytics" = "Analysen";
 "tab.settings" = "Einstellungen";
-"settings.language.title" = "Sprache";
-"settings.language.confirm.title" = "Sprache ändern?";
-"common.cancel" = "Abbrechen";
-"common.change" = "Ändern";
-"settings.language.confirm.message" = "Die Sprache der Anwendung wird geändert.";
 "welcome.description" = "Verwalte Kunden, Termine und dein Geschäft an einem Ort.";
 "welcome.createAccount" = "Konto erstellen";
 "welcome.login" = "Ich habe bereits ein Konto";
@@ -63,10 +58,6 @@
 "auth.error.userNotFound" = "Benutzer nicht gefunden";
 "auth.error.wrongPassword" = "Falsches Passwort";
 
-"validation.error.emptyEmail" = "E-Mail-Adresse erforderlich";
-"validation.error.invalidEmail" = "Bitte gib eine gültige E-Mail-Adresse ein";
-"validation.error.weakPassword" = "Das Passwort muss mindestens 8 Zeichen und eine Zahl enthalten";
-"validation.error.emptyName" = "Name erforderlich";
 /* Home */
 "home.today" = "HEUTE";
 "home.appointments" = "Termine";
@@ -180,9 +171,7 @@
 "settings.language.title" = "Sprache";
 "settings.language.confirm.title" = "Sprache ändern?";
 "settings.language.confirm.message" = "Die App-Sprache wird geändert.";
-"common.cancel" = "Abbrechen";
 "common.change" = "Ändern";
-"calendar.title" = "Kalender";
 "calendar.emptyDay" = "Keine Termine an diesem Tag";
 "calendar.addAppointment" = "Termin hinzufügen";
 

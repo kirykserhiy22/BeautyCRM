@@ -20,8 +20,6 @@ final class AppointmentServiceItem {
     // FINAL OVERRIDE (editable only in FINALIZE state)
     var finalPrice: Decimal?
 
-    var isDeleted: Bool = false
-
     var duration: Int?
 
    

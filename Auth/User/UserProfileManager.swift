@@ -30,47 +30,6 @@ final class UserProfileManager {
 
 
 
-    static func create(
-        context: ModelContext,
-        userID: String,
-        firstName: String,
-        lastName: String,
-        businessName: String?,
-        currencyCode: String,
-        languageCode: String
-    ) {
-
-
-        guard profile(
-            context: context,
-            userID: userID
-        ) == nil else {
-
-            return
-        }
-
-
-
-        let profile = UserProfile(
-            authUserID: userID,
-            firstName: firstName,
-            lastName: lastName,
-            businessName: businessName,
-            currencyCode: currencyCode,
-            languageCode: languageCode,
-            
-        )
-
-
-
-        context.insert(profile)
-
-
-        context.saveReportingErrors()
-    }
-
-
-
     // Перевірка полів профілю: ключ Localizable.strings або nil, якщо все гаразд
     static func validationErrorKey(
         firstName: String,

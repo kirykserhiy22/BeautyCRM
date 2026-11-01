@@ -10,11 +10,6 @@
 "tab.calendar" = "Kalendář";
 "tab.analytics" = "Analytika";
 "tab.settings" = "Nastavení";
-"settings.language.title" = "Jazyk";
-"settings.language.confirm.title" = "Změnit jazyk?";
-"common.cancel" = "Zrušit";
-"common.change" = "Změnit";
-"settings.language.confirm.message" = "Jazyk aplikace bude změněn.";
 "welcome.description" = "Spravujte klienty, schůzky a podnikání na jednom místě.";
 "welcome.createAccount" = "Vytvořit účet";
 "welcome.login" = "Už mám účet";
@@ -63,10 +58,6 @@
 "auth.error.userNotFound" = "Uživatel nebyl nalezen";
 "auth.error.wrongPassword" = "Nesprávné heslo";
 
-"validation.error.emptyEmail" = "E-mail je povinný";
-"validation.error.invalidEmail" = "Zadejte platnou e-mailovou adresu";
-"validation.error.weakPassword" = "Heslo musí obsahovat alespoň 8 znaků a jednu číslici";
-"validation.error.emptyName" = "Jméno je povinné";
 /* Home */
 "home.today" = "DNES";
 "home.appointments" = "Objednávky";
@@ -180,10 +171,8 @@
 "settings.language.title" = "Jazyk";
 "settings.language.confirm.title" = "Změnit jazyk?";
 "settings.language.confirm.message" = "Jazyk aplikace bude změněn.";
-"common.cancel" = "Zrušit";
 "common.change" = "Změnit";
 
-"calendar.title" = "Kalendář";
 "calendar.emptyDay" = "Na tento den nejsou žádné rezervace";
 "calendar.addAppointment" = "Přidat rezervaci";
 

@@ -39,8 +39,7 @@ final class ClientPhotoStorage {
             return filename
 
         } catch {
-
-            print("Save image error:", error)
+            // Не вдалося записати файл — фото просто не додасться
             return nil
         }
     }
@@ -90,8 +89,7 @@ final class ClientPhotoStorage {
             try FileManager.default.removeItem(at: fileURL)
 
         } catch {
-
-            print("Delete image error:", error)
+            // Файлу вже немає — нічого робити не треба
         }
     }
 
@@ -135,28 +133,6 @@ final class ClientPhotoStorage {
         return UIImage(contentsOfFile: fileURL.path)
     }
     
-    static func getOptimizedImage(from path: String) -> UIImage? {
-
-        // 1. try thumbnail first
-        if let thumb = loadThumbnail(from: path) {
-            return thumb
-        }
-
-        // 2. fallback full image
-        guard let full = loadImage(from: path) else {
-            return nil
-        }
-
-        // 3. async generate thumbnail (optional optimization later)
-        DispatchQueue.global(qos: .utility).async {
-            let thumb = ClientPhotoThumbnailGenerator.generate(from: full)
-            if let thumb {
-                saveThumbnail(thumb, fileName: path)
-            }
-        }
-
-        return full
-    }
     // MARK: - FOLDER URL
 
     private static func photosFolderURL() -> URL {

@@ -186,10 +186,6 @@ private extension SignUpFlowView {
         case .success(let userID):
 
 
-            print("USER CREATED:", userID)
-
-
-
             let profile = UserProfile(
                 authUserID: userID,
                 firstName: state.firstName,

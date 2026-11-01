@@ -10,11 +10,6 @@
 "tab.calendar" = "Kalendarz";
 "tab.analytics" = "Analityka";
 "tab.settings" = "Ustawienia";
-"settings.language.title" = "Język";
-"settings.language.confirm.title" = "Zmienić język?";
-"common.cancel" = "Anuluj";
-"common.change" = "Zmień";
-"settings.language.confirm.message" = "Język aplikacji zostanie zmieniony.";
 "welcome.description" = "Zarządzaj klientami, wizytami i firmą w jednym miejscu.";
 "welcome.createAccount" = "Utwórz konto";
 "welcome.login" = "Mam już konto";
@@ -63,10 +58,6 @@
 "auth.error.userNotFound" = "Nie znaleziono użytkownika";
 "auth.error.wrongPassword" = "Nieprawidłowe hasło";
 
-"validation.error.emptyEmail" = "Adres e-mail jest wymagany";
-"validation.error.invalidEmail" = "Wprowadź prawidłowy adres e-mail";
-"validation.error.weakPassword" = "Hasło musi zawierać co najmniej 8 znaków i jedną cyfrę";
-"validation.error.emptyName" = "Imię jest wymagane";
 /* Home */
 "home.today" = "DZISIAJ";
 "home.appointments" = "Wizyty";
@@ -180,9 +171,7 @@
 "settings.language.title" = "Język";
 "settings.language.confirm.title" = "Zmienić język?";
 "settings.language.confirm.message" = "Język aplikacji zostanie zmieniony.";
-"common.cancel" = "Anuluj";
 "common.change" = "Zmień";
-"calendar.title" = "Kalendarz";
 "calendar.emptyDay" = "Brak wizyt w tym dniu";
 "calendar.addAppointment" = "Dodaj wizytę";
 

@@ -10,23 +10,6 @@ import SwiftData
 
 final class ClientManager {
     
-    static func createClient(
-        name: String,
-        phone: String?,
-        instagram: String?,
-        userID: String,
-        context: ModelContext
-    ) {
-        let client = Client(
-            userID: userID,
-            name: name,
-            phone: phone,
-            instagram: instagram
-        )
-        
-        context.insert(client)
-    }
-    
     // MARK: - DUPLICATES
 
     // Можливий дублікат — клієнт з тим самим ім'ям (без різниці у великих

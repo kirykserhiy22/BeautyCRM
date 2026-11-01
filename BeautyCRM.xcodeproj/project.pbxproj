@@ -8,12 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		3D20239B2FA3B51B0078D26B /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20238C2FA3B3600078D26B /* SessionManager.swift */; };
-		3D20239C2FA3B5200078D26B /* AuthUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20238B2FA3B33D0078D26B /* AuthUser.swift */; };
 		3D20239F2FA3B5330078D26B /* ThemeStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2023932FA3B3F50078D26B /* ThemeStorage.swift */; };
 		3D2023A02FA3B5380078D26B /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2023922FA3B3E00078D26B /* ThemeManager.swift */; };
 		3D2023A12FA3B53C0078D26B /* ThemeColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2023912FA3B3D30078D26B /* ThemeColors.swift */; };
 		3D2023A22FA3B5400078D26B /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2023902FA3B3BF0078D26B /* AppTheme.swift */; };
-		3D2023A32FA3B5440078D26B /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2023952FA3B43E0078D26B /* DateFormatter.swift */; };
 		3D2023A42FA3B5490078D26B /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2023942FA3B42A0078D26B /* Constants.swift */; };
 		3D2BAAE52FAF6AEB00984CFE /* AppointmentFormMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2BAAE42FAF6AEA00984CFE /* AppointmentFormMode.swift */; };
 		3D32E7482FA3BDC200A746A5 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D32E7462FA3BD9100A746A5 /* LoginView.swift */; };
@@ -35,7 +33,6 @@
 		3D618F3E300BC80A00D0685C /* LanguageSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D618F3D300BC80A00D0685C /* LanguageSettingsView.swift */; };
 		3D618F423010E06E00D0685C /* UserProfileLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D618F413010E06E00D0685C /* UserProfileLoader.swift */; };
 		3D618F453010E28200D0685C /* CurrencyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D618F443010E28100D0685C /* CurrencyManager.swift */; };
-		3D618F473010E5CB00D0685C /* CurrencyFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D618F463010E5CA00D0685C /* CurrencyFormatter.swift */; };
 		3D62D6102FBDC50A00E259CF /* AnalyticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D62D60F2FBDC50A00E259CF /* AnalyticsView.swift */; };
 		3D62D6122FBDC58E00E259CF /* AnalyticsPeriod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D62D6112FBDC58E00E259CF /* AnalyticsPeriod.swift */; };
 		3D62D6142FBDC5BC00E259CF /* AnalyticsServiceItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D62D6132FBDC5BB00E259CF /* AnalyticsServiceItem.swift */; };
@@ -87,8 +84,6 @@
 		3DD3D40D3008E2B30037BD57 /* SignUpProfileStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD3D40C3008E2B10037BD57 /* SignUpProfileStep.swift */; };
 		3DD3D40F3008E2C60037BD57 /* SignUpBusinessStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD3D40E3008E2C50037BD57 /* SignUpBusinessStep.swift */; };
 		3DD3D4113008E2DF0037BD57 /* SignUpCurrencyStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD3D4103008E2DD0037BD57 /* SignUpCurrencyStep.swift */; };
-		3DD3D4133008E70E0037BD57 /* AuthValidationError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD3D4123008E70C0037BD57 /* AuthValidationError.swift */; };
-		3DDD1E522FB489DA00CFB004 /* ServiceRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDD1E512FB489D900CFB004 /* ServiceRow.swift */; };
 		3DE40D932FA7798A004491EA /* ClientManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE40D922FA77989004491EA /* ClientManager.swift */; };
 		3DE40D952FA77A4D004491EA /* ClientRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE40D942FA77A4C004491EA /* ClientRowView.swift */; };
 		3DE40D972FA77B0D004491EA /* ClientProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE40D962FA77B0C004491EA /* ClientProfileView.swift */; };
@@ -125,14 +120,12 @@
 		3D2023542FA3B1D30078D26B /* BeautyCRM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BeautyCRM.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D2023632FA3B1D30078D26B /* BeautyCRMTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BeautyCRMTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D20236D2FA3B1D30078D26B /* BeautyCRMUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BeautyCRMUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		3D20238B2FA3B33D0078D26B /* AuthUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthUser.swift; sourceTree = "<group>"; };
 		3D20238C2FA3B3600078D26B /* SessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
 		3D2023902FA3B3BF0078D26B /* AppTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; };
 		3D2023912FA3B3D30078D26B /* ThemeColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeColors.swift; sourceTree = "<group>"; };
 		3D2023922FA3B3E00078D26B /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
 		3D2023932FA3B3F50078D26B /* ThemeStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeStorage.swift; sourceTree = "<group>"; };
 		3D2023942FA3B42A0078D26B /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
-		3D2023952FA3B43E0078D26B /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
 		3D2BAAE42FAF6AEA00984CFE /* AppointmentFormMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppointmentFormMode.swift; sourceTree = "<group>"; };
 		3D32E7462FA3BD9100A746A5 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		3D32E7472FA3BDBD00A746A5 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
@@ -157,7 +150,6 @@
 		3D618F3D300BC80A00D0685C /* LanguageSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageSettingsView.swift; sourceTree = "<group>"; };
 		3D618F413010E06E00D0685C /* UserProfileLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileLoader.swift; sourceTree = "<group>"; };
 		3D618F443010E28100D0685C /* CurrencyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyManager.swift; sourceTree = "<group>"; };
-		3D618F463010E5CA00D0685C /* CurrencyFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyFormatter.swift; sourceTree = "<group>"; };
 		3D62D60F2FBDC50A00E259CF /* AnalyticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsView.swift; sourceTree = "<group>"; };
 		3D62D6112FBDC58E00E259CF /* AnalyticsPeriod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsPeriod.swift; sourceTree = "<group>"; };
 		3D62D6132FBDC5BB00E259CF /* AnalyticsServiceItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsServiceItem.swift; sourceTree = "<group>"; };
@@ -209,8 +201,6 @@
 		3DD3D40C3008E2B10037BD57 /* SignUpProfileStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpProfileStep.swift; sourceTree = "<group>"; };
 		3DD3D40E3008E2C50037BD57 /* SignUpBusinessStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpBusinessStep.swift; sourceTree = "<group>"; };
 		3DD3D4103008E2DD0037BD57 /* SignUpCurrencyStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpCurrencyStep.swift; sourceTree = "<group>"; };
-		3DD3D4123008E70C0037BD57 /* AuthValidationError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthValidationError.swift; sourceTree = "<group>"; };
-		3DDD1E512FB489D900CFB004 /* ServiceRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceRow.swift; sourceTree = "<group>"; };
 		3DE40D922FA77989004491EA /* ClientManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientManager.swift; sourceTree = "<group>"; };
 		3DE40D942FA77A4C004491EA /* ClientRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientRowView.swift; sourceTree = "<group>"; };
 		3DE40D962FA77B0C004491EA /* ClientProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientProfileView.swift; sourceTree = "<group>"; };
@@ -311,7 +301,6 @@
 			isa = PBXGroup;
 			children = (
 				3DEF1E8A3088C2BC009E3F13 /* AppFormatting.swift */,
-				3D2023952FA3B43E0078D26B /* DateFormatter.swift */,
 				3D2023942FA3B42A0078D26B /* Constants.swift */,
 			);
 			path = Utils;
@@ -335,7 +324,6 @@
 				3DD3D4053008E2600037BD57 /* SignUp */,
 				3DD3D4033008E1400037BD57 /* AuthValidator.swift */,
 				3DD3D4013008E12B0037BD57 /* AuthResult.swift */,
-				3DD3D4123008E70C0037BD57 /* AuthValidationError.swift */,
 				3DD3D3FF3008E1120037BD57 /* AuthError.swift */,
 				3D32E7552FA3D0B000A746A5 /* SplashView.swift */,
 				3DD3D3FB3008DC010037BD57 /* WelcomeView.swift */,
@@ -343,7 +331,6 @@
 				3D32E7512FA3CEA300A746A5 /* AuthCredentials.swift */,
 				3D32E74F2FA3CE9E00A746A5 /* LocalAuthService.swift */,
 				3D20238C2FA3B3600078D26B /* SessionManager.swift */,
-				3D20238B2FA3B33D0078D26B /* AuthUser.swift */,
 			);
 			path = Auth;
 			sourceTree = "<group>";
@@ -402,7 +389,6 @@
 		3D618F433010E26400D0685C /* User */ = {
 			isa = PBXGroup;
 			children = (
-				3D618F463010E5CA00D0685C /* CurrencyFormatter.swift */,
 				3D618F443010E28100D0685C /* CurrencyManager.swift */,
 				3DB845E62FBA11E500A4C698 /* UserProfile.swift */,
 				3D32E74D2FA3BEE700A746A5 /* UserProfileManager.swift */,
@@ -572,7 +558,6 @@
 			children = (
 				3D62D6192FC0559400E259CF /* CompletionServiceItem.swift */,
 				3D62D6152FBDC89300E259CF /* AppointmentServiceItem.swift */,
-				3DDD1E512FB489D900CFB004 /* ServiceRow.swift */,
 				3DE40DA82FA78A9A004491EA /* EditServiceView.swift */,
 				3DE40DA22FA78143004491EA /* CreateServiceView.swift */,
 				3DE40DA42FA78148004491EA /* ServicesListView.swift */,
@@ -760,9 +745,6 @@
 				3DD3D4113008E2DF0037BD57 /* SignUpCurrencyStep.swift in Sources */,
 				3D618F3E300BC80A00D0685C /* LanguageSettingsView.swift in Sources */,
 				3D62D6122FBDC58E00E259CF /* AnalyticsPeriod.swift in Sources */,
-				3D2023A32FA3B5440078D26B /* DateFormatter.swift in Sources */,
-				3DD3D4133008E70E0037BD57 /* AuthValidationError.swift in Sources */,
-				3D618F473010E5CB00D0685C /* CurrencyFormatter.swift in Sources */,
 				3DE40DA52FA78148004491EA /* ServicesListView.swift in Sources */,
 				3D32E7522FA3CEA300A746A5 /* AuthCredentials.swift in Sources */,
 				3D32E74E2FA3BEE800A746A5 /* UserProfileManager.swift in Sources */,
@@ -775,7 +757,6 @@
 				3DD3D4073008E26F0037BD57 /* SignUpState.swift in Sources */,
 				3DD3D4093008E2850037BD57 /* SignUpFlowView.swift in Sources */,
 				3D32E7562FA3D0B000A746A5 /* SplashView.swift in Sources */,
-				3DDD1E522FB489DA00CFB004 /* ServiceRow.swift in Sources */,
 				3DE40D932FA7798A004491EA /* ClientManager.swift in Sources */,
 				3DD3D3E6300780370037BD57 /* DashboardAppointmentCard.swift in Sources */,
 				3D2023A02FA3B5380078D26B /* ThemeManager.swift in Sources */,
@@ -821,7 +802,6 @@
 				3D62D64B2FCB16C000E259CF /* ClientPhotoThumbnailGenerator.swift in Sources */,
 				3D62D6422FC1D87500E259CF /* PhotoGalleryView.swift in Sources */,
 				3D62D6492FCB154B00E259CF /* PhotoThumbnailCache.swift in Sources */,
-				3D20239C2FA3B5200078D26B /* AuthUser.swift in Sources */,
 				3DE40DA72FA7837E004491EA /* HomeView.swift in Sources */,
 				3D62D6142FBDC5BC00E259CF /* AnalyticsServiceItem.swift in Sources */,
 				3D32E7482FA3BDC200A746A5 /* LoginView.swift in Sources */,

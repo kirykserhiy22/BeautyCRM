@@ -22,7 +22,6 @@ struct AppointmentRow: View {
     
     @State private var showEdit = false
     @State private var showComplete = false
-    @State private var showNotes = false
     @State private var showCancelConfirm = false
     @State private var showRestoreConflict = false
     @State private var finalServicePrices: [UUID: String] = [:]
@@ -358,23 +357,6 @@ struct AppointmentRow: View {
             Text(localization.localizedString(for: "appointment.restoreConflict.message"))
         }
 
-        // NOTES
-        
-        .alert(
-            localization.localizedString(for: "appointment.notesTitle"),
-            isPresented: $showNotes
-        ) {
-            
-            Button(
-                "OK",
-                role: .cancel
-            ) { }
-            
-        } message: {
-            
-            Text(appt.notes ?? "")
-        }
-        
         // COMPLETE SHEET
         
         .sheet(
