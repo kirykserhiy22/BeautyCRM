@@ -57,6 +57,7 @@
 		3D62D64B2FCB16C000E259CF /* ClientPhotoThumbnailGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D62D64A2FCB16C000E259CF /* ClientPhotoThumbnailGenerator.swift */; };
 		3D62D64D2FCB19E300E259CF /* PhotoMemoryCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D62D64C2FCB19E200E259CF /* PhotoMemoryCache.swift */; };
 		3D62D64F2FCB1A0300E259CF /* PhotoRenderService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D62D64E2FCB1A0200E259CF /* PhotoRenderService.swift */; };
+		3D77D25C3097F271003B6D95 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3D77D25A3097F271003B6D95 /* InfoPlist.strings */; };
 		3D823D4E2FFA863C0099B3D7 /* CalendarWeekdayHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D823D4D2FFA863B0099B3D7 /* CalendarWeekdayHeaderView.swift */; };
 		3DB845CF2FB5F25C00A4C698 /* CalendarDayCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB845CE2FB5F25B00A4C698 /* CalendarDayCell.swift */; };
 		3DB845D12FB5F2A800A4C698 /* CalendarMonthGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB845D02FB5F2A700A4C698 /* CalendarMonthGrid.swift */; };
@@ -174,6 +175,11 @@
 		3D62D64A2FCB16C000E259CF /* ClientPhotoThumbnailGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientPhotoThumbnailGenerator.swift; sourceTree = "<group>"; };
 		3D62D64C2FCB19E200E259CF /* PhotoMemoryCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoMemoryCache.swift; sourceTree = "<group>"; };
 		3D62D64E2FCB1A0200E259CF /* PhotoRenderService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoRenderService.swift; sourceTree = "<group>"; };
+		3D77D25B3097F271003B6D95 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		3D77D25D3097F2EB003B6D95 /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		3D77D25E3097F2ED003B6D95 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		3D77D25F3097F2EF003B6D95 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		3D77D2603097F2F1003B6D95 /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		3D823D4D2FFA863B0099B3D7 /* CalendarWeekdayHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarWeekdayHeaderView.swift; sourceTree = "<group>"; };
 		3DB845CC2FB5F25400A4C698 /* DayOccupancySegment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayOccupancySegment.swift; sourceTree = "<group>"; };
 		3DB845CD2FB5F25700A4C698 /* DayOccupancyBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayOccupancyBar.swift; sourceTree = "<group>"; };
@@ -378,6 +384,7 @@
 		3D618F28300BAB8400D0685C /* Language */ = {
 			isa = PBXGroup;
 			children = (
+				3D77D25A3097F271003B6D95 /* InfoPlist.strings */,
 				3D618F37300BC35100D0685C /* Localizable.strings */,
 				3D618F29300BAB9B00D0685C /* SupportedLanguage.swift */,
 				3DEF1E8C3088CA41009E3F13 /* CountFormatting.swift */,
@@ -692,6 +699,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3D77D25C3097F271003B6D95 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -849,6 +857,18 @@
 				3D618F3C300BC47A00D0685C /* cs */,
 			);
 			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		3D77D25A3097F271003B6D95 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3D77D25B3097F271003B6D95 /* en */,
+				3D77D25D3097F2EB003B6D95 /* cs */,
+				3D77D25E3097F2ED003B6D95 /* de */,
+				3D77D25F3097F2EF003B6D95 /* pl */,
+				3D77D2603097F2F1003B6D95 /* uk */,
+			);
+			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

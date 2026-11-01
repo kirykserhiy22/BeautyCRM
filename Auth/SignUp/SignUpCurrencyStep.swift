@@ -12,6 +12,7 @@ struct SignUpCurrencyStep: View {
 
 
     @ObservedObject var state: SignUpState
+    @EnvironmentObject var localization: LocalizationManager
 
 
     var body: some View {
@@ -50,7 +51,7 @@ struct SignUpCurrencyStep: View {
 
 
                         Text(
-                            "\(currency.symbol) \(currency.title)"
+                            "\(currency.symbol) \(localization.localizedString(for: "currency.\(currency.code)"))"
                         )
                         .tag(
                             currency.code

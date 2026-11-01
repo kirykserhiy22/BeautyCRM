@@ -44,7 +44,7 @@ struct WelcomeView: View {
                                         $0.code == localization.languageCode
                                     }.map {
                                         "\($0.flag) \($0.title)"
-                                    } ?? "🌐 Language"
+                                    } ?? "🌐 \(localization.localizedString(for: "settings.language.title"))"
                                 )
 
                                 Image(systemName: "chevron.down")

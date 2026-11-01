@@ -399,7 +399,7 @@ struct AnalyticsView: View {
                     for: now
                 )
         else {
-            return "Current week"
+            return localized("analytics.currentWeek")
         }
 
 
