@@ -52,14 +52,6 @@ enum UserProfileLoader {
             profile.profession
         )
 
-
-        print(
-            "PROFILE LOADED:",
-            profile.languageCode,
-            profile.currencyCode
-        )
-
-
         return profile
     }
 }

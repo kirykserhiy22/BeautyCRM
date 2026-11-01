@@ -10,11 +10,6 @@
 "tab.calendar" = "Календар";
 "tab.analytics" = "Аналітика";
 "tab.settings" = "Налаштування";
-"settings.language.title" = "Мова";
-"settings.language.confirm.title" = "Змінити мову?";
-"common.cancel" = "Скасувати";
-"common.change" = "Змінити";
-"settings.language.confirm.message" = "Мову застосунку буде змінено.";
 "welcome.description" = "Керуйте клієнтами, записами та бізнесом в одному місці.";
 "welcome.createAccount" = "Створити акаунт";
 "welcome.login" = "У мене вже є акаунт";
@@ -63,10 +58,6 @@
 "auth.error.userNotFound" = "Користувача не знайдено";
 "auth.error.wrongPassword" = "Неправильний пароль";
 
-"validation.error.emptyEmail" = "Введіть електронну пошту";
-"validation.error.invalidEmail" = "Введіть коректну електронну пошту";
-"validation.error.weakPassword" = "Пароль має містити щонайменше 8 символів і одну цифру";
-"validation.error.emptyName" = "Введіть ім’я";
 /* Home */
 "home.today" = "СЬОГОДНІ";
 "home.appointments" = "Записи";
@@ -181,9 +172,7 @@
 "settings.language.title" = "Мова";
 "settings.language.confirm.title" = "Змінити мову?";
 "settings.language.confirm.message" = "Мову застосунку буде змінено.";
-"common.cancel" = "Скасувати";
 "common.change" = "Змінити";
-"calendar.title" = "Календар";
 "calendar.emptyDay" = "На цей день записів немає";
 "calendar.addAppointment" = "Додати запис";
 

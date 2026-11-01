@@ -172,7 +172,6 @@ private extension ClientFormView {
     private func saveClient(allowDuplicate: Bool = false) {
 
         guard let userID = appState.session.userID else {
-            print("NO SESSION USER ID")
             return
         }
 

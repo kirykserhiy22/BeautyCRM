@@ -10,11 +10,6 @@
 "tab.calendar" = "Calendar";
 "tab.analytics" = "Analytics";
 "tab.settings" = "Settings";
-"settings.language.title" = "Language";
-"settings.language.confirm.title" = "Change language?";
-"common.cancel" = "Cancel";
-"common.change" = "Change";
-"settings.language.confirm.message" = "The application language will be changed.";
 "welcome.description" = "Manage clients, appointments and business in one place.";
 "welcome.createAccount" = "Create Account";
 "welcome.login" = "I already have an account";
@@ -63,10 +58,6 @@
 "auth.error.userNotFound" = "User not found";
 "auth.error.wrongPassword" = "Wrong password";
 
-"validation.error.emptyEmail" = "Email is required";
-"validation.error.invalidEmail" = "Enter a valid email";
-"validation.error.weakPassword" = "Password must contain at least 8 characters and a number";
-"validation.error.emptyName" = "Name is required";
 /* Home */
 "home.today" = "TODAY";
 "home.appointments" = "Appointments";
@@ -180,9 +171,7 @@
 "settings.language.title" = "Language";
 "settings.language.confirm.title" = "Change language?";
 "settings.language.confirm.message" = "The app language will be changed.";
-"common.cancel" = "Cancel";
 "common.change" = "Change";
-"calendar.title" = "Calendar";
 "calendar.emptyDay" = "No appointments on this day";
 "calendar.addAppointment" = "Add appointment";
 

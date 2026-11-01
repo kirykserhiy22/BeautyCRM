@@ -329,11 +329,6 @@ private extension HomeView {
 
 
         appointment.services
-            .filter {
-
-                !$0.isDeleted
-
-            }
             .map {
 
                 $0.serviceName

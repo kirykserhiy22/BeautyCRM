@@ -82,7 +82,6 @@ struct AppointmentFormView: View {
     private var userClients: [Client] {
 
         guard let userID = appState.session.userID else {
-            print("NO USER")
             return []
         }
 
