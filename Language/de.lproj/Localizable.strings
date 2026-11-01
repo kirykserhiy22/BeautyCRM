@@ -274,3 +274,13 @@
 "clients.possibleDuplicate.title" = "Derselbe Kunde?";
 "clients.possibleDuplicate.message" = "Kunde „%@“ ist bereits in der Liste. Trotzdem speichern?";
 "clients.possibleDuplicate.save" = "Trotzdem speichern";
+
+/* Empty states (#49) */
+"empty.clients.title" = "Noch keine Kunden";
+"empty.clients.message" = "Tippe auf +, um deinen ersten Kunden hinzuzufügen.";
+"empty.search.title" = "Nichts gefunden";
+"empty.search.message" = "Versuche einen anderen Namen.";
+"empty.services.title" = "Noch keine Leistungen";
+"empty.services.message" = "Tippe auf +, um deine erste Leistung mit Preis hinzuzufügen.";
+"empty.analytics.title" = "Keine abgeschlossenen Termine";
+"empty.analytics.message" = "Umsatz und Ranglisten erscheinen hier, sobald du Termine in diesem Zeitraum abschließt.";

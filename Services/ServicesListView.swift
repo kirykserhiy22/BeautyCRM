@@ -70,6 +70,14 @@ struct ServicesListView: View {
                             
                             serviceCard(service)
                         }
+
+                        if userServices.isEmpty {
+                            EmptyStateView(
+                                systemImage: "scissors",
+                                titleKey: "empty.services.title",
+                                messageKey: "empty.services.message"
+                            )
+                        }
                     }
                     .padding()
                 }

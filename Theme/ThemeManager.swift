@@ -51,7 +51,7 @@ final class ThemeManager: ObservableObject {
                 // TEXT
                 textPrimary: .black,
                 textSecondary: .gray,
-                textMuted: Color(.systemGray6),
+                textMuted: Color(.systemGray3),
                 
                 // BRAND
                 accent: .blue,

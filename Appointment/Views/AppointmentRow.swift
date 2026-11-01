@@ -97,7 +97,7 @@ struct AppointmentRow: View {
                         
                         Text(appt.clientName)
                             .font(.headline)
-                            .foregroundColor(colors.textSecondary)
+                            .foregroundColor(colors.textPrimary)
                         
                         Text(
                             appt.services

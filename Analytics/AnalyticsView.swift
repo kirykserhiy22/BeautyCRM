@@ -169,9 +169,17 @@ struct AnalyticsView: View {
 
                         statsGrid(summary)
 
-                        topServicesSection(summary)
+                        if summary.appointmentCount == 0 {
+                            EmptyStateView(
+                                systemImage: "chart.bar",
+                                titleKey: "empty.analytics.title",
+                                messageKey: "empty.analytics.message"
+                            )
+                        } else {
+                            topServicesSection(summary)
 
-                        topClientsSection(summary)
+                            topClientsSection(summary)
+                        }
                     }
                 }
                 .padding()

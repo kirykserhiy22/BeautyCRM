@@ -104,6 +104,22 @@ struct ClientsListView: View {
                                         }
                                     }
                             }
+
+                            if filteredClients.isEmpty {
+                                if userClients.isEmpty {
+                                    EmptyStateView(
+                                        systemImage: "person.2",
+                                        titleKey: "empty.clients.title",
+                                        messageKey: "empty.clients.message"
+                                    )
+                                } else {
+                                    EmptyStateView(
+                                        systemImage: "magnifyingglass",
+                                        titleKey: "empty.search.title",
+                                        messageKey: "empty.search.message"
+                                    )
+                                }
+                            }
                         }
                         .padding(.horizontal)
                         .padding(.top, 8)

@@ -274,3 +274,13 @@
 "clients.possibleDuplicate.title" = "Ten sam klient?";
 "clients.possibleDuplicate.message" = "Klient „%@” jest już na liście. Zapisać mimo to?";
 "clients.possibleDuplicate.save" = "Zapisz mimo to";
+
+/* Empty states (#49) */
+"empty.clients.title" = "Brak klientów";
+"empty.clients.message" = "Stuknij +, aby dodać pierwszego klienta.";
+"empty.search.title" = "Nic nie znaleziono";
+"empty.search.message" = "Spróbuj innego imienia.";
+"empty.services.title" = "Brak usług";
+"empty.services.message" = "Stuknij +, aby dodać pierwszą usługę i jej cenę.";
+"empty.analytics.title" = "Brak zakończonych wizyt";
+"empty.analytics.message" = "Przychód i rankingi pojawią się tutaj, gdy zakończysz wizyty w tym okresie.";
