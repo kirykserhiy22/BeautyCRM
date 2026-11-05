@@ -21,6 +21,14 @@ struct HomeView: View {
     private var colors: ThemeColors {
         theme.colors(for: theme.currentTheme)
     }
+    @Query private var profiles: [UserProfile]
+    @Query(filter: #Predicate<Client> { $0.deletedAt == nil })
+    private var clients: [Client]
+
+    private var firstName: String {
+        profiles.first { $0.authUserID == appState.session.userID }?.firstName ?? ""
+    }
+
     private var userAppointments: [Appointment] {
 
         guard let userID = appState.session.userID else {
@@ -45,64 +53,55 @@ struct HomeView: View {
                     spacing: 20
                 ) {
 
-                    HomeHeaderView()
+                    HomeHeaderView(firstName: firstName)
 
+                    // Раз на 30 секунд оновлює «через 40 хв» і стан запису
+                    TimelineView(.periodic(from: .now, by: 30)) { _ in
 
-                    TodayStatsCard(
-                        totalAppointments: todayAppointments.count,
-                        completedAppointments: completedToday,
-                        remainingAppointments: remainingToday
-                    )
+                        VStack(alignment: .leading, spacing: 20) {
 
+                            if let dashboardAppointment {
 
-                    if let dashboardAppointment {
+                                DashboardAppointmentCard(
+                                    appointment: dashboardAppointment,
+                                    title: dashboardTitle,
+                                    services: servicesText(dashboardAppointment),
+                                    timeText: timeText(dashboardAppointment),
+                                    statusText: statusText(dashboardAppointment),
+                                    statusColor: dashboardColor,
+                                    phoneURL: phoneURL(dashboardAppointment)
+                                )
 
-                        DashboardAppointmentCard(
-                            title: dashboardTitle,
-                            clientName: dashboardAppointment.clientName,
-                            services: servicesText(dashboardAppointment),
-                            dateText: dateText(dashboardAppointment),
-                            timeText: timeText(dashboardAppointment),
-                            statusText: dashboardStatus,
-                            accentColor: dashboardColor,
-                            titleIsLocalized: true,
-                            statusIsLocalized: true
-                        )
+                            } else if !todayAppointments.isEmpty && remainingToday == 0 {
 
-                    } else if !todayAppointments.isEmpty && remainingToday == 0 {
+                                // Сьогодні записи були, і всі вже завершені
+                                DashboardMessageCard(
+                                    title: "home.dayComplete",
+                                    message: "home.allDoneToday"
+                                )
 
-                        // Сьогодні записи були, і всі вже завершені
-                        DashboardAppointmentCard(
-                            title: "home.dayComplete",
-                            clientName: "home.allDoneToday",
-                            services: "",
-                            dateText: "",
-                            timeText: "",
-                            statusText: "home.noUpcomingAppointments",
-                            accentColor: colors.success,
-                            titleIsLocalized: true,
-                            clientNameIsLocalized: true,
-                            statusIsLocalized: true
-                        )
+                            } else {
 
-                    } else {
+                                DashboardMessageCard(
+                                    title: "home.noAppointments",
+                                    message: "home.freeToday"
+                                )
+                            }
 
-                        DashboardAppointmentCard(
-                            title: "home.noAppointments",
-                            clientName: "home.freeToday",
-                            services: "",
-                            dateText: "",
-                            timeText: "",
-                            statusText: "home.noUpcomingAppointments",
-                            accentColor: colors.textSecondary,
-                            titleIsLocalized: true,
-                            clientNameIsLocalized: true,
-                            statusIsLocalized: true
-                        )
+                            if !todayAppointments.isEmpty {
+                                TodayStatsCard(
+                                    totalAppointments: todayAppointments.count,
+                                    completedAppointments: completedToday
+                                )
+                            }
+
+                            QuickActionsSection()
+
+                            if !laterTodayText.isEmpty {
+                                laterTodayCard
+                            }
+                        }
                     }
-
-
-                    QuickActionsSection()
 
                 }
                 .padding()
@@ -262,34 +261,102 @@ private extension HomeView {
 
 
 
-    var dashboardStatus: String {
-
-        guard let appointment = dashboardAppointment
-        else {
-            return ""
-        }
-
+    func statusText(_ appointment: Appointment) -> String {
 
         let now = Date()
 
-
         if appointment.endDate < now {
-
-            return "home.waitingForCompletion"
+            return localization.localizedString(for: "home.waitingForCompletion")
         }
-
 
         if appointment.startDate <= now {
-
-            return "home.inProgress"
+            let left = String(
+                format: localization.localizedString(for: "home.endsInMinutes"),
+                locale: localization.locale,
+                HomeTiming.minutes(from: now, to: appointment.endDate)
+            )
+            return "\(localization.localizedString(for: "home.inProgress")) · \(left)"
         }
 
+        switch HomeTiming.countdown(from: now, to: appointment.startDate) {
 
-        return "home.upcoming"
+        case .minutes(let minutes):
+            return String(
+                format: localization.localizedString(for: "home.startsInMinutes"),
+                locale: localization.locale,
+                minutes
+            )
+
+        case .hours(let hours, let minutes):
+            return String(
+                format: localization.localizedString(for: "home.startsInHours"),
+                locale: localization.locale,
+                hours,
+                minutes
+            )
+
+        case .otherDay:
+            return dateText(appointment)
+        }
     }
 
 
+    func phoneURL(_ appointment: Appointment) -> URL? {
+        clients
+            .first { $0.id == appointment.clientID }?
+            .phone
+            .flatMap { ContactLinks.phone($0) }
+    }
 
+
+    // Решта сьогоднішніх записів: «13:30 Anna · 15:00 Lena · ще 1»
+    var laterTodayText: String {
+
+        let now = Date()
+
+        let later = todayAppointments.filter {
+            $0.status == .active
+                && $0.startDate > now
+                && $0.id != dashboardAppointment?.id
+        }
+
+        var parts = later.prefix(2).map {
+            "\(AppFormatting.clock($0.startDate)) \($0.clientName)"
+        }
+
+        if later.count > 2 {
+            parts.append(
+                String(
+                    format: localization.localizedString(for: "home.moreCount"),
+                    locale: localization.locale,
+                    later.count - 2
+                )
+            )
+        }
+
+        return parts.joined(separator: " · ")
+    }
+
+
+    var laterTodayCard: some View {
+
+        VStack(alignment: .leading, spacing: 4) {
+
+            Text("home.laterToday")
+                .font(.subheadline)
+                .foregroundColor(colors.textSecondary)
+
+            Text(laterTodayText)
+                .font(.subheadline.weight(.medium))
+                .foregroundColor(colors.textPrimary)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(16)
+        .background(
+            RoundedRectangle(cornerRadius: 18)
+                .fill(colors.card)
+        )
+    }
 
 
     var dashboardColor: Color {
@@ -360,7 +427,7 @@ private extension HomeView {
     ) -> String {
 
 
-        "\(AppFormatting.clock(appointment.startDate)) - \(AppFormatting.clock(appointment.endDate))"
+        "\(AppFormatting.clock(appointment.startDate)) – \(AppFormatting.clock(appointment.endDate))"
     }
 
 }

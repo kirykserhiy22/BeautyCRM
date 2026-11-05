@@ -1,24 +1,108 @@
 //
-//  Untitled.swift
+//  DashboardAppointmentCard.swift
 //  BeautyCRM
 //
-//  Created by Serhii Kiryk on 15.07.26.
+//  Головна картка: хто наступний і коли.
 //
+
 import SwiftUI
 
 struct DashboardAppointmentCard: View {
 
+    let appointment: Appointment
     let title: String
-    let clientName: String
     let services: String
-    let dateText: String
     let timeText: String
     let statusText: String
-    let accentColor: Color
+    let statusColor: Color
+    let phoneURL: URL?
 
-    var titleIsLocalized = false
-    var clientNameIsLocalized = false
-    var statusIsLocalized = false
+    @EnvironmentObject var theme: ThemeManager
+    @Environment(\.colorScheme) private var colorScheme
+
+    private var colors: ThemeColors {
+        theme.colors(for: theme.currentTheme)
+    }
+
+    var body: some View {
+
+        VStack(alignment: .leading, spacing: 10) {
+
+            HStack(alignment: .firstTextBaseline) {
+
+                Text(LocalizedStringKey(title))
+                    .font(.subheadline)
+                    .foregroundColor(colors.textSecondary)
+
+                Spacer()
+
+                Text(statusText)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundColor(statusColor)
+                    .multilineTextAlignment(.trailing)
+            }
+
+            Text(appointment.clientName)
+                .font(.title.bold())
+                .foregroundColor(colors.textPrimary)
+
+            if !services.isEmpty {
+                Text(services)
+                    .font(.subheadline)
+                    .foregroundColor(colors.textSecondary)
+            }
+
+            Text(timeText)
+                .font(.title3.weight(.semibold))
+                .foregroundColor(colors.textPrimary)
+
+            HStack(spacing: 10) {
+
+                NavigationLink {
+                    AppointmentDetailScreen(appointment: appointment)
+                } label: {
+                    AuthButtonLabel(
+                        title: "home.open",
+                        background: colors.buttonPrimary,
+                        foreground: .white
+                    )
+                }
+                .accessibilityIdentifier("home.open")
+
+                if let phoneURL {
+                    Link(destination: phoneURL) {
+                        Image(systemName: "phone.fill")
+                            .font(.headline)
+                            .foregroundColor(colors.textPrimary)
+                            .frame(width: 54, height: 54)
+                            .background(colors.buttonSecondary)
+                            .cornerRadius(16)
+                    }
+                    .accessibilityLabel(Text("clients.phone"))
+                }
+            }
+            .padding(.top, 4)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(20)
+        .background(
+            RoundedRectangle(cornerRadius: 22)
+                .fill(colors.card)
+        )
+        // Фірмова картка вишнева в обох режимах iPhone
+        .environment(
+            \.colorScheme,
+            theme.currentTheme.followsSystemAppearance ? .dark : colorScheme
+        )
+    }
+}
+
+
+// Коли наступного запису немає: день завершено або вільний
+struct DashboardMessageCard: View {
+
+    let title: String
+    let message: String
 
     @EnvironmentObject var theme: ThemeManager
 
@@ -26,114 +110,49 @@ struct DashboardAppointmentCard: View {
         theme.colors(for: theme.currentTheme)
     }
 
-
     var body: some View {
 
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: 8) {
 
-            // MARK: - HEADER
+            Text(LocalizedStringKey(title))
+                .font(.subheadline)
+                .foregroundColor(colors.textSecondary)
 
-            Group {
-                if titleIsLocalized {
-                    Text(LocalizedStringKey(title)).textCase(.uppercase)
-                } else {
-                    Text(title.uppercased())
-                }
-            }
-            .font(.caption.weight(.bold))
-            .foregroundColor(colors.textSecondary)
-
-            // MARK: - CLIENT
-
-            Group {
-                if clientNameIsLocalized {
-                    Text(LocalizedStringKey(clientName))
-                } else {
-                    Text(clientName)
-                }
-            }
-            .font(.title2.bold())
-            .foregroundColor(colors.textPrimary)
-
-
-            // MARK: - SERVICES
-
-            if !services.isEmpty {
-
-                Text(services)
-                    .font(.subheadline)
-                    .foregroundColor(colors.textSecondary)
-            }
-            // MARK: - DATE
-            if !dateText.isEmpty {
-                Text(dateText)
-                    .font(.subheadline.weight(.medium))
-                    .foregroundColor(colors.textSecondary)
-            }
-            // MARK: - TIME
-
-            Text(timeText)
-                .font(.headline)
+            Text(LocalizedStringKey(message))
+                .font(.title3.bold())
                 .foregroundColor(colors.textPrimary)
-
-
-            // MARK: - STATUS
-
-            HStack(spacing: 6) {
-
-                Circle()
-                    .fill(accentColor)
-                    .frame(
-                        width: 8,
-                        height: 8
-                    )
-
-
-                Group {
-                    if statusIsLocalized {
-                        Text(LocalizedStringKey(statusText))
-                    } else {
-                        Text(statusText)
-                    }
-                }
-                .font(.subheadline.weight(.medium))
-                .foregroundColor(accentColor)
-            }
-
         }
-        .frame(
-            maxWidth: .infinity,
-            alignment: .leading
-        )
+        .frame(maxWidth: .infinity, alignment: .leading)
         .padding(20)
         .background(
-            RoundedRectangle(cornerRadius: 20)
+            RoundedRectangle(cornerRadius: 22)
                 .fill(colors.card)
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: 20)
-                .stroke(colors.border, lineWidth: 1)
-        )
-        .shadow(
-            color: colors.shadow,
-            radius: 6,
-            y: 2
         )
     }
 }
 
 
-#Preview {
+// Запис з Головної: той самий рядок, що в календарі, одразу розгорнутий
+struct AppointmentDetailScreen: View {
 
-    DashboardAppointmentCard(
-        title: "Current Appointment",
-        clientName: "Anna Johnson",
-        services: "Hair Coloring • Haircut",
-        dateText: "Tomorrow",
-        timeText: "10:00 – 11:30",
-        statusText: "In Progress",
-        accentColor: .green
-    )
-    .padding()
-    .environmentObject(ThemeManager())
+    let appointment: Appointment
+
+    @EnvironmentObject var theme: ThemeManager
+    @State private var expandedID: UUID?
+
+    var body: some View {
+
+        ScrollView {
+            AppointmentRow(
+                appt: appointment,
+                expandedAppointmentID: $expandedID
+            )
+            .padding()
+        }
+        .background(theme.colors(for: theme.currentTheme).background.ignoresSafeArea())
+        .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            expandedID = appointment.id
+        }
+    }
 }

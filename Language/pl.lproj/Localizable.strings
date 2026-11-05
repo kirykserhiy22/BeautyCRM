@@ -57,14 +57,9 @@
 "auth.error.wrongPassword" = "Nieprawidłowe hasło";
 
 /* Home */
-"home.today" = "DZISIAJ";
-"home.appointments" = "Wizyty";
-"home.completed" = "Zakończone";
-"home.remaining" = "Pozostałe";
 
 "home.noAppointments" = "Brak wizyt";
 "home.freeToday" = "Dziś masz wolne 🎉";
-"home.noUpcomingAppointments" = "Brak nadchodzących wizyt";
 "home.dayComplete" = "Dzień zakończony";
 "home.allDoneToday" = "Wszystkie dzisiejsze wizyty zakończone 🎉";
 
@@ -74,11 +69,8 @@
 
 "home.waitingForCompletion" = "Oczekuje na zakończenie";
 "home.inProgress" = "W trakcie";
-"home.upcoming" = "Nadchodząca";
 "home.dateToday" = "Dzisiaj";
 "home.dateTomorrow" = "Jutro";
-"home.quickActions" = "Szybkie akcje";
-"home.addClients" = "Dodaj klientów";
 "home.services" = "Usługi";
 "home.dayOff" = "Dzień wolny";
 
@@ -294,3 +286,17 @@
 
 /* Brand theme */
 "settings.theme.darkcherry" = "Dark Cherry";
+
+/* Home redesign */
+"home.greeting.morning" = "Dzień dobry, %@";
+"home.greeting.afternoon" = "Dzień dobry, %@";
+"home.greeting.evening" = "Dobry wieczór, %@";
+"home.startsInMinutes" = "za %d min";
+"home.startsInHours" = "za %d godz. %d min";
+"home.endsInMinutes" = "jeszcze %d min";
+"home.progress" = "%d z %d wizyt";
+"home.laterToday" = "Później dziś";
+"home.moreCount" = "+%d więcej";
+"home.open" = "Otwórz";
+"home.action.appointment" = "Wizyta";
+"home.action.client" = "Klient";

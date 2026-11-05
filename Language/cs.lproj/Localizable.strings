@@ -57,14 +57,9 @@
 "auth.error.wrongPassword" = "Nesprávné heslo";
 
 /* Home */
-"home.today" = "DNES";
-"home.appointments" = "Objednávky";
-"home.completed" = "Dokončeno";
-"home.remaining" = "Zbývá";
 
 "home.noAppointments" = "Žádné objednávky";
 "home.freeToday" = "Dnes máš volno 🎉";
-"home.noUpcomingAppointments" = "Žádné nadcházející objednávky";
 "home.dayComplete" = "Den dokončen";
 "home.allDoneToday" = "Všechny dnešní rezervace jsou hotové 🎉";
 
@@ -74,11 +69,8 @@
 
 "home.waitingForCompletion" = "Čeká na dokončení";
 "home.inProgress" = "Probíhá";
-"home.upcoming" = "Nadcházející";
 "home.dateToday" = "Dnes";
 "home.dateTomorrow" = "Zítra";
-"home.quickActions" = "Rychlé akce";
-"home.addClients" = "Přidat klienty";
 "home.services" = "Služby";
 "home.dayOff" = "Volný den";
 
@@ -295,3 +287,17 @@
 
 /* Brand theme */
 "settings.theme.darkcherry" = "Dark Cherry";
+
+/* Home redesign */
+"home.greeting.morning" = "Dobré ráno, %@";
+"home.greeting.afternoon" = "Dobré odpoledne, %@";
+"home.greeting.evening" = "Dobrý večer, %@";
+"home.startsInMinutes" = "za %d min";
+"home.startsInHours" = "za %d h %d min";
+"home.endsInMinutes" = "ještě %d min";
+"home.progress" = "%d z %d termínů";
+"home.laterToday" = "Později dnes";
+"home.moreCount" = "+%d další";
+"home.open" = "Otevřít";
+"home.action.appointment" = "Termín";
+"home.action.client" = "Klient";

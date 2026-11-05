@@ -2,9 +2,8 @@
 //  TodayStatsCard.swift
 //  BeautyCRM
 //
-//  Created by Serhii Kiryk on 15.07.26.
+//  Прогрес дня: скільки записів уже завершено.
 //
-
 
 import SwiftUI
 
@@ -12,9 +11,9 @@ struct TodayStatsCard: View {
 
     let totalAppointments: Int
     let completedAppointments: Int
-    let remainingAppointments: Int
 
     @EnvironmentObject var theme: ThemeManager
+    @EnvironmentObject var localization: LocalizationManager
 
     private var colors: ThemeColors {
         theme.colors(for: theme.currentTheme)
@@ -22,77 +21,40 @@ struct TodayStatsCard: View {
 
     var body: some View {
 
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: 10) {
 
-            Text("home.today")
-                .font(.caption.weight(.bold))
+            HStack {
+
+                Text("home.dateToday")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundColor(colors.textPrimary)
+
+                Spacer()
+
+                Text(
+                    String(
+                        format: localization.localizedString(for: "home.progress"),
+                        locale: localization.locale,
+                        completedAppointments,
+                        totalAppointments
+                    )
+                )
+                .font(.subheadline)
                 .foregroundColor(colors.textSecondary)
+            }
 
-            HStack(spacing: 16) {
-
-                statView(
-                    value: totalAppointments,
-                    title: "home.appointments"
-                )
-                Divider()
-
-                statView(
-                    value: completedAppointments,
-                    title: "home.completed"
-                )
-
-                Divider()
-
-                statView(
-                    value: remainingAppointments,
-                    title: "home.remaining"
-                )
+            HStack(spacing: 4) {
+                ForEach(0..<totalAppointments, id: \.self) { index in
+                    Capsule()
+                        .fill(index < completedAppointments ? colors.buttonPrimary : colors.buttonSecondary)
+                        .frame(height: 6)
+                }
             }
         }
-        .padding()
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(16)
         .background(
             RoundedRectangle(cornerRadius: 18)
                 .fill(colors.card)
         )
-        .overlay(
-            RoundedRectangle(cornerRadius: 18)
-                .stroke(colors.border, lineWidth: 1)
-        )
-        .shadow(
-            color: colors.shadow,
-            radius: 6,
-            y: 2
-        )
     }
-
-    @ViewBuilder
-    private func statView(
-        value: Int,
-        title: String
-    ) -> some View {
-
-        VStack(spacing: 6) {
-
-            Text("\(value)")
-                .font(.title.bold())
-                .foregroundColor(colors.textPrimary)
-
-            Text(LocalizedStringKey(title))
-                .font(.caption)
-                .foregroundColor(colors.textSecondary)
-                .multilineTextAlignment(.center)
-        }
-        .frame(maxWidth: .infinity)
-    }
-}
-
-#Preview {
-    TodayStatsCard(
-        totalAppointments: 5,
-        completedAppointments: 2,
-        remainingAppointments: 3
-    )
-    .padding()
-    .environmentObject(ThemeManager())
 }
