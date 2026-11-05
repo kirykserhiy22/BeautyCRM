@@ -13,42 +13,70 @@ struct EditServiceView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
     @EnvironmentObject var localization: LocalizationManager
-    @Bindable var service: Service
+    let service: Service
     @EnvironmentObject var theme: ThemeManager
+
+    // Форма працює з копією: у прайс зміни потрапляють тільки після «Зберегти»
+    @State private var name: String
+    @State private var isVariable: Bool
+    @State private var price: Decimal?
+
     private var colors: ThemeColors {
         theme.colors(for: theme.currentTheme)
     }
+
+    private var canSave: Bool {
+        // Без назви, а у фіксованої послуги ще й без правильної ціни, не зберігається
+        ServiceEngine.validate(name: name) && (isVariable || price != nil)
+    }
+
+    init(service: Service) {
+        self.service = service
+        _name = State(initialValue: service.name)
+        _isVariable = State(initialValue: service.pricingType == .variable)
+        _price = State(initialValue: service.price)
+    }
+
     var body: some View {
         
         NavigationStack {
             
             Form {
                 
-                TextField("services.name", text: $service.name)
+                TextField("services.name", text: $name)
                 
-                if service.pricingType == .fixed {
+                if !isVariable {
                     MoneyField(
                         placeholder: localization.localizedString(for: "services.price"),
-                        value: $service.price
+                        value: $price
                     )
                 }
                 
-                Toggle("services.variablePrice", isOn: Binding(
-                    get: { service.pricingType == .variable },
-                    set: { isOn in
-                        service.pricingType = isOn ? .variable : .fixed
-                    }
-                ))
+                Toggle("services.variablePrice", isOn: $isVariable)
                 
                 Button("services.save") {
-                    if context.saveReportingErrors() {
+                    save()
+                }
+                .disabled(!canSave)
+            }
+            .navigationTitle("services.editTitle")
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("common.cancel") {
                         dismiss()
                     }
                 }
-                // Фіксована послуга без правильної ціни не зберігається
-                .disabled(service.pricingType == .fixed && service.price == nil)
             }
-            .navigationTitle("services.editTitle")
+        }
+    }
+
+    private func save() {
+        service.name = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        service.pricingType = isVariable ? .variable : .fixed
+        service.price = price
+
+        if context.saveReportingErrors() {
+            dismiss()
         }
     }
 }

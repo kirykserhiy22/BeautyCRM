@@ -153,6 +153,11 @@ enum SyncTracking {
             record.workspaceID = workspaceID
         }
 
+        // Старі вихідні: день рядком із дати, поки часовий пояс ще той самий (#52)
+        for dayOff in daysOff where dayOff.dayKey.isEmpty {
+            dayOff.dayKey = DayOff.key(for: dayOff.date)
+        }
+
 
         context.saveReportingErrors()
     }

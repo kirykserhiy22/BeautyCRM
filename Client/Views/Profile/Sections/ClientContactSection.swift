@@ -23,47 +23,29 @@ struct ClientContactSection: View {
 
             if let phone = client.phone {
 
-                Link(
-                    destination: URL(
-                        string: "tel://\(phone)"
-                    )!
-                ) {
-
-                    contactRow(
-                        icon: "phone.fill",
-                        title: phone
-                    )
-                }
+                contactLink(
+                    url: ContactLinks.phone(phone),
+                    icon: "phone.fill",
+                    title: phone
+                )
             }
 
             if let instagram = client.instagram {
 
-                Link(
-                    destination: URL(
-                        string: "https://instagram.com/\(instagram)"
-                    )!
-                ) {
-
-                    contactRow(
-                        icon: "camera.fill",
-                        title: "\(instagram)"
-                    )
-                }
+                contactLink(
+                    url: ContactLinks.instagram(instagram),
+                    icon: "camera.fill",
+                    title: instagram
+                )
             }
 
             if let telegram = client.telegram {
 
-                Link(
-                    destination: URL(
-                        string: "https://t.me/\(telegram)"
-                    )!
-                ) {
-
-                    contactRow(
-                        icon: "paperplane.fill",
-                        title: "\(telegram)"
-                    )
-                }
+                contactLink(
+                    url: ContactLinks.telegram(telegram),
+                    icon: "paperplane.fill",
+                    title: telegram
+                )
             }
         }
     }
@@ -73,9 +55,27 @@ struct ClientContactSection: View {
 
 private extension ClientContactSection {
 
-    func contactRow(
+    // Якщо посилання зібрати не вдалось, рядок показується без переходу
+    @ViewBuilder
+    func contactLink(
+        url: URL?,
         icon: String,
         title: String
+    ) -> some View {
+
+        if let url {
+            Link(destination: url) {
+                contactRow(icon: icon, title: title, hasLink: true)
+            }
+        } else {
+            contactRow(icon: icon, title: title, hasLink: false)
+        }
+    }
+
+    func contactRow(
+        icon: String,
+        title: String,
+        hasLink: Bool
     ) -> some View {
 
         HStack(spacing: 14) {
@@ -87,9 +87,11 @@ private extension ClientContactSection {
 
             Spacer()
 
-            Image(systemName: "chevron.right")
-                .font(.caption.bold())
-                .foregroundColor(colors.textSecondary)
+            if hasLink {
+                Image(systemName: "chevron.right")
+                    .font(.caption.bold())
+                    .foregroundColor(colors.textSecondary)
+            }
         }
         .foregroundColor(colors.textPrimary)
         .padding()

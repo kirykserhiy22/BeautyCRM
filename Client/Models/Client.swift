@@ -30,10 +30,6 @@ final class Client: SyncTrackable {
     var notes: String?
     var avatarPath: String?
 
-    // MARK: - FLAGS
-
-    var isFavorite: Bool
-
     // MARK: - RELATIONS
 
     @Relationship(deleteRule: .cascade)
@@ -58,8 +54,7 @@ final class Client: SyncTrackable {
         instagram: String? = nil,
         telegram: String? = nil,
         notes: String? = nil,
-        avatarPath: String? = nil,
-        isFavorite: Bool = false
+        avatarPath: String? = nil
     ) {
 
         self.id = UUID()
@@ -73,8 +68,6 @@ final class Client: SyncTrackable {
 
         self.notes = notes
         self.avatarPath = avatarPath
-
-        self.isFavorite = isFavorite
 
         self.createdAt = Date()
     }
