@@ -20,6 +20,7 @@ struct BeautyCRMApp: App {
 
     init() {
         SyncTracking.start()
+        BrandFont.register()
     }
 
     var body: some Scene {
