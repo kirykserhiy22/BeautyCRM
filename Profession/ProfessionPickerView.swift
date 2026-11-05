@@ -112,6 +112,7 @@ struct ProfessionPickerView: View {
         }
         .buttonStyle(.plain)
         .accessibilityAddTraits(isSelected ? .isSelected : [])
+        .accessibilityIdentifier("profession.\(profession.rawValue)")
     }
 }
 

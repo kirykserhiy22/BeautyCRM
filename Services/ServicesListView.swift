@@ -100,6 +100,7 @@ struct ServicesListView: View {
                             y: 4
                         )
                 }
+                .accessibilityIdentifier("floating.add")
                 .padding()
             }
             .navigationTitle("services.title")

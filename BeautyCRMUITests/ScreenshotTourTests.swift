@@ -9,8 +9,8 @@
 //    3) test02…test04 — по одній темі на тест.
 //  Без змінної AUDIT_SHOTS тести пропускаються й нічого не роблять.
 //
-//  Елементи шукаються за англійськими текстами (мова додатку за замовчуванням),
-//  бо accessibilityIdentifier у коді додатку немає.
+//  Вхід і реєстрація шукаються за accessibilityIdentifier (#63), решта екранів —
+//  за англійськими текстами (мова додатку за замовчуванням).
 //
 
 import XCTest
@@ -40,7 +40,7 @@ final class ScreenshotTourTests: XCTestCase {
     // MARK: - TESTS
 
     func test01_RegisterMaster() {
-        let createAccount = app.buttons["Create Account"]
+        let createAccount = app.buttons["welcome.createAccount"]
         guard createAccount.waitForExistence(timeout: 6) else {
             return // уже зареєстровано і ввійшли
         }
@@ -48,7 +48,7 @@ final class ScreenshotTourTests: XCTestCase {
         createAccount.tap()
         fillSignUpSteps(email: email, shoot: false)
 
-        app.buttons["Create account"].tap()
+        app.buttons["signup.next"].tap()
         sleep(1)
         dismissSystemPrompts()
         XCTAssertTrue(app.tabBars.firstMatch.waitForExistence(timeout: 6))
@@ -172,16 +172,16 @@ final class ScreenshotTourTests: XCTestCase {
 
         // Вихід → екрани без входу
         button(containing: "Log Out").tap()
-        XCTAssertTrue(app.buttons["Create Account"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["welcome.createAccount"].waitForExistence(timeout: 5))
         shot("01-welcome")
 
-        app.buttons["Create Account"].tap()
+        app.buttons["welcome.createAccount"].tap()
         fillSignUpSteps(email: "preview.\(folder)@example.com", shoot: true)
         for _ in 0..<SignUpStepCount.value {
-            app.buttons["Back"].tap()
+            app.buttons["signup.back"].tap()
         }
 
-        app.buttons["I already have an account"].tap()
+        app.buttons["welcome.login"].tap()
         shot("02-login")
         login()
     }
@@ -195,36 +195,36 @@ final class ScreenshotTourTests: XCTestCase {
 
     // Проходить кроки реєстрації до останнього (валюта), не створюючи акаунт
     private func fillSignUpSteps(email: String, shoot: Bool) {
-        let emailField = app.textFields["Email"]
+        let emailField = app.textFields["signup.email"]
         XCTAssertTrue(emailField.waitForExistence(timeout: 5))
         enter(email, into: emailField)
-        let passwordField = app.secureTextFields["Password"]
+        let passwordField = app.secureTextFields["signup.password"]
         enter(password, into: passwordField)
         hideKeyboard()
         if shoot { shot("03-signup-1-account") }
-        app.buttons["Next"].tap()
+        app.buttons["signup.next"].tap()
         sleep(1)
         dismissSystemPrompts()
 
-        let first = app.textFields["First name"]
+        let first = app.textFields["signup.firstName"]
         XCTAssertTrue(first.waitForExistence(timeout: 3))
         enter("Demo", into: first)
-        let last = app.textFields["Last name"]
+        let last = app.textFields["signup.lastName"]
         enter("Master", into: last)
         hideKeyboard()
         if shoot { shot("04-signup-2-profile") }
-        app.buttons["Next"].tap()
+        app.buttons["signup.next"].tap()
 
-        button(containing: "Hair stylist").tap()
+        app.buttons["profession.hair_stylist"].tap()
         if shoot { shot("05-signup-3-profession") }
-        app.buttons["Next"].tap()
+        app.buttons["signup.next"].tap()
 
         let business = app.textFields.firstMatch
         XCTAssertTrue(business.waitForExistence(timeout: 3))
         enter("Demo Studio", into: business)
         hideKeyboard()
         if shoot { shot("06-signup-4-business") }
-        app.buttons["Next"].tap()
+        app.buttons["signup.next"].tap()
 
         XCTAssertTrue(app.staticTexts["Choose currency"].waitForExistence(timeout: 3))
         if shoot { shot("07-signup-5-currency") }
@@ -234,20 +234,20 @@ final class ScreenshotTourTests: XCTestCase {
         if app.tabBars.firstMatch.waitForExistence(timeout: 6) {
             return
         }
-        if app.buttons["I already have an account"].exists {
-            app.buttons["I already have an account"].tap()
+        if app.buttons["welcome.login"].exists {
+            app.buttons["welcome.login"].tap()
         }
         login()
     }
 
     private func login() {
-        let emailField = app.textFields["Email"]
+        let emailField = app.textFields["login.email"]
         XCTAssertTrue(emailField.waitForExistence(timeout: 5))
         enter(email, into: emailField)
-        let passwordField = app.secureTextFields["Password"]
+        let passwordField = app.secureTextFields["login.password"]
         enter(password, into: passwordField)
         hideKeyboard()
-        app.buttons["Log In"].tap()
+        app.buttons["login.submit"].tap()
         sleep(1)
         dismissSystemPrompts()
         XCTAssertTrue(app.tabBars.firstMatch.waitForExistence(timeout: 6))
@@ -270,7 +270,7 @@ final class ScreenshotTourTests: XCTestCase {
 
     // Круглі кнопки «+» внизу праворуч (SF Symbol plus → label «Add»)
     private func floatingPlus() -> XCUIElement {
-        let element = app.buttons.matching(identifier: "Add").allElementsBoundByIndex.last
+        let element = app.buttons.matching(identifier: "floating.add").allElementsBoundByIndex.last
             ?? app.buttons["Add"]
         XCTAssertTrue(element.waitForExistence(timeout: 4), "Немає кнопки «+»")
         return element

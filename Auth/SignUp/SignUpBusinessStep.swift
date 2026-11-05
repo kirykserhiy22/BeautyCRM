@@ -31,6 +31,7 @@ struct SignUpBusinessStep: View {
                 text: $state.businessName
             )
             .textFieldStyle(.roundedBorder)
+            .accessibilityIdentifier("signup.businessName")
         }
     }
 }

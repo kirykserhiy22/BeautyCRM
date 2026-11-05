@@ -168,6 +168,7 @@ struct ClientsListView: View {
                                 y: 4
                             )
                     }
+                    .accessibilityIdentifier("floating.add")
                     .padding()
                 }
             }

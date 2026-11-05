@@ -28,9 +28,11 @@ struct SignUpProfileStep: View {
 
             TextField("signup.firstName", text: $state.firstName)
                 .textFieldStyle(.roundedBorder)
+                .accessibilityIdentifier("signup.firstName")
 
             TextField("signup.lastName", text: $state.lastName)
                 .textFieldStyle(.roundedBorder)
+                .accessibilityIdentifier("signup.lastName")
         }
     }
 }
