@@ -95,20 +95,21 @@ final class AuditAppointmentRulesTests: XCTestCase {
             F.appointment(start: F.date(hour: 11, 30), minutes: 60)
         ]
 
-        // Між 11:00 і 11:30 лише 30 хв — годинний запис туди не влазить
+        // Між 11:00 і 11:30 лише 30 хв — годинний запис туди не влазить.
+        // Найближче вікно — ранкове: 9:00 (до 10:30 півтори години, а до 12:30 — дві)
         let result = AppointmentEngine.conflictResult(newStart: F.date(hour: 10, 30), duration: 60, existing: existing)
 
-        XCTAssertEqual(result.suggestedStart, F.date(hour: 12, 30))
+        XCTAssertEqual(result.suggestedStart, F.date(hour: 9))
     }
 
     func testSuggestionUsesFreeTimeBeforeFirstAppointment() {
-        // Майстер хоче 10:30–11:30, а 11:00–12:00 зайнято. Вільно і 10:00–11:00 (раніше),
-        // і 12:00 (пізніше). Рушій шукає тільки ПІСЛЯ записів, тож «раніше» не пропонує ніколи.
+        // Майстер хоче 10:30–11:30, а 11:00–12:00 зайнято. Найближче вільно 10:00–11:00.
         let existing = [F.appointment(start: F.date(hour: 11), minutes: 60)]
 
         let result = AppointmentEngine.conflictResult(newStart: F.date(hour: 10, 30), duration: 60, existing: existing)
 
-        XCTAssertEqual(result.suggestedStart, F.date(hour: 12))
+        XCTAssertEqual(result.suggestedStart, F.date(hour: 10))
+        XCTAssertEqual(result.suggestedEnd, F.date(hour: 11))
     }
 
     func testSuggestionStaysWithinWorkingHours() {
@@ -117,43 +118,58 @@ final class AuditAppointmentRulesTests: XCTestCase {
 
         let result = AppointmentEngine.conflictResult(newStart: F.date(hour: 18, 30), duration: 60, existing: existing)
 
-        XCTExpectFailure("AUDIT: найближчий слот не враховує робочі години й вихідні — пропонує 19:00, після кінця дня")
-        if let start = result.suggestedStart {
-            XCTAssertLessThan(Calendar.current.component(.hour, from: start), 19)
-        } else {
-            XCTFail("Слот не запропоновано")
-        }
+        XCTAssertEqual(result.suggestedStart, F.date(hour: 17))
+    }
+
+    func testSuggestionUsesMastersOwnWorkingHours() {
+        let existing = [F.appointment(start: F.date(hour: 12), minutes: 60)]
+
+        // Робочий день 12:00–14:00: до обіду вікна немає, лишається 13:00
+        let result = AppointmentEngine.conflictResult(
+            newStart: F.date(hour: 12),
+            duration: 60,
+            existing: existing,
+            workingHours: DayTimeScale(startMinute: 12 * 60, endMinute: 14 * 60)
+        )
+
+        XCTAssertEqual(result.suggestedStart, F.date(hour: 13))
+    }
+
+    func testNoSuggestionWhenDayIsFull() {
+        let existing = [F.appointment(start: F.date(hour: 9), minutes: 600)]
+
+        let result = AppointmentEngine.conflictResult(newStart: F.date(hour: 12), duration: 60, existing: existing)
+
+        XCTAssertTrue(result.hasConflict)
+        XCTAssertNil(result.suggestedStart)
+        XCTAssertNil(result.suggestedEnd)
+    }
+
+    func testSuggestionTodayIsNotInThePast() {
+        // Зараз 15:02, зайнято 15:00–16:00, а ранок уже минув
+        let existing = [F.appointment(start: F.date(hour: 15), minutes: 60)]
+
+        let result = AppointmentEngine.conflictResult(
+            newStart: F.date(hour: 15),
+            duration: 60,
+            existing: existing,
+            now: F.date(hour: 15, 2)
+        )
+
+        XCTAssertEqual(result.suggestedStart, F.date(hour: 16))
+    }
+
+    // MARK: - Вихідні
+
+    func testDayOffIsDetected() {
+        let dayOffs = [DayOff(userID: F.userID, date: F.date(hour: 0))]
+
+        XCTAssertTrue(AppointmentEngine.isDayOff(F.date(hour: 12), dayOffs: dayOffs))
+        XCTAssertFalse(AppointmentEngine.isDayOff(F.date(2026, 11, 3, 12), dayOffs: dayOffs))
     }
 
 
     // MARK: - Створення й редагування
-
-    func testCreateOnDayOffIsRejected() throws {
-        let context = try F.makeContext()
-        let dayOff = DayOff(userID: F.userID, date: F.date(hour: 0))
-        context.insert(dayOff)
-
-        let client = Client(userID: F.userID, name: "Demo Client")
-        let service = Service(userID: F.userID, name: "Cut", pricingType: .fixed, price: 30)
-
-        let result = AppointmentEngine.createAppointment(
-            context: context,
-            userID: F.userID,
-            client: client,
-            services: [service],
-            selectedServiceIDs: [service.id],
-            customPrices: [:],
-            startDate: F.date(hour: 12),
-            duration: 60,
-            notes: "",
-            existingAppointments: []
-        )
-
-        XCTExpectFailure("AUDIT: запис на вихідний день створюється без попередження")
-        if case .success = result {
-            XCTFail("Запис на вихідний створено")
-        }
-    }
 
     func testUpdateKeepsServiceDeletedFromPriceList() throws {
         // Запис з двома послугами; одну потім видалили з прайсу.

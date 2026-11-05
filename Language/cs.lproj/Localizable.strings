@@ -284,3 +284,10 @@
 "empty.services.message" = "Klepněte na +, abyste přidali první službu a její cenu.";
 "empty.analytics.title" = "Žádné dokončené termíny";
 "empty.analytics.message" = "Tržby a žebříčky se zde zobrazí, jakmile v tomto období dokončíte termíny.";
+
+/* Day off warning, analytics weeks (#37, #58) */
+"appointment.dayOff.title" = "Toto je váš den volna";
+"appointment.dayOff.message" = "Přesto vytvořit termín?";
+"appointment.dayOff.confirm" = "Přesto vytvořit";
+"analytics.previousWeek" = "Předchozí týden";
+"analytics.nextWeek" = "Následující týden";

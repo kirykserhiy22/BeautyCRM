@@ -283,3 +283,10 @@
 "empty.services.message" = "Tippe auf +, um deine erste Leistung mit Preis hinzuzufügen.";
 "empty.analytics.title" = "Keine abgeschlossenen Termine";
 "empty.analytics.message" = "Umsatz und Ranglisten erscheinen hier, sobald du Termine in diesem Zeitraum abschließt.";
+
+/* Day off warning, analytics weeks (#37, #58) */
+"appointment.dayOff.title" = "Das ist dein freier Tag";
+"appointment.dayOff.message" = "Termin trotzdem eintragen?";
+"appointment.dayOff.confirm" = "Trotzdem eintragen";
+"analytics.previousWeek" = "Vorherige Woche";
+"analytics.nextWeek" = "Nächste Woche";

@@ -283,3 +283,10 @@
 "empty.services.message" = "Tap + to add your first service and its price.";
 "empty.analytics.title" = "No completed appointments";
 "empty.analytics.message" = "Revenue and top lists appear here once you complete appointments in this period.";
+
+/* Day off warning, analytics weeks (#37, #58) */
+"appointment.dayOff.title" = "This is your day off";
+"appointment.dayOff.message" = "Book the appointment anyway?";
+"appointment.dayOff.confirm" = "Book anyway";
+"analytics.previousWeek" = "Previous week";
+"analytics.nextWeek" = "Next week";

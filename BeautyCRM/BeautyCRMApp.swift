@@ -38,6 +38,12 @@ struct BeautyCRMApp: App {
                 .environmentObject(localization)
                 .environmentObject(currency)
                 .environmentObject(profession)
+                .onAppear {
+                    currency.setLocale(localization.locale)
+                }
+                .onChange(of: localization.languageCode) {
+                    currency.setLocale(localization.locale)
+                }
                 .modelContainer(for: [
                     UserProfile.self,
                     Client.self,

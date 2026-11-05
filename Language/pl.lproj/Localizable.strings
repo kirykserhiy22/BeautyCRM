@@ -283,3 +283,10 @@
 "empty.services.message" = "Stuknij +, aby dodać pierwszą usługę i jej cenę.";
 "empty.analytics.title" = "Brak zakończonych wizyt";
 "empty.analytics.message" = "Przychód i rankingi pojawią się tutaj, gdy zakończysz wizyty w tym okresie.";
+
+/* Day off warning, analytics weeks (#37, #58) */
+"appointment.dayOff.title" = "To Twój dzień wolny";
+"appointment.dayOff.message" = "Mimo to umówić wizytę?";
+"appointment.dayOff.confirm" = "Umów mimo to";
+"analytics.previousWeek" = "Poprzedni tydzień";
+"analytics.nextWeek" = "Następny tydzień";

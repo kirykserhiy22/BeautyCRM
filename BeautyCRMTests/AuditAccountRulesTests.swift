@@ -142,10 +142,13 @@ final class AuditAccountRulesTests: XCTestCase {
         let currency = CurrencyManager()
         currency.setCurrency("EUR")
 
-        let text = currency.format(Decimal(string: "1234.5")!)
+        currency.setLocale(Locale(identifier: "en"))
+        XCTAssertEqual(currency.format(Decimal(string: "1234.5")!), "€1,234.50")
 
-        // Формат береться з мови пристрою, а не з мови додатку (#41)
-        XCTAssertTrue(text.contains("€"))
-        XCTAssertTrue(text.contains("1") && text.contains("234"))
+        // В українській сума з комою і символ € замість «EUR»
+        currency.setLocale(Locale(identifier: "uk"))
+        let text = currency.format(Decimal(string: "1234.5")!)
+        XCTAssertTrue(text.contains("234,50"), text)
+        XCTAssertTrue(text.contains("€"), text)
     }
 }

@@ -284,3 +284,10 @@
 "empty.services.message" = "Натисніть +, щоб додати першу послугу і її ціну.";
 "empty.analytics.title" = "Немає завершених записів";
 "empty.analytics.message" = "Дохід і рейтинги з'являться тут, коли ви завершите записи в цьому періоді.";
+
+/* Day off warning, analytics weeks (#37, #58) */
+"appointment.dayOff.title" = "Це ваш вихідний";
+"appointment.dayOff.message" = "Все одно записати клієнта?";
+"appointment.dayOff.confirm" = "Записати";
+"analytics.previousWeek" = "Попередній тиждень";
+"analytics.nextWeek" = "Наступний тиждень";

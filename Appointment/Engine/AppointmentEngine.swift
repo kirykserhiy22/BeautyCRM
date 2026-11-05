@@ -80,14 +80,20 @@ final class AppointmentEngine {
         return false
     }
 
+    // Час зайнятий — шукаємо найближче вільне вікно в той самий день:
+    // лише в робочі години, і раніше, і пізніше бажаного часу (#37)
     static func conflictResult(
         newStart: Date,
         duration: Int,
         existing: [Appointment],
-        ignoring appointmentID: UUID? = nil
+        ignoring appointmentID: UUID? = nil,
+        workingHours: DayTimeScale = .defaultWorkingHours,
+        now: Date = Date()
     ) -> ConflictResult {
 
-        let newEnd = Calendar.current.date(
+        let calendar = Calendar.current
+
+        let newEnd = calendar.date(
             byAdding: .minute,
             value: duration,
             to: newStart
@@ -105,30 +111,89 @@ final class AppointmentEngine {
             return ConflictResult(hasConflict: false, suggestedStart: nil, suggestedEnd: nil)
         }
 
-        for i in 0..<active.count {
-            let current = active[i]
-            let slotStart = current.endDate
+        let suggested = nearestFreeStart(
+            to: newStart,
+            duration: duration,
+            active: active,
+            workingHours: workingHours,
+            now: now,
+            calendar: calendar
+        )
 
-            let slotEnd: Date = (i + 1 < active.count)
-                ? active[i + 1].startDate
-                : Calendar.current.date(byAdding: .hour, value: 12, to: slotStart)!
+        return ConflictResult(
+            hasConflict: true,
+            suggestedStart: suggested,
+            suggestedEnd: suggested.flatMap {
+                calendar.date(byAdding: .minute, value: duration, to: $0)
+            }
+        )
+    }
 
-            let free = Int(slotEnd.timeIntervalSince(slotStart) / 60)
+    private static func nearestFreeStart(
+        to wanted: Date,
+        duration: Int,
+        active: [Appointment],
+        workingHours: DayTimeScale,
+        now: Date,
+        calendar: Calendar
+    ) -> Date? {
 
-            if free >= duration && slotStart >= newStart {
-                return ConflictResult(
-                    hasConflict: true,
-                    suggestedStart: slotStart,
-                    suggestedEnd: Calendar.current.date(
-                        byAdding: .minute,
-                        value: duration,
-                        to: slotStart
-                    )
-                )
+        let day = calendar.startOfDay(for: wanted)
+        let needed = TimeInterval(duration * 60)
+
+        guard
+            var cursor = calendar.date(byAdding: .minute, value: workingHours.startMinute, to: day),
+            let dayEnd = calendar.date(byAdding: .minute, value: workingHours.endMinute, to: day)
+        else {
+            return nil
+        }
+
+        // Сьогодні минулий час не пропонуємо (округлення вгору до 5 хвилин)
+        if calendar.isDate(wanted, inSameDayAs: now) {
+            let step: TimeInterval = 5 * 60
+            let nextStep = Date(timeIntervalSinceReferenceDate: (now.timeIntervalSinceReferenceDate / step).rounded(.up) * step)
+            cursor = max(cursor, nextStep)
+        }
+
+        var best: Date?
+
+        func consider(gapEnd: Date) {
+            guard gapEnd.timeIntervalSince(cursor) >= needed else {
+                return
+            }
+            // Найближчий до бажаного початок, за якого запис влазить у вікно
+            let latest = gapEnd.addingTimeInterval(-needed)
+            let candidate = min(max(wanted, cursor), latest)
+
+            guard let current = best else {
+                best = candidate
+                return
+            }
+            // Однакова відстань — кращий пізніший час: він не зсуває клієнта наперед
+            if abs(candidate.timeIntervalSince(wanted)) <= abs(current.timeIntervalSince(wanted)) {
+                best = candidate
             }
         }
 
-        return ConflictResult(hasConflict: true, suggestedStart: nil, suggestedEnd: nil)
+        for appointment in active where appointment.endDate > cursor && appointment.startDate < dayEnd {
+            consider(gapEnd: appointment.startDate)
+            cursor = max(cursor, appointment.endDate)
+        }
+
+        consider(gapEnd: dayEnd)
+
+        return best
+    }
+
+    // MARK: - DAY OFF
+
+    // Запис на вихідний не заборонений: форма лише попереджає майстра
+    static func isDayOff(
+        _ date: Date,
+        dayOffs: [DayOff]
+    ) -> Bool {
+        let key = DayOff.key(for: date)
+        return dayOffs.contains { $0.dayKey == key }
     }
 
     // MARK: - CREATE
