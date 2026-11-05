@@ -36,4 +36,12 @@ final class BrandThemeTests: XCTestCase {
         XCTAssertEqual(hex(colors.buttonPrimary, .dark), 0xE20942)
         XCTAssertEqual(hex(colors.buttonPrimary, .light), 0xE20942)
     }
+
+
+    // MARK: - Splash
+
+    func testNeonSplashUnlessReduceMotion() {
+        XCTAssertEqual(SplashPlan.choose(reduceMotion: false), .neon)
+        XCTAssertEqual(SplashPlan.choose(reduceMotion: true), .still)
+    }
 }

@@ -222,9 +222,22 @@
 		3DEF1E8C3088CA41009E3F13 /* CountFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountFormatting.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		3D77D2EE309CA4E1003B6D95 /* Exceptions for "BeautyCRM" folder in "BeautyCRM" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 3D2023532FA3B1D30078D26B /* BeautyCRM */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		3D2023562FA3B1D30078D26B /* BeautyCRM */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				3D77D2EE309CA4E1003B6D95 /* Exceptions for "BeautyCRM" folder in "BeautyCRM" target */,
+			);
 			path = BeautyCRM;
 			sourceTree = "<group>";
 		};
@@ -1007,13 +1020,13 @@
 				DEVELOPMENT_TEAM = GWK8SK6DCL;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = BeautyCRM/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Beauty Base";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Allow saving client photos to your photo library.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Allow selecting client photos from your photo library.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
@@ -1044,13 +1057,13 @@
 				DEVELOPMENT_TEAM = GWK8SK6DCL;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = BeautyCRM/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Beauty Base";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Allow saving client photos to your photo library.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Allow selecting client photos from your photo library.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
