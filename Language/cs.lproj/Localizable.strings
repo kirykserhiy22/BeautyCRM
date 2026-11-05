@@ -291,3 +291,6 @@
 "appointment.dayOff.confirm" = "Přesto vytvořit";
 "analytics.previousWeek" = "Předchozí týden";
 "analytics.nextWeek" = "Následující týden";
+
+/* Expected income */
+"analytics.expectedRevenue" = "Ještě očekáváno: %@";

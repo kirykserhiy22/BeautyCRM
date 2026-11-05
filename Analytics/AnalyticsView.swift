@@ -470,6 +470,21 @@ struct AnalyticsView: View {
             )
 
 
+            if summary.expectedRevenue > 0 {
+
+                Text(
+                    String(
+                        format: localized("analytics.expectedRevenue"),
+                        currency(summary.expectedRevenue)
+                    )
+                )
+                .font(.subheadline)
+                .foregroundColor(
+                    colors.textSecondary
+                )
+            }
+
+
             Text(
                 periodDescription
             )

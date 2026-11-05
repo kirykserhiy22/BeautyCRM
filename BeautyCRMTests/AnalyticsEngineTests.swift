@@ -154,6 +154,36 @@ final class AnalyticsEngineTests: XCTestCase {
         XCTAssertEqual(result.hourlyIncome, Decimal(string: "37.75"))
     }
 
+    func testExpectedRevenueCountsOnlyActiveInPeriod() throws {
+        func planned(_ start: Date, price: Decimal) -> Appointment {
+            let appointment = Appointment(
+                userID: F.userID, clientID: UUID(), clientName: "A",
+                startDate: start, duration: 60
+            )
+            appointment.services = [
+                AppointmentServiceItem(serviceID: UUID(), serviceName: "Cut", plannedPrice: price)
+            ]
+            return appointment
+        }
+
+        let cancelled = planned(F.date(2026, 11, 20, 10), price: 500)
+        cancelled.status = .cancelled
+        let foreign = planned(F.date(2026, 11, 21, 10), price: 700)
+        foreign.userID = "someone-else"
+
+        let result = try summary([
+            done(F.date(2026, 11, 1, 10), price: 70),
+            planned(F.date(2026, 11, 10, 10), price: 40),
+            planned(F.date(2026, 11, 30, 23, 59), price: 60),
+            planned(F.date(2026, 12, 1, 0, 0), price: 900),
+            cancelled,
+            foreign
+        ], period: .month)
+
+        XCTAssertEqual(result.revenue, 70, "Очікуване не змішується з доходом")
+        XCTAssertEqual(result.expectedRevenue, 100)
+    }
+
     func testClientCountIsUnique() throws {
         let anna = UUID()
         let result = try summary([

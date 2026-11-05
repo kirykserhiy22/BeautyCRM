@@ -16,6 +16,8 @@ struct AnalyticsSummary {
 
     // Дохід — сума фінальних цін завершених записів
     let revenue: Decimal
+    // Скільки ще очікується: заплановані ціни активних записів цього періоду
+    let expectedRevenue: Decimal
     let appointmentCount: Int
     let clientCount: Int
     let averageCheck: Decimal
@@ -96,11 +98,23 @@ enum AnalyticsEngine {
         }
 
         let revenue = completed.reduce(Decimal(0)) { $0 + ($1.finalPrice ?? 0) }
+
+        // Активні записи ще не завершені, тож у дохід не входять
+        let expectedRevenue = appointments
+            .filter {
+                $0.userID == userID
+                    && $0.status == .active
+                    && $0.startDate >= interval.start
+                    && $0.startDate < interval.end
+            }
+            .reduce(Decimal(0)) { $0 + $1.totalPlannedPrice }
+
         let minutes = completed.reduce(0) { $0 + $1.duration }
 
         return AnalyticsSummary(
             interval: interval,
             revenue: revenue,
+            expectedRevenue: expectedRevenue,
             appointmentCount: completed.count,
             clientCount: Set(completed.map(\.clientID)).count,
             averageCheck: completed.isEmpty ? 0 : revenue / Decimal(completed.count),
