@@ -56,11 +56,6 @@ struct CalendarHeaderView: View {
     }
     
     private var monthTitle: String {
-        let formatter = DateFormatter()
-        formatter.locale = localization.locale
-        formatter.calendar = Calendar(identifier: .gregorian)
-        formatter.dateFormat = "LLLL yyyy"
-
-        return formatter.string(from: selectedDate)
+        AppFormatting.pattern("LLLL yyyy", selectedDate, locale: localization.locale)
     }
 }

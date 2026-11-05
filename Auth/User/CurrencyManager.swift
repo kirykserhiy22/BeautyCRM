@@ -14,6 +14,12 @@ final class CurrencyManager: ObservableObject {
 
     @Published var currencyCode: String = "EUR"
 
+    // Формат суми йде за мовою додатку, а не телефона (#41)
+    @Published private(set) var locale: Locale = .current
+
+    // Один форматер на валюту й мову
+    private var formatters: [String: NumberFormatter] = [:]
+
 
 
     func setCurrency(
@@ -21,6 +27,16 @@ final class CurrencyManager: ObservableObject {
     ) {
 
         currencyCode = code
+
+    }
+
+
+
+    func setLocale(
+        _ locale: Locale
+    ) {
+
+        self.locale = locale
 
     }
 
@@ -60,15 +76,25 @@ final class CurrencyManager: ObservableObject {
     ) -> String {
 
 
-        let formatter = NumberFormatter()
+        let key = "\(currencyCode)|\(locale.identifier)"
 
-        formatter.numberStyle = .currency
+        let formatter = formatters[key] ?? {
 
-        formatter.currencyCode = currencyCode
+            let formatter = NumberFormatter()
 
-        formatter.locale =
-        Locale(identifier: Locale.current.identifier)
+            formatter.numberStyle = .currency
 
+            formatter.locale = locale
+
+            formatter.currencyCode = currencyCode
+
+            // Той самий символ у всіх мовах: в українській локалі євро інакше було б «EUR»
+            formatter.currencySymbol = symbol
+
+            return formatter
+        }()
+
+        formatters[key] = formatter
 
 
         return formatter.string(

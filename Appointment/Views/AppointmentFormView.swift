@@ -49,6 +49,9 @@ struct AppointmentFormView: View {
     @Query(filter: #Predicate<Service> { $0.deletedAt == nil })
     private var services: [Service]
     @Query private var appointments: [Appointment]
+    @Query(filter: #Predicate<DayOff> { $0.deletedAt == nil })
+    private var dayOffs: [DayOff]
+    @Query private var profiles: [UserProfile]
 
     // MARK: - CLIENT
 
@@ -71,6 +74,7 @@ struct AppointmentFormView: View {
     // MARK: - UI
 
     @State private var errorMessage = ""
+    @State private var showDayOffWarning = false
 
     private var colors: ThemeColors {
         theme.colors(for: theme.currentTheme)
@@ -147,6 +151,17 @@ struct AppointmentFormView: View {
             .navigationTitle(modeTitle)
             .onAppear {
                 loadAppointmentIfNeeded()
+            }
+            .alert(
+                localization.localizedString(for: "appointment.dayOff.title"),
+                isPresented: $showDayOffWarning
+            ) {
+                Button(localization.localizedString(for: "common.cancel"), role: .cancel) {}
+                Button(localization.localizedString(for: "appointment.dayOff.confirm")) {
+                    saveAppointment()
+                }
+            } message: {
+                Text(localization.localizedString(for: "appointment.dayOff.message"))
             }
             .sheet(isPresented: $showServicePicker) {
 
@@ -535,7 +550,11 @@ private extension AppointmentFormView {
     var actionButton: some View {
 
         Button {
-            saveAppointment()
+            if needsDayOffWarning {
+                showDayOffWarning = true
+            } else {
+                saveAppointment()
+            }
         } label: {
 
             Text(buttonTitle)
@@ -594,8 +613,28 @@ private extension AppointmentFormView {
             newStart: date,
             duration: duration,
             existing: userAppointments,
-            ignoring: editingAppointmentID
+            ignoring: editingAppointmentID,
+            workingHours: .workingHours(
+                profiles.first { $0.authUserID == appState.session.userID }
+            )
         )
+    }
+
+    // Новий запис на вихідний або перенесення на нього.
+    // Якщо запис уже на цей день і дату не міняли, питати вдруге не треба.
+    private var needsDayOffWarning: Bool {
+
+        let own = dayOffs.filter { $0.userID == appState.session.userID }
+
+        guard AppointmentEngine.isDayOff(date, dayOffs: own) else {
+            return false
+        }
+
+        if case .edit(let appointment) = mode {
+            return !Calendar.current.isDate(appointment.startDate, inSameDayAs: date)
+        }
+
+        return true
     }
 
     private var editingAppointmentID: UUID? {
@@ -747,10 +786,6 @@ private extension AppointmentFormView {
     }
 
     func time(_ date: Date) -> String {
-
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm"
-
-        return formatter.string(from: date)
+        AppFormatting.clock(date)
     }
 }

@@ -587,11 +587,7 @@ private extension AppointmentRow {
     }
     
     func time(_ date: Date) -> String {
-        
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm"
-        
-        return formatter.string(from: date)
+        AppFormatting.clock(date)
     }
     
     // Порожньо або не сума — не можна завершити (раніше ставало 0 €)

@@ -352,12 +352,7 @@ private extension HomeView {
             return localization.localizedString(for: "home.dateTomorrow")
         }
 
-        let formatter = DateFormatter()
-        formatter.locale = localization.locale
-        formatter.dateStyle = .long
-        formatter.timeStyle = .none
-
-        return formatter.string(from: date)
+        return AppFormatting.date(date, locale: localization.locale)
     }
 
     func timeText(
@@ -365,12 +360,7 @@ private extension HomeView {
     ) -> String {
 
 
-        let formatter = DateFormatter()
-
-        formatter.dateFormat = "HH:mm"
-
-
-        return "\(formatter.string(from: appointment.startDate)) - \(formatter.string(from: appointment.endDate))"
+        "\(AppFormatting.clock(appointment.startDate)) - \(AppFormatting.clock(appointment.endDate))"
     }
 
 }

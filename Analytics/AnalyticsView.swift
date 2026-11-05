@@ -33,6 +33,9 @@ struct AnalyticsView: View {
 
     @State private var selectedPeriod: AnalyticsPeriod = .month
 
+    // Скільки тижнів назад дивимось: 0 — поточний (#58)
+    @State private var weekOffset = 0
+
     @State private var selectedMonth: Int = Calendar.current.component(
         .month,
         from: Date()
@@ -73,6 +76,12 @@ struct AnalyticsView: View {
     private var now: Date {
 
         Date()
+    }
+
+
+    // Будь-який день вибраного тижня
+    private var weekReference: Date {
+        calendar.date(byAdding: .weekOfYear, value: -weekOffset, to: now) ?? now
     }
 
 
@@ -127,7 +136,7 @@ struct AnalyticsView: View {
             let userID = appState.session.userID,
             let interval = AnalyticsEngine.interval(
                 for: selectedPeriod,
-                reference: now,
+                reference: weekReference,
                 month: selectedMonth,
                 year: selectedYear,
                 calendar: calendar
@@ -187,6 +196,7 @@ struct AnalyticsView: View {
             .background(colors.background)
             .navigationTitle(localized("analytics.title"))
             .onChange(of: selectedPeriod) { selectedChartDate = nil }
+            .onChange(of: weekOffset) { selectedChartDate = nil }
             .onChange(of: selectedMonth) { selectedChartDate = nil }
             .onChange(of: selectedYear) { selectedChartDate = nil }
         }
@@ -232,6 +242,16 @@ struct AnalyticsView: View {
 
             HStack {
 
+                Button {
+                    weekOffset += 1
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .frame(width: 44, height: 44)
+                }
+                .accessibilityLabel(localized("analytics.previousWeek"))
+
+                Spacer()
+
                 Image(
                     systemName: "calendar"
                 )
@@ -248,6 +268,15 @@ struct AnalyticsView: View {
                 )
 
                 Spacer()
+
+                Button {
+                    weekOffset -= 1
+                } label: {
+                    Image(systemName: "chevron.right")
+                        .frame(width: 44, height: 44)
+                }
+                .disabled(weekOffset == 0)
+                .accessibilityLabel(localized("analytics.nextWeek"))
             }
 
 
@@ -404,21 +433,16 @@ struct AnalyticsView: View {
             let interval =
                 calendar.dateInterval(
                     of: .weekOfYear,
-                    for: now
+                    for: weekReference
                 )
         else {
             return localized("analytics.currentWeek")
         }
 
 
-        let formatter = DateFormatter()
+        let locale = localization.locale
 
-        formatter.locale = localization.locale
-
-        formatter.dateFormat = "dd MMM"
-
-
-        return "\(formatter.string(from: interval.start)) – \(formatter.string(from: interval.end.addingTimeInterval(-1)))"
+        return "\(AppFormatting.pattern("dd MMM", interval.start, locale: locale)) – \(AppFormatting.pattern("dd MMM", interval.end.addingTimeInterval(-1), locale: locale))"
     }
 
 
@@ -475,7 +499,9 @@ struct AnalyticsView: View {
 
         case .week:
 
-            return localized("analytics.currentWeekOverview")
+            return weekOffset == 0
+                ? localized("analytics.currentWeekOverview")
+                : currentWeekText
 
 
         case .month:
@@ -847,29 +873,24 @@ struct AnalyticsView: View {
     // Підпис під стовпчиком: день тижня, число місяця або місяць
     private func axisLabel(for date: Date) -> String {
 
-        let formatter = DateFormatter()
-        formatter.locale = localization.locale
+        let locale = localization.locale
 
         switch selectedPeriod {
 
         case .week:
-            formatter.setLocalizedDateFormatFromTemplate("EEE")
+            return AppFormatting.template("EEE", date, locale: locale)
 
         case .month:
-            formatter.dateFormat = "d"
+            return AppFormatting.pattern("d", date, locale: locale)
 
         case .year:
             // 12 підписів мають влізти в ширину екрана: 3 літери без крапки
-            formatter.setLocalizedDateFormatFromTemplate("LLL")
-
             return String(
-                formatter.string(from: date)
+                AppFormatting.template("LLL", date, locale: locale)
                     .replacingOccurrences(of: ".", with: "")
                     .prefix(3)
             )
         }
-
-        return formatter.string(from: date)
     }
 
 
@@ -960,14 +981,11 @@ struct AnalyticsView: View {
 
     private func selectionTitle(for date: Date) -> String {
 
-        let formatter = DateFormatter()
-        formatter.locale = localization.locale
-
-        formatter.setLocalizedDateFormatFromTemplate(
-            selectedPeriod == .year ? "LLLLyyyy" : "EEEEdMMMM"
+        AppFormatting.template(
+            selectedPeriod == .year ? "LLLLyyyy" : "EEEEdMMMM",
+            date,
+            locale: localization.locale
         )
-
-        return formatter.string(from: date)
     }
 
 

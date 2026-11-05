@@ -10,6 +10,33 @@ import Foundation
 
 enum AppFormatting {
 
+    // MARK: - Formatters
+
+    // Створювати DateFormatter дорого: один на мову й формат (#41)
+    private static var formatters: [String: DateFormatter] = [:]
+
+    private static func formatter(
+        locale: Locale,
+        id: String,
+        setup: (DateFormatter) -> Void = { _ in }
+    ) -> DateFormatter {
+
+        let key = "\(locale.identifier)|\(id)"
+
+        if let cached = formatters[key] {
+            return cached
+        }
+
+        let formatter = DateFormatter()
+        formatter.locale = locale
+        formatter.calendar = Calendar(identifier: .gregorian)
+        formatter.timeZone = .autoupdatingCurrent
+        setup(formatter)
+
+        formatters[key] = formatter
+        return formatter
+    }
+
     // MARK: - Date and time
 
     static func date(
@@ -17,23 +44,51 @@ enum AppFormatting {
         locale: Locale,
         format: DateFormatter.Style = .long
     ) -> String {
-        let formatter = DateFormatter()
-        formatter.locale = locale
-        formatter.calendar = Calendar(identifier: .gregorian)
-        formatter.dateStyle = format
-        formatter.timeStyle = .none
-        return formatter.string(from: value)
+        formatter(locale: locale, id: "date.\(format.rawValue)") {
+            $0.dateStyle = format
+            $0.timeStyle = .none
+        }
+        .string(from: value)
     }
 
     static func time(
         _ value: Date,
         locale: Locale
     ) -> String {
-        let formatter = DateFormatter()
-        formatter.locale = locale
-        formatter.dateStyle = .none
-        formatter.timeStyle = .short
-        return formatter.string(from: value)
+        formatter(locale: locale, id: "time") {
+            $0.dateStyle = .none
+            $0.timeStyle = .short
+        }
+        .string(from: value)
+    }
+
+    // Час у 24-годинному вигляді: «09:30»
+    static func clock(_ value: Date) -> String {
+        pattern("HH:mm", value, locale: Locale(identifier: "en_US_POSIX"))
+    }
+
+    // Дата за точним шаблоном: «LLLL yyyy»
+    static func pattern(
+        _ pattern: String,
+        _ value: Date,
+        locale: Locale
+    ) -> String {
+        formatter(locale: locale, id: "pattern.\(pattern)") {
+            $0.dateFormat = pattern
+        }
+        .string(from: value)
+    }
+
+    // Дата за шаблоном, порядок частин визначає мова: «EEEEdMMMM»
+    static func template(
+        _ template: String,
+        _ value: Date,
+        locale: Locale
+    ) -> String {
+        formatter(locale: locale, id: "template.\(template)") {
+            $0.setLocalizedDateFormatFromTemplate(template)
+        }
+        .string(from: value)
     }
 
     // MARK: - Home header
@@ -42,19 +97,13 @@ enum AppFormatting {
         _ value: Date,
         locale: Locale
     ) -> String {
-        let formatter = DateFormatter()
-        formatter.locale = locale
-        formatter.calendar = Calendar(identifier: .gregorian)
-        formatter.dateFormat = "EEEE, d MMMM"
-        return formatter.string(from: value)
+        pattern("EEEE, d MMMM", value, locale: locale)
     }
 
     // MARK: - Standalone month names
 
     static func monthNames(locale: Locale) -> [String] {
-        let formatter = DateFormatter()
-        formatter.locale = locale
-        formatter.calendar = Calendar(identifier: .gregorian)
+        let formatter = formatter(locale: locale, id: "symbols")
         // Називний відмінок: «жовтень», а не «жовтня»
         return formatter.standaloneMonthSymbols
     }
@@ -65,9 +114,7 @@ enum AppFormatting {
         locale: Locale,
         width: WeekdayWidth = .abbreviated
     ) -> [String] {
-        let formatter = DateFormatter()
-        formatter.locale = locale
-        formatter.calendar = Calendar(identifier: .gregorian)
+        let formatter = formatter(locale: locale, id: "symbols")
 
         let symbols: [String]
 
