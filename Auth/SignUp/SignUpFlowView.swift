@@ -13,6 +13,7 @@ struct SignUpFlowView: View {
 
 
     @EnvironmentObject var router: AppRouter
+    @EnvironmentObject var theme: ThemeManager
     @EnvironmentObject var appState: AppState
     @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var currency: CurrencyManager
@@ -90,7 +91,7 @@ struct SignUpFlowView: View {
             if !state.errorMessage.isEmpty {
 
                 Text(LocalizedStringKey(state.errorMessage))
-                    .foregroundColor(.red)
+                    .foregroundColor(theme.colors(for: theme.currentTheme).danger)
                     .font(.caption)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal)

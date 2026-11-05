@@ -202,7 +202,9 @@ struct ThemePreviewCard: View {
     private var title: String {
         
         switch themeCase {
-            
+
+        case .darkCherry:
+            "settings.theme.darkcherry"
         case .classic:
             "settings.theme.classic"
         case .graphite:

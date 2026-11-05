@@ -485,7 +485,7 @@ private extension AppointmentFormView {
                         localization.localizedString(for: "appointment.timeOccupied"),
                         systemImage: "exclamationmark.triangle.fill"
                     )
-                    .foregroundColor(.red)
+                    .foregroundColor(colors.danger)
 
                     if let start = conflictInfo.suggestedStart,
                        let end = conflictInfo.suggestedEnd {
@@ -538,7 +538,7 @@ private extension AppointmentFormView {
     var errorSection: some View {
 
         Text(errorMessage)
-            .foregroundColor(.red)
+            .foregroundColor(colors.danger)
             .font(.subheadline)
     }
 }
@@ -563,7 +563,7 @@ private extension AppointmentFormView {
                 .padding()
                 .background(
                     isValid
-                    ? Color.blue
+                    ? colors.buttonPrimary
                     : Color.gray.opacity(0.3)
                 )
                 .foregroundColor(.white)

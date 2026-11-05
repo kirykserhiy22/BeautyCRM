@@ -75,7 +75,7 @@ struct LanguageSettingsView: View {
                             Image(
                                 systemName: "checkmark"
                             )
-                            .foregroundColor(.blue)
+                            .foregroundStyle(.tint)
 
                         }
                     }

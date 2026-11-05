@@ -293,3 +293,6 @@
 
 /* Expected income */
 "analytics.expectedRevenue" = "Jeszcze oczekiwane: %@";
+
+/* Brand theme */
+"settings.theme.darkcherry" = "Dark Cherry";

@@ -38,7 +38,7 @@
   скасування, відновлення, приховування)
 - `Services/` — модель `Service` (fixed/variable ціна), `AppointmentServiceItem`
 - `Home/`, `Calendar/`, `Analytics/`, `Settings/` (+ екрани Профіль, Робочі години, Спеціалізація), `MainTabBar/`
-- `Theme/` — `ThemeManager`, кольори брати тільки через `theme.colors(for:)`
+- `Theme/` — `ThemeManager`, кольори брати тільки через `theme.colors(for:)`; фірмові кольори — `Color(light:dark:)`
 - `Language/` — `LocalizationManager`, `Localizable.strings` для 5 мов
 - `Utils/AppFormatting.swift` — формати дат і грошей (`parseMoney`, `moneyInput`)
 
@@ -77,7 +77,7 @@
 - `LocalAuthService` зберігає email і пароль відкритим текстом в UserDefaults — замінити на Supabase Auth (#21).
 - Сесія (`SessionManager`) — userID в UserDefaults, без токена. Видалення акаунта й Sign in with Apple немає (#22).
 - Перевірка «email уже зайнятий» на 1-му кроці реєстрації зараз локальна; із Supabase її треба робити обережно (не розкривати чужі email).
-- Темний режим iPhone вимкнено (`.preferredColorScheme(.light)` у `BeautyCRMApp`), поки в тем немає темних палітр.
+- Фірмова тема Dark Cherry (`AppTheme.darkCherry`, за замовчуванням) йде за світлим/темним режимом iPhone; старі теми (Classic, Graphite, Pearl Ivory) лише світлі, долю їх ще не вирішено.
 - **Unit-тести падають на iOS 18.x і 26.2** (`malloc: pointer being freed was not allocated` у
   `swift_task_deinitOnExecutorMainActorBackDeploy` → `TaskLocal::StopLookupScope`): вада рантайму Swift,
   коли об'єкт з ізоляцією MainActor знищується всередині XCTest (той ставить task-local значення).
