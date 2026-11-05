@@ -33,14 +33,10 @@ struct SignUpFlowView: View {
     var body: some View {
 
 
-        VStack {
+        VStack(spacing: 24) {
 
 
             progress
-
-
-
-            Spacer()
 
 
 
@@ -67,7 +63,7 @@ struct SignUpFlowView: View {
                     ProfessionPickerView(
                         selection: $state.profession
                     )
-                    .padding(.vertical, 8)
+                    .padding(.vertical, 2)
                 }
 
 
@@ -87,11 +83,12 @@ struct SignUpFlowView: View {
 
 
 
-            Spacer()
+            Spacer(minLength: 0)
+
             if !state.errorMessage.isEmpty {
 
                 Text(LocalizedStringKey(state.errorMessage))
-                    .foregroundColor(theme.colors(for: theme.currentTheme).danger)
+                    .foregroundColor(colors.danger)
                     .font(.caption)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal)
@@ -103,6 +100,7 @@ struct SignUpFlowView: View {
 
         }
         .padding()
+        .background(colors.background.ignoresSafeArea())
     }
 }
 
@@ -111,10 +109,18 @@ struct SignUpFlowView: View {
 private extension SignUpFlowView {
 
 
+    var colors: ThemeColors {
+        theme.colors(for: theme.currentTheme)
+    }
+
     var progress: some View {
-        VStack {
-            Text("signup.title")
-                .font(.largeTitle.bold())
+        VStack(alignment: .leading, spacing: 8) {
+
+            SignUpProgressBar(
+                step: state.step.number,
+                total: SignUpStep.allCases.count,
+                colors: colors
+            )
 
             // «Крок 3 з 5» — кількість кроків береться з SignUpStep
             Text(
@@ -124,30 +130,37 @@ private extension SignUpFlowView {
                     SignUpStep.allCases.count
                 )
             )
-            .foregroundColor(.secondary)
+            .font(.subheadline)
+            .foregroundColor(colors.textSecondary)
         }
     }
 
 
 
     var navigationButtons: some View {
-        HStack {
-            Button("signup.back") {
+        VStack(spacing: 14) {
+
+            Button {
+                nextStep()
+            } label: {
+                AuthButtonLabel(
+                    title: state.step.isLast
+                        ? "signup.createAccount"
+                        : "signup.next",
+                    background: colors.buttonPrimary,
+                    foreground: .white
+                )
+            }
+            .accessibilityIdentifier("signup.next")
+
+            Button {
                 goBack()
+            } label: {
+                Text("signup.back")
+                    .font(.subheadline)
+                    .foregroundColor(colors.textSecondary)
             }
             .accessibilityIdentifier("signup.back")
-
-            Spacer()
-
-            Button(
-                state.step.isLast
-                    ? "signup.createAccount"
-                    : "signup.next"
-            ) {
-                nextStep()
-            }
-            .buttonStyle(.borderedProminent)
-            .accessibilityIdentifier("signup.next")
         }
     }
 

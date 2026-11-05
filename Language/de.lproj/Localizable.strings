@@ -13,8 +13,6 @@
 "welcome.description" = "Verwalte Kunden, Termine und dein Geschäft an einem Ort.";
 "welcome.createAccount" = "Konto erstellen";
 "welcome.login" = "Ich habe bereits ein Konto";
-"welcome.tagline" = "Beginne in wenigen Minuten, dein Beauty-Business zu verwalten.";
-"signup.title" = "Konto erstellen";
 "signup.stepOf" = "Schritt %d von %d";
 "signup.error.profession" = "Wähle deine Spezialisierung.";
 "signup.back" = "Zurück";
