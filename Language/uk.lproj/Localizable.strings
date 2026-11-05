@@ -57,16 +57,11 @@
 "auth.error.wrongPassword" = "Неправильний пароль";
 
 /* Home */
-"home.today" = "СЬОГОДНІ";
-"home.appointments" = "Записи";
-"home.completed" = "Завершено";
-"home.remaining" = "Залишилося";
 "home.dateToday" = "Сьогодні";
 "home.dateTomorrow" = "Завтра";
 
 "home.noAppointments" = "Немає записів";
 "home.freeToday" = "Сьогодні нічого 🎉";
-"home.noUpcomingAppointments" = "Немає наступних записів";
 "home.dayComplete" = "День завершено";
 "home.allDoneToday" = "Усі записи на сьогодні виконано 🎉";
 
@@ -76,10 +71,7 @@
 
 "home.waitingForCompletion" = "Очікує завершення";
 "home.inProgress" = "Триває";
-"home.upcoming" = "Заплановано";
 
-"home.quickActions" = "Швидкі дії";
-"home.addClients" = "Додати клієнтів";
 "home.services" = "Послуги";
 "home.dayOff" = "Вихідний";
 
@@ -295,3 +287,17 @@
 
 /* Brand theme */
 "settings.theme.darkcherry" = "Dark Cherry";
+
+/* Home redesign */
+"home.greeting.morning" = "Доброго ранку, %@";
+"home.greeting.afternoon" = "Доброго дня, %@";
+"home.greeting.evening" = "Доброго вечора, %@";
+"home.startsInMinutes" = "через %d хв";
+"home.startsInHours" = "через %d год %d хв";
+"home.endsInMinutes" = "ще %d хв";
+"home.progress" = "%d з %d записів";
+"home.laterToday" = "Ще сьогодні";
+"home.moreCount" = "ще %d";
+"home.open" = "Відкрити";
+"home.action.appointment" = "Запис";
+"home.action.client" = "Клієнт";

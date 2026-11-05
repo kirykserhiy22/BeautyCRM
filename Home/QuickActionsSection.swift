@@ -19,103 +19,56 @@ struct QuickActionsSection: View {
 
     var body: some View {
 
-        VStack(alignment: .leading, spacing: 12) {
+        HStack(alignment: .top, spacing: 8) {
 
-            Text("home.quickActions")
-                .font(.headline)
-                .foregroundColor(colors.textPrimary)
-
-
-            HStack(spacing: 12) {
-
-                NavigationLink {
-                    ClientFormView(mode: .create)
-
-                } label: {
-                    actionCard(
-                        title: "home.addClients",
-                        icon: Image(systemName: "person.3")
-                    )
-                }
-
-
-                NavigationLink {
-                    ServicesListView()
-
-                } label: {
-                    // Іконка послуг залежить від спеціалізації майстра
-                    actionCard(
-                        title: "home.services",
-                        icon: profession.config.serviceIcon.image
-                    )
-                }
+            NavigationLink {
+                AppointmentFormView()
+            } label: {
+                action(title: "home.action.appointment", icon: Image(systemName: "calendar.badge.plus"))
             }
 
+            NavigationLink {
+                ClientFormView(mode: .create)
+            } label: {
+                action(title: "home.action.client", icon: Image(systemName: "person.badge.plus"))
+            }
 
-            HStack(spacing: 12) {
+            NavigationLink {
+                ServicesListView()
+            } label: {
+                // Іконка послуг залежить від спеціалізації майстра
+                action(title: "home.services", icon: profession.config.serviceIcon.image)
+            }
 
-                NavigationLink {
-
-                    AppointmentFormView()
-
-                } label: {
-
-                    actionCard(
-                        title: "home.appointments",
-                        icon: Image(systemName: "calendar")
-                    )
-                }
-
-
-                NavigationLink {
-
-                    DayOffPickerView()
-
-                } label: {
-
-                    actionCard(
-                        title: "home.dayOff",
-                        icon: Image(systemName: "moon")
-                    )
-                }
+            NavigationLink {
+                DayOffPickerView()
+            } label: {
+                action(title: "home.dayOff", icon: Image(systemName: "moon"))
             }
         }
     }
 
 
-
-    private func actionCard(
+    private func action(
         title: String,
         icon: Image
     ) -> some View {
 
-        VStack {
+        VStack(spacing: 6) {
 
             icon
-                .font(.title2)
+                .font(.title3)
                 .foregroundColor(colors.accent)
-                
-
+                .frame(width: 56, height: 56)
+                .background(Circle().fill(colors.card))
 
             Text(LocalizedStringKey(title))
                 .font(.caption)
-                .foregroundColor(colors.textPrimary)
+                .foregroundColor(colors.textSecondary)
+                .multilineTextAlignment(.center)
+                .lineLimit(2)
+                .minimumScaleFactor(0.85)
         }
         .frame(maxWidth: .infinity)
-        .padding()
-        .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 18)
-                .fill(colors.card)
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: 18)
-                .stroke(colors.border, lineWidth: 1)
-        )
-        .shadow(
-            color: colors.shadow,
-            radius: 6,
-            y: 2
-        )
     }
 }

@@ -8,6 +8,8 @@ import SwiftUI
 
 struct HomeHeaderView: View {
 
+    let firstName: String
+
     @EnvironmentObject var theme: ThemeManager
     @EnvironmentObject var localization: LocalizationManager
     private var colors: ThemeColors {
@@ -18,15 +20,35 @@ struct HomeHeaderView: View {
 
         VStack(alignment: .leading, spacing: 6) {
 
-            Text(Constants.appName)
-                .font(.largeTitle.bold())
+            Text(title)
+                .font(.title.bold())
                 .foregroundColor(colors.textPrimary)
+                .lineLimit(2)
+                .minimumScaleFactor(0.8)
 
             Text(formattedDate)
-                .font(.headline)
+                .font(.subheadline)
                 .foregroundColor(colors.textSecondary)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    // Без імені (старий профіль) — просто назва додатку
+    private var title: String {
+
+        let name = firstName.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        guard !name.isEmpty else {
+            return Constants.appName
+        }
+
+        let hour = Calendar.current.component(.hour, from: Date())
+
+        return String(
+            format: localization.localizedString(for: HomeTiming.greetingKey(hour: hour)),
+            locale: localization.locale,
+            name
+        )
     }
 
     private var formattedDate: String {
@@ -35,9 +57,4 @@ struct HomeHeaderView: View {
             locale: localization.locale
         )
     }
-}
-
-#Preview {
-    HomeHeaderView()
-        .environmentObject(ThemeManager())
 }

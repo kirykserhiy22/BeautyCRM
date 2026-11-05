@@ -226,7 +226,7 @@ final class ScreenshotTourTests: XCTestCase {
         if shoot { shot("06-signup-4-business") }
         app.buttons["signup.next"].tap()
 
-        XCTAssertTrue(app.staticTexts["Choose currency"].waitForExistence(timeout: 3))
+        XCTAssertTrue(app.buttons["currency.EUR"].waitForExistence(timeout: 3))
         if shoot { shot("07-signup-5-currency") }
     }
 
@@ -342,14 +342,42 @@ private extension ScreenshotTourTests {
         if !field.isHittable {
             shot("debug-not-hittable")
         }
-        for _ in 0..<5 {
-            field.tap()
-            if (field.value(forKey: "hasKeyboardFocus") as? Bool) == true {
-                break
+        // Панель «Обрати надійний пароль» стає замість клавіатури прямо під час введення
+        // і забирає символи. Тому після введення звіряємо довжину і за потреби вводимо знову.
+        for _ in 0..<4 {
+            for _ in 0..<5 {
+                field.tap()
+                if (field.value(forKey: "hasKeyboardFocus") as? Bool) == true {
+                    break
+                }
+                usleep(400_000)
             }
-            usleep(400_000)
+            closeStrongPasswordPanel()
+
+            let typed = (field.value as? String) ?? ""
+            if !typed.isEmpty, typed != field.placeholderValue {
+                field.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: typed.count))
+            }
+
+            for character in text {
+                closeStrongPasswordPanel()
+                field.typeText(String(character))
+            }
+
+            if (field.value as? String)?.count == text.count {
+                return
+            }
         }
-        field.typeText(text)
+
+        XCTFail("Текст не вдалося ввести повністю")
+    }
+
+    func closeStrongPasswordPanel() {
+        let close = app.buttons["xmark"]
+        if close.exists {
+            close.tap()
+            usleep(500_000)
+        }
     }
 }
 
