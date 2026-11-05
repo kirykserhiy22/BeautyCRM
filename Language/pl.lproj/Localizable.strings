@@ -147,7 +147,6 @@
 "clients.averageCheck" = "Średnia wartość wizyty";
 "clients.lastVisit" = "Ostatnia wizyta";
 "clients.noVisitsYet" = "Brak wizyt";
-"clients.vip" = "Klient VIP";
 "clients.photos" = "Zdjęcia";
 "clients.deletePhotoTitle" = "Usunąć zdjęcie?";
 "clients.cancel" = "Anuluj";

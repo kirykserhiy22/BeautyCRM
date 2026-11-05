@@ -11,7 +11,6 @@ struct ClientHeaderSection: View {
     let client: Client
 
     @EnvironmentObject var theme: ThemeManager
-    @EnvironmentObject var localization: LocalizationManager
     private var colors: ThemeColors {
         theme.colors(for: theme.currentTheme)
     }
@@ -27,16 +26,6 @@ struct ClientHeaderSection: View {
 
                 Text(client.name)
                     .font(.title2.bold())
-
-                if client.isFavorite {
-
-                    Label(
-                        localization.localizedString(for: "clients.vip"),
-                        systemImage: "star.fill"
-                    )
-                    .font(.caption)
-                    .foregroundColor(.yellow)
-                }
             }
         }
     }

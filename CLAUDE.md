@@ -26,6 +26,7 @@
 - `BeautyCRM/SyncTracking.swift` — протокол `SyncTrackable`, автозаповнення `updatedAt`/`workspaceID` перед кожним save, `markDeleted()`
 - `BeautyCRM/SaveErrorReporter.swift` — `context.saveReportingErrors()`: збереження з показом помилки
 - `BeautyCRM/MoneyField.swift` — поле суми з підсвіткою неправильного вводу
+- `BeautyCRM/ContactLinks.swift` — посилання на телефон, Instagram, Telegram із будь-якого написання ніка
 - `BeautyCRM/AnalyticsEngine.swift` — усі розрахунки аналітики (екран лише показує `AnalyticsSummary`)
 - `Auth/` — вхід, реєстрація (`SignUp/`, 5 кроків: акаунт, ім'я, спеціалізація, салон, валюта), сесія,
   профіль (`User/`, `UserProfileManager.update`), валюта
@@ -54,6 +55,7 @@
 - Зберігати тільки через `context.saveReportingErrors()` — не `try? context.save()`.
 - Статус запису змінювати тільки через `AppointmentEngine` (він перевіряє `canChange`), не напряму.
 - `Appointment` посилається на клієнта через `clientID: UUID` + копію `clientName`.
+- Вихідні порівнювати за `DayOff.dayKey` («2026-11-07»), а не за `date`: день не залежить від часового поясу.
 
 ## Ключові архітектурні рішення (не відходити без обговорення)
 1. **Бекенд: Supabase** (PostgreSQL, сервери в ЄС, Row Level Security). Той самий бекенд
@@ -103,8 +105,10 @@
 1. ✅ Прибирання: мертвий код, назви файлів, показ помилок реєстрації.
 2. ✅ Гроші як `Decimal`; підготовка моделей: `workspaceID`, `updatedAt`, `deletedAt`, м'яке видалення.
    ✅ Спеціалізації майстра (PR #19). ✅ Аудит (PR #20) і виправлення всіх важливих знахідок (PR #64–#73).
-   Далі за бажанням — дрібниці аудиту пачками (#37–#63).
-3. Supabase: проєкт у ЄС, схема БД, RLS-політики.
-4. Авторизація: email + пароль, Sign in with Apple, відновлення пароля, Keychain, видалення акаунта.
-5. Синхронізація: push/pull змін, фото в Storage, перший вхід на новому телефоні.
-6. Юридичне: політика конфіденційності, умови, App Privacy в App Store Connect.
+   Зараз — дрібниці аудиту пачками (#37–#63).
+3. Редизайн і бренд: палітра, теми зі світлим і темним варіантом за системою iPhone, іконка, стиль текстів,
+   Splash з анімацією (перелік — `BACKLOG.md`, розділи 3 і 4).
+4. Supabase: проєкт у ЄС, схема БД, RLS-політики.
+5. Авторизація: email + пароль, Sign in with Apple, відновлення пароля, Keychain, видалення акаунта.
+6. Синхронізація: push/pull змін, фото в Storage, перший вхід на новому телефоні.
+7. Юридичне: політика конфіденційності, умови, App Privacy в App Store Connect.

@@ -175,14 +175,46 @@ final class AuditDataRulesTests: XCTestCase {
         XCTAssertNotNil(photo.deletedAt)
     }
 
-    func testContactLinksDoNotCrashOnTypicalInput() {
-        // ClientContactSection будує посилання через URL(string:)! — перевіряємо типові введення
-        let phones = ["+380 67 123 45 67", "(050) 123-45-67", "+49 151 2345678"]
-        for phone in phones {
-            XCTAssertNotNil(URL(string: "tel://\(phone)"), phone)
+    func testPhoneLinkKeepsOnlyDigitsAndPlus() {
+        XCTAssertEqual(ContactLinks.phone("+380 67 123 45 67")?.absoluteString, "tel:+380671234567")
+        XCTAssertEqual(ContactLinks.phone("(050) 123-45-67")?.absoluteString, "tel:0501234567")
+        XCTAssertNil(ContactLinks.phone("немає"))
+    }
+
+    func testSocialLinksCleanNick() {
+        let expected = "https://instagram.com/demo.nick"
+        for input in ["demo.nick", "@demo.nick", " @demo.nick ", "https://www.instagram.com/demo.nick/?igsh=abc", "Instagram.com/@demo.nick"] {
+            XCTAssertEqual(ContactLinks.instagram(input)?.absoluteString, expected, input)
         }
-        // Нік з «@» дає неправильне посилання instagram.com/@nick
-        XCTAssertEqual(URL(string: "https://instagram.com/@demo.nick")?.lastPathComponent, "@demo.nick")
+
+        XCTAssertEqual(ContactLinks.telegram("@demo_nick")?.absoluteString, "https://t.me/demo_nick")
+        XCTAssertEqual(ContactLinks.telegram("https://t.me/demo_nick")?.absoluteString, "https://t.me/demo_nick")
+    }
+
+    func testSocialLinkWithImpossibleNickIsNil() {
+        XCTAssertNil(ContactLinks.instagram("два слова"))
+        XCTAssertNil(ContactLinks.telegram("нік"))
+        XCTAssertNil(ContactLinks.telegram("@"))
+    }
+
+
+    // MARK: - Вихідні й часовий пояс (#52)
+
+    func testDayOffKeepsItsDayInAnotherTimeZone() throws {
+        var kyiv = Calendar(identifier: .gregorian)
+        kyiv.timeZone = try XCTUnwrap(TimeZone(identifier: "Europe/Kyiv"))
+        var newYork = Calendar(identifier: .gregorian)
+        newYork.timeZone = try XCTUnwrap(TimeZone(identifier: "America/New_York"))
+
+        let day = try XCTUnwrap(kyiv.date(from: DateComponents(year: 2026, month: 11, day: 7)))
+        let dayOff = DayOff(userID: F.userID, date: day, calendar: kyiv)
+
+        XCTAssertEqual(dayOff.dayKey, "2026-11-07")
+
+        // Та сама мить у Нью-Йорку — ще 6 листопада, а вихідний лишається 7-го
+        XCTAssertEqual(DayOff.key(for: dayOff.date, calendar: newYork), "2026-11-06")
+        let shown = try XCTUnwrap(DayOff.date(fromKey: dayOff.dayKey, calendar: newYork))
+        XCTAssertEqual(DayOff.key(for: shown, calendar: newYork), "2026-11-07")
     }
 
 

@@ -78,13 +78,11 @@ struct DayOffPickerView: View {
 
         guard let userID = appState.session.userID else { return }
 
-        let calendar = Calendar.current
-
         let existing = dayOffs.filter { $0.userID == userID }
 
         selectedDates = Set(
-            existing.map {
-                calendar.startOfDay(for: $0.date)
+            existing.compactMap {
+                DayOff.date(fromKey: $0.dayKey)
             }
         )
     }
@@ -93,33 +91,25 @@ struct DayOffPickerView: View {
 
         guard let userID = appState.session.userID else { return }
 
-        let calendar = Calendar.current
-
         let existing = dayOffs.filter { $0.userID == userID }
 
-        let existingDates = Set(existing.map {
-            calendar.startOfDay(for: $0.date)
-        })
+        let existingKeys = Set(existing.map(\.dayKey))
 
-        let newDates = Set(selectedDates.map {
-            calendar.startOfDay(for: $0)
-        })
+        let newKeys = Dictionary(
+            selectedDates.map { (DayOff.key(for: $0), $0) },
+            uniquingKeysWith: { first, _ in first }
+        )
 
         // 1. DELETE only removed
-        for item in existing {
-            let day = calendar.startOfDay(for: item.date)
-            if !newDates.contains(day) {
-                item.markDeleted()
-            }
+        for item in existing where newKeys[item.dayKey] == nil {
+            item.markDeleted()
         }
 
         // 2. ADD only new
-        for date in newDates {
-            if !existingDates.contains(date) {
-                context.insert(
-                    DayOff(userID: userID, date: date)
-                )
-            }
+        for (key, date) in newKeys where !existingKeys.contains(key) {
+            context.insert(
+                DayOff(userID: userID, date: date)
+            )
         }
 
         if context.saveReportingErrors() {

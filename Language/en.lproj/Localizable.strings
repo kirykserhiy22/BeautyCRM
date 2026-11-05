@@ -147,7 +147,6 @@
 "clients.averageCheck" = "Average Check";
 "clients.lastVisit" = "Last Visit";
 "clients.noVisitsYet" = "No visits yet";
-"clients.vip" = "VIP Client";
 "clients.photos" = "Photos";
 "clients.deletePhotoTitle" = "Delete photo?";
 "clients.cancel" = "Cancel";

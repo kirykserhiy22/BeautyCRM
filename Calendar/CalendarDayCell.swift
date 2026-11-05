@@ -33,9 +33,8 @@ struct CalendarDayCell: View {
     // MARK: - STATE
 
     private var isPersistedDayOff: Bool {
-        dayOffs.contains {
-            calendar.isDate($0.date, inSameDayAs: date)
-        }
+        let key = DayOff.key(for: date, calendar: calendar)
+        return dayOffs.contains { $0.dayKey == key }
     }
 
     
@@ -83,9 +82,10 @@ struct CalendarDayCell: View {
 
         guard let userID = appState.session.userID else { return }
 
+        let key = DayOff.key(for: day, calendar: calendar)
+
         if let existing = dayOffs.first(where: {
-            $0.userID == userID &&
-            calendar.isDate($0.date, inSameDayAs: day)
+            $0.userID == userID && $0.dayKey == key
         }) {
             existing.markDeleted()
         } else {
