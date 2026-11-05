@@ -12,8 +12,9 @@ struct WelcomeView: View {
     @EnvironmentObject var router: AppRouter
     @EnvironmentObject var theme: ThemeManager
     @EnvironmentObject var localization: LocalizationManager
+    // Вітання — продовження заставки: завжди фірмове вишневе, незалежно від теми й режиму iPhone
     private var colors: ThemeColors {
-        theme.colors(for: theme.currentTheme)
+        theme.colors(for: .darkCherry)
     }
 
     var body: some View {
@@ -22,7 +23,7 @@ struct WelcomeView: View {
 
             ZStack {
 
-                colors.background
+                Color("SplashBackground")
                     .ignoresSafeArea()
 
                 VStack {
@@ -66,21 +67,20 @@ struct WelcomeView: View {
 
                     // MARK: Logo
 
-                    Image(systemName: "sparkles")
-                        .font(.system(size: 70))
-                        .foregroundColor(colors.accent)
+                    BrandMarkView(letters: .white, brush: colors.accent, size: 150)
 
-                    Text(Constants.appName)
-                        .font(.system(size: 34, weight: .bold))
-                        .foregroundColor(colors.textPrimary)
-                        .padding(.top, 12)
+                    Text(Constants.appName.uppercased())
+                        .font(BrandFont.font(size: 20))
+                        .tracking(4.4)
+                        .foregroundColor(.white)
+                        .padding(.top, 28)
 
                     Text("welcome.description")
                         .font(.body)
                         .foregroundColor(colors.textSecondary)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 40)
-                        .padding(.top, 8)
+                        .padding(.top, 12)
 
                     Spacer()
 
@@ -92,13 +92,11 @@ struct WelcomeView: View {
 
                         } label: {
 
-                            Text("welcome.createAccount")
-                                .font(.headline)
-                                .foregroundColor(.white)
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(colors.buttonPrimary)
-                                .cornerRadius(18)
+                            AuthButtonLabel(
+                                title: "welcome.createAccount",
+                                background: colors.buttonPrimary,
+                                foreground: .white
+                            )
                         }
                         .accessibilityIdentifier("welcome.createAccount")
 
@@ -108,28 +106,24 @@ struct WelcomeView: View {
 
                         } label: {
 
-                            Text("welcome.login")
-                                .font(.headline)
-                                .foregroundColor(colors.accent)
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(colors.card)
-                                .cornerRadius(18)
+                            AuthButtonLabel(
+                                title: "welcome.login",
+                                background: colors.card,
+                                foreground: .white
+                            )
                         }
                         .accessibilityIdentifier("welcome.login")
                     }
                     .padding(.horizontal)
 
-                    Text("welcome.tagline")
-                        .font(.caption)
-                        .foregroundColor(colors.textMuted)
-                        .padding(.top, 20)
-
                     Spacer()
-                        .frame(height: 35)
+                        .frame(height: 24)
                 }
             }
         }
+        // Обидва потрібні: перший — для статус-бару, другий — щоб фірмові кольори взяли темний варіант
+        .preferredColorScheme(.dark)
+        .environment(\.colorScheme, .dark)
     }
 }
 

@@ -13,8 +13,6 @@
 "welcome.description" = "Manage clients, appointments and business in one place.";
 "welcome.createAccount" = "Create Account";
 "welcome.login" = "I already have an account";
-"welcome.tagline" = "Start managing your beauty business in minutes.";
-"signup.title" = "Create account";
 "signup.stepOf" = "Step %d of %d";
 "signup.error.profession" = "Choose your specialization.";
 "signup.back" = "Back";

@@ -86,16 +86,16 @@ private extension LoginView {
         VStack(spacing: 10) {
 
 
-            Image(systemName: "sparkles")
-                .font(.system(size: 50))
-                .foregroundColor(colors.accent)
+            BrandMarkView(letters: colors.textPrimary, brush: colors.buttonPrimary, size: 88)
 
 
             Text("login.title")
                 .font(.largeTitle.bold())
+                .foregroundColor(colors.textPrimary)
 
             Text("login.subtitle")
-                .foregroundColor(.secondary)
+                .foregroundColor(colors.textSecondary)
+                .multilineTextAlignment(.center)
         }
     }
 }
@@ -112,21 +112,18 @@ private extension LoginView {
         VStack(spacing: 16) {
 
 
-            TextField("login.email", text: $email)
+            TextField("login.email", text: $email, prompt: Text("login.email").foregroundColor(colors.textSecondary))
             .accessibilityIdentifier("login.email")
             .keyboardType(.emailAddress)
             .textInputAutocapitalization(.never)
-            .padding()
-            .background(colors.inputBackground)
-            .cornerRadius(14)
+            .autocorrectionDisabled()
+            .authField(colors)
 
 
 
-            SecureField("login.password", text: $password)
+            SecureField("login.password", text: $password, prompt: Text("login.password").foregroundColor(colors.textSecondary))
             .accessibilityIdentifier("login.password")
-            .padding()
-            .background(colors.inputBackground)
-            .cornerRadius(14)
+            .authField(colors)
 
         }
     }
@@ -146,12 +143,11 @@ private extension LoginView {
 
         } label: {
 
-            Text("login.button")
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(colors.buttonPrimary)
-                .foregroundColor(.white)
-                .cornerRadius(14)
+            AuthButtonLabel(
+                title: "login.button",
+                background: colors.buttonPrimary,
+                foreground: .white
+            )
         }
         .accessibilityIdentifier("login.submit")
     }
@@ -168,6 +164,7 @@ private extension LoginView {
 
             Text("login.createAccount")
                 .font(.subheadline)
+                .foregroundColor(colors.accent)
         }
     }
 }
