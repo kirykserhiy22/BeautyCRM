@@ -96,7 +96,8 @@ enum BrandMark {
 }
 
 
-// Шрифт бренду: назва, великі заголовки й суми. Решта текстів — системний.
+// Шрифт бренду — лише для назви «Beauty Base» латиницею.
+// У Jost немає українських Ґ Є І Ї і символа ₴, тому для текстів і сум він не годиться.
 enum BrandFont {
 
     static func register() {
@@ -107,6 +108,6 @@ enum BrandFont {
     }
 
     static func font(size: CGFloat) -> Font {
-        .custom("Jost", size: size)
+        .custom("Jost", size: size).weight(.regular)
     }
 }
