@@ -108,12 +108,13 @@ struct CalendarDayCell: View {
         if isEditingDayOff {
 
             return selectedDates.contains(calendar.startOfDay(for: date))
-                ? .green.opacity(0.28)
+                ? colors.accent.opacity(0.28)
                 : .clear
         }
 
         if isPersistedDayOff {
-            return .green.opacity(0.20)
+            // Нейтральний відтінок, щоб не плутати з вибраним днем
+            return colors.textMuted.opacity(0.35)
         }
 
         return isSelected

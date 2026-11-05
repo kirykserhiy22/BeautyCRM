@@ -17,7 +17,7 @@ final class ThemeStorage {
     func load() -> AppTheme {
         guard let value = UserDefaults.standard.string(forKey: key),
               let theme = AppTheme(rawValue: value) else {
-            return .classic
+            return .darkCherry
         }
         return theme
     }

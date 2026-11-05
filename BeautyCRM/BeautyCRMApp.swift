@@ -27,10 +27,10 @@ struct BeautyCRMApp: App {
         WindowGroup {
             
             RootView()
-                // Теми поки світлі: у темному режимі iPhone частина їхніх кольорів
-                // темніє, а частина ні, і текст зливається з фоном (#24).
-                // Прибрати, коли в тем з'являться темні палітри.
-                .preferredColorScheme(.light)
+                // Фірмова тема йде за iPhone. Старі теми лише світлі: у темному режимі
+                // частина їхніх кольорів темніє, і текст зливається з фоном (#24).
+                .preferredColorScheme(theme.currentTheme.followsSystemAppearance ? nil : .light)
+                .tint(theme.colors(for: theme.currentTheme).accent)
                 .environment(\.locale, localization.locale)
                 .environmentObject(appState)
                 .environmentObject(router)

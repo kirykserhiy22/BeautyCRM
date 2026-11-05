@@ -6,6 +6,30 @@
 //
 import SwiftUI
 
+extension Color {
+
+    // Колір, що сам змінюється зі світлою й темною темою iPhone
+    init(light: UInt32, dark: UInt32, lightOpacity: CGFloat = 1, darkOpacity: CGFloat = 1) {
+        self.init(uiColor: UIColor { traits in
+            traits.userInterfaceStyle == .dark
+                ? UIColor(hex: dark, alpha: darkOpacity)
+                : UIColor(hex: light, alpha: lightOpacity)
+        })
+    }
+}
+
+private extension UIColor {
+
+    convenience init(hex: UInt32, alpha: CGFloat) {
+        self.init(
+            red: CGFloat((hex >> 16) & 0xFF) / 255,
+            green: CGFloat((hex >> 8) & 0xFF) / 255,
+            blue: CGFloat(hex & 0xFF) / 255,
+            alpha: alpha
+        )
+    }
+}
+
 struct ThemeColors {
 
     // SCREEN

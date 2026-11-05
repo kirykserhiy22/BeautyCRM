@@ -10,6 +10,7 @@ import SwiftData
 struct LoginView: View {
 
     @EnvironmentObject var appState: AppState
+    @EnvironmentObject var theme: ThemeManager
     @EnvironmentObject var router: AppRouter
     @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var currency: CurrencyManager
@@ -27,12 +28,16 @@ struct LoginView: View {
 
     @State private var isLoading = false
 
+    private var colors: ThemeColors {
+        theme.colors(for: theme.currentTheme)
+    }
+
 
     var body: some View {
 
         ZStack {
 
-            Color(.systemGroupedBackground)
+            colors.background
                 .ignoresSafeArea()
 
 
@@ -57,7 +62,7 @@ struct LoginView: View {
                 if !errorMessage.isEmpty {
 
                     Text(LocalizedStringKey(errorMessage))
-                        .foregroundColor(.red)
+                        .foregroundColor(colors.danger)
                         .font(.caption)
                 }
 
@@ -83,7 +88,7 @@ private extension LoginView {
 
             Image(systemName: "sparkles")
                 .font(.system(size: 50))
-                .foregroundColor(.pink)
+                .foregroundColor(colors.accent)
 
 
             Text("login.title")
@@ -112,7 +117,7 @@ private extension LoginView {
             .keyboardType(.emailAddress)
             .textInputAutocapitalization(.never)
             .padding()
-            .background(.white)
+            .background(colors.inputBackground)
             .cornerRadius(14)
 
 
@@ -120,7 +125,7 @@ private extension LoginView {
             SecureField("login.password", text: $password)
             .accessibilityIdentifier("login.password")
             .padding()
-            .background(.white)
+            .background(colors.inputBackground)
             .cornerRadius(14)
 
         }
@@ -144,7 +149,7 @@ private extension LoginView {
             Text("login.button")
                 .frame(maxWidth: .infinity)
                 .padding()
-                .background(Color.pink)
+                .background(colors.buttonPrimary)
                 .foregroundColor(.white)
                 .cornerRadius(14)
         }

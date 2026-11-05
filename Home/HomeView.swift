@@ -305,13 +305,13 @@ private extension HomeView {
 
         if appointment.endDate < now {
 
-            return .orange
+            return colors.warning
         }
 
 
         if appointment.startDate <= now {
 
-            return .green
+            return colors.success
         }
 
 

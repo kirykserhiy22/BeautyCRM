@@ -224,7 +224,7 @@ struct AppointmentRow: View {
                                     .multilineTextAlignment(.center)
                                 }
                                 .buttonStyle(.borderedProminent)
-                                .tint(.green)
+                                .tint(colors.buttonPrimary)
                                 .frame(maxWidth: .infinity)
 
                                 Button {
@@ -258,7 +258,7 @@ struct AppointmentRow: View {
                                 .multilineTextAlignment(.center)
                             }
                             .buttonStyle(.bordered)
-                            .tint(.red)
+                            .tint(colors.danger)
                             .frame(maxWidth: .infinity)
 
                         } else if appt.status == .cancelled {
@@ -292,7 +292,7 @@ struct AppointmentRow: View {
                                     .multilineTextAlignment(.center)
                                 }
                                 .buttonStyle(.bordered)
-                                .tint(.gray)
+                                .tint(colors.textSecondary)
                                 .frame(maxWidth: .infinity)
                             }
                         }
@@ -470,7 +470,7 @@ struct AppointmentRow: View {
                             Text(localization.localizedString(for: "appointment.confirm"))
                                 .frame(maxWidth: .infinity)
                                 .padding()
-                                .background(canConfirmCompletion ? Color.green : Color.gray.opacity(0.4))
+                                .background(canConfirmCompletion ? colors.buttonPrimary : Color.gray.opacity(0.4))
                                 .foregroundColor(.white)
                                 .cornerRadius(14)
                         }
@@ -545,13 +545,13 @@ private extension AppointmentRow {
         switch appt.status {
             
         case .active:
-            return .blue
+            return colors.accent
             
         case .completed:
-            return .green
+            return colors.success
             
         case .cancelled:
-            return .red
+            return colors.danger
             
         case .archived:
             return .gray
