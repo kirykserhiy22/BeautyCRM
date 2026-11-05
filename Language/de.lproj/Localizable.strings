@@ -290,3 +290,6 @@
 "appointment.dayOff.confirm" = "Trotzdem eintragen";
 "analytics.previousWeek" = "Vorherige Woche";
 "analytics.nextWeek" = "Nächste Woche";
+
+/* Expected income */
+"analytics.expectedRevenue" = "Noch erwartet: %@";

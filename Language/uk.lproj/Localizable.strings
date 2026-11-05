@@ -291,3 +291,6 @@
 "appointment.dayOff.confirm" = "Записати";
 "analytics.previousWeek" = "Попередній тиждень";
 "analytics.nextWeek" = "Наступний тиждень";
+
+/* Expected income */
+"analytics.expectedRevenue" = "Ще очікується: %@";

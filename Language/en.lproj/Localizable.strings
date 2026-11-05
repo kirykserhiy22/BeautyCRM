@@ -290,3 +290,6 @@
 "appointment.dayOff.confirm" = "Book anyway";
 "analytics.previousWeek" = "Previous week";
 "analytics.nextWeek" = "Next week";
+
+/* Expected income */
+"analytics.expectedRevenue" = "Still expected: %@";
