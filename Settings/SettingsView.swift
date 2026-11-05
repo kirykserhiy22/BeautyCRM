@@ -120,6 +120,7 @@ struct SettingsView: View {
                     
                     settingsRow(title: "settings.logout", icon: "rectangle.portrait.and.arrow.right")
                 }
+                .accessibilityIdentifier("settings.logout")
             }
             .padding()
             .background(colors.background)

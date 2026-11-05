@@ -30,11 +30,13 @@ struct SignUpAccountStep: View {
 
             TextField("signup.email", text: $state.email)
                 .textFieldStyle(.roundedBorder)
+                .accessibilityIdentifier("signup.email")
 
 
 
             SecureField("signup.password", text: $state.password)
                 .textFieldStyle(.roundedBorder)
+                .accessibilityIdentifier("signup.password")
 
 
 

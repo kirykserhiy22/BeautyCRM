@@ -100,6 +100,7 @@ struct WelcomeView: View {
                                 .background(colors.buttonPrimary)
                                 .cornerRadius(18)
                         }
+                        .accessibilityIdentifier("welcome.createAccount")
 
                         Button {
 
@@ -115,6 +116,7 @@ struct WelcomeView: View {
                                 .background(colors.card)
                                 .cornerRadius(18)
                         }
+                        .accessibilityIdentifier("welcome.login")
                     }
                     .padding(.horizontal)
 

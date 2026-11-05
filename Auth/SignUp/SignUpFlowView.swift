@@ -134,6 +134,7 @@ private extension SignUpFlowView {
             Button("signup.back") {
                 goBack()
             }
+            .accessibilityIdentifier("signup.back")
 
             Spacer()
 
@@ -145,6 +146,7 @@ private extension SignUpFlowView {
                 nextStep()
             }
             .buttonStyle(.borderedProminent)
+            .accessibilityIdentifier("signup.next")
         }
     }
 

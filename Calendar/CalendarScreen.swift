@@ -132,6 +132,7 @@ struct CalendarScreen: View {
                         y: 4
                     )
             }
+            .accessibilityIdentifier("floating.add")
             .padding(.trailing, 20)
             .padding(.bottom, 20)
         }

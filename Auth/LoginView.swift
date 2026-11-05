@@ -108,6 +108,7 @@ private extension LoginView {
 
 
             TextField("login.email", text: $email)
+            .accessibilityIdentifier("login.email")
             .keyboardType(.emailAddress)
             .textInputAutocapitalization(.never)
             .padding()
@@ -117,6 +118,7 @@ private extension LoginView {
 
 
             SecureField("login.password", text: $password)
+            .accessibilityIdentifier("login.password")
             .padding()
             .background(.white)
             .cornerRadius(14)
@@ -146,6 +148,7 @@ private extension LoginView {
                 .foregroundColor(.white)
                 .cornerRadius(14)
         }
+        .accessibilityIdentifier("login.submit")
     }
 
 
