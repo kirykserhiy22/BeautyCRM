@@ -72,10 +72,6 @@ struct AppointmentRow: View {
                     )
                 ) {
 
-                    if !isExpanded {
-                        loadServices()
-                    }
-
                     withAnimation(.spring(response: 0.28, dampingFraction: 0.82)) {
 
                         if expandedAppointmentID.wrappedValue == appt.id {
@@ -479,6 +475,11 @@ struct AppointmentRow: View {
                     .padding()
                 }
                 .scrollDismissesKeyboard(.interactively)
+            }
+            // Завантажуємо тут, а не перед показом: стан, змінений в одну мить
+            // із відкриттям, вікно не встигає побачити, і список лишається порожнім
+            .onAppear {
+                loadServices()
             }
             .presentationDetents([.medium, .large])
             .presentationDragIndicator(.visible)
