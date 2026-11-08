@@ -408,14 +408,7 @@ struct AppointmentRow: View {
                                         )
                                     )
                                     .keyboardType(.decimalPad)
-                                    .textFieldStyle(.roundedBorder)
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 6)
-                                            .stroke(
-                                                isPriceInvalid(item.serviceID) ? colors.danger : .clear,
-                                                lineWidth: 1.5
-                                            )
-                                    )
+                                    .moneyFieldStyle(colors, isInvalid: isPriceInvalid(item.serviceID))
 
                                     if isPriceInvalid(item.serviceID) {
                                         Text(localization.localizedString(for: "money.invalid"))
