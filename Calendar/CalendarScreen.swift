@@ -24,6 +24,9 @@ struct CalendarScreen: View {
     @State private var showCreate = false
     @State private var expandedAppointmentID: UUID?
     @State private var selectedAppointment: Appointment?
+    @StateObject private var moves = TimelineMoveModel()
+    // Поки запис тягнуть, календар не згортається: інакше шкала стрибне під пальцем
+    @State private var isDraggingAppointment = false
     @State private var showsCancelled = false
 
     // Календар згорнутий в один тиждень (коли список записів прокручено вгору)
@@ -101,10 +104,20 @@ struct CalendarScreen: View {
                             DayTimelineView(
                                 day: selectedDate,
                                 appointments: timelineAppointments,
-                                workingHours: workingHours
-                            ) { appointment in
-                                selectedAppointment = appointment
-                            }
+                                workingHours: workingHours,
+                                onSelect: { selectedAppointment = $0 },
+                                onMove: { appointment, newStart in
+                                    moves.move(
+                                        appointment,
+                                        to: newStart,
+                                        existing: userAppointments,
+                                        context: context,
+                                        localization: localization
+                                    )
+                                },
+                                onOutsideHours: { moves.showOutsideHours(localization: localization) },
+                                onDragActive: { isDraggingAppointment = $0 }
+                            )
                         }
 
                         if !cancelledAppointments.isEmpty {
@@ -151,6 +164,7 @@ struct CalendarScreen: View {
         }
         .background(colors.background)
         .navigationTitle(localization.localizedString(for: "tab.calendar"))
+        .timelineNotice(moves, existing: userAppointments, bottomPadding: 88)
         .sheet(isPresented: $showCreate) {
             AppointmentFormView(initialDate: newAppointmentDate)
         }
@@ -262,6 +276,10 @@ struct CalendarScreen: View {
     // Прокрутка списку вгору згортає календар у тиждень;
     // потягнути список вниз на самому верху — розгортає назад
     private func handleListOffset(_ offset: CGFloat) {
+
+        guard !isDraggingAppointment else {
+            return
+        }
 
         if !isCalendarCollapsed && offset < -24 {
             setCalendarCollapsed(true)

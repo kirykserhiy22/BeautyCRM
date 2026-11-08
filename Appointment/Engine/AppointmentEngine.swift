@@ -16,6 +16,8 @@ enum AppointmentError: Error {
     case invalidStatus
     // Для послуги зі змінною ціною не введено суму
     case missingPrice
+    // Запис не можна перенести на час, що вже минув
+    case pastTime
 
 
     // Ключ з Localizable.strings — текст перекладається на мову додатку
@@ -31,8 +33,18 @@ enum AppointmentError: Error {
             return "appointment.error.invalidStatus"
         case .missingPrice:
             return "appointment.error.missingPrice"
+        case .pastTime:
+            return "appointment.error.pastTime"
         }
     }
+}
+
+// Обмін двох записів часом: запис кинули на інший
+struct AppointmentSwapPlan {
+    let moved: Appointment
+    let movedStart: Date
+    let other: Appointment
+    let otherStart: Date
 }
 
 struct ConflictResult {
@@ -384,6 +396,144 @@ final class AppointmentEngine {
         appointment.completedAt = Date()
 
         return .success(())
+    }
+
+    // MARK: - RESCHEDULE
+
+    // Перенесення зі шкали: змінюється лише час початку
+    static func reschedule(
+        appointment: Appointment,
+        to newStart: Date,
+        existingAppointments: [Appointment],
+        now: Date = Date()
+    ) -> Result<Void, AppointmentError> {
+
+        guard appointment.status == .active else {
+            return .failure(.invalidStatus)
+        }
+
+        guard newStart >= now else {
+            return .failure(.pastTime)
+        }
+
+        let newEnd = Calendar.current.date(
+            byAdding: .minute,
+            value: appointment.duration,
+            to: newStart
+        ) ?? newStart
+
+        if hasConflict(
+            newStart: newStart,
+            newEnd: newEnd,
+            existing: existingAppointments,
+            ignoring: appointment.id
+        ) {
+            return .failure(.timeConflict)
+        }
+
+        appointment.startDate = newStart
+
+        return .success(())
+    }
+
+    // Можна обміняти, якщо запис кинули рівно на один інший активний запис.
+    // Перший за часом слот стає початком для другого запису, а перший запис
+    // стає на місце другого, або одразу після нього, якщо другий довший.
+    static func swapPlan(
+        appointment: Appointment,
+        droppedAt newStart: Date,
+        existingAppointments: [Appointment],
+        now: Date = Date()
+    ) -> AppointmentSwapPlan? {
+
+        guard appointment.status == .active else {
+            return nil
+        }
+
+        let calendar = Calendar.current
+
+        func end(_ start: Date, _ duration: Int) -> Date {
+            calendar.date(byAdding: .minute, value: duration, to: start) ?? start
+        }
+
+        let newEnd = end(newStart, appointment.duration)
+
+        let overlapping = existingAppointments.filter {
+            $0.status == .active && $0.id != appointment.id
+                && newStart < $0.endDate && newEnd > $0.startDate
+        }
+
+        guard overlapping.count == 1, let other = overlapping.first else {
+            return nil
+        }
+
+        let (first, second) = appointment.startDate <= other.startDate
+            ? (appointment, other)
+            : (other, appointment)
+
+        let secondNewStart = first.startDate
+        let firstNewStart = max(second.startDate, end(secondNewStart, second.duration))
+
+        let starts = [
+            (first, firstNewStart),
+            (second, secondNewStart)
+        ]
+
+        guard starts.allSatisfy({ $0.1 >= now }) else {
+            return nil
+        }
+
+        let rest = existingAppointments.filter {
+            $0.id != appointment.id && $0.id != other.id
+        }
+
+        for (item, start) in starts where hasConflict(
+            newStart: start,
+            newEnd: end(start, item.duration),
+            existing: rest
+        ) {
+            return nil
+        }
+
+        return AppointmentSwapPlan(
+            moved: appointment,
+            movedStart: first.id == appointment.id ? firstNewStart : secondNewStart,
+            other: other,
+            otherStart: first.id == other.id ? firstNewStart : secondNewStart
+        )
+    }
+
+    // Повернення часу кількох записів разом (кнопка «Скасувати», обмін).
+    // Минулий час тут дозволений: запис міг там і стояти.
+    @discardableResult
+    static func setStarts(
+        _ starts: [(appointment: Appointment, start: Date)],
+        existingAppointments: [Appointment]
+    ) -> Bool {
+
+        let ids = Set(starts.map(\.appointment.id))
+        let rest = existingAppointments.filter { !ids.contains($0.id) }
+
+        for item in starts {
+
+            let end = Calendar.current.date(
+                byAdding: .minute,
+                value: item.appointment.duration,
+                to: item.start
+            ) ?? item.start
+
+            guard item.appointment.status == .active,
+                  !hasConflict(newStart: item.start, newEnd: end, existing: rest)
+            else {
+                return false
+            }
+        }
+
+        for item in starts {
+            item.appointment.startDate = item.start
+        }
+
+        return true
     }
 
     // MARK: - CANCEL

@@ -61,6 +61,45 @@ enum DayTimelineLayout {
         return lower...upper
     }
 
+    // Куди стане запис, якщо його потягнути: крок 15 хвилин, у межах шкали.
+    // Ледь зрушений запис лишається на своєму місці, навіть якщо час «некруглий».
+    static func snappedStart(
+        original: Int,
+        dragPoints: CGFloat,
+        pointsPerHour: CGFloat,
+        duration: Int,
+        hours: ClosedRange<Int>,
+        step: Int = 15
+    ) -> Int {
+
+        let delta = Double(dragPoints / pointsPerHour * 60)
+
+        guard abs(delta) >= Double(step) / 2 else {
+            return original
+        }
+
+        let snapped = Int(((Double(original) + delta) / Double(step)).rounded()) * step
+        let latest = max(hours.upperBound * 60 - duration, hours.lowerBound * 60)
+
+        return min(max(snapped, hours.lowerBound * 60), latest)
+    }
+
+    // Запис тягнуть за межу шкали (раніше початку чи пізніше кінця робочого дня)
+    static func isBeyondScale(
+        original: Int,
+        dragPoints: CGFloat,
+        pointsPerHour: CGFloat,
+        duration: Int,
+        hours: ClosedRange<Int>,
+        tolerance: Int = 15
+    ) -> Bool {
+
+        let start = Double(original) + Double(dragPoints / pointsPerHour * 60)
+
+        return start < Double(hours.lowerBound * 60 - tolerance)
+            || start + Double(duration) > Double(hours.upperBound * 60 + tolerance)
+    }
+
     // Записи, що накладаються, стають поруч; решта займає всю ширину
     static func placements(for items: [TimelineItem]) -> [UUID: TimelinePlacement] {
 

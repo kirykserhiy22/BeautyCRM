@@ -46,6 +46,47 @@ final class DayTimelineLayoutTests: XCTestCase {
         XCTAssertEqual(range, 9...18)
     }
 
+    // MARK: - Перетягування
+
+    private func snapped(_ original: Int, points: CGFloat, duration: Int = 60) -> Int {
+        DayTimelineLayout.snappedStart(
+            original: original,
+            dragPoints: points,
+            pointsPerHour: 60,
+            duration: duration,
+            hours: 9...19
+        )
+    }
+
+    func testDragSnapsToQuarterHours() {
+        XCTAssertEqual(snapped(900, points: 60), 960)
+        XCTAssertEqual(snapped(900, points: 20), 915)
+        XCTAssertEqual(snapped(900, points: -40), 855)
+    }
+
+    func testSmallMovementKeepsOriginalTime() {
+        XCTAssertEqual(snapped(907, points: 3), 907)
+        XCTAssertEqual(snapped(900, points: -7), 900)
+    }
+
+    func testDragStaysInsideTheScale() {
+        XCTAssertEqual(snapped(600, points: -600), 540)
+        XCTAssertEqual(snapped(1000, points: 600, duration: 90), 19 * 60 - 90)
+    }
+
+    func testDraggingPastTheScaleIsDetected() {
+        func beyond(_ start: Int, _ points: CGFloat) -> Bool {
+            DayTimelineLayout.isBeyondScale(
+                original: start, dragPoints: points, pointsPerHour: 60, duration: 60, hours: 9...19
+            )
+        }
+
+        XCTAssertFalse(beyond(600, -60), "Рівно до 9:00")
+        XCTAssertFalse(beyond(600, -70), "Трохи за край — це ще 9:00")
+        XCTAssertTrue(beyond(600, -80))
+        XCTAssertTrue(beyond(1000, 200))
+    }
+
     func testSeparateAppointmentsTakeFullWidth() {
         let first = item(600, 660), second = item(660, 720)
 

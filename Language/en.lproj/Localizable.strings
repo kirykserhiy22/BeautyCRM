@@ -303,3 +303,12 @@
 /* Day timeline */
 "home.schedule" = "Today's schedule";
 "calendar.cancelledCount" = "Cancelled (%d)";
+
+/* Timeline drag */
+"timeline.moved" = "Moved to %@";
+"timeline.undo" = "Undo";
+"appointment.error.pastTime" = "This time has already passed";
+"timeline.outsideHours" = "Outside working hours. You can change them in Settings.";
+"timeline.swap.title" = "Swap appointments?";
+"timeline.swap.confirm" = "Swap";
+"timeline.swapped" = "Appointments swapped";

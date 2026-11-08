@@ -304,3 +304,12 @@
 /* Day timeline */
 "home.schedule" = "Розклад на сьогодні";
 "calendar.cancelledCount" = "Скасовані (%d)";
+
+/* Timeline drag */
+"timeline.moved" = "Перенесено на %@";
+"timeline.undo" = "Скасувати";
+"appointment.error.pastTime" = "Цей час уже минув";
+"timeline.outsideHours" = "Це поза робочими годинами. Змінити їх можна в Налаштуваннях.";
+"timeline.swap.title" = "Поміняти записи місцями?";
+"timeline.swap.confirm" = "Поміняти";
+"timeline.swapped" = "Записи поміняно місцями";

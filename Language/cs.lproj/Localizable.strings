@@ -304,3 +304,12 @@
 /* Day timeline */
 "home.schedule" = "Dnešní rozvrh";
 "calendar.cancelledCount" = "Zrušené (%d)";
+
+/* Timeline drag */
+"timeline.moved" = "Přesunuto na %@";
+"timeline.undo" = "Zpět";
+"appointment.error.pastTime" = "Tento čas už uplynul";
+"timeline.outsideHours" = "Mimo pracovní dobu. Můžete ji změnit v Nastavení.";
+"timeline.swap.title" = "Prohodit termíny?";
+"timeline.swap.confirm" = "Prohodit";
+"timeline.swapped" = "Termíny prohozeny";
