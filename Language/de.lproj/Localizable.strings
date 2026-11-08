@@ -303,3 +303,12 @@
 /* Day timeline */
 "home.schedule" = "Heutiger Zeitplan";
 "calendar.cancelledCount" = "Storniert (%d)";
+
+/* Timeline drag */
+"timeline.moved" = "Verschoben auf %@";
+"timeline.undo" = "Rückgängig";
+"appointment.error.pastTime" = "Diese Zeit ist bereits vorbei";
+"timeline.outsideHours" = "Außerhalb der Arbeitszeit. Du kannst sie in den Einstellungen ändern.";
+"timeline.swap.title" = "Termine tauschen?";
+"timeline.swap.confirm" = "Tauschen";
+"timeline.swapped" = "Termine getauscht";

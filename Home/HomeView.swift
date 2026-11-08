@@ -22,6 +22,8 @@ struct HomeView: View {
         theme.colors(for: theme.currentTheme)
     }
     @State private var selectedAppointment: Appointment?
+    @StateObject private var moves = TimelineMoveModel()
+    @Environment(\.modelContext) private var context
 
     @Query private var profiles: [UserProfile]
     @Query(filter: #Predicate<Client> { $0.deletedAt == nil })
@@ -106,6 +108,7 @@ struct HomeView: View {
                 .padding()
             }
             .background(colors.background.ignoresSafeArea())
+            .timelineNotice(moves, existing: userAppointments)
             .sheet(item: $selectedAppointment) { appointment in
                 AppointmentDetailScreen(appointment: appointment)
                     .presentationDetents([.medium, .large])
@@ -340,10 +343,19 @@ private extension HomeView {
                 appointments: todayAppointments,
                 workingHours: .workingHours(
                     profiles.first { $0.authUserID == appState.session.userID }
-                )
-            ) { appointment in
-                selectedAppointment = appointment
-            }
+                ),
+                onSelect: { selectedAppointment = $0 },
+                onMove: { appointment, newStart in
+                    moves.move(
+                        appointment,
+                        to: newStart,
+                        existing: userAppointments,
+                        context: context,
+                        localization: localization
+                    )
+                },
+                onOutsideHours: { moves.showOutsideHours(localization: localization) }
+            )
         }
     }
 

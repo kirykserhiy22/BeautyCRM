@@ -303,3 +303,12 @@
 /* Day timeline */
 "home.schedule" = "Plan na dziś";
 "calendar.cancelledCount" = "Anulowane (%d)";
+
+/* Timeline drag */
+"timeline.moved" = "Przeniesiono na %@";
+"timeline.undo" = "Cofnij";
+"appointment.error.pastTime" = "Ten czas już minął";
+"timeline.outsideHours" = "Poza godzinami pracy. Możesz je zmienić w Ustawieniach.";
+"timeline.swap.title" = "Zamienić wizyty miejscami?";
+"timeline.swap.confirm" = "Zamień";
+"timeline.swapped" = "Wizyty zamieniono";

@@ -340,6 +340,150 @@ final class AuditAppointmentRulesTests: XCTestCase {
         XCTAssertEqual(appointment.totalFinalPrice, appointment.finalPrice)
     }
 
+    func testRescheduleMovesOnlyStart() {
+        let appointment = F.appointment(start: F.date(hour: 15), minutes: 60)
+
+        let result = AppointmentEngine.reschedule(
+            appointment: appointment,
+            to: F.date(hour: 16),
+            existingAppointments: [appointment],
+            now: F.date(hour: 8)
+        )
+
+        guard case .success = result else {
+            return XCTFail("Запис не конфліктує сам із собою")
+        }
+        XCTAssertEqual(appointment.startDate, F.date(hour: 16))
+        XCTAssertEqual(appointment.duration, 60)
+        XCTAssertEqual(appointment.status, .active)
+    }
+
+    func testRescheduleRespectsOccupiedTime() {
+        let moved = F.appointment(start: F.date(hour: 15), minutes: 60)
+        let other = F.appointment(start: F.date(hour: 16), minutes: 60)
+
+        let result = AppointmentEngine.reschedule(
+            appointment: moved,
+            to: F.date(hour: 16, 30),
+            existingAppointments: [moved, other],
+            now: F.date(hour: 8)
+        )
+
+        guard case .failure(.timeConflict) = result else {
+            return XCTFail("Зайнятий час не приймається")
+        }
+        XCTAssertEqual(moved.startDate, F.date(hour: 15))
+    }
+
+    func testOnlyActiveAppointmentsCanBeRescheduled() {
+        let completed = F.appointment(start: F.date(hour: 15), minutes: 60, status: .completed)
+
+        guard case .failure(.invalidStatus) = AppointmentEngine.reschedule(
+            appointment: completed,
+            to: F.date(hour: 16),
+            existingAppointments: []
+        ) else {
+            return XCTFail("Завершений запис не переноситься")
+        }
+        XCTAssertEqual(completed.startDate, F.date(hour: 15))
+    }
+
+    func testCannotRescheduleToPastTime() {
+        let appointment = F.appointment(start: F.date(hour: 15), minutes: 60)
+
+        guard case .failure(.pastTime) = AppointmentEngine.reschedule(
+            appointment: appointment,
+            to: F.date(hour: 11),
+            existingAppointments: [appointment],
+            now: F.date(hour: 12)
+        ) else {
+            return XCTFail("Минулий час не приймається")
+        }
+        XCTAssertEqual(appointment.startDate, F.date(hour: 15))
+    }
+
+    // MARK: - Обмін записів
+
+    private func swap(_ moved: Appointment, onto minuteHour: Date, with all: [Appointment]) -> AppointmentSwapPlan? {
+        AppointmentEngine.swapPlan(
+            appointment: moved,
+            droppedAt: minuteHour,
+            existingAppointments: all,
+            now: F.date(hour: 8)
+        )
+    }
+
+    func testEqualAppointmentsSwapTimes() {
+        let a = F.appointment(start: F.date(hour: 17), minutes: 60)
+        let b = F.appointment(start: F.date(hour: 18), minutes: 60)
+
+        let plan = swap(a, onto: F.date(hour: 18), with: [a, b])
+
+        XCTAssertEqual(plan?.movedStart, F.date(hour: 18))
+        XCTAssertEqual(plan?.otherStart, F.date(hour: 17))
+    }
+
+    func testLongerAppointmentPushesTheOtherAfterIt() {
+        let a = F.appointment(start: F.date(hour: 17), minutes: 60)
+        let b = F.appointment(start: F.date(hour: 18), minutes: 90)
+
+        let plan = swap(a, onto: F.date(hour: 18), with: [a, b])
+
+        XCTAssertEqual(plan?.otherStart, F.date(hour: 17))
+        XCTAssertEqual(plan?.movedStart, F.date(hour: 18, 30), "Одразу після довшого запису")
+    }
+
+    func testDroppingUpwardSwapsToo() {
+        let a = F.appointment(start: F.date(hour: 17), minutes: 60)
+        let b = F.appointment(start: F.date(hour: 18), minutes: 60)
+
+        let plan = swap(b, onto: F.date(hour: 17), with: [a, b])
+
+        XCTAssertEqual(plan?.movedStart, F.date(hour: 17))
+        XCTAssertEqual(plan?.otherStart, F.date(hour: 18))
+    }
+
+    func testNoSwapWhenDroppedOnTwoAppointments() {
+        let a = F.appointment(start: F.date(hour: 10), minutes: 60)
+        let b = F.appointment(start: F.date(hour: 12), minutes: 60)
+        let c = F.appointment(start: F.date(hour: 13), minutes: 60)
+
+        XCTAssertNil(swap(a, onto: F.date(hour: 12, 30), with: [a, b, c]))
+    }
+
+    func testNoSwapWhenResultOverlapsThirdAppointment() {
+        let a = F.appointment(start: F.date(hour: 10), minutes: 60)
+        let b = F.appointment(start: F.date(hour: 11), minutes: 120)
+        let c = F.appointment(start: F.date(hour: 12, 30), minutes: 60)
+
+        // b стане 10:00–12:00, a — о 12:00, а там уже c
+        XCTAssertNil(swap(a, onto: F.date(hour: 11), with: [a, b, c]))
+    }
+
+    func testNoSwapIntoThePast() {
+        let a = F.appointment(start: F.date(hour: 10), minutes: 60)
+        let b = F.appointment(start: F.date(hour: 11), minutes: 60)
+
+        XCTAssertNil(AppointmentEngine.swapPlan(
+            appointment: b,
+            droppedAt: F.date(hour: 10),
+            existingAppointments: [a, b],
+            now: F.date(hour: 10, 30)
+        ))
+    }
+
+    func testSetStartsRestoresBothTogether() {
+        let a = F.appointment(start: F.date(hour: 18), minutes: 60)
+        let b = F.appointment(start: F.date(hour: 17), minutes: 60)
+
+        XCTAssertTrue(AppointmentEngine.setStarts(
+            [(a, F.date(hour: 17)), (b, F.date(hour: 18))],
+            existingAppointments: [a, b]
+        ))
+        XCTAssertEqual(a.startDate, F.date(hour: 17))
+        XCTAssertEqual(b.startDate, F.date(hour: 18))
+    }
+
     func testServiceAddedOnCompletionCountsInTotal() {
         let appointment = F.appointment(start: F.date(hour: 10), minutes: 60)
         let coloring = UUID(), bangs = UUID()
