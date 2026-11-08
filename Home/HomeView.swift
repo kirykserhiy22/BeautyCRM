@@ -68,7 +68,7 @@ struct HomeView: View {
                                     appointment: dashboardAppointment,
                                     title: dashboardTitle,
                                     services: servicesText(dashboardAppointment),
-                                    timeText: timeText(dashboardAppointment),
+                                    timeText: cardTimeText(dashboardAppointment),
                                     statusText: statusText(dashboardAppointment),
                                     statusColor: dashboardColor,
                                     phoneURL: phoneURL(dashboardAppointment)
@@ -301,6 +301,21 @@ private extension HomeView {
         case .otherDay:
             return dateText(appointment)
         }
+    }
+
+
+    // Незавершений запис за минулий день не має виглядати сьогоднішнім
+    func cardTimeText(_ appointment: Appointment) -> String {
+
+        guard appointment.endDate < Date(),
+              !Calendar.current.isDateInToday(appointment.startDate)
+        else {
+            return timeText(appointment)
+        }
+
+        let date = AppFormatting.date(appointment.startDate, locale: localization.locale, format: .medium)
+
+        return "\(date) · \(timeText(appointment))"
     }
 
 

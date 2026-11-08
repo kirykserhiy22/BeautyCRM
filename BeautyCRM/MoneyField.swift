@@ -26,13 +26,9 @@ struct MoneyField: View {
 
     var body: some View {
 
-        TextField(placeholder, text: $text)
+        TextField(placeholder, text: $text, prompt: Text(placeholder).foregroundColor(colors.textSecondary))
             .keyboardType(.decimalPad)
-            .textFieldStyle(.roundedBorder)
-            .overlay(
-                RoundedRectangle(cornerRadius: 6)
-                    .stroke(Self.isInvalid(text) ? colors.danger : .clear, lineWidth: 1.5)
-            )
+            .moneyFieldStyle(colors, isInvalid: Self.isInvalid(text))
             .onAppear {
                 text = value.map { AppFormatting.moneyInput($0) } ?? ""
             }
@@ -46,5 +42,26 @@ struct MoneyField: View {
     static func isInvalid(_ text: String) -> Bool {
         !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
             && AppFormatting.parseMoney(text) == nil
+    }
+}
+
+
+extension View {
+
+    // Системна рамка в темному режимі чорна, тому поле бере кольори теми
+    func moneyFieldStyle(_ colors: ThemeColors, isInvalid: Bool) -> some View {
+        self
+            .foregroundColor(colors.textPrimary)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 7)
+            .background(colors.inputBackground)
+            .cornerRadius(8)
+            .overlay(
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(
+                        isInvalid ? colors.danger : colors.border,
+                        lineWidth: isInvalid ? 1.5 : 1
+                    )
+            )
     }
 }
