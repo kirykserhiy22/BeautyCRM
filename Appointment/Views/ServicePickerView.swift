@@ -28,12 +28,14 @@ struct ServicePickerView: View {
         }
 
         return services.filter {
-            $0.userID == userID
+            $0.userID == userID && !excludedIDs.contains($0.id)
         }
     }
     
     @Binding var selectedIDs: Set<UUID>
     @Binding var customPrices: [UUID: Decimal]
+    // Послуги, яких не треба пропонувати (вже є в записі)
+    var excludedIDs: Set<UUID> = []
     
     // MARK: - UI
     

@@ -345,14 +345,23 @@ final class AppointmentEngine {
     // MARK: - COMPLETE
 
     @discardableResult
+    // addedServices — послуги, які клієнт замовив уже на місці.
+    // Тривалість запису не змінюється: він уже завершується.
     static func complete(
         appointment: Appointment,
-        finalServicePrices: [UUID: Decimal]
+        finalServicePrices: [UUID: Decimal],
+        addedServices: [AppointmentServiceItem] = []
     ) -> Result<Void, AppointmentError> {
 
         guard appointment.status.canChange(to: .completed) else {
             return .failure(.invalidStatus)
         }
+
+        let existingIDs = Set(appointment.services.map(\.serviceID))
+
+        appointment.services.append(
+            contentsOf: addedServices.filter { !existingIDs.contains($0.serviceID) }
+        )
 
         var total: Decimal = 0
 

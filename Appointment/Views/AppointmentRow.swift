@@ -11,6 +11,8 @@ struct AppointmentRow: View {
     @EnvironmentObject var currencyManager: CurrencyManager
     @EnvironmentObject var localization: LocalizationManager
     @Environment(\.modelContext) private var context
+    @Query(filter: #Predicate<Service> { $0.deletedAt == nil })
+    private var services: [Service]
     
     let appt: Appointment
     let expandedAppointmentID: Binding<UUID?>
@@ -22,6 +24,8 @@ struct AppointmentRow: View {
     
     @State private var showEdit = false
     @State private var showComplete = false
+    @State private var showAddService = false
+    @State private var addedServiceIDs: Set<UUID> = []
     @State private var showCancelConfirm = false
     @State private var showRestoreConflict = false
     @State private var finalServicePrices: [UUID: String] = [:]
@@ -360,6 +364,7 @@ struct AppointmentRow: View {
             onDismiss: {
                 completionItems = []
                 finalServicePrices = [:]
+                addedServiceIDs = []
             }
         ) {
             
@@ -389,9 +394,27 @@ struct AppointmentRow: View {
                                     spacing: 8
                                 ) {
                                     
-                                    Text(item.serviceName)
-                                        .font(.headline)
-                                    
+                                    HStack {
+
+                                        Text(item.serviceName)
+                                            .font(.headline)
+
+                                        Spacer()
+
+                                        if item.isAdded {
+                                            Button {
+                                                addedServiceIDs.remove(item.serviceID)
+                                                syncAddedServices()
+                                            } label: {
+                                                Image(systemName: "xmark.circle.fill")
+                                                    .foregroundColor(colors.textSecondary)
+                                            }
+                                            .accessibilityLabel(
+                                                localization.localizedString(for: "common.delete")
+                                            )
+                                        }
+                                    }
+
                                     TextField(
                                         localization.localizedString(for: "appointment.price"),
                                         text: Binding(
@@ -421,8 +444,19 @@ struct AppointmentRow: View {
                                 .cornerRadius(16)
                             }
                         }
-                        
-                        
+
+                        Button {
+                            showAddService = true
+                        } label: {
+                            Label(
+                                localization.localizedString(for: "appointment.addServices"),
+                                systemImage: "plus"
+                            )
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundColor(colors.accent)
+                        }
+                        .accessibilityIdentifier("completion.addService")
+
                         Divider()
                         
                         HStack {
@@ -447,7 +481,14 @@ struct AppointmentRow: View {
                             
                             AppointmentEngine.complete(
                                 appointment: appt,
-                                finalServicePrices: mapped
+                                finalServicePrices: mapped,
+                                addedServices: completionItems.filter(\.isAdded).map {
+                                    AppointmentServiceItem(
+                                        serviceID: $0.serviceID,
+                                        serviceName: $0.serviceName,
+                                        plannedPrice: mapped[$0.serviceID] ?? $0.plannedPrice
+                                    )
+                                }
                             )
                             
                             context.saveReportingErrors()
@@ -468,6 +509,13 @@ struct AppointmentRow: View {
                     .padding()
                 }
                 .scrollDismissesKeyboard(.interactively)
+            }
+            .sheet(isPresented: $showAddService, onDismiss: syncAddedServices) {
+                ServicePickerView(
+                    selectedIDs: $addedServiceIDs,
+                    customPrices: .constant([:]),
+                    excludedIDs: Set(appt.services.map(\.serviceID))
+                )
             }
             // Завантажуємо тут, а не перед показом: стан, змінений в одну мить
             // із відкриттям, вікно не встигає побачити, і список лишається порожнім
@@ -587,6 +635,45 @@ private extension AppointmentRow {
     // Порожньо або не сума — не можна завершити (раніше ставало 0 €)
     func isPriceInvalid(_ serviceID: UUID) -> Bool {
         AppFormatting.parseMoney(finalServicePrices[serviceID] ?? "") == nil
+    }
+
+    // Приводить вікно завершення у відповідність до вибраних додаткових послуг.
+    // Фіксована ціна підставляється, змінну майстер вводить сам.
+    func syncAddedServices() {
+
+        let removed = completionItems.filter {
+            $0.isAdded && !addedServiceIDs.contains($0.serviceID)
+        }
+
+        for item in removed {
+            finalServicePrices[item.serviceID] = nil
+        }
+
+        completionItems.removeAll {
+            $0.isAdded && !addedServiceIDs.contains($0.serviceID)
+        }
+
+        let shownIDs = Set(completionItems.map(\.serviceID))
+
+        let new = services
+            .filter { addedServiceIDs.contains($0.id) && !shownIDs.contains($0.id) }
+            .sorted { $0.name < $1.name }
+
+        for service in new {
+
+            let price = service.pricingType == .fixed ? service.price : nil
+
+            completionItems.append(
+                CompletionServiceItem(
+                    serviceID: service.id,
+                    serviceName: service.name,
+                    plannedPrice: price ?? 0,
+                    isAdded: true
+                )
+            )
+
+            finalServicePrices[service.id] = price.map { AppFormatting.moneyInput($0) } ?? ""
+        }
     }
 
     var canConfirmCompletion: Bool {
