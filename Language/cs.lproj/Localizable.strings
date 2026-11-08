@@ -58,10 +58,8 @@
 
 /* Home */
 
-"home.noAppointments" = "Žádné objednávky";
-"home.freeToday" = "Dnes máš volno 🎉";
 "home.dayComplete" = "Den dokončen";
-"home.allDoneToday" = "Všechny dnešní rezervace jsou hotové 🎉";
+"home.allDoneToday" = "Všechny dnešní rezervace jsou hotové";
 
 "home.currentAppointment" = "Aktuální objednávka";
 "home.needsCompletion" = "Čeká na dokončení";
@@ -296,8 +294,13 @@
 "home.startsInHours" = "za %d h %d min";
 "home.endsInMinutes" = "ještě %d min";
 "home.progress" = "%d z %d termínů";
-"home.laterToday" = "Později dnes";
-"home.moreCount" = "+%d další";
 "home.open" = "Otevřít";
 "home.action.appointment" = "Termín";
 "home.action.client" = "Klient";
+
+/* Home empty state */
+"home.noPlanned" = "Žádné naplánované termíny";
+
+/* Day timeline */
+"home.schedule" = "Dnešní rozvrh";
+"calendar.cancelledCount" = "Zrušené (%d)";

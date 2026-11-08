@@ -31,9 +31,11 @@ struct PhotoGalleryView: View {
                 }
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
+            .ignoresSafeArea()
             .onTapGesture {
                 dismiss()
             }
         }
+        .presentationBackground(.black)
     }
 }

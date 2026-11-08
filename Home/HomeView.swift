@@ -21,6 +21,8 @@ struct HomeView: View {
     private var colors: ThemeColors {
         theme.colors(for: theme.currentTheme)
     }
+    @State private var selectedAppointment: Appointment?
+
     @Query private var profiles: [UserProfile]
     @Query(filter: #Predicate<Client> { $0.deletedAt == nil })
     private var clients: [Client]
@@ -82,10 +84,7 @@ struct HomeView: View {
 
                             } else {
 
-                                DashboardMessageCard(
-                                    title: "home.noAppointments",
-                                    message: "home.freeToday"
-                                )
+                                DashboardMessageCard(message: "home.noPlanned")
                             }
 
                             if !todayAppointments.isEmpty {
@@ -97,8 +96,8 @@ struct HomeView: View {
 
                             QuickActionsSection()
 
-                            if !laterTodayText.isEmpty {
-                                laterTodayCard
+                            if !todayAppointments.isEmpty {
+                                scheduleSection
                             }
                         }
                     }
@@ -107,7 +106,11 @@ struct HomeView: View {
                 .padding()
             }
             .background(colors.background.ignoresSafeArea())
-            
+            .sheet(item: $selectedAppointment) { appointment in
+                AppointmentDetailScreen(appointment: appointment)
+                    .presentationDetents([.medium, .large])
+                    .presentationDragIndicator(.visible)
+            }
         }
     }
 }
@@ -309,53 +312,24 @@ private extension HomeView {
     }
 
 
-    // Решта сьогоднішніх записів: «13:30 Anna · 15:00 Lena · ще 1»
-    var laterTodayText: String {
+    var scheduleSection: some View {
 
-        let now = Date()
+        VStack(alignment: .leading, spacing: 10) {
 
-        let later = todayAppointments.filter {
-            $0.status == .active
-                && $0.startDate > now
-                && $0.id != dashboardAppointment?.id
-        }
-
-        var parts = later.prefix(2).map {
-            "\(AppFormatting.clock($0.startDate)) \($0.clientName)"
-        }
-
-        if later.count > 2 {
-            parts.append(
-                String(
-                    format: localization.localizedString(for: "home.moreCount"),
-                    locale: localization.locale,
-                    later.count - 2
-                )
-            )
-        }
-
-        return parts.joined(separator: " · ")
-    }
-
-
-    var laterTodayCard: some View {
-
-        VStack(alignment: .leading, spacing: 4) {
-
-            Text("home.laterToday")
-                .font(.subheadline)
-                .foregroundColor(colors.textSecondary)
-
-            Text(laterTodayText)
-                .font(.subheadline.weight(.medium))
+            Text("home.schedule")
+                .font(.headline)
                 .foregroundColor(colors.textPrimary)
+
+            DayTimelineView(
+                day: Date(),
+                appointments: todayAppointments,
+                workingHours: .workingHours(
+                    profiles.first { $0.authUserID == appState.session.userID }
+                )
+            ) { appointment in
+                selectedAppointment = appointment
+            }
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(16)
-        .background(
-            RoundedRectangle(cornerRadius: 18)
-                .fill(colors.card)
-        )
     }
 
 

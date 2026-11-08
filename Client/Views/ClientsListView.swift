@@ -67,6 +67,8 @@ struct ClientsListView: View {
 
                 VStack(spacing: 14) {
 
+                    header
+
                     searchBar
 
                     ScrollView {
@@ -173,6 +175,8 @@ struct ClientsListView: View {
                 }
             }
             .navigationTitle(localization.localizedString(for: "clients.title"))
+            // Заголовок із кількістю клієнтів малює header
+            .toolbar(.hidden, for: .navigationBar)
             .sheet(isPresented: $showAddClient) {
                 ClientFormView(mode: .create)
             }
@@ -205,6 +209,27 @@ struct ClientsListView: View {
 }
 
 private extension ClientsListView {
+
+    var header: some View {
+
+        HStack(alignment: .firstTextBaseline, spacing: 10) {
+
+            Text(localization.localizedString(for: "clients.title"))
+                .font(.largeTitle.bold())
+                .foregroundColor(colors.textPrimary)
+
+            if !userClients.isEmpty {
+                Text("\(userClients.count)")
+                    .font(.title2)
+                    .foregroundColor(colors.textSecondary)
+            }
+
+            Spacer()
+        }
+        .padding(.horizontal)
+        .padding(.top, 8)
+        .accessibilityElement(children: .combine)
+    }
 
     var searchBar: some View {
 

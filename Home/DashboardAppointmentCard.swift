@@ -101,7 +101,7 @@ struct DashboardAppointmentCard: View {
 // Коли наступного запису немає: день завершено або вільний
 struct DashboardMessageCard: View {
 
-    let title: String
+    var title: String? = nil
     let message: String
 
     @EnvironmentObject var theme: ThemeManager
@@ -114,9 +114,11 @@ struct DashboardMessageCard: View {
 
         VStack(alignment: .leading, spacing: 8) {
 
-            Text(LocalizedStringKey(title))
-                .font(.subheadline)
-                .foregroundColor(colors.textSecondary)
+            if let title {
+                Text(LocalizedStringKey(title))
+                    .font(.subheadline)
+                    .foregroundColor(colors.textSecondary)
+            }
 
             Text(LocalizedStringKey(message))
                 .font(.title3.bold())

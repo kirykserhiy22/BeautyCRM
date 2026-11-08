@@ -23,6 +23,8 @@ struct CalendarScreen: View {
     @State private var selectedDates: Set<Date> = []   // 👈 ВАЖЛИВО
     @State private var showCreate = false
     @State private var expandedAppointmentID: UUID?
+    @State private var selectedAppointment: Appointment?
+    @State private var showsCancelled = false
 
     // Календар згорнутий в один тиждень (коли список записів прокручено вгору)
     @State private var isCalendarCollapsed = false
@@ -95,12 +97,23 @@ struct CalendarScreen: View {
                             emptyDayView
                         }
 
-                        ForEach(filteredAppointments) { appt in
-                            AppointmentRow(
-                                appt: appt,
-                                expandedAppointmentID: $expandedAppointmentID
-                            )
+                        if !timelineAppointments.isEmpty {
+                            DayTimelineView(
+                                day: selectedDate,
+                                appointments: timelineAppointments,
+                                workingHours: workingHours
+                            ) { appointment in
+                                selectedAppointment = appointment
+                            }
                         }
+
+                        if !cancelledAppointments.isEmpty {
+                            cancelledSection
+                        }
+
+                        // Місце під плаваючою кнопкою
+                        Color.clear
+                            .frame(height: 64)
                     }
                     .padding()
                     .background(
@@ -141,11 +154,61 @@ struct CalendarScreen: View {
         .sheet(isPresented: $showCreate) {
             AppointmentFormView(initialDate: newAppointmentDate)
         }
+        .sheet(item: $selectedAppointment) { appointment in
+            AppointmentDetailScreen(appointment: appointment)
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
+        }
         .onAppear {
             selectedDate = Date()
         }
     }
     
+    // MARK: - CANCELLED
+
+    // На шкалі їх немає, але тут їх можна відновити або приховати
+    private var cancelledSection: some View {
+
+        VStack(spacing: 12) {
+
+            Button {
+                withAnimation(.snappy(duration: 0.25)) {
+                    showsCancelled.toggle()
+                }
+            } label: {
+                HStack {
+                    Text(
+                        String(
+                            format: localization.localizedString(for: "calendar.cancelledCount"),
+                            locale: localization.locale,
+                            cancelledAppointments.count
+                        )
+                    )
+                    .font(.subheadline.weight(.medium))
+
+                    Spacer()
+
+                    Image(systemName: showsCancelled ? "chevron.up" : "chevron.down")
+                        .font(.caption.bold())
+                }
+                .foregroundColor(colors.textSecondary)
+                .padding(.vertical, 4)
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+
+            if showsCancelled {
+                ForEach(cancelledAppointments) { appt in
+                    AppointmentRow(
+                        appt: appt,
+                        expandedAppointmentID: $expandedAppointmentID
+                    )
+                }
+            }
+        }
+    }
+
+
     // MARK: - EMPTY DAY
 
     // Підказка, коли на вибраний день немає записів
@@ -237,6 +300,14 @@ struct CalendarScreen: View {
             value: workingHours.startMinute,
             to: calendar.startOfDay(for: selectedDate)
         ) ?? selectedDate
+    }
+
+    private var timelineAppointments: [Appointment] {
+        filteredAppointments.filter { $0.status != .cancelled }
+    }
+
+    private var cancelledAppointments: [Appointment] {
+        filteredAppointments.filter { $0.status == .cancelled }
     }
 
     private var filteredAppointments: [Appointment] {

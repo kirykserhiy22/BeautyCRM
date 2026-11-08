@@ -60,10 +60,8 @@
 "home.dateToday" = "Сьогодні";
 "home.dateTomorrow" = "Завтра";
 
-"home.noAppointments" = "Немає записів";
-"home.freeToday" = "Сьогодні нічого 🎉";
 "home.dayComplete" = "День завершено";
-"home.allDoneToday" = "Усі записи на сьогодні виконано 🎉";
+"home.allDoneToday" = "Усі записи на сьогодні виконано";
 
 "home.currentAppointment" = "Поточний запис";
 "home.needsCompletion" = "Потрібно завершити";
@@ -296,8 +294,13 @@
 "home.startsInHours" = "через %d год %d хв";
 "home.endsInMinutes" = "ще %d хв";
 "home.progress" = "%d з %d записів";
-"home.laterToday" = "Ще сьогодні";
-"home.moreCount" = "ще %d";
 "home.open" = "Відкрити";
 "home.action.appointment" = "Запис";
 "home.action.client" = "Клієнт";
+
+/* Home empty state */
+"home.noPlanned" = "Немає запланованих записів";
+
+/* Day timeline */
+"home.schedule" = "Розклад на сьогодні";
+"calendar.cancelledCount" = "Скасовані (%d)";
