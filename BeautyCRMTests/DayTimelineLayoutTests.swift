@@ -12,8 +12,13 @@ final class DayTimelineLayoutTests: XCTestCase {
         TimelineItem(id: UUID(), startMinute: start, endMinute: end)
     }
 
-    private func hours(_ items: [TimelineItem]) -> ClosedRange<Int> {
-        DayTimelineLayout.hourRange(items: items, workStartMinute: 9 * 60, workEndMinute: 19 * 60)
+    private func hours(_ items: [TimelineItem], startsAtFirstItem: Bool = true) -> ClosedRange<Int> {
+        DayTimelineLayout.hourRange(
+            items: items,
+            workStartMinute: 9 * 60,
+            workEndMinute: 19 * 60,
+            startsAtFirstItem: startsAtFirstItem
+        )
     }
 
     func testEmptyDayShowsWorkingHours() {
@@ -24,8 +29,16 @@ final class DayTimelineLayoutTests: XCTestCase {
         XCTAssertEqual(hours([item(7 * 60 + 30, 8 * 60 + 30), item(20 * 60, 21 * 60 + 10)]), 7...22)
     }
 
+    func testScaleStartsAtTheHourOfFirstAppointment() {
+        XCTAssertEqual(hours([item(13 * 60 + 30, 14 * 60 + 30), item(16 * 60, 17 * 60)]), 13...19)
+    }
+
+    func testFullDayKeepsWorkingHoursBeforeFirstAppointment() {
+        XCTAssertEqual(hours([item(13 * 60, 14 * 60)], startsAtFirstItem: false), 9...19)
+    }
+
     func testScaleNeverGoesPastMidnight() {
-        XCTAssertEqual(hours([item(23 * 60, 24 * 60)]), 9...24)
+        XCTAssertEqual(hours([item(23 * 60, 24 * 60)]), 23...24)
     }
 
     func testPartialWorkingHoursRoundOutward() {

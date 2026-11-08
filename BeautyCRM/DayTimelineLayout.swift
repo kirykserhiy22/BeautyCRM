@@ -42,14 +42,17 @@ enum DayTimelineLayout {
         )
     }
 
-    // Робочі години, розширені до цілих годин і до записів поза ними
+    // Від першого запису дня (порожні ранкові години не потрібні) до кінця робочого дня.
+    // startsAtFirstItem: false — увесь робочий день, для перенесення записів.
     static func hourRange(
         items: [TimelineItem],
         workStartMinute: Int,
-        workEndMinute: Int
+        workEndMinute: Int,
+        startsAtFirstItem: Bool = true
     ) -> ClosedRange<Int> {
 
-        let first = min(items.map(\.startMinute).min() ?? workStartMinute, workStartMinute)
+        let earliest = items.map(\.startMinute).min() ?? workStartMinute
+        let first = startsAtFirstItem ? earliest : min(earliest, workStartMinute)
         let last = max(items.map(\.endMinute).max() ?? workEndMinute, workEndMinute)
 
         let lower = first / 60
