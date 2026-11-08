@@ -14,4 +14,6 @@ struct CompletionServiceItem: Identifiable {
     let serviceID: UUID
     let serviceName: String
     let plannedPrice: Decimal
+    // Додана майстром під час завершення; її можна прибрати
+    var isAdded = false
 }

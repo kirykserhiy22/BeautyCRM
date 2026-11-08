@@ -340,6 +340,57 @@ final class AuditAppointmentRulesTests: XCTestCase {
         XCTAssertEqual(appointment.totalFinalPrice, appointment.finalPrice)
     }
 
+    func testServiceAddedOnCompletionCountsInTotal() {
+        let appointment = F.appointment(start: F.date(hour: 10), minutes: 60)
+        let coloring = UUID(), bangs = UUID()
+        appointment.services = [
+            AppointmentServiceItem(serviceID: coloring, serviceName: "Coloring", plannedPrice: 100)
+        ]
+
+        AppointmentEngine.complete(
+            appointment: appointment,
+            finalServicePrices: [coloring: 100, bangs: 15],
+            addedServices: [AppointmentServiceItem(serviceID: bangs, serviceName: "Bangs", plannedPrice: 15)]
+        )
+
+        XCTAssertEqual(appointment.services.count, 2)
+        XCTAssertEqual(appointment.finalPrice, 115)
+        XCTAssertEqual(appointment.services.last?.finalPrice, 15)
+        XCTAssertEqual(appointment.duration, 60, "Тривалість не змінюється")
+    }
+
+    func testAddingServiceAlreadyInAppointmentDoesNotDuplicateIt() {
+        let appointment = F.appointment(start: F.date(hour: 10), minutes: 60)
+        let cut = UUID()
+        appointment.services = [
+            AppointmentServiceItem(serviceID: cut, serviceName: "Cut", plannedPrice: 30)
+        ]
+
+        AppointmentEngine.complete(
+            appointment: appointment,
+            finalServicePrices: [:],
+            addedServices: [AppointmentServiceItem(serviceID: cut, serviceName: "Cut", plannedPrice: 30)]
+        )
+
+        XCTAssertEqual(appointment.services.count, 1)
+        XCTAssertEqual(appointment.finalPrice, 30)
+    }
+
+    func testCompletedAppointmentGetsNoAddedServices() {
+        let appointment = F.appointment(start: F.date(hour: 10), minutes: 60, status: .cancelled)
+
+        let result = AppointmentEngine.complete(
+            appointment: appointment,
+            finalServicePrices: [:],
+            addedServices: [AppointmentServiceItem(serviceID: UUID(), serviceName: "X", plannedPrice: 5)]
+        )
+
+        guard case .failure = result else {
+            return XCTFail("Скасований запис не завершується")
+        }
+        XCTAssertTrue(appointment.services.isEmpty)
+    }
+
     func testCannotCompleteCancelledAppointment() {
         let appointment = F.appointment(start: F.date(hour: 10), minutes: 60, status: .cancelled)
 
