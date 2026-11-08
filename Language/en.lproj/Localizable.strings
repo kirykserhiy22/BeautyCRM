@@ -293,11 +293,13 @@
 "home.startsInHours" = "in %d h %d min";
 "home.endsInMinutes" = "%d min left";
 "home.progress" = "%d of %d appointments";
-"home.laterToday" = "Later today";
-"home.moreCount" = "+%d more";
 "home.open" = "Open";
 "home.action.appointment" = "Appointment";
 "home.action.client" = "Client";
 
 /* Home empty state */
 "home.noPlanned" = "No upcoming appointments";
+
+/* Day timeline */
+"home.schedule" = "Today's schedule";
+"calendar.cancelledCount" = "Cancelled (%d)";

@@ -294,11 +294,13 @@
 "home.startsInHours" = "za %d h %d min";
 "home.endsInMinutes" = "ještě %d min";
 "home.progress" = "%d z %d termínů";
-"home.laterToday" = "Později dnes";
-"home.moreCount" = "+%d další";
 "home.open" = "Otevřít";
 "home.action.appointment" = "Termín";
 "home.action.client" = "Klient";
 
 /* Home empty state */
 "home.noPlanned" = "Žádné naplánované termíny";
+
+/* Day timeline */
+"home.schedule" = "Dnešní rozvrh";
+"calendar.cancelledCount" = "Zrušené (%d)";

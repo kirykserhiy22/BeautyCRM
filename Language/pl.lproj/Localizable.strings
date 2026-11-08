@@ -293,11 +293,13 @@
 "home.startsInHours" = "za %d godz. %d min";
 "home.endsInMinutes" = "jeszcze %d min";
 "home.progress" = "%d z %d wizyt";
-"home.laterToday" = "Później dziś";
-"home.moreCount" = "+%d więcej";
 "home.open" = "Otwórz";
 "home.action.appointment" = "Wizyta";
 "home.action.client" = "Klient";
 
 /* Home empty state */
 "home.noPlanned" = "Brak zaplanowanych wizyt";
+
+/* Day timeline */
+"home.schedule" = "Plan na dziś";
+"calendar.cancelledCount" = "Anulowane (%d)";

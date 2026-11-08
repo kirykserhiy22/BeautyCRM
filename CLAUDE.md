@@ -27,6 +27,7 @@
 - `BeautyCRM/SaveErrorReporter.swift` — `context.saveReportingErrors()`: збереження з показом помилки
 - `BeautyCRM/MoneyField.swift` — поле суми з підсвіткою неправильного вводу
 - `BeautyCRM/ContactLinks.swift` — посилання на телефон, Instagram, Telegram із будь-якого написання ніка
+- `BeautyCRM/DayTimelineView.swift` + `DayTimelineLayout.swift` — шкала дня (Головна, Календар) і розрахунок положення записів
 - `BeautyCRM/AnalyticsEngine.swift` — усі розрахунки аналітики (екран лише показує `AnalyticsSummary`)
 - `Auth/` — вхід, реєстрація (`SignUp/`, 5 кроків: акаунт, ім'я, спеціалізація, салон, валюта), сесія,
   профіль (`User/`, `UserProfileManager.update`), валюта

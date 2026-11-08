@@ -293,11 +293,13 @@
 "home.startsInHours" = "in %d Std. %d Min.";
 "home.endsInMinutes" = "noch %d Min.";
 "home.progress" = "%d von %d Terminen";
-"home.laterToday" = "Später heute";
-"home.moreCount" = "+%d weitere";
 "home.open" = "Öffnen";
 "home.action.appointment" = "Termin";
 "home.action.client" = "Kunde";
 
 /* Home empty state */
 "home.noPlanned" = "Keine geplanten Termine";
+
+/* Day timeline */
+"home.schedule" = "Heutiger Zeitplan";
+"calendar.cancelledCount" = "Storniert (%d)";
