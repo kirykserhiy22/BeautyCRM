@@ -82,10 +82,7 @@ struct HomeView: View {
 
                             } else {
 
-                                DashboardMessageCard(
-                                    title: "home.noAppointments",
-                                    message: "home.freeToday"
-                                )
+                                DashboardMessageCard(message: "home.noPlanned")
                             }
 
                             if !todayAppointments.isEmpty {

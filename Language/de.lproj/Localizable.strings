@@ -58,10 +58,8 @@
 
 /* Home */
 
-"home.noAppointments" = "Keine Termine";
-"home.freeToday" = "Heute hast du frei 🎉";
 "home.dayComplete" = "Tag abgeschlossen";
-"home.allDoneToday" = "Alle heutigen Termine sind erledigt 🎉";
+"home.allDoneToday" = "Alle heutigen Termine sind erledigt";
 
 "home.currentAppointment" = "Aktueller Termin";
 "home.needsCompletion" = "Abschluss erforderlich";
@@ -300,3 +298,6 @@
 "home.open" = "Öffnen";
 "home.action.appointment" = "Termin";
 "home.action.client" = "Kunde";
+
+/* Home empty state */
+"home.noPlanned" = "Keine geplanten Termine";

@@ -22,6 +22,9 @@ struct ZoomableImageView: View {
     // MARK: - Gesture state
     @GestureState private var isDragging = false
 
+    // Маленька копія фото для розмитого фону
+    @State private var backdrop: UIImage?
+
     var body: some View {
 
         GeometryReader { geo in
@@ -31,8 +34,18 @@ struct ZoomableImageView: View {
 
             ZStack {
 
-                Color.black
+                // Замість чорних смуг — те саме фото, розмите й притемнене
+                Color.clear
+                    .overlay(
+                        Image(uiImage: backdrop ?? image)
+                            .resizable()
+                            .scaledToFill()
+                    )
+                    .clipped()
+                    .blur(radius: 32, opaque: true)
+                    .overlay(Color.black.opacity(0.35))
                     .ignoresSafeArea()
+                    .allowsHitTesting(false)
 
                 Image(uiImage: image)
                     .resizable()
@@ -77,6 +90,9 @@ struct ZoomableImageView: View {
                         }
                     }
             }
+        }
+        .task {
+            backdrop = image.preparingThumbnail(of: CGSize(width: 160, height: 160))
         }
     }
 
