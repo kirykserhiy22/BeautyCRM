@@ -240,6 +240,11 @@ struct DayTimelineView: View {
         let height = CGFloat(minutes) / 60 * hourHeight - 2
         let isCompleted = appointment.status == .completed
         let services = appointment.services.map(\.serviceName).joined(separator: " · ")
+        let timeRange = "\(AppFormatting.clock(appointment.startDate)) – \(AppFormatting.clock(appointment.endDate))"
+        // Час у невисоких блоках: збоку, а у вузькій колонці — лише початок перед текстом
+        let hasTimeLine = height >= 66
+        let timeOnSide = !hasTimeLine && columnWidth >= 200
+        let timePrefix = !hasTimeLine && !timeOnSide ? "\(AppFormatting.clock(appointment.startDate)) · " : ""
 
         let dragMinute = drag?.id == appointment.id ? drag?.startMinute : nil
         let dragVerdict = drag.flatMap { $0.id == appointment.id ? verdict(appointment, current: $0) : nil }
@@ -263,19 +268,19 @@ struct DayTimelineView: View {
                         .foregroundColor(isCompleted ? colors.textSecondary : colors.textPrimary)
                         .lineLimit(1)
 
-                    Text(services)
+                    Text(timePrefix + services)
                         .font(.caption)
                         .foregroundColor(colors.textSecondary)
                         .lineLimit(1)
                 } else {
-                    Text("\(appointment.clientName) · \(services)")
+                    Text("\(timePrefix)\(appointment.clientName) · \(services)")
                         .font(.caption.weight(.semibold))
                         .foregroundColor(isCompleted ? colors.textSecondary : colors.textPrimary)
                         .lineLimit(1)
                 }
 
-                if height >= 66 {
-                    Text("\(AppFormatting.clock(appointment.startDate)) – \(AppFormatting.clock(appointment.endDate))")
+                if hasTimeLine {
+                    Text(timeRange)
                         .font(.caption2)
                         .foregroundColor(colors.textSecondary)
                         .lineLimit(1)
@@ -285,6 +290,15 @@ struct DayTimelineView: View {
             .padding(.vertical, 3)
 
             Spacer(minLength: 0)
+
+            if timeOnSide && dragMinute == nil {
+                Text(timeRange)
+                    .font(.caption)
+                    .monospacedDigit()
+                    .foregroundColor(colors.textSecondary)
+                    .fixedSize()
+                    .padding(.trailing, 8)
+            }
 
             if isCompleted {
                 Image(systemName: "checkmark")
