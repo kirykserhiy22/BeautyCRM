@@ -316,7 +316,24 @@ final class AnalyticsEngineTests: XCTestCase {
         ], period: .month, month: 11, year: 2026)
 
         XCTAssertEqual(result.newClientCount, 1)
-        XCTAssertEqual(result.returningClientCount, 1)
+    }
+
+    func testReturningPercentCountsEarlierYearsToo() throws {
+        let twiceThisYear = UUID()
+        let cameBackAfterNewYear = UUID()
+        let onlyOnce = UUID()
+
+        let result = try summary([
+            done(F.date(2026, 2, 1, 10), price: 10, client: twiceThisYear),
+            done(F.date(2026, 8, 1, 10), price: 10, client: twiceThisYear),
+            done(F.date(2025, 12, 1, 10), price: 10, client: cameBackAfterNewYear),
+            done(F.date(2026, 6, 1, 10), price: 10, client: cameBackAfterNewYear),
+            done(F.date(2026, 3, 1, 10), price: 10, client: onlyOnce),
+            done(F.date(2027, 1, 5, 10), price: 10, client: onlyOnce)  // візит після кінця року не рахується
+        ], period: .year, year: 2026)
+
+        XCTAssertEqual(result.clientCount, 3)
+        XCTAssertEqual(result.returningClientPercent, 67)
     }
 
 

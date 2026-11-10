@@ -33,9 +33,11 @@ struct AnalyticsSummary {
     // Порівняння з попереднім періодом; nil — порівнювати нема з чим
     let comparison: AnalyticsComparison?
 
-    // Нові — перший завершений візит припав на цей період; решта повернулись
+    // Нові — перший завершений візит припав на цей період
     let newClientCount: Int
-    let returningClientCount: Int
+
+    // Який відсоток клієнтів періоду приходив більше одного разу
+    let returningClientPercent: Int
 
     // Послуга, що принесла найбільше грошей за період
     let leadingService: AnalyticsServiceShare?
@@ -143,15 +145,13 @@ enum AnalyticsEngine {
         let minutes = completed.reduce(0) { $0 + $1.duration }
 
         let services = topServices(completed, serviceNames: serviceNames)
-        let newClients = newClientCount(allCompleted: allCompleted, completed: completed, interval: interval)
-        let clientCount = Set(completed.map(\.clientID)).count
 
         return AnalyticsSummary(
             interval: interval,
             revenue: revenue,
             expectedRevenue: expectedRevenue,
             appointmentCount: completed.count,
-            clientCount: clientCount,
+            clientCount: Set(completed.map(\.clientID)).count,
             averageCheck: completed.isEmpty ? 0 : revenue / Decimal(completed.count),
             // Через хвилини, щоб не втрачати точність на дробових годинах
             hourlyIncome: minutes > 0 ? revenue * 60 / Decimal(minutes) : 0,
@@ -166,8 +166,8 @@ enum AnalyticsEngine {
                 now: now,
                 calendar: calendar
             ),
-            newClientCount: newClients,
-            returningClientCount: clientCount - newClients,
+            newClientCount: newClientCount(allCompleted: allCompleted, completed: completed, interval: interval),
+            returningClientPercent: returningClientPercent(allCompleted: allCompleted, completed: completed, interval: interval),
             leadingService: leadingService(services)
         )
     }
@@ -246,6 +246,34 @@ enum AnalyticsEngine {
         return Set(completed.map(\.clientID))
             .filter { (firstVisit[$0] ?? interval.start) >= interval.start }
             .count
+    }
+
+
+    // MARK: - RETURNING CLIENTS
+
+    // Повертається той, хто до кінця періоду прийшов щонайменше двічі,
+    // зокрема й у попередні роки: грудень і червень — це теж повернення
+    static func returningClientPercent(
+        allCompleted: [Appointment],
+        completed: [Appointment],
+        interval: DateInterval
+    ) -> Int {
+
+        let clients = Set(completed.map(\.clientID))
+
+        guard !clients.isEmpty else {
+            return 0
+        }
+
+        var visits: [UUID: Int] = [:]
+
+        for appointment in allCompleted where appointment.startDate < interval.end {
+            visits[appointment.clientID, default: 0] += 1
+        }
+
+        let returning = clients.filter { (visits[$0] ?? 0) >= 2 }.count
+
+        return Int((Double(returning) * 100 / Double(clients.count)).rounded())
     }
 
 

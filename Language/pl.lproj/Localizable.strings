@@ -322,7 +322,8 @@
 "analytics.compare.soFar.week" = "o tej porze w poprzednim tygodniu";
 "analytics.compare.soFar.month" = "o tej porze w poprzednim miesiącu";
 "analytics.compare.soFar.year" = "o tej porze w poprzednim roku";
-"analytics.newAndReturning" = "Nowi klienci: %d, powracający: %d";
+"analytics.newClients" = "Nowi klienci: %d";
+"analytics.yearClients" = "Klienci w roku: %d, wraca %@";
 "analytics.serviceShare" = "%@ daje %@ przychodu";
-"analytics.topService" = "Najpopularniejsza usługa";
+"analytics.topServices" = "Najpopularniejsze usługi";
 "analytics.topClient" = "Najwierniejszy klient";

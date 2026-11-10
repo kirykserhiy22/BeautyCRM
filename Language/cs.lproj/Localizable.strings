@@ -323,7 +323,8 @@
 "analytics.compare.soFar.week" = "ve stejnou dobu předchozího týdne";
 "analytics.compare.soFar.month" = "ve stejnou dobu předchozího měsíce";
 "analytics.compare.soFar.year" = "ve stejnou dobu předchozího roku";
-"analytics.newAndReturning" = "Noví klienti: %d, vracející se: %d";
+"analytics.newClients" = "Noví klienti: %d";
+"analytics.yearClients" = "Klienti za rok: %d, vrací se %@";
 "analytics.serviceShare" = "%@ přináší %@ tržeb";
-"analytics.topService" = "Nejoblíbenější služba";
+"analytics.topServices" = "Nejoblíbenější služby";
 "analytics.topClient" = "Nejvěrnější klient";

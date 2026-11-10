@@ -624,14 +624,7 @@ struct AnalyticsView: View {
 
         VStack(alignment: .leading, spacing: 12) {
 
-            insightRow(
-                icon: "person.badge.plus",
-                text: String(
-                    format: localized("analytics.newAndReturning"),
-                    summary.newClientCount,
-                    summary.returningClientCount
-                )
-            )
+            clientsInsight(summary)
 
             if let leader = summary.leadingService {
                 insightRow(
@@ -647,12 +640,15 @@ struct AnalyticsView: View {
             Divider()
                 .overlay(colors.divider)
 
-            if let service = summary.topServices.first {
-                topRow(
-                    title: "analytics.topService",
-                    name: service.name,
-                    detail: CountFormatting.appointments(service.count, locale: localization.locale)
-                )
+            VStack(alignment: .leading, spacing: 6) {
+
+                Text(localized("analytics.topServices"))
+                    .font(.caption)
+                    .foregroundColor(colors.textSecondary)
+
+                ForEach(summary.topServices.prefix(3)) { service in
+                    serviceRow(service)
+                }
             }
 
             if let client = summary.topClients.first {
@@ -667,6 +663,47 @@ struct AnalyticsView: View {
         .padding()
         .background(colors.card)
         .cornerRadius(18)
+    }
+
+
+    // За рік важливо, чи клієнти повертаються; за тиждень чи місяць — скільки нових
+    @ViewBuilder
+    private func clientsInsight(_ summary: AnalyticsSummary) -> some View {
+
+        if selectedPeriod == .year {
+            insightRow(
+                icon: "person.2",
+                text: String(
+                    format: localized("analytics.yearClients"),
+                    summary.clientCount,
+                    percentText(summary.returningClientPercent)
+                )
+            )
+        } else {
+            insightRow(
+                icon: "person.badge.plus",
+                text: String(format: localized("analytics.newClients"), summary.newClientCount)
+            )
+        }
+    }
+
+
+    private func serviceRow(_ service: AnalyticsServiceItem) -> some View {
+
+        HStack(alignment: .firstTextBaseline) {
+
+            Text(service.name)
+                .font(.headline)
+                .foregroundColor(colors.textPrimary)
+                .lineLimit(1)
+
+            Spacer()
+
+            Text(CountFormatting.appointments(service.count, locale: localization.locale))
+                .font(.subheadline)
+                .foregroundColor(colors.textSecondary)
+        }
+        .accessibilityElement(children: .combine)
     }
 
 

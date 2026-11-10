@@ -323,7 +323,8 @@
 "analytics.compare.soFar.week" = "за цей час попереднього тижня";
 "analytics.compare.soFar.month" = "за цей час попереднього місяця";
 "analytics.compare.soFar.year" = "за цей час попереднього року";
-"analytics.newAndReturning" = "Нових клієнтів: %d, повернулись: %d";
+"analytics.newClients" = "Нових клієнтів: %d";
+"analytics.yearClients" = "Клієнтів за рік: %d, повертаються: %@";
 "analytics.serviceShare" = "%@ дає %@ доходу";
-"analytics.topService" = "Популярна послуга";
+"analytics.topServices" = "Найпопулярніші послуги";
 "analytics.topClient" = "Постійний клієнт";
