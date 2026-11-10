@@ -312,3 +312,8 @@
 "timeline.swap.title" = "Termine tauschen?";
 "timeline.swap.confirm" = "Tauschen";
 "timeline.swapped" = "Termine getauscht";
+
+/* Photo captions */
+"clients.photo.before" = "Vorher";
+"clients.photo.after" = "Nachher";
+"clients.photo.addCaption" = "Notiz hinzufügen";

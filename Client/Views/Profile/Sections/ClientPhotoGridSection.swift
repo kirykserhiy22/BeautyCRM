@@ -47,12 +47,16 @@ struct ClientPhotoGridSection: View {
         }
         .sheet(isPresented: $showViewer) {
 
+            let entries = sortedPhotos.compactMap { photo in
+                ClientPhotoStorage.loadImage(from: photo.fileName).map {
+                    PhotoGalleryEntry(photo: photo, image: $0)
+                }
+            }
+
             PhotoGalleryView(
-                images: sortedPhotos.compactMap {
-                    ClientPhotoStorage.loadImage(from: $0.fileName)
-                },
-                selectedIndex: sortedPhotos.firstIndex(where: {
-                    $0.id == selectedPhoto?.id
+                entries: entries,
+                selectedIndex: entries.firstIndex(where: {
+                    $0.photo.id == selectedPhoto?.id
                 }) ?? 0
             )
         }
@@ -154,6 +158,11 @@ struct ClientPhotoGridSection: View {
             .frame(maxWidth: .infinity)
             .clipped()
             .clipShape(RoundedRectangle(cornerRadius: 8))
+            .overlay(alignment: .topLeading) {
+                if let stage = photo.stage {
+                    stageBadge(stage)
+                }
+            }
             .onTapGesture {
                 selectedPhoto = photo
                 showViewer = true
@@ -190,6 +199,19 @@ struct ClientPhotoGridSection: View {
                     )
                 }
             }
+    }
+
+    private func stageBadge(_ stage: ClientPhotoStage) -> some View {
+
+        Text(localization.localizedString(for: stage.localizationKey))
+            .font(.caption2.weight(.semibold))
+            .foregroundColor(.white)
+            .padding(.horizontal, 7)
+            .padding(.vertical, 3)
+            .background(
+                Capsule().fill(stage == .after ? colors.buttonPrimary : Color.black.opacity(0.6))
+            )
+            .padding(5)
     }
 
     // MARK: - THUMBNAIL LOADING (v3 CORE FIX)

@@ -7,6 +7,19 @@
 import Foundation
 import SwiftData
 
+// Позначка фото: стан до або після роботи майстра
+enum ClientPhotoStage: String, CaseIterable {
+    case before
+    case after
+
+    var localizationKey: String {
+        switch self {
+        case .before: return "clients.photo.before"
+        case .after: return "clients.photo.after"
+        }
+    }
+}
+
 @Model
 final class ClientPhoto: SyncTrackable {
 
@@ -18,6 +31,15 @@ final class ClientPhoto: SyncTrackable {
     var fileName: String
 
     var createdAt: Date
+
+    // Необов'язкові підпис і позначка «До/Після»
+    var caption: String? = nil
+    var stageRaw: String? = nil
+
+    var stage: ClientPhotoStage? {
+        get { stageRaw.flatMap(ClientPhotoStage.init(rawValue:)) }
+        set { stageRaw = newValue?.rawValue }
+    }
 
     // MARK: - SYNC
 

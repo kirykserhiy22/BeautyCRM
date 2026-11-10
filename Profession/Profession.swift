@@ -59,7 +59,8 @@ enum Profession: String, CaseIterable, Identifiable, Codable {
                     "service.suggestion.gelPolish",
                     "service.suggestion.nailExtensions",
                     "service.suggestion.nailDesign"
-                ]
+                ],
+                showsPhotoStages: false
             )
 
 

@@ -25,6 +25,9 @@ struct ProfessionConfig {
     // Ключі назв типових послуг (поки лише дані, без UI)
     let suggestedServiceKeys: [String]
 
+    // Позначки «До/Після» на фото клієнта (для нігтів не потрібні)
+    var showsPhotoStages = true
+
 
     // Нейтральна конфігурація, коли професію не обрано (іконки як раніше)
     static let generic = ProfessionConfig(

@@ -313,3 +313,8 @@
 "timeline.swap.title" = "Prohodit termíny?";
 "timeline.swap.confirm" = "Prohodit";
 "timeline.swapped" = "Termíny prohozeny";
+
+/* Photo captions */
+"clients.photo.before" = "Před";
+"clients.photo.after" = "Po";
+"clients.photo.addCaption" = "Přidat popisek";
