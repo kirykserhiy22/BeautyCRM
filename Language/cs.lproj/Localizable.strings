@@ -327,4 +327,5 @@
 "analytics.yearClients" = "Klienti za rok: %d, vrací se %@";
 "analytics.serviceShare" = "%@ přináší %@ tržeb";
 "analytics.topServices" = "Nejoblíbenější služby";
-"analytics.topClient" = "Nejvěrnější klient";
+"analytics.topClient" = "Nejlepší klient";
+"analytics.loyalClients" = "Nejvěrnější klienti";

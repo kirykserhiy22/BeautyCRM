@@ -647,17 +647,14 @@ struct AnalyticsView: View {
                     .foregroundColor(colors.textSecondary)
 
                 ForEach(summary.topServices.prefix(3)) { service in
-                    serviceRow(service)
+                    rankRow(
+                        name: service.name,
+                        detail: CountFormatting.appointments(service.count, locale: localization.locale)
+                    )
                 }
             }
 
-            if let client = summary.topClients.first {
-                topRow(
-                    title: "analytics.topClient",
-                    name: client.name,
-                    detail: CountFormatting.visits(client.visits, locale: localization.locale)
-                )
-            }
+            clientsRanking(summary)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding()
@@ -688,18 +685,49 @@ struct AnalyticsView: View {
     }
 
 
-    private func serviceRow(_ service: AnalyticsServiceItem) -> some View {
+    // Постійним клієнт стає за довший час, тому за тиждень чи місяць — лише хто приніс більше
+    @ViewBuilder
+    private func clientsRanking(_ summary: AnalyticsSummary) -> some View {
+
+        if selectedPeriod == .year {
+
+            VStack(alignment: .leading, spacing: 6) {
+
+                Text(localized("analytics.loyalClients"))
+                    .font(.caption)
+                    .foregroundColor(colors.textSecondary)
+
+                ForEach(summary.topClients.prefix(3)) { client in
+                    rankRow(
+                        name: client.name,
+                        detail: CountFormatting.visits(client.visits, locale: localization.locale)
+                    )
+                }
+            }
+
+        } else if let client = summary.topClientBySpending {
+
+            topRow(
+                title: "analytics.topClient",
+                name: client.name,
+                detail: currency(client.spent)
+            )
+        }
+    }
+
+
+    private func rankRow(name: String, detail: String) -> some View {
 
         HStack(alignment: .firstTextBaseline) {
 
-            Text(service.name)
+            Text(name)
                 .font(.headline)
                 .foregroundColor(colors.textPrimary)
                 .lineLimit(1)
 
             Spacer()
 
-            Text(CountFormatting.appointments(service.count, locale: localization.locale))
+            Text(detail)
                 .font(.subheadline)
                 .foregroundColor(colors.textSecondary)
         }

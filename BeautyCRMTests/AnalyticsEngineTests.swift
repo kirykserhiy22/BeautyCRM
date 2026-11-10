@@ -318,6 +318,21 @@ final class AnalyticsEngineTests: XCTestCase {
         XCTAssertEqual(result.newClientCount, 1)
     }
 
+    func testTopClientIsPickedByMoneyNotByVisits() throws {
+        let frequent = UUID()
+        let bigSpender = UUID()
+
+        let result = try summary([
+            done(F.date(2026, 11, 3, 10), price: 20, client: frequent, clientName: "Frequent"),
+            done(F.date(2026, 11, 4, 10), price: 20, client: frequent, clientName: "Frequent"),
+            done(F.date(2026, 11, 5, 10), price: 120, client: bigSpender, clientName: "Big Spender")
+        ], period: .month, month: 11, year: 2026)
+
+        XCTAssertEqual(result.topClientBySpending?.name, "Big Spender")
+        XCTAssertEqual(result.topClientBySpending?.spent, 120)
+        XCTAssertEqual(result.topClients.first?.name, "Frequent", "Рейтинг постійних лишається за візитами")
+    }
+
     func testReturningPercentCountsEarlierYearsToo() throws {
         let twiceThisYear = UUID()
         let cameBackAfterNewYear = UUID()

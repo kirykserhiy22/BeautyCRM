@@ -327,4 +327,5 @@
 "analytics.yearClients" = "Клієнтів за рік: %d, повертаються: %@";
 "analytics.serviceShare" = "%@ дає %@ доходу";
 "analytics.topServices" = "Найпопулярніші послуги";
-"analytics.topClient" = "Постійний клієнт";
+"analytics.topClient" = "Топ-клієнт";
+"analytics.loyalClients" = "Найпостійніші клієнти";

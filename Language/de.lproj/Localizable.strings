@@ -326,4 +326,5 @@
 "analytics.yearClients" = "Kunden im Jahr: %d, %@ kommen wieder";
 "analytics.serviceShare" = "%@ bringt %@ des Umsatzes";
 "analytics.topServices" = "Beliebteste Dienstleistungen";
-"analytics.topClient" = "Treuester Kunde";
+"analytics.topClient" = "Top-Kunde";
+"analytics.loyalClients" = "Treueste Kunden";

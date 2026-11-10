@@ -27,6 +27,9 @@ struct AnalyticsSummary {
     let topServices: [AnalyticsServiceItem]
     let topClients: [AnalyticsClientItem]
 
+    // Клієнт, який приніс найбільше грошей за період
+    let topClientBySpending: AnalyticsClientItem?
+
     // Стовпчик на кожен день (тиждень, місяць) або місяць (рік), навіть порожній
     let chart: [AnalyticsChartItem]
 
@@ -145,6 +148,7 @@ enum AnalyticsEngine {
         let minutes = completed.reduce(0) { $0 + $1.duration }
 
         let services = topServices(completed, serviceNames: serviceNames)
+        let clients = topClients(completed, clientNames: clientNames)
 
         return AnalyticsSummary(
             interval: interval,
@@ -156,7 +160,8 @@ enum AnalyticsEngine {
             // Через хвилини, щоб не втрачати точність на дробових годинах
             hourlyIncome: minutes > 0 ? revenue * 60 / Decimal(minutes) : 0,
             topServices: services,
-            topClients: topClients(completed, clientNames: clientNames),
+            topClients: clients,
+            topClientBySpending: clients.max(by: { ($0.spent, $1.name) < ($1.spent, $0.name) }),
             chart: chart(completed, period: period, interval: interval, calendar: calendar),
             comparison: comparison(
                 revenue: revenue,
