@@ -96,7 +96,6 @@
 "services.createTitle" = "Нова послуга";
 "services.nameRequired" = "Вкажіть назву послуги";
 "analytics.title" = "Аналітика";
-"analytics.period" = "Період";
 "analytics.week" = "Тиждень";
 "analytics.month" = "Місяць";
 "analytics.year" = "Рік";
@@ -106,14 +105,8 @@
 "analytics.clients" = "Клієнти";
 "analytics.avgCheck" = "Середній чек";
 "analytics.perHour" = "За годину";
-"analytics.mostPopularServices" = "Найпопулярніші послуги";
-"analytics.mostLoyalClients" = "Найпостійніші клієнти";
-"analytics.currentWeekOverview" = "Огляд поточного тижня";
-"analytics.selectedMonthOverview" = "Огляд вибраного місяця";
-"analytics.selectedYearOverview" = "Огляд вибраного року";
 "analytics.appointmentCount" = "записів";
 "analytics.visitCount" = "відвідувань";
-"analytics.chart.tapHint" = "Натисніть на стовпчик, щоб побачити суму";
 "analytics.chart.date" = "Дата";
 "analytics.chart.revenue" = "Дохід";
 "clients.title" = "Клієнти";
@@ -318,3 +311,21 @@
 "clients.photo.before" = "До";
 "clients.photo.after" = "Після";
 "clients.photo.addCaption" = "Додати підпис";
+
+/* Analytics redesign */
+"analytics.earned" = "зароблено";
+"analytics.compare.more" = "На %@ більше, ніж %@";
+"analytics.compare.less" = "На %@ менше, ніж %@";
+"analytics.compare.same" = "Стільки ж, як %@";
+"analytics.compare.week" = "попереднього тижня";
+"analytics.compare.month" = "попереднього місяця";
+"analytics.compare.year" = "попереднього року";
+"analytics.compare.soFar.week" = "за цей час попереднього тижня";
+"analytics.compare.soFar.month" = "за цей час попереднього місяця";
+"analytics.compare.soFar.year" = "за цей час попереднього року";
+"analytics.newClients" = "Нових клієнтів: %d";
+"analytics.yearClients" = "Клієнтів за рік: %d, повертаються: %@";
+"analytics.serviceShare" = "%@ дає %@ доходу";
+"analytics.topServices" = "Найпопулярніші послуги";
+"analytics.topClient" = "Топ-клієнт";
+"analytics.loyalClients" = "Найпостійніші клієнти";

@@ -176,8 +176,6 @@ struct AnalyticsView: View {
 
                         revenueCard(summary)
 
-                        statsGrid(summary)
-
                         if summary.appointmentCount == 0 {
                             EmptyStateView(
                                 systemImage: "chart.bar",
@@ -185,9 +183,9 @@ struct AnalyticsView: View {
                                 messageKey: "empty.analytics.message"
                             )
                         } else {
-                            topServicesSection(summary)
+                            statsGrid(summary)
 
-                            topClientsSection(summary)
+                            insightsCard(summary)
                         }
                     }
                 }
@@ -209,25 +207,42 @@ struct AnalyticsView: View {
 
         VStack(spacing: 12) {
 
-            Picker(
-                localized("analytics.period"),
-                selection: $selectedPeriod
-            ) {
-
-                ForEach(
-                    AnalyticsPeriod.allCases
-                ) { period in
-
-                    Text(localized("analytics.\(period.rawValue)"))
-                        .tag(period)
-                }
-            }
-            .pickerStyle(.segmented)
-            .tint(colors.accent)
-
+            periodPicker
 
             periodSelection
         }
+        .tint(colors.accent)
+    }
+
+
+    // Свій перемикач: системний не бере фірмовий колір
+    private var periodPicker: some View {
+
+        HStack(spacing: 2) {
+
+            ForEach(AnalyticsPeriod.allCases) { period in
+
+                let isSelected = selectedPeriod == period
+
+                Button {
+                    selectedPeriod = period
+                } label: {
+                    Text(localized("analytics.\(period.rawValue)"))
+                        .font(.subheadline.weight(.medium))
+                        .foregroundColor(isSelected ? .white : colors.textSecondary)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 8)
+                        .background(isSelected ? colors.buttonPrimary : Color.clear)
+                        .clipShape(RoundedRectangle(cornerRadius: 9))
+                        .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityAddTraits(isSelected ? .isSelected : [])
+            }
+        }
+        .padding(3)
+        .background(colors.card)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 
 
@@ -448,30 +463,60 @@ struct AnalyticsView: View {
 
     // MARK: - REVENUE CARD
 
+    // Натиснутий стовпчик тимчасово показує свої дані на місці головної суми
     private func revenueCard(_ summary: AnalyticsSummary) -> some View {
 
-        VStack(
-            alignment: .leading,
-            spacing: 12
-        ) {
+        let selected = selectedChartItem(in: summary.chart)
 
-            Text(localized("analytics.revenue"))
-                .font(.headline)
+        return VStack(alignment: .leading, spacing: 4) {
+
+            Text(selected.map { selectionTitle(for: $0.date) } ?? "\(periodDescription) · \(localized("analytics.earned"))")
+                .font(.subheadline)
+                .foregroundColor(colors.textSecondary)
+
+            Text(currency(selected?.revenue ?? summary.revenue))
+                .font(.system(size: 36, weight: .bold))
+                .foregroundColor(colors.textPrimary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.6)
+
+            // ZStack тримає висоту, щоб графік не стрибав при виборі стовпчика
+            ZStack(alignment: .topLeading) {
+
+                revenueNotes(summary)
+                    .opacity(selected == nil ? 1 : 0)
+
+                if let selected {
+                    Text(CountFormatting.appointments(selected.count, locale: localization.locale))
+                        .font(.subheadline)
+                        .foregroundColor(colors.textSecondary)
+                }
+            }
+
+            // Порожній графік лише займав би місце над підказкою «немає записів»
+            if summary.appointmentCount > 0 {
+                revenueChart(summary.chart)
+                    .padding(.top, 10)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding()
+        .background(colors.card)
+        .cornerRadius(24)
+    }
 
 
-            Text(
-                currency(summary.revenue)
-            )
-            .font(
-                .system(
-                    size: 36,
-                    weight: .bold
-                )
-            )
+    private func revenueNotes(_ summary: AnalyticsSummary) -> some View {
 
+        VStack(alignment: .leading, spacing: 2) {
+
+            if let comparison = summary.comparison {
+                Text(comparisonText(comparison))
+                    .font(.subheadline)
+                    .foregroundColor(comparison.percent > 0 ? colors.accent : colors.textSecondary)
+            }
 
             if summary.expectedRevenue > 0 {
-
                 Text(
                     String(
                         format: localized("analytics.expectedRevenue"),
@@ -479,30 +524,31 @@ struct AnalyticsView: View {
                     )
                 )
                 .font(.subheadline)
-                .foregroundColor(
-                    colors.textSecondary
-                )
+                .foregroundColor(colors.textSecondary)
             }
-
-
-            Text(
-                periodDescription
-            )
-            .foregroundColor(
-                colors.textSecondary
-            )
-
-
-            chartSelectionInfo(summary.chart)
-
-
-            revenueChart(summary.chart)
         }
-        .padding()
-        .background(
-            colors.card
+    }
+
+
+    private func comparisonText(_ comparison: AnalyticsComparison) -> String {
+
+        let scope = comparison.isPartial ? "soFar." : ""
+        let previous = localized("analytics.compare.\(scope)\(selectedPeriod.rawValue)")
+
+        if comparison.percent == 0 {
+            return String(format: localized("analytics.compare.same"), previous)
+        }
+
+        return String(
+            format: localized(comparison.percent > 0 ? "analytics.compare.more" : "analytics.compare.less"),
+            percentText(abs(comparison.percent)),
+            previous
         )
-        .cornerRadius(24)
+    }
+
+
+    private func percentText(_ percent: Int) -> String {
+        percent.formatted(.percent.locale(localization.locale))
     }
 
 
@@ -514,19 +560,20 @@ struct AnalyticsView: View {
 
         case .week:
 
-            return weekOffset == 0
-                ? localized("analytics.currentWeekOverview")
-                : currentWeekText
+            return currentWeekText
 
 
         case .month:
 
-            return "\(monthNames[selectedMonth - 1]) \(selectedYear)"
+            let month = monthNames[selectedMonth - 1].capitalized(with: localization.locale)
+            let isThisYear = selectedYear == calendar.component(.year, from: now)
+
+            return isThisYear ? month : "\(month) \(selectedYear)"
 
 
         case .year:
 
-            return "\(selectedYear) — \(localized("analytics.selectedYearOverview"))"
+            return String(selectedYear)
         }
     }
 
@@ -536,238 +583,194 @@ struct AnalyticsView: View {
     private func statsGrid(_ summary: AnalyticsSummary) -> some View {
 
         LazyVGrid(
-
             columns: [
-
-                GridItem(.flexible()),
-
-                GridItem(.flexible())
+                GridItem(.flexible(), spacing: 10),
+                GridItem(.flexible(), spacing: 10)
             ],
-
-            spacing: 14
-        ) {
-
-            analyticsCard(
-                title: "analytics.appointments",
-                value: "\(summary.appointmentCount)",
-                icon: "calendar"
-            )
-
-
-            analyticsCard(
-                title: "analytics.clients",
-                value: "\(summary.clientCount)",
-                icon: "person.2"
-            )
-
-
-            analyticsCard(
-                title: "analytics.avgCheck",
-                value: currency(summary.averageCheck),
-                icon: "eurosign.circle"
-            )
-
-
-            analyticsCard(
-                title: "analytics.perHour",
-                value: currency(summary.hourlyIncome),
-                icon: "clock"
-            )
-        }
-    }
-
-
-    // MARK: - TOP SERVICES
-
-    private func topServicesSection(_ summary: AnalyticsSummary) -> some View {
-
-        VStack(
-            alignment: .leading,
-            spacing: 14
-        ) {
-
-            Text(localized("analytics.mostPopularServices")
-            )
-            .font(
-                .title3.bold()
-            )
-
-
-            ForEach(
-                summary.topServices.prefix(3)
-            ) { item in
-
-                HStack {
-
-                    Image(
-                        systemName: "scissors"
-                    )
-                    .foregroundColor(
-                        colors.accent
-                    )
-                    .font(.title3)
-
-
-                    VStack(
-                        alignment: .leading,
-                        spacing: 4
-                    ) {
-
-                        Text(
-                            item.name
-                        )
-                        .font(.headline)
-
-
-                        Text(
-                            CountFormatting.appointments(
-                                item.count,
-                                locale: localization.locale
-                            )
-                        )
-                        .font(.caption)
-                        .foregroundColor(
-                            colors.textSecondary
-                        )
-                    }
-
-
-                    Spacer()
-
-
-                    Text(
-                        currency(item.revenue)
-                    )
-                    .font(.headline)
-                }
-                .padding()
-                .background(
-                    colors.card
-                )
-                .cornerRadius(18)
-            }
-        }
-    }
-
-
-    // MARK: - TOP CLIENTS
-
-    private func topClientsSection(_ summary: AnalyticsSummary) -> some View {
-
-        VStack(
-            alignment: .leading,
-            spacing: 14
-        ) {
-
-            Text(localized("analytics.mostLoyalClients"))
-            .font(
-                .title3.bold()
-            )
-
-
-            ForEach(
-                summary.topClients.prefix(3)
-            ) { item in
-
-                HStack {
-
-                    Image(
-                        systemName: "person.crop.circle"
-                    )
-                    .foregroundColor(
-                        colors.accent
-                    )
-                    .font(.title3)
-
-
-                    VStack(
-                        alignment: .leading,
-                        spacing: 4
-                    ) {
-
-                        Text(
-                            item.name
-                        )
-                        .font(.headline)
-
-
-                        Text(
-                            CountFormatting.visits(
-                                item.visits,
-                                locale: localization.locale
-                            )
-                        )
-                        .font(.caption)
-                        .foregroundColor(
-                            colors.textSecondary
-                        )
-                    }
-
-
-                    Spacer()
-
-
-                    Text(
-                        currency(item.spent)
-                    )
-                    .font(.headline)
-                }
-                .padding()
-                .background(
-                    colors.card
-                )
-                .cornerRadius(18)
-            }
-        }
-    }
-
-
-    // MARK: - ANALYTICS CARD
-
-    private func analyticsCard(
-        title: String,
-        value: String,
-        icon: String
-    ) -> some View {
-
-        VStack(
-            alignment: .leading,
             spacing: 10
         ) {
-
-            Image(
-                systemName: icon
-            )
-            .font(.title2)
-            .foregroundColor(
-                colors.accent
-            )
+            statTile(value: "\(summary.appointmentCount)", title: "analytics.appointments")
+            statTile(value: currency(summary.averageCheck), title: "analytics.avgCheck")
+            statTile(value: "\(summary.clientCount)", title: "analytics.clients")
+            statTile(value: currency(summary.hourlyIncome), title: "analytics.perHour")
+        }
+    }
 
 
-            Text(
-                value
-            )
-            .font(
-                .title2.bold()
-            )
+    private func statTile(value: String, title: String) -> some View {
+
+        VStack(alignment: .leading, spacing: 2) {
+
+            Text(value)
+                .font(.title3.bold())
+                .foregroundColor(colors.textPrimary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+
+            Text(localized(title))
+                .font(.subheadline)
+                .foregroundColor(colors.textSecondary)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(14)
+        .background(colors.card)
+        .cornerRadius(18)
+    }
 
 
-            Text(
-                localized(title)
+    // MARK: - INSIGHTS
+
+    private func insightsCard(_ summary: AnalyticsSummary) -> some View {
+
+        VStack(alignment: .leading, spacing: 12) {
+
+            clientsInsight(summary)
+
+            if let leader = summary.leadingService {
+                insightRow(
+                    icon: "chart.pie",
+                    text: String(
+                        format: localized("analytics.serviceShare"),
+                        leader.name,
+                        percentText(leader.percent)
+                    )
+                )
+            }
+
+            Divider()
+                .overlay(colors.divider)
+
+            VStack(alignment: .leading, spacing: 6) {
+
+                Text(localized("analytics.topServices"))
+                    .font(.caption)
+                    .foregroundColor(colors.textSecondary)
+
+                ForEach(summary.topServices.prefix(3)) { service in
+                    rankRow(
+                        name: service.name,
+                        detail: CountFormatting.appointments(service.count, locale: localization.locale)
+                    )
+                }
+            }
+
+            clientsRanking(summary)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding()
+        .background(colors.card)
+        .cornerRadius(18)
+    }
+
+
+    // За рік важливо, чи клієнти повертаються; за тиждень чи місяць — скільки нових
+    @ViewBuilder
+    private func clientsInsight(_ summary: AnalyticsSummary) -> some View {
+
+        if selectedPeriod == .year {
+            insightRow(
+                icon: "person.2",
+                text: String(
+                    format: localized("analytics.yearClients"),
+                    summary.clientCount,
+                    percentText(summary.returningClientPercent)
+                )
             )
-            .foregroundColor(
-                colors.textSecondary
+        } else {
+            insightRow(
+                icon: "person.badge.plus",
+                text: String(format: localized("analytics.newClients"), summary.newClientCount)
             )
         }
-        .frame(
-            maxWidth: .infinity,
-            alignment: .leading
-        )
-        .padding()
-        .background(
-            colors.card
-        )
-        .cornerRadius(20)
+    }
+
+
+    // Постійним клієнт стає за довший час, тому за тиждень чи місяць — лише хто приніс більше
+    @ViewBuilder
+    private func clientsRanking(_ summary: AnalyticsSummary) -> some View {
+
+        if selectedPeriod == .year {
+
+            VStack(alignment: .leading, spacing: 6) {
+
+                Text(localized("analytics.loyalClients"))
+                    .font(.caption)
+                    .foregroundColor(colors.textSecondary)
+
+                ForEach(summary.topClients.prefix(3)) { client in
+                    rankRow(
+                        name: client.name,
+                        detail: CountFormatting.visits(client.visits, locale: localization.locale)
+                    )
+                }
+            }
+
+        } else if let client = summary.topClientBySpending {
+
+            topRow(
+                title: "analytics.topClient",
+                name: client.name,
+                detail: currency(client.spent)
+            )
+        }
+    }
+
+
+    private func rankRow(name: String, detail: String) -> some View {
+
+        HStack(alignment: .firstTextBaseline) {
+
+            Text(name)
+                .font(.headline)
+                .foregroundColor(colors.textPrimary)
+                .lineLimit(1)
+
+            Spacer()
+
+            Text(detail)
+                .font(.subheadline)
+                .foregroundColor(colors.textSecondary)
+        }
+        .accessibilityElement(children: .combine)
+    }
+
+
+    private func insightRow(icon: String, text: String) -> some View {
+
+        Label {
+            Text(text)
+                .font(.subheadline)
+                .foregroundColor(colors.textPrimary)
+        } icon: {
+            Image(systemName: icon)
+                .foregroundColor(colors.accent)
+        }
+    }
+
+
+    private func topRow(title: String, name: String, detail: String) -> some View {
+
+        HStack(alignment: .firstTextBaseline) {
+
+            VStack(alignment: .leading, spacing: 2) {
+
+                Text(localized(title))
+                    .font(.caption)
+                    .foregroundColor(colors.textSecondary)
+
+                Text(name)
+                    .font(.headline)
+                    .foregroundColor(colors.textPrimary)
+                    .lineLimit(1)
+            }
+
+            Spacer()
+
+            Text(detail)
+                .font(.subheadline)
+                .foregroundColor(colors.textSecondary)
+        }
+        .accessibilityElement(children: .combine)
     }
 
 
@@ -824,28 +827,12 @@ struct AnalyticsView: View {
                     {
                         Text(axisLabel(for: items[index].date))
                             .font(.caption2)
+                            .foregroundColor(colors.textSecondary)
                     }
                 }
             }
         }
-        .chartYAxis {
-
-            AxisMarks { value in
-
-                AxisGridLine()
-
-                AxisValueLabel {
-
-                    if let amount = value.as(Double.self) {
-                        Text(
-                            amount.formatted(
-                                .number.notation(.compactName)
-                            )
-                        )
-                    }
-                }
-            }
-        }
+        .chartYAxis(.hidden)
         .chartOverlay { proxy in
 
             GeometryReader { geometry in
@@ -867,7 +854,7 @@ struct AnalyticsView: View {
             }
         }
         .frame(
-            height: 200
+            height: 120
         )
     }
 
@@ -938,60 +925,6 @@ struct AnalyticsView: View {
             selectedChartDate == date ? nil : date
     }
 
-
-    // Рядок над графіком: дані вибраного стовпчика або підказка
-    private func chartSelectionInfo(_ items: [AnalyticsChartItem]) -> some View {
-
-        HStack {
-
-            if let item = selectedChartItem(in: items) {
-
-                VStack(
-                    alignment: .leading,
-                    spacing: 2
-                ) {
-
-                    Text(selectionTitle(for: item.date))
-                        .font(.subheadline)
-                        .foregroundColor(colors.textSecondary)
-
-                    HStack(
-                        alignment: .firstTextBaseline,
-                        spacing: 8
-                    ) {
-
-                        Text(currency(item.revenue))
-                            .font(.title3.bold())
-                            .foregroundColor(colors.textPrimary)
-
-                        Text(
-                            CountFormatting.appointments(
-                                item.count,
-                                locale: localization.locale
-                            )
-                        )
-                        .font(.subheadline)
-                        .foregroundColor(colors.textSecondary)
-                    }
-                }
-
-            } else {
-
-                Label(
-                    localized("analytics.chart.tapHint"),
-                    systemImage: "hand.tap"
-                )
-                .font(.footnote)
-                .foregroundColor(colors.textSecondary)
-            }
-
-            Spacer()
-        }
-        .frame(
-            minHeight: 48,
-            alignment: .leading
-        )
-    }
 
 
     private func selectionTitle(for date: Date) -> String {

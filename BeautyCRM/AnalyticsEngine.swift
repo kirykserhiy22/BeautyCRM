@@ -27,8 +27,40 @@ struct AnalyticsSummary {
     let topServices: [AnalyticsServiceItem]
     let topClients: [AnalyticsClientItem]
 
+    // Клієнт, який приніс найбільше грошей за період
+    let topClientBySpending: AnalyticsClientItem?
+
     // Стовпчик на кожен день (тиждень, місяць) або місяць (рік), навіть порожній
     let chart: [AnalyticsChartItem]
+
+    // Порівняння з попереднім періодом; nil — порівнювати нема з чим
+    let comparison: AnalyticsComparison?
+
+    // Нові — перший завершений візит припав на цей період
+    let newClientCount: Int
+
+    // Який відсоток клієнтів періоду приходив більше одного разу
+    let returningClientPercent: Int
+
+    // Послуга, що принесла найбільше грошей за період
+    let leadingService: AnalyticsServiceShare?
+}
+
+
+struct AnalyticsComparison: Equatable {
+
+    // Зі знаком: +12 — більше, −12 — менше, 0 — стільки ж
+    let percent: Int
+
+    // true — період ще триває, тож порівнюємо з тим самим відрізком попереднього
+    let isPartial: Bool
+}
+
+
+struct AnalyticsServiceShare: Equatable {
+
+    let name: String
+    let percent: Int
 }
 
 
@@ -84,16 +116,20 @@ enum AnalyticsEngine {
         serviceNames: [UUID: String],
         period: AnalyticsPeriod,
         interval: DateInterval,
-        calendar: Calendar
+        calendar: Calendar,
+        now: Date = Date()
     ) -> AnalyticsSummary {
 
-        // Лише завершені записи цього майстра в межах періоду
-        // (кінець періоду не входить: 00:00 наступного дня — вже інший період)
-        let completed = appointments.filter {
+        let allCompleted = appointments.filter {
             $0.userID == userID
                 && $0.status == .completed
                 && $0.finalPrice != nil
-                && $0.startDate >= interval.start
+        }
+
+        // Лише завершені записи цього майстра в межах періоду
+        // (кінець періоду не входить: 00:00 наступного дня — вже інший період)
+        let completed = allCompleted.filter {
+            $0.startDate >= interval.start
                 && $0.startDate < interval.end
         }
 
@@ -111,6 +147,9 @@ enum AnalyticsEngine {
 
         let minutes = completed.reduce(0) { $0 + $1.duration }
 
+        let services = topServices(completed, serviceNames: serviceNames)
+        let clients = topClients(completed, clientNames: clientNames)
+
         return AnalyticsSummary(
             interval: interval,
             revenue: revenue,
@@ -120,9 +159,145 @@ enum AnalyticsEngine {
             averageCheck: completed.isEmpty ? 0 : revenue / Decimal(completed.count),
             // Через хвилини, щоб не втрачати точність на дробових годинах
             hourlyIncome: minutes > 0 ? revenue * 60 / Decimal(minutes) : 0,
-            topServices: topServices(completed, serviceNames: serviceNames),
-            topClients: topClients(completed, clientNames: clientNames),
-            chart: chart(completed, period: period, interval: interval, calendar: calendar)
+            topServices: services,
+            topClients: clients,
+            topClientBySpending: clients.max(by: { ($0.spent, $1.name) < ($1.spent, $0.name) }),
+            chart: chart(completed, period: period, interval: interval, calendar: calendar),
+            comparison: comparison(
+                revenue: revenue,
+                allCompleted: allCompleted,
+                period: period,
+                interval: interval,
+                now: now,
+                calendar: calendar
+            ),
+            newClientCount: newClientCount(allCompleted: allCompleted, completed: completed, interval: interval),
+            returningClientPercent: returningClientPercent(allCompleted: allCompleted, completed: completed, interval: interval),
+            leadingService: leadingService(services)
+        )
+    }
+
+
+    // MARK: - COMPARISON
+
+    // Місяць, що ще триває, порівнюємо з тими самими днями попереднього:
+    // 10 днів листопада проти всього жовтня завжди виглядали б провалом
+    static func comparison(
+        revenue: Decimal,
+        allCompleted: [Appointment],
+        period: AnalyticsPeriod,
+        interval: DateInterval,
+        now: Date,
+        calendar: Calendar
+    ) -> AnalyticsComparison? {
+
+        guard revenue > 0 else {
+            return nil
+        }
+
+        let unit: Calendar.Component
+
+        switch period {
+        case .week: unit = .weekOfYear
+        case .month: unit = .month
+        case .year: unit = .year
+        }
+
+        guard let previousStart = calendar.date(byAdding: unit, value: -1, to: interval.start) else {
+            return nil
+        }
+
+        let isPartial = now >= interval.start && now < interval.end
+
+        var previousEnd = interval.start
+
+        if isPartial, let sameMoment = calendar.date(byAdding: unit, value: -1, to: now) {
+            previousEnd = min(sameMoment, interval.start)
+        }
+
+        let previous = allCompleted
+            .filter { $0.startDate >= previousStart && $0.startDate < previousEnd }
+            .reduce(Decimal(0)) { $0 + ($1.finalPrice ?? 0) }
+
+        guard previous > 0 else {
+            return nil
+        }
+
+        let change = (revenue - previous) * 100 / previous
+
+        return AnalyticsComparison(
+            percent: Int(change.doubleValue.rounded()),
+            isPartial: isPartial
+        )
+    }
+
+
+    // MARK: - NEW CLIENTS
+
+    // Новий — той, чий найперший завершений візит припав на цей період
+    static func newClientCount(
+        allCompleted: [Appointment],
+        completed: [Appointment],
+        interval: DateInterval
+    ) -> Int {
+
+        var firstVisit: [UUID: Date] = [:]
+
+        for appointment in allCompleted {
+            let known = firstVisit[appointment.clientID] ?? appointment.startDate
+            firstVisit[appointment.clientID] = min(known, appointment.startDate)
+        }
+
+        return Set(completed.map(\.clientID))
+            .filter { (firstVisit[$0] ?? interval.start) >= interval.start }
+            .count
+    }
+
+
+    // MARK: - RETURNING CLIENTS
+
+    // Повертається той, хто до кінця періоду прийшов щонайменше двічі,
+    // зокрема й у попередні роки: грудень і червень — це теж повернення
+    static func returningClientPercent(
+        allCompleted: [Appointment],
+        completed: [Appointment],
+        interval: DateInterval
+    ) -> Int {
+
+        let clients = Set(completed.map(\.clientID))
+
+        guard !clients.isEmpty else {
+            return 0
+        }
+
+        var visits: [UUID: Int] = [:]
+
+        for appointment in allCompleted where appointment.startDate < interval.end {
+            visits[appointment.clientID, default: 0] += 1
+        }
+
+        let returning = clients.filter { (visits[$0] ?? 0) >= 2 }.count
+
+        return Int((Double(returning) * 100 / Double(clients.count)).rounded())
+    }
+
+
+    // MARK: - SERVICE SHARE
+
+    static func leadingService(_ services: [AnalyticsServiceItem]) -> AnalyticsServiceShare? {
+
+        let total = services.reduce(Decimal(0)) { $0 + $1.revenue }
+
+        guard
+            total > 0,
+            let leader = services.max(by: { ($0.revenue, $1.name) < ($1.revenue, $0.name) })
+        else {
+            return nil
+        }
+
+        return AnalyticsServiceShare(
+            name: leader.name,
+            percent: Int((leader.revenue * 100 / total).doubleValue.rounded())
         )
     }
 

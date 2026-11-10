@@ -95,7 +95,6 @@
 "services.createTitle" = "Nowa usługa";
 "services.nameRequired" = "Podaj nazwę usługi";
 "analytics.title" = "Analityka";
-"analytics.period" = "Okres";
 "analytics.week" = "Tydzień";
 "analytics.month" = "Miesiąc";
 "analytics.year" = "Rok";
@@ -105,14 +104,8 @@
 "analytics.clients" = "Klienci";
 "analytics.avgCheck" = "Średnia wartość wizyty";
 "analytics.perHour" = "Na godzinę";
-"analytics.mostPopularServices" = "Najpopularniejsze usługi";
-"analytics.mostLoyalClients" = "Najwierniejsi klienci";
-"analytics.currentWeekOverview" = "Podsumowanie bieżącego tygodnia";
-"analytics.selectedMonthOverview" = "Podsumowanie wybranego miesiąca";
-"analytics.selectedYearOverview" = "Podsumowanie wybranego roku";
 "analytics.appointmentCount" = "wizyt";
 "analytics.visitCount" = "wizyt";
-"analytics.chart.tapHint" = "Dotknij słupka, aby zobaczyć kwotę";
 "analytics.chart.date" = "Data";
 "analytics.chart.revenue" = "Przychód";
 "clients.title" = "Klienci";
@@ -317,3 +310,21 @@
 "clients.photo.before" = "Przed";
 "clients.photo.after" = "Po";
 "clients.photo.addCaption" = "Dodaj podpis";
+
+/* Analytics redesign */
+"analytics.earned" = "zarobiono";
+"analytics.compare.more" = "O %@ więcej niż %@";
+"analytics.compare.less" = "O %@ mniej niż %@";
+"analytics.compare.same" = "Tyle samo co %@";
+"analytics.compare.week" = "w poprzednim tygodniu";
+"analytics.compare.month" = "w poprzednim miesiącu";
+"analytics.compare.year" = "w poprzednim roku";
+"analytics.compare.soFar.week" = "o tej porze w poprzednim tygodniu";
+"analytics.compare.soFar.month" = "o tej porze w poprzednim miesiącu";
+"analytics.compare.soFar.year" = "o tej porze w poprzednim roku";
+"analytics.newClients" = "Nowi klienci: %d";
+"analytics.yearClients" = "Klienci w roku: %d, wraca %@";
+"analytics.serviceShare" = "%@ daje %@ przychodu";
+"analytics.topServices" = "Najpopularniejsze usługi";
+"analytics.topClient" = "Najlepszy klient";
+"analytics.loyalClients" = "Najwierniejsi klienci";

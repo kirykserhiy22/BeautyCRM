@@ -45,7 +45,8 @@ final class AnalyticsEngineTests: XCTestCase {
         month: Int = 11,
         year: Int = 2026,
         clientNames: [UUID: String] = [:],
-        serviceNames: [UUID: String] = [:]
+        serviceNames: [UUID: String] = [:],
+        now: Date = F.date(2030, 1, 1, 12)
     ) throws -> AnalyticsSummary {
         let interval = try XCTUnwrap(
             AnalyticsEngine.interval(for: period, reference: reference, month: month, year: year, calendar: calendar)
@@ -57,7 +58,8 @@ final class AnalyticsEngineTests: XCTestCase {
             serviceNames: serviceNames,
             period: period,
             interval: interval,
-            calendar: calendar
+            calendar: calendar,
+            now: now
         )
     }
 
@@ -257,5 +259,112 @@ final class AnalyticsEngineTests: XCTestCase {
         XCTAssertEqual(result.topServices.first?.name, "Haircut")
         XCTAssertEqual(result.topServices.first?.count, 2)
         XCTAssertEqual(result.topServices.first?.revenue, 65)
+    }
+
+
+    // MARK: - COMPARISON
+
+    func testFinishedMonthComparesWithWholePreviousMonth() throws {
+        let result = try summary([
+            done(F.date(2026, 10, 3, 10), price: 100),
+            done(F.date(2026, 10, 30, 10), price: 100),
+            done(F.date(2026, 11, 5, 10), price: 250)
+        ], period: .month, month: 11, year: 2026)
+
+        XCTAssertEqual(result.comparison, AnalyticsComparison(percent: 25, isPartial: false))
+    }
+
+    func testRunningMonthComparesWithSameDaysOfPreviousMonth() throws {
+        // Сьогодні 10.11: 20 жовтня ще не «той самий відрізок», у підрахунок не входить
+        let result = try summary([
+            done(F.date(2026, 10, 3, 10), price: 100),
+            done(F.date(2026, 10, 20, 10), price: 900),
+            done(F.date(2026, 11, 5, 10), price: 90)
+        ], period: .month, month: 11, year: 2026, now: F.date(2026, 11, 10, 12))
+
+        XCTAssertEqual(result.comparison, AnalyticsComparison(percent: -10, isPartial: true))
+    }
+
+    func testNoComparisonWithoutPreviousIncome() throws {
+        let result = try summary([
+            done(F.date(2026, 11, 5, 10), price: 250)
+        ], period: .month, month: 11, year: 2026)
+
+        XCTAssertNil(result.comparison)
+    }
+
+    func testNoComparisonWithoutCurrentIncome() throws {
+        let result = try summary([
+            done(F.date(2026, 10, 5, 10), price: 250)
+        ], period: .month, month: 11, year: 2026)
+
+        XCTAssertNil(result.comparison)
+    }
+
+
+    // MARK: - NEW AND RETURNING CLIENTS
+
+    func testNewClientIsCountedByFirstCompletedVisit() throws {
+        let regular = UUID()
+        let newcomer = UUID()
+
+        let result = try summary([
+            done(F.date(2026, 9, 1, 10), price: 10, client: regular),
+            done(F.date(2026, 11, 3, 10), price: 10, client: regular),
+            done(F.date(2026, 11, 4, 10), price: 10, client: newcomer),
+            done(F.date(2026, 11, 20, 10), price: 10, client: newcomer)
+        ], period: .month, month: 11, year: 2026)
+
+        XCTAssertEqual(result.newClientCount, 1)
+    }
+
+    func testTopClientIsPickedByMoneyNotByVisits() throws {
+        let frequent = UUID()
+        let bigSpender = UUID()
+
+        let result = try summary([
+            done(F.date(2026, 11, 3, 10), price: 20, client: frequent, clientName: "Frequent"),
+            done(F.date(2026, 11, 4, 10), price: 20, client: frequent, clientName: "Frequent"),
+            done(F.date(2026, 11, 5, 10), price: 120, client: bigSpender, clientName: "Big Spender")
+        ], period: .month, month: 11, year: 2026)
+
+        XCTAssertEqual(result.topClientBySpending?.name, "Big Spender")
+        XCTAssertEqual(result.topClientBySpending?.spent, 120)
+        XCTAssertEqual(result.topClients.first?.name, "Frequent", "Рейтинг постійних лишається за візитами")
+    }
+
+    func testReturningPercentCountsEarlierYearsToo() throws {
+        let twiceThisYear = UUID()
+        let cameBackAfterNewYear = UUID()
+        let onlyOnce = UUID()
+
+        let result = try summary([
+            done(F.date(2026, 2, 1, 10), price: 10, client: twiceThisYear),
+            done(F.date(2026, 8, 1, 10), price: 10, client: twiceThisYear),
+            done(F.date(2025, 12, 1, 10), price: 10, client: cameBackAfterNewYear),
+            done(F.date(2026, 6, 1, 10), price: 10, client: cameBackAfterNewYear),
+            done(F.date(2026, 3, 1, 10), price: 10, client: onlyOnce),
+            done(F.date(2027, 1, 5, 10), price: 10, client: onlyOnce)  // візит після кінця року не рахується
+        ], period: .year, year: 2026)
+
+        XCTAssertEqual(result.clientCount, 3)
+        XCTAssertEqual(result.returningClientPercent, 67)
+    }
+
+
+    // MARK: - SERVICE SHARE
+
+    func testLeadingServiceIsPickedByMoneyNotByCount() throws {
+        let cut = UUID()
+        let color = UUID()
+
+        let result = try summary([
+            done(F.date(2026, 11, 3, 10), price: 20, services: [(cut, "Cut", 20)]),
+            done(F.date(2026, 11, 4, 10), price: 20, services: [(cut, "Cut", 20)]),
+            done(F.date(2026, 11, 5, 10), price: 120, services: [(color, "Color", 120)])
+        ], period: .month, month: 11, year: 2026)
+
+        XCTAssertEqual(result.leadingService, AnalyticsServiceShare(name: "Color", percent: 75))
+        XCTAssertEqual(result.topServices.first?.name, "Cut", "Найчастіша послуга лишається у своєму рядку")
     }
 }

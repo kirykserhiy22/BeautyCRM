@@ -95,7 +95,6 @@
 "services.createTitle" = "Nová služba";
 "services.nameRequired" = "Zadejte název služby";
 "analytics.title" = "Analytika";
-"analytics.period" = "Období";
 "analytics.week" = "Týden";
 "analytics.month" = "Měsíc";
 "analytics.year" = "Rok";
@@ -105,14 +104,8 @@
 "analytics.clients" = "Klienti";
 "analytics.avgCheck" = "Průměrná útrata";
 "analytics.perHour" = "Za hodinu";
-"analytics.mostPopularServices" = "Nejoblíbenější služby";
-"analytics.mostLoyalClients" = "Nejvěrnější klienti";
-"analytics.currentWeekOverview" = "Přehled aktuálního týdne";
-"analytics.selectedMonthOverview" = "Přehled vybraného měsíce";
-"analytics.selectedYearOverview" = "Přehled vybraného roku";
 "analytics.appointmentCount" = "rezervací";
 "analytics.visitCount" = "návštěv";
-"analytics.chart.tapHint" = "Klepněte na sloupec a uvidíte částku";
 "analytics.chart.date" = "Datum";
 "analytics.chart.revenue" = "Tržby";
 "clients.title" = "Klienti";
@@ -318,3 +311,21 @@
 "clients.photo.before" = "Před";
 "clients.photo.after" = "Po";
 "clients.photo.addCaption" = "Přidat popisek";
+
+/* Analytics redesign */
+"analytics.earned" = "vyděláno";
+"analytics.compare.more" = "O %@ více než %@";
+"analytics.compare.less" = "O %@ méně než %@";
+"analytics.compare.same" = "Stejně jako %@";
+"analytics.compare.week" = "předchozí týden";
+"analytics.compare.month" = "předchozí měsíc";
+"analytics.compare.year" = "předchozí rok";
+"analytics.compare.soFar.week" = "ve stejnou dobu předchozího týdne";
+"analytics.compare.soFar.month" = "ve stejnou dobu předchozího měsíce";
+"analytics.compare.soFar.year" = "ve stejnou dobu předchozího roku";
+"analytics.newClients" = "Noví klienti: %d";
+"analytics.yearClients" = "Klienti za rok: %d, vrací se %@";
+"analytics.serviceShare" = "%@ přináší %@ tržeb";
+"analytics.topServices" = "Nejoblíbenější služby";
+"analytics.topClient" = "Nejlepší klient";
+"analytics.loyalClients" = "Nejvěrnější klienti";
