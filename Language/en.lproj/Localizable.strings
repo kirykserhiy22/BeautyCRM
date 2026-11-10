@@ -312,3 +312,8 @@
 "timeline.swap.title" = "Swap appointments?";
 "timeline.swap.confirm" = "Swap";
 "timeline.swapped" = "Appointments swapped";
+
+/* Photo captions */
+"clients.photo.before" = "Before";
+"clients.photo.after" = "After";
+"clients.photo.addCaption" = "Add a caption";

@@ -58,6 +58,39 @@ enum ClientPhotoService {
         context.saveReportingErrors()
     }
 
+    // MARK: - CAPTION
+
+    static let captionLimit = 120
+
+    static func updateCaption(
+        _ text: String,
+        photo: ClientPhoto,
+        context: ModelContext
+    ) {
+
+        let trimmed = String(
+            text.trimmingCharacters(in: .whitespacesAndNewlines).prefix(captionLimit)
+        )
+        let caption = trimmed.isEmpty ? nil : trimmed
+
+        guard caption != photo.caption else {
+            return
+        }
+
+        photo.caption = caption
+        context.saveReportingErrors()
+    }
+
+    // Повторний дотик по вибраній позначці знімає її
+    static func toggleStage(
+        _ stage: ClientPhotoStage,
+        photo: ClientPhoto,
+        context: ModelContext
+    ) {
+        photo.stage = photo.stage == stage ? nil : stage
+        context.saveReportingErrors()
+    }
+
     // MARK: - DELETE PHOTO
 
     static func deletePhoto(

@@ -313,3 +313,8 @@
 "timeline.swap.title" = "Поміняти записи місцями?";
 "timeline.swap.confirm" = "Поміняти";
 "timeline.swapped" = "Записи поміняно місцями";
+
+/* Photo captions */
+"clients.photo.before" = "До";
+"clients.photo.after" = "Після";
+"clients.photo.addCaption" = "Додати підпис";

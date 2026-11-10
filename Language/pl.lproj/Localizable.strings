@@ -312,3 +312,8 @@
 "timeline.swap.title" = "Zamienić wizyty miejscami?";
 "timeline.swap.confirm" = "Zamień";
 "timeline.swapped" = "Wizyty zamieniono";
+
+/* Photo captions */
+"clients.photo.before" = "Przed";
+"clients.photo.after" = "Po";
+"clients.photo.addCaption" = "Dodaj podpis";
