@@ -21,6 +21,7 @@ struct ClientProfileView: View {
     // MARK: - UI
 
     @State private var showEdit = false
+    @State private var showBooking = false
 
     // MARK: - THEME
 
@@ -35,7 +36,7 @@ struct ClientProfileView: View {
         ScrollView {
             
 
-            VStack(spacing: 24) {
+            VStack(spacing: 20) {
 
                 ClientHeaderSection(
                     client: client
@@ -44,6 +45,17 @@ struct ClientProfileView: View {
                 ClientContactSection(
                     client: client
                 )
+
+                Button {
+                    showBooking = true
+                } label: {
+                    AuthButtonLabel(
+                        title: "clients.book",
+                        background: colors.buttonPrimary,
+                        foreground: .white
+                    )
+                }
+                .accessibilityIdentifier("client.book")
 
                 ClientAnalyticsSection(
                     client: client
@@ -81,6 +93,10 @@ struct ClientProfileView: View {
                     Image(systemName: "square.and.pencil")
                 }
             }
+        }
+        .sheet(isPresented: $showBooking) {
+
+            AppointmentFormView(preselectedClientID: client.id)
         }
         .sheet(isPresented: $showEdit) {
 

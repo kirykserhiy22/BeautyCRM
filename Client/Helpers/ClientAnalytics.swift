@@ -17,13 +17,32 @@ struct ClientAnalytics {
     let averageCheck: Decimal
 
     let lastVisitDate: Date?
+
+    // Найближчий активний запис, що ще попереду
+    var nextAppointmentDate: Date? = nil
 }
 
 enum ClientAnalyticsCalculator {
 
-    static func calculate(
+    // «З нами з…»: раніша з двох дат — коли клієнта додали в базу
+    // чи коли він уперше прийшов (старі візити часто вносять пізніше)
+    static func clientSince(
         client: Client,
         appointments: [Appointment]
+    ) -> Date {
+
+        let firstVisit = appointments
+            .filter { $0.clientID == client.id && $0.status == .completed }
+            .map(\.startDate)
+            .min()
+
+        return min(client.createdAt, firstVisit ?? client.createdAt)
+    }
+
+    static func calculate(
+        client: Client,
+        appointments: [Appointment],
+        now: Date = Date()
     ) -> ClientAnalytics {
 
         // appointments for this client
@@ -82,7 +101,11 @@ enum ClientAnalyticsCalculator {
             cancelledVisits: cancelled.count,
             revenue: revenue,
             averageCheck: averageCheck,
-            lastVisitDate: lastVisit
+            lastVisitDate: lastVisit,
+            nextAppointmentDate: clientAppointments
+                .filter { $0.status == .active && $0.startDate >= now }
+                .map(\.startDate)
+                .min()
         )
     }
 }

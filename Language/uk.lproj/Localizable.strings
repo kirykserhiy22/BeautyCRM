@@ -123,9 +123,6 @@
 "clients.createButton" = "Створити клієнта";
 "clients.saveChanges" = "Зберегти зміни";
 "clients.visits" = "Візити";
-"clients.completed" = "Завершені";
-"clients.revenue" = "Дохід";
-"clients.cancelled" = "Скасовані";
 "clients.averageCheck" = "Середній чек";
 "clients.lastVisit" = "Останній візит";
 "clients.noVisitsYet" = "Візитів ще не було";
@@ -136,7 +133,6 @@
 "clients.deletePhotoMessage" = "Цю дію неможливо скасувати.";
 "clients.saveToPhotos" = "Зберегти у Фото";
 "clients.share" = "Поділитися";
-"clients.clientNotes" = "Нотатки про клієнта";
 "settings.title" = "Налаштування";
 "settings.appearance" = "Зовнішній вигляд";
 "settings.language" = "Мова";
@@ -329,3 +325,9 @@
 "analytics.topServices" = "Найпопулярніші послуги";
 "analytics.topClient" = "Топ-клієнт";
 "analytics.loyalClients" = "Найпостійніші клієнти";
+
+/* Clients redesign */
+"clients.since" = "З нами з %@";
+"clients.book" = "Записати";
+"clients.nextAppointment" = "Наступний запис";
+"clients.totalSpent" = "Сума за візити";

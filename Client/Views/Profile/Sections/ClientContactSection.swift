@@ -1,8 +1,8 @@
 //
-//  Untitled 4.swift
+//  ClientContactSection.swift
 //  BeautyCRM
 //
-//  Created by Serhii Kiryk on 23.05.26.
+//  Круглі кнопки зв'язку з клієнтом: лише ті, що заповнені в картці.
 //
 
 import SwiftUI
@@ -12,90 +12,86 @@ struct ClientContactSection: View {
     let client: Client
 
     @EnvironmentObject var theme: ThemeManager
+    @EnvironmentObject var localization: LocalizationManager
 
     private var colors: ThemeColors {
         theme.colors(for: theme.currentTheme)
     }
 
+    private struct Contact: Identifiable {
+        let id: String
+        let icon: String
+        let label: String
+        let url: URL?
+    }
+
+    private var contacts: [Contact] {
+
+        var result: [Contact] = []
+
+        if let phone = client.phone {
+            result.append(Contact(id: "phone", icon: "phone.fill", label: phone, url: ContactLinks.phone(phone)))
+        }
+
+        if let instagram = client.instagram {
+            result.append(Contact(id: "instagram", icon: "camera.fill", label: "Instagram \(instagram)", url: ContactLinks.instagram(instagram)))
+        }
+
+        if let telegram = client.telegram {
+            result.append(Contact(id: "telegram", icon: "paperplane.fill", label: "Telegram \(telegram)", url: ContactLinks.telegram(telegram)))
+        }
+
+        return result
+    }
+
     var body: some View {
 
-        VStack(spacing: 14) {
+        if !contacts.isEmpty {
 
-            if let phone = client.phone {
+            HStack(spacing: 14) {
 
-                contactLink(
-                    url: ContactLinks.phone(phone),
-                    icon: "phone.fill",
-                    title: phone
-                )
+                ForEach(contacts) { contact in
+                    contactButton(contact)
+                }
             }
-
-            if let instagram = client.instagram {
-
-                contactLink(
-                    url: ContactLinks.instagram(instagram),
-                    icon: "camera.fill",
-                    title: instagram
-                )
-            }
-
-            if let telegram = client.telegram {
-
-                contactLink(
-                    url: ContactLinks.telegram(telegram),
-                    icon: "paperplane.fill",
-                    title: telegram
-                )
-            }
+            .frame(maxWidth: .infinity)
         }
     }
-}
 
-// MARK: - COMPONENTS
-
-private extension ClientContactSection {
-
-    // Якщо посилання зібрати не вдалось, рядок показується без переходу
+    // Довгий дотик — скопіювати номер чи нік, щоб продиктувати або вставити
     @ViewBuilder
-    func contactLink(
-        url: URL?,
-        icon: String,
-        title: String
-    ) -> some View {
+    private func contactButton(_ contact: Contact) -> some View {
 
-        if let url {
-            Link(destination: url) {
-                contactRow(icon: icon, title: title, hasLink: true)
+        let circle = Image(systemName: contact.icon)
+            .font(.title3)
+            .foregroundColor(contact.url == nil ? colors.textSecondary : colors.accent)
+            .frame(width: 52, height: 52)
+            .background(Circle().fill(colors.card))
+
+        Group {
+            if let url = contact.url {
+                Link(destination: url) { circle }
+            } else {
+                circle
             }
-        } else {
-            contactRow(icon: icon, title: title, hasLink: false)
+        }
+        .accessibilityLabel(contact.label)
+        .accessibilityIdentifier("client.contact.\(contact.id)")
+        .contextMenu {
+            Button {
+                UIPasteboard.general.string = copyText(for: contact)
+            } label: {
+                Label(copyText(for: contact), systemImage: "doc.on.doc")
+            }
         }
     }
 
-    func contactRow(
-        icon: String,
-        title: String,
-        hasLink: Bool
-    ) -> some View {
+    private func copyText(for contact: Contact) -> String {
 
-        HStack(spacing: 14) {
-
-            Image(systemName: icon)
-                .frame(width: 24)
-
-            Text(title)
-
-            Spacer()
-
-            if hasLink {
-                Image(systemName: "chevron.right")
-                    .font(.caption.bold())
-                    .foregroundColor(colors.textSecondary)
-            }
+        switch contact.id {
+        case "instagram": return client.instagram ?? ""
+        case "telegram": return client.telegram ?? ""
+        default: return client.phone ?? ""
         }
-        .foregroundColor(colors.textPrimary)
-        .padding()
-        .background(colors.card)
-        .cornerRadius(18)
     }
 }

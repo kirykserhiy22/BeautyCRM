@@ -122,9 +122,6 @@
 "clients.createButton" = "Create Client";
 "clients.saveChanges" = "Save Changes";
 "clients.visits" = "Visits";
-"clients.completed" = "Completed";
-"clients.revenue" = "Revenue";
-"clients.cancelled" = "Cancelled";
 "clients.averageCheck" = "Average Check";
 "clients.lastVisit" = "Last Visit";
 "clients.noVisitsYet" = "No visits yet";
@@ -135,7 +132,6 @@
 "clients.deletePhotoMessage" = "This action cannot be undone.";
 "clients.saveToPhotos" = "Save to Photos";
 "clients.share" = "Share";
-"clients.clientNotes" = "Client Notes";
 "settings.title" = "Settings";
 "settings.appearance" = "Appearance";
 "settings.language" = "Language";
@@ -328,3 +324,9 @@
 "analytics.topServices" = "Most popular services";
 "analytics.topClient" = "Top client";
 "analytics.loyalClients" = "Most loyal clients";
+
+/* Clients redesign */
+"clients.since" = "With you since %@";
+"clients.book" = "Book";
+"clients.nextAppointment" = "Next appointment";
+"clients.totalSpent" = "Total spent";

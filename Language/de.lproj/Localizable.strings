@@ -122,9 +122,6 @@
 "clients.createButton" = "Kunden erstellen";
 "clients.saveChanges" = "Änderungen speichern";
 "clients.visits" = "Besuche";
-"clients.completed" = "Abgeschlossen";
-"clients.revenue" = "Umsatz";
-"clients.cancelled" = "Storniert";
 "clients.averageCheck" = "Durchschnittlicher Umsatz";
 "clients.lastVisit" = "Letzter Besuch";
 "clients.noVisitsYet" = "Noch keine Besuche";
@@ -135,7 +132,6 @@
 "clients.deletePhotoMessage" = "Diese Aktion kann nicht rückgängig gemacht werden.";
 "clients.saveToPhotos" = "In Fotos sichern";
 "clients.share" = "Teilen";
-"clients.clientNotes" = "Kundennotizen";
 "settings.title" = "Einstellungen";
 "settings.appearance" = "Erscheinungsbild";
 "settings.language" = "Sprache";
@@ -328,3 +324,9 @@
 "analytics.topServices" = "Beliebteste Dienstleistungen";
 "analytics.topClient" = "Top-Kunde";
 "analytics.loyalClients" = "Treueste Kunden";
+
+/* Clients redesign */
+"clients.since" = "Kunde seit %@";
+"clients.book" = "Termin buchen";
+"clients.nextAppointment" = "Nächster Termin";
+"clients.totalSpent" = "Gesamtbetrag";

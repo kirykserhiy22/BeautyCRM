@@ -14,11 +14,16 @@ struct AppointmentFormView: View {
 
     let mode: AppointmentFormMode
 
+    // Клієнт, з картки якого відкрили форму
+    private let preselectedClientID: UUID?
+
     init(
         mode: AppointmentFormMode = .create,
-        initialDate: Date = Date()
+        initialDate: Date = Date(),
+        preselectedClientID: UUID? = nil
     ) {
         self.mode = mode
+        self.preselectedClientID = preselectedClientID
 
         _date = State(initialValue: initialDate)
 
@@ -151,6 +156,7 @@ struct AppointmentFormView: View {
             .navigationTitle(modeTitle)
             .onAppear {
                 loadAppointmentIfNeeded()
+                preselectClientIfNeeded()
             }
             .alert(
                 localization.localizedString(for: "appointment.dayOff.title"),
@@ -211,6 +217,12 @@ private extension AppointmentFormView {
                 switch mode {
 
                 case .create:
+
+                    // Ім'я щойно вибраного клієнта — не привід знову показувати підказки
+                    if newValue == selectedClient?.name {
+                        return
+                    }
+
                     showSuggestions = true
 
                 case .edit(let appointment):
@@ -748,6 +760,22 @@ private extension AppointmentFormView {
         case .edit:
             return localization.localizedString(for: "appointment.editTitle")
         }
+    }
+
+    func preselectClientIfNeeded() {
+
+        guard
+            case .create = mode,
+            selectedClient == nil,
+            let preselectedClientID,
+            let client = userClients.first(where: { $0.id == preselectedClientID })
+        else {
+            return
+        }
+
+        selectedClient = client
+        clientSearch = client.name
+        showSuggestions = false
     }
 
     func loadAppointmentIfNeeded() {
