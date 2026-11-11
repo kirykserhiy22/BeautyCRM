@@ -114,8 +114,6 @@
 "clients.info" = "Інформація про клієнта";
 "clients.name" = "Ім’я";
 "clients.phone" = "Телефон";
-"clients.instagram" = "Instagram";
-"clients.telegram" = "Telegram";
 "clients.notes" = "Нотатки";
 "clients.notesPlaceholder" = "Нотатки про клієнта...";
 "clients.newTitle" = "Новий клієнт";
@@ -331,3 +329,9 @@
 "clients.book" = "Записати";
 "clients.nextAppointment" = "Наступний запис";
 "clients.totalSpent" = "Сума за візити";
+
+/* Client social networks */
+"clients.networks" = "Соцмережі";
+"clients.network.add" = "Додати соцмережу";
+"clients.network.nick" = "Нік або посилання";
+"clients.network.number" = "Номер телефону";

@@ -26,7 +26,8 @@
 - `BeautyCRM/SyncTracking.swift` — протокол `SyncTrackable`, автозаповнення `updatedAt`/`workspaceID` перед кожним save, `markDeleted()`
 - `BeautyCRM/SaveErrorReporter.swift` — `context.saveReportingErrors()`: збереження з показом помилки
 - `BeautyCRM/MoneyField.swift` — поле суми з підсвіткою неправильного вводу
-- `BeautyCRM/ContactLinks.swift` — посилання на телефон, Instagram, Telegram із будь-якого написання ніка
+- `BeautyCRM/ContactLinks.swift` — посилання на телефон, Instagram, Telegram, WhatsApp, Viber, Messenger із будь-якого написання ніка чи номера
+- `BeautyCRM/ContactNetwork.swift` — соцмережі клієнта (назва, значок, поле в `Client`, посилання); нова соцмережа — один `case`
 - `BeautyCRM/DayTimelineView.swift` + `DayTimelineLayout.swift` — шкала дня (Головна, Календар) і розрахунок положення записів
 - `BeautyCRM/AnalyticsEngine.swift` — усі розрахунки аналітики (екран лише показує `AnalyticsSummary`)
 - `Auth/` — вхід, реєстрація (`SignUp/`, 5 кроків: акаунт, ім'я, спеціалізація, салон, валюта), сесія,
@@ -111,7 +112,7 @@
    ✅ Спеціалізації майстра (PR #19). ✅ Аудит (PR #20) і виправлення всіх важливих знахідок (PR #64–#73).
    ✅ Дрібниці аудиту пачками, PR #76–#83. Лишились #40 (разом із синхронізацією), #54 (разом із Supabase Auth), #57.
 3. Редизайн і бренд. ✅ Палітра Dark Cherry, світла й темна тема, іконка, Splash, вхід і реєстрація, Головна, шкала дня (PR #84–#92).
-   ✅ Аналітика. Лишились Клієнти, Налаштування. Порядок робіт — `BACKLOG.md`, «Найближча черга».
+   ✅ Аналітика, Клієнти. Лишились Налаштування. Порядок робіт — `BACKLOG.md`, «Найближча черга».
 4. Supabase: проєкт у ЄС, схема БД, RLS-політики.
 5. Авторизація: email + пароль, Sign in with Apple, відновлення пароля, Keychain, видалення акаунта.
 6. Синхронізація: push/pull змін, фото в Storage, перший вхід на новому телефоні.

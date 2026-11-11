@@ -113,8 +113,6 @@
 "clients.info" = "Informace o klientovi";
 "clients.name" = "Jméno";
 "clients.phone" = "Telefon";
-"clients.instagram" = "Instagram";
-"clients.telegram" = "Telegram";
 "clients.notes" = "Poznámky";
 "clients.notesPlaceholder" = "Poznámky o klientovi...";
 "clients.newTitle" = "Nový klient";
@@ -331,3 +329,9 @@
 "clients.book" = "Objednat";
 "clients.nextAppointment" = "Další termín";
 "clients.totalSpent" = "Celkem za návštěvy";
+
+/* Client social networks */
+"clients.networks" = "Sociální sítě";
+"clients.network.add" = "Přidat síť";
+"clients.network.nick" = "Uživatelské jméno nebo odkaz";
+"clients.network.number" = "Telefonní číslo";

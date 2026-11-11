@@ -113,8 +113,6 @@
 "clients.info" = "Client Info";
 "clients.name" = "Name";
 "clients.phone" = "Phone";
-"clients.instagram" = "Instagram";
-"clients.telegram" = "Telegram";
 "clients.notes" = "Notes";
 "clients.notesPlaceholder" = "Client notes...";
 "clients.newTitle" = "New Client";
@@ -330,3 +328,9 @@
 "clients.book" = "Book";
 "clients.nextAppointment" = "Next appointment";
 "clients.totalSpent" = "Total spent";
+
+/* Client social networks */
+"clients.networks" = "Social networks";
+"clients.network.add" = "Add social network";
+"clients.network.nick" = "Username or link";
+"clients.network.number" = "Phone number";

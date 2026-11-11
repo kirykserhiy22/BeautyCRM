@@ -48,7 +48,6 @@
 		3D62D6322FC1D32300E259CF /* ClientAnalyticsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D62D6312FC1D32300E259CF /* ClientAnalyticsSection.swift */; };
 		3D62D6342FC1D32600E259CF /* ClientContactSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D62D6332FC1D32600E259CF /* ClientContactSection.swift */; };
 		3D62D6362FC1D32900E259CF /* ClientHeaderSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D62D6352FC1D32800E259CF /* ClientHeaderSection.swift */; };
-		3D62D63A2FC1D38A00E259CF /* ClientStatCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D62D6392FC1D36B00E259CF /* ClientStatCard.swift */; };
 		3D62D63C2FC1D49100E259CF /* ClientAnalytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D62D63B2FC1D48700E259CF /* ClientAnalytics.swift */; };
 		3D62D63E2FC1D7C200E259CF /* ClientPhotoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D62D63D2FC1D7C200E259CF /* ClientPhotoService.swift */; };
 		3D62D6422FC1D87500E259CF /* PhotoGalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D62D6412FC1D87300E259CF /* PhotoGalleryView.swift */; };
@@ -166,7 +165,6 @@
 		3D62D6312FC1D32300E259CF /* ClientAnalyticsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientAnalyticsSection.swift; sourceTree = "<group>"; };
 		3D62D6332FC1D32600E259CF /* ClientContactSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientContactSection.swift; sourceTree = "<group>"; };
 		3D62D6352FC1D32800E259CF /* ClientHeaderSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientHeaderSection.swift; sourceTree = "<group>"; };
-		3D62D6392FC1D36B00E259CF /* ClientStatCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientStatCard.swift; sourceTree = "<group>"; };
 		3D62D63B2FC1D48700E259CF /* ClientAnalytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientAnalytics.swift; sourceTree = "<group>"; };
 		3D62D63D2FC1D7C200E259CF /* ClientPhotoService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientPhotoService.swift; sourceTree = "<group>"; };
 		3D62D6412FC1D87300E259CF /* PhotoGalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoGalleryView.swift; sourceTree = "<group>"; };
@@ -457,7 +455,6 @@
 			isa = PBXGroup;
 			children = (
 				3D62D6462FCB0C2F00E259CF /* ZoomableImageView.swift */,
-				3D62D6392FC1D36B00E259CF /* ClientStatCard.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -751,7 +748,6 @@
 				3D32E75A2FA3D27C00A746A5 /* ClientsListView.swift in Sources */,
 				3DE40DA32FA78146004491EA /* CreateServiceView.swift in Sources */,
 				3DB845D72FB5F91B00A4C698 /* CalendarMonthBuilder.swift in Sources */,
-				3D62D63A2FC1D38A00E259CF /* ClientStatCard.swift in Sources */,
 				3DE40D9F2FA78123004491EA /* Service.swift in Sources */,
 				3D618F2A300BAB9B00D0685C /* SupportedLanguage.swift in Sources */,
 				3D32E7682FA76F7B00A746A5 /* Appointment.swift in Sources */,

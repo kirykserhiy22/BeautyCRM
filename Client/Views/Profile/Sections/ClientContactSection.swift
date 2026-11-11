@@ -12,7 +12,6 @@ struct ClientContactSection: View {
     let client: Client
 
     @EnvironmentObject var theme: ThemeManager
-    @EnvironmentObject var localization: LocalizationManager
 
     private var colors: ThemeColors {
         theme.colors(for: theme.currentTheme)
@@ -20,9 +19,13 @@ struct ClientContactSection: View {
 
     private struct Contact: Identifiable {
         let id: String
-        let icon: String
-        let label: String
+        let network: ContactNetwork?   // nil — телефон
+        let value: String
         let url: URL?
+
+        var label: String {
+            network.map { "\($0.title) \(value)" } ?? value
+        }
     }
 
     private var contacts: [Contact] {
@@ -30,15 +33,13 @@ struct ClientContactSection: View {
         var result: [Contact] = []
 
         if let phone = client.phone {
-            result.append(Contact(id: "phone", icon: "phone.fill", label: phone, url: ContactLinks.phone(phone)))
+            result.append(Contact(id: "phone", network: nil, value: phone, url: ContactLinks.phone(phone)))
         }
 
-        if let instagram = client.instagram {
-            result.append(Contact(id: "instagram", icon: "camera.fill", label: "Instagram \(instagram)", url: ContactLinks.instagram(instagram)))
-        }
-
-        if let telegram = client.telegram {
-            result.append(Contact(id: "telegram", icon: "paperplane.fill", label: "Telegram \(telegram)", url: ContactLinks.telegram(telegram)))
+        for network in ContactNetwork.allCases {
+            if let value = network.value(of: client) {
+                result.append(Contact(id: network.rawValue, network: network, value: value, url: network.url(for: value)))
+            }
         }
 
         return result
@@ -48,13 +49,26 @@ struct ClientContactSection: View {
 
         if !contacts.isEmpty {
 
-            HStack(spacing: 14) {
+            // На вузькому екрані шість кнопок не влізуть у рядок — тоді гортаються
+            ViewThatFits(in: .horizontal) {
 
-                ForEach(contacts) { contact in
-                    contactButton(contact)
+                buttons
+
+                ScrollView(.horizontal, showsIndicators: false) {
+                    buttons
+                        .padding(.horizontal, 2)
                 }
             }
             .frame(maxWidth: .infinity)
+        }
+    }
+
+    private var buttons: some View {
+
+        HStack(spacing: 12) {
+            ForEach(contacts) { contact in
+                contactButton(contact)
+            }
         }
     }
 
@@ -62,8 +76,7 @@ struct ClientContactSection: View {
     @ViewBuilder
     private func contactButton(_ contact: Contact) -> some View {
 
-        let circle = Image(systemName: contact.icon)
-            .font(.title3)
+        let circle = icon(for: contact)
             .foregroundColor(contact.url == nil ? colors.textSecondary : colors.accent)
             .frame(width: 52, height: 52)
             .background(Circle().fill(colors.card))
@@ -79,19 +92,21 @@ struct ClientContactSection: View {
         .accessibilityIdentifier("client.contact.\(contact.id)")
         .contextMenu {
             Button {
-                UIPasteboard.general.string = copyText(for: contact)
+                UIPasteboard.general.string = contact.value
             } label: {
-                Label(copyText(for: contact), systemImage: "doc.on.doc")
+                Label(contact.label, systemImage: "doc.on.doc")
             }
         }
     }
 
-    private func copyText(for contact: Contact) -> String {
+    @ViewBuilder
+    private func icon(for contact: Contact) -> some View {
 
-        switch contact.id {
-        case "instagram": return client.instagram ?? ""
-        case "telegram": return client.telegram ?? ""
-        default: return client.phone ?? ""
+        if let network = contact.network {
+            ContactNetworkIcon(network: network)
+        } else {
+            Image(systemName: "phone.fill")
+                .font(.title3)
         }
     }
 }
