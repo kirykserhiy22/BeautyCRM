@@ -1,216 +1,98 @@
 //
-//  Untitled.swift
+//  ThemeSettingsView.swift
 //  BeautyCRM
 //
-//  Created by Serhii Kiryk on 13.05.26.
+//  Вигляд: як в iPhone, світлий або темний. Тема одна — фірмова Dark Cherry.
 //
 
 import SwiftUI
 
 struct ThemeSettingsView: View {
-    
+
     @EnvironmentObject var theme: ThemeManager
     @EnvironmentObject var localization: LocalizationManager
+
     private var colors: ThemeColors {
         theme.colors(for: theme.currentTheme)
     }
-    
+
     var body: some View {
-        
+
         ScrollView {
-            
-            VStack(
-                alignment: .leading,
-                spacing: 20
-            ) {
-                
-                Text("settings.appearance")
-                    .font(.largeTitle.bold())
-                    .foregroundColor(colors.textPrimary)
-                
-                Text("settings.theme.description")
+
+            VStack(alignment: .leading, spacing: 20) {
+
+                modePicker
+
+                HStack(spacing: 12) {
+                    preview(.light)
+                    preview(.dark)
+                }
+
+                Text(localization.localizedString(for: "settings.appearance.description"))
                     .font(.subheadline)
                     .foregroundColor(colors.textSecondary)
-                
-                VStack(spacing: 14) {
-                    
-                    ForEach(
-                        AppTheme.allCases,
-                        id: \.self
-                    ) { themeCase in
-                        
-                        ThemePreviewCard(
-                            themeCase: themeCase,
-                            isSelected:
-                                theme.currentTheme == themeCase
-                        ) {
-                            
-                            withAnimation(.easeInOut) {
-
-                                theme.setTheme(themeCase)
-
-
-                               
-                            }
-                        }
-                    }
-                }
             }
             .padding()
         }
         .background(colors.background)
+        .navigationTitle(localization.localizedString(for: "settings.appearance"))
+        .navigationBarTitleDisplayMode(.inline)
     }
-}
 
-// MARK: - PREVIEW CARD
+    // Той самий фірмовий перемикач, що й в Аналітиці
+    private var modePicker: some View {
 
-struct ThemePreviewCard: View {
-    
-    @EnvironmentObject var themeManager: ThemeManager
-    @EnvironmentObject var localization: LocalizationManager
-    let themeCase: AppTheme
-    let isSelected: Bool
-    let onTap: () -> Void
-    
-    private var colors: ThemeColors {
-        themeManager.colors(for: themeCase)
-    }
-    
-    var body: some View {
-        
-        Button {
-            
-            onTap()
-            
-        } label: {
-            
-            VStack(
-                alignment: .leading,
-                spacing: 16
-            ) {
-                
-                // HEADER
-                
-                HStack {
-                    
-                    Text(localization.localizedString(for: title))
-                        .font(.headline)
-                        .foregroundColor(colors.textPrimary)
-                    
-                    Spacer()
-                    
-                    if isSelected {
-                        
-                        Image(
-                            systemName:
-                                "checkmark.circle.fill"
-                        )
-                        .foregroundColor(colors.accent)
-                    }
+        HStack(spacing: 2) {
+
+            ForEach(AppearanceMode.allCases) { mode in
+
+                let isSelected = theme.appearance == mode
+
+                Button {
+                    theme.setAppearance(mode)
+                } label: {
+                    Text(localization.localizedString(for: mode.titleKey))
+                        .font(.subheadline.weight(.medium))
+                        .foregroundColor(isSelected ? .white : colors.textSecondary)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 8)
+                        .background(isSelected ? colors.buttonPrimary : Color.clear)
+                        .clipShape(RoundedRectangle(cornerRadius: 9))
+                        .contentShape(Rectangle())
                 }
-                
-                // PREVIEW
-                
-                VStack(
-                    alignment: .leading,
-                    spacing: 12
-                ) {
-                    
-                    RoundedRectangle(cornerRadius: 16)
-                        .fill(colors.card)
-                        .frame(height: 70)
-                        .overlay(
-                            VStack(
-                                alignment: .leading,
-                                spacing: 8
-                            ) {
-                                
-                                RoundedRectangle(cornerRadius: 4)
-                                    .fill(colors.textPrimary)
-                                    .frame(width: 90, height: 10)
-                                
-                                RoundedRectangle(cornerRadius: 4)
-                                    .fill(colors.textSecondary)
-                                    .frame(width: 140, height: 8)
-                                
-                                HStack(spacing: 8) {
-                                    
-                                    Circle()
-                                        .fill(colors.accent)
-                                        .frame(width: 12)
-                                    
-                                    Circle()
-                                        .fill(colors.success)
-                                        .frame(width: 12)
-                                    
-                                    Circle()
-                                        .fill(colors.danger)
-                                        .frame(width: 12)
-                                }
-                            }
-                            .padding()
-                        )
-                    
-                    HStack(spacing: 10) {
-                        
-                        colorDot(colors.background)
-                        colorDot(colors.card)
-                        colorDot(colors.accent)
-                        colorDot(colors.textPrimary)
-                    }
-                }
+                .buttonStyle(.plain)
+                .accessibilityAddTraits(isSelected ? .isSelected : [])
+                .accessibilityIdentifier("appearance.\(mode.rawValue)")
             }
-            .padding()
-            .background(colors.cardSecondary)
-            .overlay(
-                RoundedRectangle(cornerRadius: 20)
-                    .stroke(
-                        isSelected
-                        ? colors.accent
-                        : colors.border,
-                        lineWidth: isSelected ? 2 : 1
-                    )
-            )
-            .cornerRadius(20)
-            .shadow(
-                color: colors.shadow,
-                radius: 6,
-                y: 3
-            )
         }
-        .buttonStyle(.plain)
+        .padding(3)
+        .background(colors.card)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
     }
-    
-    // MARK: - HELPERS
-    
-    private func colorDot(
-        _ color: Color
-    ) -> some View {
-        
-        Circle()
-            .fill(color)
-            .frame(width: 18)
-            .overlay(
-                Circle()
-                    .stroke(
-                        colors.border,
-                        lineWidth: 1
-                    )
-            )
-    }
-    
-    private var title: String {
-        
-        switch themeCase {
 
-        case .darkCherry:
-            "settings.theme.darkcherry"
-        case .classic:
-            "settings.theme.classic"
-        case .graphite:
-            "settings.theme.graphite"
-        case .pearlivory:
-            "settings.theme.pearlivory"
+    // Маленький зразок екрана: ті самі фірмові кольори в потрібному режимі
+    private func preview(_ scheme: ColorScheme) -> some View {
+
+        VStack(alignment: .leading, spacing: 8) {
+
+            Text(localization.localizedString(for: scheme == .light ? "settings.appearance.light" : "settings.appearance.dark"))
+                .font(.caption.weight(.semibold))
+                .foregroundColor(colors.textPrimary)
+
+            RoundedRectangle(cornerRadius: 6)
+                .fill(colors.card)
+                .frame(height: 28)
+
+            RoundedRectangle(cornerRadius: 6)
+                .fill(colors.buttonPrimary)
+                .frame(width: 60, height: 12)
         }
+        .padding(10)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(colors.background)
+        .clipShape(RoundedRectangle(cornerRadius: 14))
+        .overlay(RoundedRectangle(cornerRadius: 14).stroke(colors.border))
+        .environment(\.colorScheme, scheme)
     }
 }

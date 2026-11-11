@@ -59,9 +59,10 @@ struct ServicesListView: View {
         NavigationStack {
             
             ZStack(alignment: .bottomTrailing) {
-                
-                
-                
+
+                colors.background
+                    .ignoresSafeArea()
+
                 ScrollView {
                     
                     LazyVStack(spacing: 14) {

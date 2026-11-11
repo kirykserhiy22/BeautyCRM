@@ -138,10 +138,6 @@
 "settings.workingHours.end" = "Ende";
 "settings.workingHours.description" = "Die Auslastungsleiste im Kalender zeigt diesen Zeitraum. Termine außerhalb werden trotzdem angezeigt: Die Monatsskala erweitert sich automatisch.";
 "settings.logout" = "Abmelden";
-"settings.theme.description" = "App-Design auswählen";
-"settings.theme.classic" = "Classic";
-"settings.theme.graphite" = "Graphite";
-"settings.theme.pearlivory" = "Pearlivory";
 "settings.language.title" = "Sprache";
 "settings.language.confirm.title" = "Sprache ändern?";
 "settings.language.confirm.message" = "Die App-Sprache wird geändert.";
@@ -269,9 +265,6 @@
 /* Expected income */
 "analytics.expectedRevenue" = "Noch erwartet: %@";
 
-/* Brand theme */
-"settings.theme.darkcherry" = "Dark Cherry";
-
 /* Home redesign */
 "home.greeting.morning" = "Guten Morgen, %@";
 "home.greeting.afternoon" = "Guten Tag, %@";
@@ -334,3 +327,13 @@
 "clients.network.add" = "Netzwerk hinzufügen";
 "clients.network.nick" = "Benutzername oder Link";
 "clients.network.number" = "Telefonnummer";
+
+/* Settings redesign */
+"settings.services" = "Leistungen";
+"settings.group.work" = "Arbeit";
+"settings.group.app" = "App";
+"settings.group.account" = "Konto";
+"settings.appearance.system" = "Wie iPhone";
+"settings.appearance.light" = "Hell";
+"settings.appearance.dark" = "Dunkel";
+"settings.appearance.description" = "Die Markenfarben von Beauty Base in Hell und Dunkel. „Wie iPhone“ wechselt sie zusammen mit dem Telefon.";

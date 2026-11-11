@@ -138,10 +138,6 @@
 "settings.workingHours.end" = "Koniec";
 "settings.workingHours.description" = "Pasek zajętości w kalendarzu pokazuje ten przedział. Wizyty poza nim też będą widoczne: skala miesiąca rozszerzy się automatycznie.";
 "settings.logout" = "Wyloguj się";
-"settings.theme.description" = "Wybierz motyw aplikacji";
-"settings.theme.classic" = "Classic";
-"settings.theme.graphite" = "Graphite";
-"settings.theme.pearlivory" = "Pearlivory";
 "settings.language.title" = "Język";
 "settings.language.confirm.title" = "Zmienić język?";
 "settings.language.confirm.message" = "Język aplikacji zostanie zmieniony.";
@@ -269,9 +265,6 @@
 /* Expected income */
 "analytics.expectedRevenue" = "Jeszcze oczekiwane: %@";
 
-/* Brand theme */
-"settings.theme.darkcherry" = "Dark Cherry";
-
 /* Home redesign */
 "home.greeting.morning" = "Dzień dobry, %@";
 "home.greeting.afternoon" = "Dzień dobry, %@";
@@ -334,3 +327,13 @@
 "clients.network.add" = "Dodaj sieć";
 "clients.network.nick" = "Nazwa lub link";
 "clients.network.number" = "Numer telefonu";
+
+/* Settings redesign */
+"settings.services" = "Usługi";
+"settings.group.work" = "Praca";
+"settings.group.app" = "Aplikacja";
+"settings.group.account" = "Konto";
+"settings.appearance.system" = "Jak w iPhonie";
+"settings.appearance.light" = "Jasny";
+"settings.appearance.dark" = "Ciemny";
+"settings.appearance.description" = "Kolory marki Beauty Base w wersji jasnej i ciemnej. „Jak w iPhonie” przełącza je razem z telefonem.";
