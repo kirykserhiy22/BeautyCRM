@@ -122,9 +122,6 @@
 "clients.createButton" = "Vytvořit klienta";
 "clients.saveChanges" = "Uložit změny";
 "clients.visits" = "Návštěvy";
-"clients.completed" = "Dokončené";
-"clients.revenue" = "Tržby";
-"clients.cancelled" = "Zrušené";
 "clients.averageCheck" = "Průměrná útrata";
 "clients.lastVisit" = "Poslední návštěva";
 "clients.noVisitsYet" = "Zatím žádné návštěvy";
@@ -135,7 +132,6 @@
 "clients.deletePhotoMessage" = "Tuto akci nelze vrátit zpět.";
 "clients.saveToPhotos" = "Uložit do Fotek";
 "clients.share" = "Sdílet";
-"clients.clientNotes" = "Poznámky o klientovi";
 "settings.title" = "Nastavení";
 "settings.appearance" = "Vzhled";
 "settings.language" = "Jazyk";
@@ -329,3 +325,9 @@
 "analytics.topServices" = "Nejoblíbenější služby";
 "analytics.topClient" = "Nejlepší klient";
 "analytics.loyalClients" = "Nejvěrnější klienti";
+
+/* Clients redesign */
+"clients.since" = "S námi od %@";
+"clients.book" = "Objednat";
+"clients.nextAppointment" = "Další termín";
+"clients.totalSpent" = "Celkem za návštěvy";

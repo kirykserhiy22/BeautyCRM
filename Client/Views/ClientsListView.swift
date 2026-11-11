@@ -31,6 +31,15 @@ struct ClientsListView: View {
     )
     private var clients: [Client]
 
+    @Query private var appointments: [Appointment]
+
+    // Скільки завершених візитів у кожного клієнта — один прохід по записах
+    private var visitCounts: [UUID: Int] {
+        appointments
+            .filter { $0.status == .completed }
+            .reduce(into: [:]) { $0[$1.clientID, default: 0] += 1 }
+    }
+
     @State private var searchText = ""
     @State private var showAddClient = false
 
@@ -75,8 +84,10 @@ struct ClientsListView: View {
 
                         LazyVStack(spacing: 14) {
 
+                            let visitCounts = visitCounts
+
                             ForEach(filteredClients) { client in
-                                ClientRowView(client: client)
+                                ClientRowView(client: client, visits: visitCounts[client.id] ?? 0)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .background(
                                         selectedClientIDs.contains(client.id)

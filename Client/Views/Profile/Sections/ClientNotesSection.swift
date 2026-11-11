@@ -1,8 +1,6 @@
 //
-//  Untitled 2.swift
+//  ClientNotesSection.swift
 //  BeautyCRM
-//
-//  Created by Serhii Kiryk on 23.05.26.
 //
 
 import SwiftUI
@@ -13,28 +11,25 @@ struct ClientNotesSection: View {
 
     @EnvironmentObject var theme: ThemeManager
     @EnvironmentObject var localization: LocalizationManager
+
     private var colors: ThemeColors {
         theme.colors(for: theme.currentTheme)
     }
 
     var body: some View {
 
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 8) {
 
-            Label(
-                localization.localizedString(for: "clients.clientNotes"),
-                systemImage: "note.text"
-            )
-            .font(.headline)
+            Text(localization.localizedString(for: "clients.notes"))
+                .font(.headline)
+                .foregroundColor(colors.textPrimary)
 
             Text(notes)
-                .frame(
-                    maxWidth: .infinity,
-                    alignment: .leading
-                )
+                .foregroundColor(colors.textPrimary)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding()
+                .background(colors.card)
+                .cornerRadius(20)
         }
-        .padding()
-        .background(colors.card)
-        .cornerRadius(22)
     }
 }

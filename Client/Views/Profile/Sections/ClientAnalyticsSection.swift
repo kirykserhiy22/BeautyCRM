@@ -1,8 +1,9 @@
 //
-//  Untitled 3.swift
+//  ClientAnalyticsSection.swift
 //  BeautyCRM
 //
-//  Created by Serhii Kiryk on 23.05.26.
+//  Коротка колонка з головним про клієнта: наступний запис, останній візит,
+//  скільки разів приходив, скільки заплатив і середній чек.
 //
 
 import SwiftUI
@@ -12,116 +13,68 @@ struct ClientAnalyticsSection: View {
 
     let client: Client
 
+    @EnvironmentObject var theme: ThemeManager
     @EnvironmentObject var currency: CurrencyManager
     @EnvironmentObject var localization: LocalizationManager
     @Query private var appointments: [Appointment]
 
-    // MARK: - ANALYTICS
+    private var colors: ThemeColors {
+        theme.colors(for: theme.currentTheme)
+    }
 
     private var analytics: ClientAnalytics {
-
         ClientAnalyticsCalculator.calculate(
             client: client,
             appointments: appointments
         )
     }
 
-    // MARK: - BODY
-
     var body: some View {
 
-        VStack(spacing: 18) {
+        let analytics = analytics
 
-            // GRID
+        VStack(spacing: 12) {
 
-            LazyVGrid(
-                columns: [
-                    GridItem(.flexible()),
-                    GridItem(.flexible())
-                ],
-                spacing: 14
-            ) {
-
-                ClientStatCard(
-                    title: "clients.visits",
-                    value: "\(analytics.totalVisits)",
-                    icon: "calendar"
-                )
-
-                ClientStatCard(
-                    title: "clients.completed",
-                    value: "\(analytics.completedVisits)",
-                    icon: "checkmark.circle"
-                )
-
-                ClientStatCard(
-                    title: "clients.revenue",
-                    value: currency.format(analytics.revenue),
-                    icon: "eurosign.circle"
-                )
-
-                ClientStatCard(
-                    title: "clients.cancelled",
-                    value: "\(analytics.cancelledVisits)",
-                    icon: "xmark.circle"
-                )
+            if let next = analytics.nextAppointmentDate {
+                row("clients.nextAppointment", AppFormatting.template("EEEdMMMMjmm", next, locale: localization.locale))
             }
 
-            // EXTRA STATS
+            row("clients.lastVisit", lastVisitText(analytics.lastVisitDate))
 
-            VStack(spacing: 12) {
+            row("clients.visits", "\(analytics.completedVisits)")
 
-                analyticsRow(
-                    title: localization.localizedString(for: "clients.averageCheck"),
-                    value: currency.format(
-                        analytics.averageCheck
-                    )
-                )
+            row("clients.totalSpent", currency.format(analytics.revenue))
 
-                analyticsRow(
-                    title: localization.localizedString(for: "clients.lastVisit"),
-                    value: formattedLastVisit
-                )
-            }
-            .padding()
-            .background(.gray.opacity(0.08))
-            .cornerRadius(20)
+            row("clients.averageCheck", currency.format(analytics.averageCheck))
         }
-    }
-}
-
-// MARK: - HELPERS
-
-private extension ClientAnalyticsSection {
-
-    
-
-    var formattedLastVisit: String {
-
-        guard let date = analytics.lastVisitDate else {
-            return localization.localizedString(for: "clients.noVisitsYet")
-        }
-
-        return AppFormatting.date(
-            date,
-            locale: localization.locale,
-            format: .medium
-        )
+        .padding()
+        .background(colors.card)
+        .cornerRadius(20)
     }
 
-    func analyticsRow(
-        title: String,
-        value: String
-    ) -> some View {
+    private func row(_ titleKey: String, _ value: String) -> some View {
 
         HStack {
 
-            Text(title)
+            Text(localization.localizedString(for: titleKey))
+                .foregroundColor(colors.textSecondary)
 
             Spacer()
 
             Text(value)
                 .fontWeight(.semibold)
+                .foregroundColor(colors.textPrimary)
         }
+        .font(.subheadline)
+        .accessibilityElement(children: .combine)
+    }
+
+    private func lastVisitText(_ date: Date?) -> String {
+
+        guard let date else {
+            return localization.localizedString(for: "clients.noVisitsYet")
+        }
+
+        return AppFormatting.date(date, locale: localization.locale, format: .medium)
     }
 }
