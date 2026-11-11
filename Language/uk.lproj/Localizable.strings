@@ -139,10 +139,6 @@
 "settings.workingHours.end" = "Кінець";
 "settings.workingHours.description" = "Смужка зайнятості в календарі показує цей час. Записи поза ним теж буде видно: шкала місяця розшириться сама.";
 "settings.logout" = "Вийти";
-"settings.theme.description" = "Оберіть тему застосунку";
-"settings.theme.classic" = "Classic";
-"settings.theme.graphite" = "Graphite";
-"settings.theme.pearlivory" = "Pearlivory";
 "settings.language.title" = "Мова";
 "settings.language.confirm.title" = "Змінити мову?";
 "settings.language.confirm.message" = "Мову застосунку буде змінено.";
@@ -270,9 +266,6 @@
 /* Expected income */
 "analytics.expectedRevenue" = "Ще очікується: %@";
 
-/* Brand theme */
-"settings.theme.darkcherry" = "Dark Cherry";
-
 /* Home redesign */
 "home.greeting.morning" = "Доброго ранку, %@";
 "home.greeting.afternoon" = "Доброго дня, %@";
@@ -335,3 +328,13 @@
 "clients.network.add" = "Додати соцмережу";
 "clients.network.nick" = "Нік або посилання";
 "clients.network.number" = "Номер телефону";
+
+/* Settings redesign */
+"settings.services" = "Послуги";
+"settings.group.work" = "Робота";
+"settings.group.app" = "Додаток";
+"settings.group.account" = "Акаунт";
+"settings.appearance.system" = "Як в iPhone";
+"settings.appearance.light" = "Світлий";
+"settings.appearance.dark" = "Темний";
+"settings.appearance.description" = "Фірмові кольори Beauty Base у світлому й темному варіанті. «Як в iPhone» перемикає їх разом із телефоном.";

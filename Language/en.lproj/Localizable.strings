@@ -138,10 +138,6 @@
 "settings.workingHours.end" = "End";
 "settings.workingHours.description" = "The occupancy bar in the calendar shows this time range. Appointments outside it are still shown: the month scale extends automatically.";
 "settings.logout" = "Log Out";
-"settings.theme.description" = "Choose app theme";
-"settings.theme.classic" = "Classic";
-"settings.theme.graphite" = "Graphite";
-"settings.theme.pearlivory" = "Pearl Ivory";
 "settings.language.title" = "Language";
 "settings.language.confirm.title" = "Change language?";
 "settings.language.confirm.message" = "The app language will be changed.";
@@ -269,9 +265,6 @@
 /* Expected income */
 "analytics.expectedRevenue" = "Still expected: %@";
 
-/* Brand theme */
-"settings.theme.darkcherry" = "Dark Cherry";
-
 /* Home redesign */
 "home.greeting.morning" = "Good morning, %@";
 "home.greeting.afternoon" = "Good afternoon, %@";
@@ -334,3 +327,13 @@
 "clients.network.add" = "Add social network";
 "clients.network.nick" = "Username or link";
 "clients.network.number" = "Phone number";
+
+/* Settings redesign */
+"settings.services" = "Services";
+"settings.group.work" = "Work";
+"settings.group.app" = "App";
+"settings.group.account" = "Account";
+"settings.appearance.system" = "Like iPhone";
+"settings.appearance.light" = "Light";
+"settings.appearance.dark" = "Dark";
+"settings.appearance.description" = "Beauty Base brand colors in light and dark. “Like iPhone” switches them together with your phone.";

@@ -18,7 +18,6 @@ struct DashboardAppointmentCard: View {
     let phoneURL: URL?
 
     @EnvironmentObject var theme: ThemeManager
-    @Environment(\.colorScheme) private var colorScheme
 
     private var colors: ThemeColors {
         theme.colors(for: theme.currentTheme)
@@ -90,10 +89,7 @@ struct DashboardAppointmentCard: View {
                 .fill(colors.card)
         )
         // Фірмова картка вишнева в обох режимах iPhone
-        .environment(
-            \.colorScheme,
-            theme.currentTheme.followsSystemAppearance ? .dark : colorScheme
-        )
+        .environment(\.colorScheme, .dark)
     }
 }
 

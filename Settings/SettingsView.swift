@@ -1,198 +1,357 @@
 //
-//  Untitled.swift
+//  SettingsView.swift
 //  BeautyCRM
 //
-//  Created by Serhii Kiryk on 30.04.26.
+//  Налаштування: картка майстра і групи «Робота», «Додаток», «Акаунт».
+//  Праворуч у рядках — поточне значення, щоб не відкривати кожен екран.
 //
+
 import SwiftUI
 import SwiftData
 
-
 struct SettingsView: View {
-    
+
     @EnvironmentObject var appState: AppState
     @EnvironmentObject var router: AppRouter
     @EnvironmentObject var theme: ThemeManager
     @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var profession: ProfessionManager
-    
+
     @Environment(\.modelContext)
     private var context
-    
-    
+
+    @Query(filter: #Predicate<Service> { $0.deletedAt == nil })
+    private var services: [Service]
+
+    // Профіль — запитом, щоб рядки оновились одразу після змін на підекранах
+    @Query private var profiles: [UserProfile]
+
     private var colors: ThemeColors {
         theme.colors(for: theme.currentTheme)
     }
-    
-    
+
+    private var profile: UserProfile? {
+        guard let userID = appState.session.userID else {
+            return nil
+        }
+        return profiles.first { $0.authUserID == userID }
+            ?? UserProfileManager.profile(context: context, userID: userID)
+    }
+
     var body: some View {
-        
+
         NavigationStack {
-            
-            VStack(
-                spacing: 20
-            ) {
-                
-                // MARK: - PROFILE
 
-                NavigationLink {
+            ScrollView {
 
-                    ProfileSettingsView()
+                VStack(alignment: .leading, spacing: 8) {
 
-                } label: {
+                    masterCard
+                        .padding(.bottom, 8)
 
-                    settingsRow(
-                        title: "settings.profile",
-                        icon: "person.crop.circle",
-                        value: profileName
-                    )
+                    groupTitle("settings.group.work")
+
+                    group {
+                        link(title: "settings.services", icon: "scissors", value: serviceCountText) {
+                            ServicesListView()
+                        }
+                        divider
+                        link(title: "settings.workingHours", icon: "clock", value: workingHoursText) {
+                            WorkingHoursSettingsView()
+                        }
+                        divider
+                        link(title: "settings.profession", icon: "person.text.rectangle", value: professionTitle) {
+                            ProfessionSettingsView()
+                        }
+                    }
+
+                    groupTitle("settings.group.app")
+
+                    group {
+                        link(
+                            title: "settings.appearance",
+                            icon: "circle.lefthalf.filled",
+                            value: localization.localizedString(for: theme.appearance.titleKey)
+                        ) {
+                            ThemeSettingsView()
+                        }
+                        divider
+                        link(title: "settings.language", icon: "globe", value: languageTitle) {
+                            LanguageSettingsView()
+                        }
+                        divider
+                        link(title: "signup.currency.label", icon: "banknote", value: profile?.currencyCode) {
+                            CurrencySettingsView()
+                        }
+                    }
+
+                    groupTitle("settings.group.account")
+
+                    group {
+                        Button {
+                            appState.session.logout()
+                            profession.reset()
+                            router.currentScreen = .welcome
+                        } label: {
+                            row(title: "settings.logout", icon: "rectangle.portrait.and.arrow.right", value: nil, isDestructive: true)
+                        }
+                        .accessibilityIdentifier("settings.logout")
+                    }
+
+                    Text("\(Constants.appName) \(appVersion)")
+                        .font(.footnote)
+                        .foregroundColor(colors.textMuted)
+                        .frame(maxWidth: .infinity)
+                        .padding(.top, 16)
                 }
-
-
-                // MARK: - APPEARANCE
-                
-                NavigationLink {
-                    
-                    ThemeSettingsView()
-                        .environmentObject(theme)
-                    
-                } label: {
-                    
-                    settingsRow(title: "settings.appearance", icon: "paintbrush")
-                }
-                
-                
-                // MARK: - PROFESSION
-
-                NavigationLink {
-
-                    ProfessionSettingsView()
-
-                } label: {
-
-                    settingsRow(
-                        title: "settings.profession",
-                        icon: "person.text.rectangle",
-                        value: professionTitle
-                    )
-                }
-
-
-                // MARK: - WORKING HOURS
-
-                NavigationLink {
-
-                    WorkingHoursSettingsView()
-
-                } label: {
-
-                    settingsRow(title: "settings.workingHours", icon: "clock")
-                }
-
-
-                // MARK: - LANGUAGE
-                
-                NavigationLink {
-                    
-                    LanguageSettingsView()
-                        .environmentObject(localization)
-                    
-                } label: {
-                    
-                    settingsRow(title: "settings.language", icon: "globe")
-                }
-                
-                
-                Spacer()
-                
-                
-                // MARK: - LOGOUT
-                
-                Button {
-                    
-                    appState.session.logout()
-
-                    profession.reset()
-                    
-                    router.currentScreen = .welcome
-                    
-                } label: {
-                    
-                    settingsRow(title: "settings.logout", icon: "rectangle.portrait.and.arrow.right")
-                }
-                .accessibilityIdentifier("settings.logout")
+                .padding()
             }
-            .padding()
             .background(colors.background)
-            .navigationTitle("settings.title")
+            .navigationTitle(localization.localizedString(for: "settings.title"))
         }
     }
-    
-    
-    // MARK: - ROW
 
-    // Ім'я майстра для рядка «Профіль»
-    private var profileName: String? {
-        guard
-            let userID = appState.session.userID,
-            let profile = UserProfileManager.profile(context: context, userID: userID)
-        else {
-            return nil
+    // MARK: - MASTER CARD
+
+    private var masterCard: some View {
+
+        NavigationLink {
+            ProfileSettingsView()
+        } label: {
+
+            HStack(spacing: 14) {
+
+                Circle()
+                    .fill(colors.cardSecondary)
+                    .frame(width: 54, height: 54)
+                    .overlay(
+                        Text(String((profile?.firstName ?? "").prefix(1)))
+                            .font(.title2.bold())
+                            .foregroundColor(colors.accent)
+                    )
+
+                VStack(alignment: .leading, spacing: 3) {
+
+                    Text(profileName)
+                        .font(.headline)
+                        .foregroundColor(colors.textPrimary)
+                        .lineLimit(1)
+
+                    Text(masterSubtitle)
+                        .font(.subheadline)
+                        .foregroundColor(colors.textSecondary)
+                        .lineLimit(1)
+                }
+
+                Spacer()
+
+                Image(systemName: "chevron.right")
+                    .font(.caption.bold())
+                    .foregroundColor(colors.textMuted)
+            }
+            .padding()
+            .background(colors.card)
+            .cornerRadius(18)
+        }
+        .accessibilityIdentifier("settings.profile")
+    }
+
+    // MARK: - VALUES
+
+    private var profileName: String {
+        guard let profile else {
+            return localization.localizedString(for: "settings.profile")
         }
         return "\(profile.firstName) \(profile.lastName)"
     }
 
-    // Поточна спеціалізація для рядка налаштувань
+    // «Перукар · Studio Demo»; без салону — лише спеціалізація
+    private var masterSubtitle: String {
+        [professionTitle, profile?.businessName]
+            .compactMap { $0 }
+            .filter { !$0.isEmpty }
+            .joined(separator: " · ")
+    }
+
     private var professionTitle: String {
         guard let current = profession.current else {
             return localization.localizedString(for: "settings.profession.notSelected")
         }
         return localization.localizedString(for: current.config.titleKey)
     }
-    
-    
-    private func settingsRow(
+
+    private var serviceCountText: String {
+        let userID = appState.session.userID
+        return "\(services.filter { $0.userID == userID }.count)"
+    }
+
+    private var workingHoursText: String {
+        let hours = DayTimeScale.workingHours(profile)
+        return "\(timeText(hours.startMinute))–\(timeText(hours.endMinute))"
+    }
+
+    private var languageTitle: String? {
+        SupportedLanguage.all.first { $0.code == localization.languageCode }?.title
+    }
+
+    private var appVersion: String {
+        Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? ""
+    }
+
+    private func timeText(_ minute: Int) -> String {
+        String(format: "%d:%02d", minute / 60, minute % 60)
+    }
+
+    // MARK: - ROWS
+
+    private func groupTitle(_ key: String) -> some View {
+        Text(localization.localizedString(for: key))
+            .font(.footnote.weight(.semibold))
+            .foregroundColor(colors.textSecondary)
+            .padding(.horizontal, 4)
+            .padding(.top, 8)
+    }
+
+    private func group<Content: View>(@ViewBuilder _ content: () -> Content) -> some View {
+        VStack(spacing: 0) {
+            content()
+        }
+        .background(colors.card)
+        .cornerRadius(18)
+    }
+
+    private var divider: some View {
+        Divider()
+            .overlay(colors.divider)
+            .padding(.leading, 52)
+    }
+
+    private func link<Destination: View>(
         title: String,
         icon: String,
-        value: String? = nil
+        value: String?,
+        @ViewBuilder destination: @escaping () -> Destination
     ) -> some View {
-        
+
+        NavigationLink {
+            destination()
+        } label: {
+            row(title: title, icon: icon, value: value, isDestructive: false)
+        }
+        .accessibilityIdentifier(title)
+    }
+
+    private func row(title: String, icon: String, value: String?, isDestructive: Bool) -> some View {
+
         HStack(spacing: 14) {
-            
+
             Image(systemName: icon)
                 .font(.headline)
-                .foregroundColor(colors.accent)
+                .foregroundColor(isDestructive ? colors.danger : colors.accent)
                 .frame(width: 24)
-            
-            
+
             Text(localization.localizedString(for: title))
-                .foregroundColor(colors.textPrimary)
-            
-            
+                .foregroundColor(isDestructive ? colors.danger : colors.textPrimary)
+
             Spacer()
 
             if let value {
                 Text(value)
                     .font(.subheadline)
                     .foregroundColor(colors.textSecondary)
+                    .lineLimit(1)
             }
-            
-            
-            Image(systemName: "chevron.right")
-                .font(.caption.bold())
-                .foregroundColor(colors.textMuted)
+
+            if !isDestructive {
+                Image(systemName: "chevron.right")
+                    .font(.caption.bold())
+                    .foregroundColor(colors.textMuted)
+            }
         }
-        .padding()
-        .background(colors.card)
-        .cornerRadius(16)
-        .shadow(
-            color: colors.shadow,
-            radius: 4,
-            y: 2
-        )
+        .padding(.horizontal)
+        .padding(.vertical, 14)
+        .contentShape(Rectangle())
     }
 }
 
+
+// MARK: - CURRENCY
+
+// Валюта окремим екраном: суми не перераховуються, змінюється лише позначка
+struct CurrencySettingsView: View {
+
+    @EnvironmentObject var appState: AppState
+    @EnvironmentObject var theme: ThemeManager
+    @EnvironmentObject var localization: LocalizationManager
+    @EnvironmentObject var currency: CurrencyManager
+
+    @Environment(\.modelContext)
+    private var context
+
+    private var colors: ThemeColors {
+        theme.colors(for: theme.currentTheme)
+    }
+
+    private var profile: UserProfile? {
+        guard let userID = appState.session.userID else {
+            return nil
+        }
+        return UserProfileManager.profile(context: context, userID: userID)
+    }
+
+    var body: some View {
+
+        List {
+
+            Section {
+
+                ForEach(SupportedCurrency.all) { item in
+
+                    Button {
+                        choose(item.code)
+                    } label: {
+                        HStack {
+                            Text("\(item.symbol)  \(localization.localizedString(for: "currency.\(item.code)"))")
+                                .foregroundColor(colors.textPrimary)
+                            Spacer()
+                            if profile?.currencyCode == item.code {
+                                Image(systemName: "checkmark")
+                                    .foregroundColor(colors.accent)
+                            }
+                        }
+                    }
+                    .listRowBackground(colors.card)
+                }
+
+            } footer: {
+                Text(localization.localizedString(for: "settings.profile.currencyNote"))
+            }
+        }
+        .scrollContentBackground(.hidden)
+        .background(colors.background)
+        .navigationTitle(localization.localizedString(for: "signup.currency.label"))
+    }
+
+    private func choose(_ code: String) {
+
+        guard let profile, profile.currencyCode != code else {
+            return
+        }
+
+        let saved = UserProfileManager.update(
+            profile: profile,
+            firstName: profile.firstName,
+            lastName: profile.lastName,
+            businessName: profile.businessName ?? "",
+            currencyCode: code,
+            context: context
+        )
+
+        if saved {
+            currency.setCurrency(code)
+        }
+    }
+}
 
 
 // MARK: - WORKING HOURS
@@ -355,7 +514,7 @@ struct ProfessionSettingsView: View {
 
 // MARK: - PROFILE
 
-// Ім'я, назва салону і валюта — те, що вводилось при реєстрації
+// Ім'я і назва салону. Валюта — окремим рядком у Налаштуваннях
 struct ProfileSettingsView: View {
 
     @EnvironmentObject var appState: AppState
@@ -404,23 +563,6 @@ struct ProfileSettingsView: View {
             Section(localization.localizedString(for: "signup.business.title")) {
 
                 TextField(localization.localizedString(for: "signup.business.name"), text: $businessName)
-            }
-
-            Section {
-
-                Picker(
-                    localization.localizedString(for: "signup.currency.label"),
-                    selection: $currencyCode
-                ) {
-                    ForEach(SupportedCurrency.all) { item in
-                        Text("\(item.symbol) \(localization.localizedString(for: "currency.\(item.code)"))")
-                            .tag(item.code)
-                    }
-                }
-
-            } footer: {
-
-                Text(localization.localizedString(for: "settings.profile.currencyNote"))
             }
 
             if !errorKey.isEmpty {

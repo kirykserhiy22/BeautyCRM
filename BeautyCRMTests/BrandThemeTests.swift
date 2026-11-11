@@ -19,9 +19,22 @@ final class BrandThemeTests: XCTestCase {
     }
 
     func testBrandThemeIsDefaultAndFollowsSystem() {
-        XCTAssertEqual(ThemeManager().currentTheme, .darkCherry)
-        XCTAssertTrue(AppTheme.darkCherry.followsSystemAppearance)
-        XCTAssertFalse(AppTheme.classic.followsSystemAppearance)
+        let manager = ThemeManager()
+        XCTAssertEqual(manager.currentTheme, .darkCherry)
+        XCTAssertEqual(manager.appearance, .system)
+        XCTAssertNil(AppearanceMode.system.colorScheme, "Як в iPhone — iOS вирішує сам")
+        XCTAssertEqual(AppearanceMode.light.colorScheme, .light)
+        XCTAssertEqual(AppearanceMode.dark.colorScheme, .dark)
+    }
+
+    func testRemovedOldThemeFallsBackToBrandTheme() {
+        let key = "app_theme"
+        let saved = UserDefaults.standard.string(forKey: key)
+        defer { UserDefaults.standard.set(saved, forKey: key) }
+
+        UserDefaults.standard.set("graphite", forKey: key)
+
+        XCTAssertEqual(ThemeStorage().load(), .darkCherry)
     }
 
     func testBrandColorsChangeWithAppearance() {

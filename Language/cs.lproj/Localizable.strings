@@ -138,10 +138,6 @@
 "settings.workingHours.end" = "Konec";
 "settings.workingHours.description" = "Lišta obsazenosti v kalendáři ukazuje tento čas. Rezervace mimo něj budou také vidět: měsíční škála se automaticky rozšíří.";
 "settings.logout" = "Odhlásit se";
-"settings.theme.description" = "Vyberte motiv aplikace";
-"settings.theme.classic" = "Classic";
-"settings.theme.graphite" = "Graphite";
-"settings.theme.pearlivory" = "Pearlivory";
 "settings.language.title" = "Jazyk";
 "settings.language.confirm.title" = "Změnit jazyk?";
 "settings.language.confirm.message" = "Jazyk aplikace bude změněn.";
@@ -270,9 +266,6 @@
 /* Expected income */
 "analytics.expectedRevenue" = "Ještě očekáváno: %@";
 
-/* Brand theme */
-"settings.theme.darkcherry" = "Dark Cherry";
-
 /* Home redesign */
 "home.greeting.morning" = "Dobré ráno, %@";
 "home.greeting.afternoon" = "Dobré odpoledne, %@";
@@ -335,3 +328,13 @@
 "clients.network.add" = "Přidat síť";
 "clients.network.nick" = "Uživatelské jméno nebo odkaz";
 "clients.network.number" = "Telefonní číslo";
+
+/* Settings redesign */
+"settings.services" = "Služby";
+"settings.group.work" = "Práce";
+"settings.group.app" = "Aplikace";
+"settings.group.account" = "Účet";
+"settings.appearance.system" = "Jako v iPhonu";
+"settings.appearance.light" = "Světlý";
+"settings.appearance.dark" = "Tmavý";
+"settings.appearance.description" = "Barvy značky Beauty Base ve světlé i tmavé verzi. „Jako v iPhonu“ je přepíná spolu s telefonem.";
