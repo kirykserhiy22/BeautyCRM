@@ -20,6 +20,9 @@ struct MainTabView: View {
     // Старий акаунт без спеціалізації — один раз попросити обрати
     @State private var showProfessionPrompt = false
 
+    // Гід по додатку — один раз після реєстрації
+    @State private var showGuide = false
+
     private var colors: ThemeColors {
         theme.colors(for: theme.currentTheme)
     }
@@ -65,6 +68,22 @@ struct MainTabView: View {
                    profile.profession == nil {
                     showProfessionPrompt = true
                 }
+
+                showGuide = OnboardingStore.isPending(userID: userID)
+            }
+        }
+        // Поверх вкладок, а не окремим вікном: не конфліктує з вибором спеціалізації
+        .overlay {
+            if showGuide {
+                OnboardingView {
+                    if let userID = appState.session.userID {
+                        OnboardingStore.markSeen(userID: userID)
+                    }
+                    withAnimation(.easeOut(duration: 0.25)) {
+                        showGuide = false
+                    }
+                }
+                .transition(.opacity)
             }
         }
         .fullScreenCover(isPresented: $showProfessionPrompt) {

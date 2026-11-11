@@ -26,6 +26,8 @@ struct SettingsView: View {
     // Профіль — запитом, щоб рядки оновились одразу після змін на підекранах
     @Query private var profiles: [UserProfile]
 
+    @State private var showGuide = false
+
     private var colors: ThemeColors {
         theme.colors(for: theme.currentTheme)
     }
@@ -83,6 +85,13 @@ struct SettingsView: View {
                         link(title: "signup.currency.label", icon: "banknote", value: profile?.currencyCode) {
                             CurrencySettingsView()
                         }
+                        divider
+                        Button {
+                            showGuide = true
+                        } label: {
+                            row(title: "settings.guide", icon: "questionmark.circle", value: nil, isDestructive: false)
+                        }
+                        .accessibilityIdentifier("settings.guide")
                     }
 
                     groupTitle("settings.group.account")
@@ -108,6 +117,13 @@ struct SettingsView: View {
             }
             .background(colors.background)
             .navigationTitle(localization.localizedString(for: "settings.title"))
+            .fullScreenCover(isPresented: $showGuide) {
+                OnboardingView {
+                    showGuide = false
+                }
+                .environmentObject(theme)
+                .environmentObject(localization)
+            }
         }
     }
 

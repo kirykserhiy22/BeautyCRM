@@ -337,3 +337,22 @@
 "settings.appearance.light" = "Jasny";
 "settings.appearance.dark" = "Ciemny";
 "settings.appearance.description" = "Kolory marki Beauty Base w wersji jasnej i ciemnej. „Jak w iPhonie” przełącza je razem z telefonem.";
+
+/* Onboarding guide */
+"onboarding.skip" = "Pomiń";
+"onboarding.next" = "Dalej";
+"onboarding.start" = "Zaczynamy";
+"onboarding.busy" = "Ten termin jest zajęty";
+"settings.guide" = "Jak korzystać";
+"onboarding.1.title" = "Twój dzień na ekranie głównym";
+"onboarding.1.text" = "Na górze następny klient, niżej oś dnia ze wszystkimi wizytami. Dotknij wizyty, aby ją otworzyć.";
+"onboarding.2.title" = "Nowa wizyta w minutę";
+"onboarding.2.text" = "Dotknij „Wizyta” na ekranie głównym: klient, usługi, godzina. Jeśli termin jest zajęty, aplikacja ostrzeże.";
+"onboarding.3.title" = "Przenoszenie przez przeciągnięcie";
+"onboarding.3.text" = "Przytrzymaj wizytę na osi dnia i przeciągnij na inną godzinę. Upuść ją na inną wizytę, a zamienią się miejscami.";
+"onboarding.4.title" = "Zakończ wizytę";
+"onboarding.4.text" = "Po wizycie dotknij „Zakończ” i wpisz cenę końcową. Od razu trafi do Analityki.";
+"onboarding.5.title" = "Wszystko o kliencie";
+"onboarding.5.text" = "W karcie klienta: wizyty, notatki, zdjęcia przed i po. Stamtąd zadzwonisz, napiszesz lub umówisz ponownie.";
+"onboarding.6.title" = "Zacznij od cennika";
+"onboarding.6.text" = "Dodaj usługi i godziny pracy w Ustawieniach. Tam też znajdziesz ten przewodnik: „Jak korzystać”.";

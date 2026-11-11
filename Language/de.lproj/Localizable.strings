@@ -337,3 +337,22 @@
 "settings.appearance.light" = "Hell";
 "settings.appearance.dark" = "Dunkel";
 "settings.appearance.description" = "Die Markenfarben von Beauty Base in Hell und Dunkel. „Wie iPhone“ wechselt sie zusammen mit dem Telefon.";
+
+/* Onboarding guide */
+"onboarding.skip" = "Überspringen";
+"onboarding.next" = "Weiter";
+"onboarding.start" = "Los geht’s";
+"onboarding.busy" = "Diese Zeit ist belegt";
+"settings.guide" = "Anleitung";
+"onboarding.1.title" = "Ihr Tag auf der Startseite";
+"onboarding.1.text" = "Oben der nächste Kunde, darunter die Zeitleiste des Tages. Tippen Sie auf einen Termin, um ihn zu öffnen.";
+"onboarding.2.title" = "Neuer Termin in einer Minute";
+"onboarding.2.text" = "Tippen Sie auf der Startseite auf „Termin“: Kunde, Leistungen, Uhrzeit. Ist die Zeit belegt, warnt die App.";
+"onboarding.3.title" = "Verschieben per Ziehen";
+"onboarding.3.text" = "Halten Sie einen Termin in der Zeitleiste gedrückt und ziehen Sie ihn auf eine andere Zeit. Auf einem anderen Termin abgelegt, tauschen beide.";
+"onboarding.4.title" = "Besuch abschließen";
+"onboarding.4.text" = "Tippen Sie nach dem Besuch auf „Abschließen“ und geben Sie den Endpreis ein. Er erscheint sofort in der Analyse.";
+"onboarding.5.title" = "Alles über den Kunden";
+"onboarding.5.text" = "In der Kundenkarte: Besuche, Notizen, Vorher-Nachher-Fotos. Von dort aus anrufen, schreiben oder neu buchen.";
+"onboarding.6.title" = "Starten Sie mit der Preisliste";
+"onboarding.6.text" = "Fügen Sie Leistungen und Arbeitszeiten in den Einstellungen hinzu. Dort finden Sie auch diese „Anleitung“.";
