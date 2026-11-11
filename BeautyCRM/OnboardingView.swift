@@ -172,6 +172,7 @@ struct OnboardingIllustration: View {
     @EnvironmentObject var theme: ThemeManager
     @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var currency: CurrencyManager
+    @EnvironmentObject var profession: ProfessionManager
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     @State private var animate = false
@@ -227,9 +228,9 @@ struct OnboardingIllustration: View {
             .opacity(animate ? 1 : 0.85)
     }
 
-    private func pill(_ icon: String, _ text: String, highlighted: Bool = false) -> some View {
+    private func pill(_ icon: Image, _ text: String, highlighted: Bool = false) -> some View {
         HStack(spacing: 10) {
-            Image(systemName: icon)
+            icon
                 .foregroundColor(highlighted ? colors.warning : colors.accent)
                 .frame(width: 20)
             Text(text)
@@ -319,10 +320,10 @@ struct OnboardingIllustration: View {
 
     private var newAppointment: some View {
         VStack(spacing: 8) {
-            pill("person.fill", "Anna K.")
-            pill("scissors", currency.format(85))
-            pill("clock", "14:00 · 90 min")
-            pill("exclamationmark.triangle.fill", t("onboarding.busy"), highlighted: true)
+            pill(Image(systemName: "person.fill"), "Anna K.")
+            pill(profession.config.serviceIcon.image, currency.format(85))
+            pill(Image(systemName: "clock"), "14:00 · 90 min")
+            pill(Image(systemName: "exclamationmark.triangle.fill"), t("onboarding.busy"), highlighted: true)
             primaryButton("appointment.createButton")
                 .overlay(alignment: .trailing) {
                     tapFinger.offset(x: -24, y: 24)
@@ -444,11 +445,11 @@ struct OnboardingIllustration: View {
 
     private var settings: some View {
         VStack(spacing: 0) {
-            settingsRow("scissors", t("settings.services"), value: "4")
+            settingsRow(profession.config.serviceIcon.image, t("settings.services"), value: "4")
             Divider().overlay(colors.divider)
-            settingsRow("clock", t("settings.workingHours"), value: "9:00–19:00")
+            settingsRow(Image(systemName: "clock"), t("settings.workingHours"), value: "9:00–19:00")
             Divider().overlay(colors.divider)
-            settingsRow("questionmark.circle", t("settings.guide"), value: nil)
+            settingsRow(Image(systemName: "questionmark.circle"), t("settings.guide"), value: nil)
                 .background(colors.accent.opacity(animate ? 0.18 : 0.06))
         }
         .background(colors.card)
@@ -459,9 +460,9 @@ struct OnboardingIllustration: View {
         .frame(maxHeight: .infinity)
     }
 
-    private func settingsRow(_ icon: String, _ title: String, value: String?) -> some View {
+    private func settingsRow(_ icon: Image, _ title: String, value: String?) -> some View {
         HStack(spacing: 10) {
-            Image(systemName: icon)
+            icon
                 .foregroundColor(colors.accent)
                 .frame(width: 20)
             Text(title)
