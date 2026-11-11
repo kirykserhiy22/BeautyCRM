@@ -121,9 +121,12 @@ private extension LoginView {
 
 
 
-            SecureField("login.password", text: $password, prompt: Text("login.password").foregroundColor(colors.textSecondary))
-            .accessibilityIdentifier("login.password")
-            .authField(colors)
+            PasswordField(
+                titleKey: "login.password",
+                text: $password,
+                colors: colors,
+                identifier: "login.password"
+            )
 
         }
     }

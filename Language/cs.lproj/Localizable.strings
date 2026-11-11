@@ -357,3 +357,6 @@
 "onboarding.5.text" = "V kartě klienta: návštěvy, poznámky, fotky před a po. Odtud zavoláte, napíšete nebo znovu objednáte.";
 "onboarding.6.title" = "Začněte ceníkem";
 "onboarding.6.text" = "Přidejte služby a pracovní dobu v Nastavení. Najdete tam i tohoto průvodce: „Jak používat“.";
+
+"password.show" = "Zobrazit heslo";
+"password.hide" = "Skrýt heslo";

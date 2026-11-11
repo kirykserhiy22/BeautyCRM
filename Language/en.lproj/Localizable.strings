@@ -356,3 +356,6 @@
 "onboarding.5.text" = "The client card has visits, notes and before/after photos. Call, message or book again right from there.";
 "onboarding.6.title" = "Start with your price list";
 "onboarding.6.text" = "Add your services and working hours in Settings. This guide lives there too: “How to use”.";
+
+"password.show" = "Show password";
+"password.hide" = "Hide password";

@@ -152,7 +152,8 @@ struct AppointmentFormView: View {
                 }
                 .padding()
             }
-            .background(colors.secondaryBackground)
+            .background(colors.background)
+            .tint(colors.accent)
             .navigationTitle(modeTitle)
             .onAppear {
                 loadAppointmentIfNeeded()
@@ -199,8 +200,10 @@ private extension AppointmentFormView {
 
         VStack(alignment: .leading, spacing: 10) {
 
-            Text(localization.localizedString(for: "appointment.client"))
-                .font(.headline)
+            FormSectionTitle(
+                text: localization.localizedString(for: "appointment.client"),
+                colors: colors
+            )
 
             
             TextField(
@@ -339,8 +342,10 @@ private extension AppointmentFormView {
 
         VStack(alignment: .leading, spacing: 12) {
 
-            Text(localization.localizedString(for: "appointment.services"))
-                .font(.headline)
+            FormSectionTitle(
+                text: localization.localizedString(for: "appointment.services"),
+                colors: colors
+            )
 
             Button {
                 showServicePicker = true
@@ -351,6 +356,7 @@ private extension AppointmentFormView {
                     Text(localization.localizedString(for: "appointment.addServices"))
                     Spacer()
                 }
+                .foregroundColor(colors.accent)
                 .padding()
                 .background(colors.card)
                 .cornerRadius(14)
@@ -458,6 +464,7 @@ private extension AppointmentFormView {
              )
             )
             .font(.system(size: 34, weight: .bold))
+            .foregroundColor(colors.textPrimary)
         }
         .padding(.top, 8)
     }
@@ -471,24 +478,34 @@ private extension AppointmentFormView {
 
         VStack(alignment: .leading, spacing: 12) {
 
-            Text(localization.localizedString(for: "appointment.dateTime"))
-                .font(.headline)
-
-            DatePicker(
-                localization.localizedString(for: "appointment.start"),
-                selection: $date
+            FormSectionTitle(
+                text: localization.localizedString(for: "appointment.dateTime"),
+                colors: colors
             )
 
-            Stepper(
-                String(
-                    format: localization.localizedString(for: "appointment.duration"),
-                    locale: localization.locale,
-                    duration
-                ),
-                value: $duration,
-                in: 15...600,
-                step: 15
-            )
+            VStack(spacing: 12) {
+
+                DatePicker(
+                    localization.localizedString(for: "appointment.start"),
+                    selection: $date
+                )
+
+                Divider()
+                    .overlay(colors.divider)
+
+                Stepper(
+                    String(
+                        format: localization.localizedString(for: "appointment.duration"),
+                        locale: localization.locale,
+                        duration
+                    ),
+                    value: $duration,
+                    in: 15...600,
+                    step: 15
+                )
+            }
+            .foregroundColor(colors.textPrimary)
+            .formCard(colors)
             if conflictInfo.hasConflict {
 
                 VStack(alignment: .leading, spacing: 6) {
@@ -527,8 +544,10 @@ private extension AppointmentFormView {
 
         VStack(alignment: .leading, spacing: 8) {
 
-            Text(localization.localizedString(for: "appointment.notes"))
-                .font(.headline)
+            FormSectionTitle(
+                text: localization.localizedString(for: "appointment.notes"),
+                colors: colors
+            )
 
             TextField(
                 localization.localizedString(for: "appointment.notesPlaceholder"),
@@ -576,9 +595,9 @@ private extension AppointmentFormView {
                 .background(
                     isValid
                     ? colors.buttonPrimary
-                    : Color.gray.opacity(0.3)
+                    : colors.buttonSecondary
                 )
-                .foregroundColor(.white)
+                .foregroundColor(isValid ? .white : colors.textSecondary)
                 .cornerRadius(16)
         }
         .disabled(!isValid)

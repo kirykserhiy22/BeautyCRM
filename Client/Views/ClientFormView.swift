@@ -54,6 +54,7 @@ struct ClientFormView: View {
                     TextField(localization.localizedString(for: "clients.phone"), text: $phone)
                         .keyboardType(.phonePad)
                 }
+                .brandRows(colors)
 
                 // Майстер сам вибирає, де клієнт: Instagram, Telegram, WhatsApp…
                 Section(localization.localizedString(for: "clients.networks")) {
@@ -75,6 +76,7 @@ struct ClientFormView: View {
                         .accessibilityIdentifier("client.network.add")
                     }
                 }
+                .brandRows(colors)
 
                 Section(localization.localizedString(for: "clients.notes")) {
 
@@ -85,21 +87,17 @@ struct ClientFormView: View {
                     )
                     .lineLimit(5)
                 }
+                .brandRows(colors)
 
-                Section {
-
-                    Button {
-
-                        saveClient()
-
-                    } label: {
-
-                        Text(buttonTitle)
-                            .frame(maxWidth: .infinity)
-                    }
-                    .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty)
+                FormPrimaryButton(
+                    title: buttonTitle,
+                    isEnabled: !name.trimmingCharacters(in: .whitespaces).isEmpty,
+                    colors: colors
+                ) {
+                    saveClient()
                 }
             }
+            .brandForm(colors)
             .alert(
                 localization.localizedString(for: "clients.possibleDuplicate.title"),
                 isPresented: Binding(
@@ -119,13 +117,11 @@ struct ClientFormView: View {
                     )
                 )
             }
-            .background(colors.secondaryBackground)
             .navigationTitle(title)
             .onAppear {
                 loadClientIfNeeded()
             }
         }
-        .background(colors.secondaryBackground)
     }
 }
 

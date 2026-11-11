@@ -26,6 +26,7 @@
 - `BeautyCRM/SyncTracking.swift` — протокол `SyncTrackable`, автозаповнення `updatedAt`/`workspaceID` перед кожним save, `markDeleted()`
 - `BeautyCRM/SaveErrorReporter.swift` — `context.saveReportingErrors()`: збереження з показом помилки
 - `BeautyCRM/MoneyField.swift` — поле суми з підсвіткою неправильного вводу
+- `BeautyCRM/BrandForm.swift` — фірмовий вигляд форм (`brandForm`, `brandRows`, `FormPrimaryButton`, `formCard`) і `PasswordField` з кнопкою «показати пароль»
 - `BeautyCRM/ContactLinks.swift` — посилання на телефон, Instagram, Telegram, WhatsApp, Viber, Messenger із будь-якого написання ніка чи номера
 - `BeautyCRM/ContactNetwork.swift` — соцмережі клієнта (назва, значок, поле в `Client`, посилання); нова соцмережа — один `case`
 - `BeautyCRM/DayTimelineView.swift` + `DayTimelineLayout.swift` — шкала дня (Головна, Календар) і розрахунок положення записів
@@ -76,7 +77,7 @@
 6. **App Store:** обов'язкові «Sign in with Apple» поруч з email-входом і видалення акаунта в додатку.
 
 ## Відомі проблеми (станом на 10.11.2026)
-- Відкриті знахідки аудиту — у GitHub Issues: критичні #21, #22; дрібні #40, #54, #57 (тема в профілі — закрита редизайном Налаштувань, перевірити й закрити). Подробиці — `docs/audit/REPORT.md`.
+- Відкриті знахідки аудиту — у GitHub Issues: критичні #21, #22; дрібні #40, #54 — усі чекають Supabase (#2 і #57 закрито 11.11.2026). Подробиці — `docs/audit/REPORT.md`.
 - `.gitignore` у репозиторії немає — додати перед Supabase (див. «Секрети» нижче).
 - `LocalAuthService` зберігає email і пароль відкритим текстом в UserDefaults — замінити на Supabase Auth (#21).
 - Сесія (`SessionManager`) — userID в UserDefaults, без токена. Видалення акаунта й Sign in with Apple немає (#22).
@@ -113,7 +114,8 @@
    ✅ Спеціалізації майстра (PR #19). ✅ Аудит (PR #20) і виправлення всіх важливих знахідок (PR #64–#73).
    ✅ Дрібниці аудиту пачками, PR #76–#83. Лишились #40 (разом із синхронізацією), #54 (разом із Supabase Auth), #57.
 3. Редизайн і бренд. ✅ Палітра Dark Cherry, світла й темна тема, іконка, Splash, вхід і реєстрація, Головна, шкала дня (PR #84–#92).
-   ✅ Аналітика, Клієнти, Налаштування. Лишились форми у фірмових кольорах. Порядок робіт — `BACKLOG.md`, «Найближча черга».
+   ✅ Аналітика, Клієнти, Налаштування, гід по додатку, форми у фірмових кольорах. Порядок робіт — `BACKLOG.md`, «Найближча черга».
+   Далі: нагадування (локальні сповіщення + повідомлення клієнту), потім Supabase.
 4. Supabase: проєкт у ЄС, схема БД, RLS-політики.
 5. Авторизація: email + пароль, Sign in with Apple, відновлення пароля, Keychain, видалення акаунта.
 6. Синхронізація: push/pull змін, фото в Storage, перший вхід на новому телефоні.

@@ -431,9 +431,9 @@ struct WorkingHoursSettingsView: View {
 
                 Text(localization.localizedString(for: "settings.workingHours.description"))
             }
+            .brandRows(colors)
         }
-        .scrollContentBackground(.hidden)
-        .background(colors.background)
+        .brandForm(colors)
         .navigationTitle(localization.localizedString(for: "settings.workingHours"))
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
@@ -576,20 +576,22 @@ struct ProfileSettingsView: View {
                 TextField(localization.localizedString(for: "signup.lastName"), text: $lastName)
                     .textContentType(.familyName)
             }
+            .brandRows(colors)
 
             Section(localization.localizedString(for: "signup.business.title")) {
 
                 TextField(localization.localizedString(for: "signup.business.name"), text: $businessName)
             }
+            .brandRows(colors)
 
             if !errorKey.isEmpty {
                 Text(localization.localizedString(for: errorKey))
                     .foregroundColor(colors.danger)
                     .font(.caption)
+                    .listRowBackground(Color.clear)
             }
         }
-        .scrollContentBackground(.hidden)
-        .background(colors.background)
+        .brandForm(colors)
         .navigationTitle(localization.localizedString(for: "settings.profile"))
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {

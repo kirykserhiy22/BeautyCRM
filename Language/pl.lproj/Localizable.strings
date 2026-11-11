@@ -356,3 +356,6 @@
 "onboarding.5.text" = "W karcie klienta: wizyty, notatki, zdjęcia przed i po. Stamtąd zadzwonisz, napiszesz lub umówisz ponownie.";
 "onboarding.6.title" = "Zacznij od cennika";
 "onboarding.6.text" = "Dodaj usługi i godziny pracy w Ustawieniach. Tam też znajdziesz ten przewodnik: „Jak korzystać”.";
+
+"password.show" = "Pokaż hasło";
+"password.hide" = "Ukryj hasło";
