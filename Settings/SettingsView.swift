@@ -54,15 +54,16 @@ struct SettingsView: View {
                     groupTitle("settings.group.work")
 
                     group {
-                        link(title: "settings.services", icon: "scissors", value: serviceCountText) {
+                        // Значок послуг — від спеціалізації, як на Головній
+                        link(title: "settings.services", icon: profession.config.serviceIcon.image, value: serviceCountText) {
                             ServicesListView()
                         }
                         divider
-                        link(title: "settings.workingHours", icon: "clock", value: workingHoursText) {
+                        link(title: "settings.workingHours", icon: Image(systemName: "clock"), value: workingHoursText) {
                             WorkingHoursSettingsView()
                         }
                         divider
-                        link(title: "settings.profession", icon: "person.text.rectangle", value: professionTitle) {
+                        link(title: "settings.profession", icon: Image(systemName: "person.text.rectangle"), value: professionTitle) {
                             ProfessionSettingsView()
                         }
                     }
@@ -72,24 +73,24 @@ struct SettingsView: View {
                     group {
                         link(
                             title: "settings.appearance",
-                            icon: "circle.lefthalf.filled",
+                            icon: Image(systemName: "circle.lefthalf.filled"),
                             value: localization.localizedString(for: theme.appearance.titleKey)
                         ) {
                             ThemeSettingsView()
                         }
                         divider
-                        link(title: "settings.language", icon: "globe", value: languageTitle) {
+                        link(title: "settings.language", icon: Image(systemName: "globe"), value: languageTitle) {
                             LanguageSettingsView()
                         }
                         divider
-                        link(title: "signup.currency.label", icon: "banknote", value: profile?.currencyCode) {
+                        link(title: "signup.currency.label", icon: Image(systemName: "banknote"), value: profile?.currencyCode) {
                             CurrencySettingsView()
                         }
                         divider
                         Button {
                             showGuide = true
                         } label: {
-                            row(title: "settings.guide", icon: "questionmark.circle", value: nil, isDestructive: false)
+                            row(title: "settings.guide", icon: Image(systemName: "questionmark.circle"), value: nil, isDestructive: false)
                         }
                         .accessibilityIdentifier("settings.guide")
                     }
@@ -102,7 +103,7 @@ struct SettingsView: View {
                             profession.reset()
                             router.currentScreen = .welcome
                         } label: {
-                            row(title: "settings.logout", icon: "rectangle.portrait.and.arrow.right", value: nil, isDestructive: true)
+                            row(title: "settings.logout", icon: Image(systemName: "rectangle.portrait.and.arrow.right"), value: nil, isDestructive: true)
                         }
                         .accessibilityIdentifier("settings.logout")
                     }
@@ -244,7 +245,7 @@ struct SettingsView: View {
 
     private func link<Destination: View>(
         title: String,
-        icon: String,
+        icon: Image,
         value: String?,
         @ViewBuilder destination: @escaping () -> Destination
     ) -> some View {
@@ -257,11 +258,11 @@ struct SettingsView: View {
         .accessibilityIdentifier(title)
     }
 
-    private func row(title: String, icon: String, value: String?, isDestructive: Bool) -> some View {
+    private func row(title: String, icon: Image, value: String?, isDestructive: Bool) -> some View {
 
         HStack(spacing: 14) {
 
-            Image(systemName: icon)
+            icon
                 .font(.headline)
                 .foregroundColor(isDestructive ? colors.danger : colors.accent)
                 .frame(width: 24)
