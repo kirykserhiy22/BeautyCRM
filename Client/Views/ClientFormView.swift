@@ -28,8 +28,7 @@ struct ClientFormView: View {
 
     @State private var name = ""
     @State private var phone = ""
-    @State private var instagram = ""
-    @State private var telegram = ""
+    @State private var networks: [NetworkEntry] = []
     @State private var notes = ""
     // Ім'я наявного клієнта, схожого на цього (показуємо попередження)
     @State private var possibleDuplicateName: String?
@@ -54,10 +53,27 @@ struct ClientFormView: View {
 
                     TextField(localization.localizedString(for: "clients.phone"), text: $phone)
                         .keyboardType(.phonePad)
+                }
 
-                    TextField(localization.localizedString(for: "clients.instagram"), text: $instagram)
+                // Майстер сам вибирає, де клієнт: Instagram, Telegram, WhatsApp…
+                Section(localization.localizedString(for: "clients.networks")) {
 
-                    TextField(localization.localizedString(for: "clients.telegram"), text: $telegram)
+                    ForEach($networks) { $entry in
+                        networkRow($entry)
+                    }
+                    .onDelete { networks.remove(atOffsets: $0) }
+
+                    if let next = availableNetworks(excluding: nil).first {
+                        Button {
+                            addNetwork(next)
+                        } label: {
+                            Label(
+                                localization.localizedString(for: "clients.network.add"),
+                                systemImage: "plus"
+                            )
+                        }
+                        .accessibilityIdentifier("client.network.add")
+                    }
                 }
 
                 Section(localization.localizedString(for: "clients.notes")) {
@@ -113,6 +129,85 @@ struct ClientFormView: View {
     }
 }
 
+// MARK: - SOCIAL NETWORKS
+
+// Один рядок «соцмережа + нік чи номер»
+fileprivate struct NetworkEntry: Identifiable {
+    let id = UUID()
+    var network: ContactNetwork
+    var value: String
+}
+
+private extension ClientFormView {
+
+    func networkRow(_ entry: Binding<NetworkEntry>) -> some View {
+
+        HStack(spacing: 10) {
+
+            Menu {
+                ForEach(availableNetworks(excluding: entry.wrappedValue.id)) { network in
+                    Button {
+                        choose(network, for: entry)
+                    } label: {
+                        Text(network.title)
+                    }
+                }
+            } label: {
+                HStack(spacing: 6) {
+                    ContactNetworkIcon(network: entry.wrappedValue.network, size: 18)
+                    Text(entry.wrappedValue.network.title)
+                    Image(systemName: "chevron.down")
+                        .font(.caption2.bold())
+                }
+                .foregroundColor(colors.accent)
+                .fixedSize()
+            }
+            .accessibilityIdentifier("client.network.picker")
+
+            TextField(
+                localization.localizedString(for: entry.wrappedValue.network.placeholderKey),
+                text: entry.value
+            )
+            .keyboardType(entry.wrappedValue.network.usesPhoneNumber ? .phonePad : .default)
+            .textInputAutocapitalization(.never)
+            .autocorrectionDisabled()
+        }
+    }
+
+    // Соцмережі, яких ще немає в інших рядках (одна соцмережа — один рядок)
+    func availableNetworks(excluding entryID: UUID?) -> [ContactNetwork] {
+        let used = Set(networks.filter { $0.id != entryID }.map(\.network))
+        return ContactNetwork.allCases.filter { !used.contains($0) }
+    }
+
+    func addNetwork(_ network: ContactNetwork) {
+        networks.append(NetworkEntry(network: network, value: prefill(for: network)))
+    }
+
+    func choose(_ network: ContactNetwork, for entry: Binding<NetworkEntry>) {
+        let wasPhoneBased = entry.wrappedValue.network.usesPhoneNumber
+        entry.wrappedValue.network = network
+
+        // Нік і номер — різні речі: при зміні типу поле не лишається з чужим значенням
+        if wasPhoneBased != network.usesPhoneNumber || entry.wrappedValue.value.isEmpty {
+            entry.wrappedValue.value = prefill(for: network)
+        }
+    }
+
+    // Для WhatsApp і Viber одразу підставляємо телефон клієнта
+    func prefill(for network: ContactNetwork) -> String {
+        network.usesPhoneNumber ? phone.trimmingCharacters(in: .whitespacesAndNewlines) : ""
+    }
+
+    func networkValue(_ network: ContactNetwork) -> String? {
+        let value = networks
+            .first { $0.network == network }?
+            .value
+            .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        return value.isEmpty ? nil : value
+    }
+}
+
 // MARK: - HELPERS
 
 private extension ClientFormView {
@@ -158,13 +253,20 @@ private extension ClientFormView {
                 name = prefilledName
             }
 
+            // Найчастіше клієнти приходять з Instagram — один порожній рядок одразу
+            if networks.isEmpty {
+                networks = [NetworkEntry(network: .instagram, value: "")]
+            }
+
         case .edit(let client):
 
             name = client.name
             phone = client.phone ?? ""
-            instagram = client.instagram ?? ""
-            telegram = client.telegram ?? ""
             notes = client.notes ?? ""
+
+            networks = ContactNetwork.allCases.compactMap { network in
+                network.value(of: client).map { NetworkEntry(network: network, value: $0) }
+            }
         }
     }
     
@@ -180,8 +282,8 @@ private extension ClientFormView {
                 if let existing = try ClientManager.possibleDuplicate(
                     name: name,
                     phone: phone,
-                    instagram: instagram,
-                    telegram: telegram,
+                    instagram: networkValue(.instagram),
+                    telegram: networkValue(.telegram),
                     userID: userID,
                     excluding: editingClientID,
                     context: context
@@ -197,9 +299,9 @@ private extension ClientFormView {
 
         let name = name.trimmingCharacters(in: .whitespacesAndNewlines)
         let phone = phone.trimmingCharacters(in: .whitespacesAndNewlines)
-        let instagram = instagram.trimmingCharacters(in: .whitespacesAndNewlines)
-        let telegram = telegram.trimmingCharacters(in: .whitespacesAndNewlines)
         let notes = notes.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        let client: Client
 
         switch mode {
 
@@ -207,12 +309,10 @@ private extension ClientFormView {
 
         case .create:
 
-            let client = Client(
+            client = Client(
                 userID: userID,
                 name: name,
                 phone: phone.isEmpty ? nil : phone,
-                instagram: instagram.isEmpty ? nil : instagram,
-                telegram: telegram.isEmpty ? nil : telegram,
                 notes: notes.isEmpty ? nil : notes
             )
 
@@ -220,13 +320,17 @@ private extension ClientFormView {
 
         // EDIT
 
-        case .edit(let client):
+        case .edit(let existing):
 
+            client = existing
             client.name = name
             client.phone = phone.isEmpty ? nil : phone
-            client.instagram = instagram.isEmpty ? nil : instagram
-            client.telegram = telegram.isEmpty ? nil : telegram
             client.notes = notes.isEmpty ? nil : notes
+        }
+
+        // Прибраний рядок соцмережі очищає й поле в картці
+        for network in ContactNetwork.allCases {
+            network.set(networkValue(network), on: client)
         }
 
         // SAVE — форма закривається лише після успішного збереження

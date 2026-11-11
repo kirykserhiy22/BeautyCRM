@@ -32,6 +32,33 @@ enum ContactLinks {
     }
 
 
+    // WhatsApp і Viber відкривають чат за номером телефону
+    static func whatsapp(_ text: String) -> URL? {
+        internationalDigits(text).flatMap {
+            URL(string: "https://wa.me/\($0)")
+        }
+    }
+
+    static func viber(_ text: String) -> URL? {
+        internationalDigits(text).flatMap {
+            URL(string: "viber://chat?number=%2B\($0)")
+        }
+    }
+
+    static func messenger(_ text: String) -> URL? {
+        nick(from: text, sites: ["m.me/", "messenger.com/t/", "facebook.com/"]).flatMap {
+            URL(string: "https://m.me/\($0)")
+        }
+    }
+
+
+    // Цифри номера без «+», пробілів і дужок; nil, якщо номер закороткий
+    private static func internationalDigits(_ text: String) -> String? {
+        let digits = text.filter { $0.isASCII && $0.isNumber }
+        return digits.count >= 7 ? digits : nil
+    }
+
+
     // Чистий нік або nil, якщо такого ніка не може бути (пробіли, кирилиця)
     private static func nick(from text: String, sites: [String]) -> String? {
 

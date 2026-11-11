@@ -25,6 +25,11 @@ final class Client: SyncTrackable {
     var instagram: String?
     var telegram: String?
 
+    // Нові поля зі значенням за замовчуванням: старі дані відкриваються без перевстановлення
+    var whatsapp: String? = nil
+    var viber: String? = nil
+    var messenger: String? = nil
+
     // MARK: - PROFILE
 
     var notes: String?
