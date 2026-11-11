@@ -337,3 +337,22 @@
 "settings.appearance.light" = "Light";
 "settings.appearance.dark" = "Dark";
 "settings.appearance.description" = "Beauty Base brand colors in light and dark. “Like iPhone” switches them together with your phone.";
+
+/* Onboarding guide */
+"onboarding.skip" = "Skip";
+"onboarding.next" = "Next";
+"onboarding.start" = "Get started";
+"onboarding.busy" = "This time is taken";
+"settings.guide" = "How to use";
+"onboarding.1.title" = "Your day on Home";
+"onboarding.1.text" = "The next client is at the top, your day’s timeline below. Tap an appointment to open it.";
+"onboarding.2.title" = "A new appointment in a minute";
+"onboarding.2.text" = "Tap “Appointment” on Home: client, services, time. If the time is taken, the app warns you.";
+"onboarding.3.title" = "Reschedule by dragging";
+"onboarding.3.text" = "Press and hold an appointment on the timeline and drag it to another time. Drop it on another appointment to swap them.";
+"onboarding.4.title" = "Finish the visit";
+"onboarding.4.text" = "After the visit tap “Complete” and enter the final price. It goes straight into Analytics.";
+"onboarding.5.title" = "Everything about a client";
+"onboarding.5.text" = "The client card has visits, notes and before/after photos. Call, message or book again right from there.";
+"onboarding.6.title" = "Start with your price list";
+"onboarding.6.text" = "Add your services and working hours in Settings. This guide lives there too: “How to use”.";

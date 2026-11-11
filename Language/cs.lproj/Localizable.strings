@@ -338,3 +338,22 @@
 "settings.appearance.light" = "Světlý";
 "settings.appearance.dark" = "Tmavý";
 "settings.appearance.description" = "Barvy značky Beauty Base ve světlé i tmavé verzi. „Jako v iPhonu“ je přepíná spolu s telefonem.";
+
+/* Onboarding guide */
+"onboarding.skip" = "Přeskočit";
+"onboarding.next" = "Další";
+"onboarding.start" = "Začít";
+"onboarding.busy" = "Tento čas je obsazený";
+"settings.guide" = "Jak používat";
+"onboarding.1.title" = "Váš den na hlavní obrazovce";
+"onboarding.1.text" = "Nahoře další klient, pod ním časová osa dne se všemi termíny. Klepnutím termín otevřete.";
+"onboarding.2.title" = "Nový termín za minutu";
+"onboarding.2.text" = "Na hlavní obrazovce klepněte na „Termín“: klient, služby, čas. Pokud je čas obsazený, aplikace upozorní.";
+"onboarding.3.title" = "Přesun tažením";
+"onboarding.3.text" = "Podržte termín na časové ose a přetáhněte ho na jiný čas. Pustíte-li ho na jiný termín, prohodí se.";
+"onboarding.4.title" = "Dokončete návštěvu";
+"onboarding.4.text" = "Po návštěvě klepněte na „Dokončit“ a zadejte konečnou cenu. Hned se objeví v Analytice.";
+"onboarding.5.title" = "Vše o klientovi";
+"onboarding.5.text" = "V kartě klienta: návštěvy, poznámky, fotky před a po. Odtud zavoláte, napíšete nebo znovu objednáte.";
+"onboarding.6.title" = "Začněte ceníkem";
+"onboarding.6.text" = "Přidejte služby a pracovní dobu v Nastavení. Najdete tam i tohoto průvodce: „Jak používat“.";

@@ -228,6 +228,9 @@ private extension SignUpFlowView {
                 userID: userID
             )
 
+            // Новий майстер один раз побачить короткий гід по додатку
+            OnboardingStore.markPending(userID: userID)
+
             // Мова, валюта і професія з щойно створеного профілю
             UserProfileLoader.load(
                 context: context,

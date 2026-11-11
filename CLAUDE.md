@@ -29,6 +29,7 @@
 - `BeautyCRM/ContactLinks.swift` — посилання на телефон, Instagram, Telegram, WhatsApp, Viber, Messenger із будь-якого написання ніка чи номера
 - `BeautyCRM/ContactNetwork.swift` — соцмережі клієнта (назва, значок, поле в `Client`, посилання); нова соцмережа — один `case`
 - `BeautyCRM/DayTimelineView.swift` + `DayTimelineLayout.swift` — шкала дня (Головна, Календар) і розрахунок положення записів
+- `BeautyCRM/OnboardingView.swift` — гід по додатку (сторіс): `OnboardingStore` (показ один раз після реєстрації), слайди й намальовані ілюстрації
 - `BeautyCRM/AnalyticsEngine.swift` — усі розрахунки аналітики (екран лише показує `AnalyticsSummary`)
 - `Auth/` — вхід, реєстрація (`SignUp/`, 5 кроків: акаунт, ім'я, спеціалізація, салон, валюта), сесія,
   профіль (`User/`, `UserProfileManager.update`), валюта

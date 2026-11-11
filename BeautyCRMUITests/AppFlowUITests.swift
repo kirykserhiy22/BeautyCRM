@@ -53,6 +53,11 @@ final class AppFlowUITests: XCTestCase {
         goNext() // валюта вже вибрана: кнопка створює акаунт
 
         dismissSystemPrompts()
+
+        // Новий майстер один раз бачить гід по додатку
+        XCTAssertTrue(app.buttons["onboarding.skip"].waitForExistence(timeout: 8), "Після реєстрації показується гід")
+        app.buttons["onboarding.skip"].tap()
+
         XCTAssertTrue(app.tabBars.firstMatch.waitForExistence(timeout: 8), "Після реєстрації відкрився додаток")
 
         // Новий майстер бачить порожній список і кнопку додавання
@@ -68,6 +73,7 @@ final class AppFlowUITests: XCTestCase {
 
         dismissSystemPrompts()
         XCTAssertTrue(app.tabBars.firstMatch.waitForExistence(timeout: 8), "Вхід із новим акаунтом працює")
+        XCTAssertFalse(app.buttons["onboarding.skip"].exists, "Гід не показується вдруге")
 
         logOut()
     }
