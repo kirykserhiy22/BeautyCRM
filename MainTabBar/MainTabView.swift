@@ -23,6 +23,12 @@ struct MainTabView: View {
     // Гід по додатку — один раз після реєстрації
     @State private var showGuide = false
 
+    private enum Tab: Hashable {
+        case home, clients, calendar, analytics, settings
+    }
+
+    @State private var tab: Tab = .home
+
     private var colors: ThemeColors {
         theme.colors(for: theme.currentTheme)
     }
@@ -30,33 +36,46 @@ struct MainTabView: View {
 
     var body: some View {
 
-        TabView {
+        TabView(selection: $tab) {
             HomeView()
                 .tabItem {
                     Label("tab.home", systemImage: "house")
                 }
+                .tag(Tab.home)
 
             ClientsListView()
                 .tabItem {
                     Label("tab.clients", systemImage: "person.3")
                 }
+                .tag(Tab.clients)
 
             CalendarScreen()
                 .tabItem {
                     Label("tab.calendar", systemImage: "calendar")
                 }
+                .tag(Tab.calendar)
 
             AnalyticsView()
                 .tabItem {
                     Label("tab.analytics", systemImage: "chart.bar")
                 }
+                .tag(Tab.analytics)
 
             SettingsView()
                 .tabItem {
                     Label("tab.settings", systemImage: "gear")
                 }
+                .tag(Tab.settings)
         }
         .tint(colors.accent)
+        // Нагадування майстру стежать за записами
+        .background(ReminderSyncView())
+        // Тап по нагадуванню — запис відкривається на Головній
+        .onChange(of: appState.openAppointmentID) { _, id in
+            if id != nil {
+                tab = .home
+            }
+        }
         .task {
             if let userID = appState.session.userID {
                 SyncTracking.prepareWorkspace(

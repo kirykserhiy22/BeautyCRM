@@ -27,6 +27,9 @@
 - `BeautyCRM/SaveErrorReporter.swift` — `context.saveReportingErrors()`: збереження з показом помилки
 - `BeautyCRM/MoneyField.swift` — поле суми з підсвіткою неправильного вводу
 - `BeautyCRM/BrandForm.swift` — фірмовий вигляд форм (`brandForm`, `brandRows`, `FormPrimaryButton`, `formCard`) і `PasswordField` з кнопкою «показати пароль»
+- `BeautyCRM/Reminders.swift` — нагадування майстру (локальні сповіщення): `ReminderPlanner` (розклад, тести), `ReminderScheduler`,
+  `ReminderSyncView` (перебудовує розклад при зміні записів), `NotificationRouter` (тап відкриває запис через `AppState.openAppointmentID`);
+  екран — `ReminderSettingsView.swift`
 - `BeautyCRM/ContactLinks.swift` — посилання на телефон, Instagram, Telegram, WhatsApp, Viber, Messenger із будь-якого написання ніка чи номера
 - `BeautyCRM/ContactNetwork.swift` — соцмережі клієнта (назва, значок, поле в `Client`, посилання); нова соцмережа — один `case`
 - `BeautyCRM/DayTimelineView.swift` + `DayTimelineLayout.swift` — шкала дня (Головна, Календар) і розрахунок положення записів

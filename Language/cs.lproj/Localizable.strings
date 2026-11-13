@@ -360,3 +360,26 @@
 
 "password.show" = "Zobrazit heslo";
 "password.hide" = "Skrýt heslo";
+
+// Нагадування майстру
+"settings.reminders" = "Připomínky";
+"reminders.section.me" = "Pro mě";
+"reminders.before" = "Před rezervací";
+"reminders.lead" = "Kdy";
+"reminders.lead.min15" = "15 minut předem";
+"reminders.lead.min30" = "30 minut předem";
+"reminders.lead.hour1" = "1 hodinu předem";
+"reminders.lead.hour2" = "2 hodiny předem";
+"reminders.lead.eveningBefore" = "den předem ve 20:00";
+"reminders.finish" = "Připomenout dokončení";
+"reminders.footer" = "Oznámení přijdou, i když je aplikace zavřená a bez internetu. „Dokončete rezervaci“ přijde 5 minut po jejím konci.";
+"reminders.off" = "Vypnuto";
+"reminders.denied" = "Oznámení pro Beauty Base jsou vypnutá v nastavení iPhonu.";
+"reminders.openSettings" = "Otevřít nastavení";
+"reminders.upcoming.min15" = "Za 15 minut — %@";
+"reminders.upcoming.min30" = "Za 30 minut — %@";
+"reminders.upcoming.hour1" = "Za 1 hodinu — %@";
+"reminders.upcoming.hour2" = "Za 2 hodiny — %@";
+"reminders.upcoming.eveningBefore" = "Zítra — %@";
+"reminders.finish.title" = "Dokončete rezervaci";
+"reminders.finish.body" = "%1$@, %2$@. Zadejte konečnou cenu.";

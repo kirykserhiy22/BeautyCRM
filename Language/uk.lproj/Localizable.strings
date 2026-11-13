@@ -360,3 +360,26 @@
 
 "password.show" = "Показати пароль";
 "password.hide" = "Сховати пароль";
+
+// Нагадування майстру
+"settings.reminders" = "Нагадування";
+"reminders.section.me" = "Мені";
+"reminders.before" = "Перед записом";
+"reminders.lead" = "Коли";
+"reminders.lead.min15" = "за 15 хвилин";
+"reminders.lead.min30" = "за 30 хвилин";
+"reminders.lead.hour1" = "за 1 годину";
+"reminders.lead.hour2" = "за 2 години";
+"reminders.lead.eveningBefore" = "напередодні о 20:00";
+"reminders.finish" = "Нагадати завершити запис";
+"reminders.footer" = "Сповіщення приходять, навіть якщо додаток закритий і немає інтернету. «Завершіть запис» — через 5 хвилин після кінця запису.";
+"reminders.off" = "Вимкнено";
+"reminders.denied" = "Сповіщення для Beauty Base вимкнені в налаштуваннях iPhone.";
+"reminders.openSettings" = "Відкрити налаштування";
+"reminders.upcoming.min15" = "Через 15 хвилин — %@";
+"reminders.upcoming.min30" = "Через 30 хвилин — %@";
+"reminders.upcoming.hour1" = "Через 1 годину — %@";
+"reminders.upcoming.hour2" = "Через 2 години — %@";
+"reminders.upcoming.eveningBefore" = "Завтра — %@";
+"reminders.finish.title" = "Завершіть запис";
+"reminders.finish.body" = "%1$@, %2$@. Вкажіть фактичну ціну.";

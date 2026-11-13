@@ -359,3 +359,26 @@
 
 "password.show" = "Pokaż hasło";
 "password.hide" = "Ukryj hasło";
+
+// Нагадування майстру
+"settings.reminders" = "Przypomnienia";
+"reminders.section.me" = "Dla mnie";
+"reminders.before" = "Przed wizytą";
+"reminders.lead" = "Kiedy";
+"reminders.lead.min15" = "15 minut wcześniej";
+"reminders.lead.min30" = "30 minut wcześniej";
+"reminders.lead.hour1" = "1 godzinę wcześniej";
+"reminders.lead.hour2" = "2 godziny wcześniej";
+"reminders.lead.eveningBefore" = "dzień wcześniej o 20:00";
+"reminders.finish" = "Przypomnij o zakończeniu";
+"reminders.footer" = "Powiadomienia przychodzą nawet przy zamkniętej aplikacji i bez internetu. „Zakończ wizytę” — 5 minut po jej końcu.";
+"reminders.off" = "Wyłączone";
+"reminders.denied" = "Powiadomienia Beauty Base są wyłączone w ustawieniach iPhone’a.";
+"reminders.openSettings" = "Otwórz ustawienia";
+"reminders.upcoming.min15" = "Za 15 minut — %@";
+"reminders.upcoming.min30" = "Za 30 minut — %@";
+"reminders.upcoming.hour1" = "Za 1 godzinę — %@";
+"reminders.upcoming.hour2" = "Za 2 godziny — %@";
+"reminders.upcoming.eveningBefore" = "Jutro — %@";
+"reminders.finish.title" = "Zakończ wizytę";
+"reminders.finish.body" = "%1$@, %2$@. Wpisz ostateczną cenę.";
