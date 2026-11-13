@@ -31,6 +31,8 @@ final class SessionManager: ObservableObject {
         self.userID = nil
         self.isLoggedIn = false
         SyncTracking.currentWorkspaceID = nil
+        // Нагадування про записи цього акаунта більше не потрібні
+        ReminderScheduler.removeAll()
         
         UserDefaults.standard.removeObject(forKey: key)
     }

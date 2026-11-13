@@ -359,3 +359,26 @@
 
 "password.show" = "Passwort anzeigen";
 "password.hide" = "Passwort verbergen";
+
+// Нагадування майстру
+"settings.reminders" = "Erinnerungen";
+"reminders.section.me" = "Für mich";
+"reminders.before" = "Vor einem Termin";
+"reminders.lead" = "Wann";
+"reminders.lead.min15" = "15 Minuten vorher";
+"reminders.lead.min30" = "30 Minuten vorher";
+"reminders.lead.hour1" = "1 Stunde vorher";
+"reminders.lead.hour2" = "2 Stunden vorher";
+"reminders.lead.eveningBefore" = "am Vorabend um 20:00";
+"reminders.finish" = "An Abschluss erinnern";
+"reminders.footer" = "Mitteilungen kommen auch bei geschlossener App und ohne Internet. „Termin abschließen“ kommt 5 Minuten nach dem Ende.";
+"reminders.off" = "Aus";
+"reminders.denied" = "Mitteilungen für Beauty Base sind in den iPhone-Einstellungen deaktiviert.";
+"reminders.openSettings" = "Einstellungen öffnen";
+"reminders.upcoming.min15" = "In 15 Minuten — %@";
+"reminders.upcoming.min30" = "In 30 Minuten — %@";
+"reminders.upcoming.hour1" = "In 1 Stunde — %@";
+"reminders.upcoming.hour2" = "In 2 Stunden — %@";
+"reminders.upcoming.eveningBefore" = "Morgen — %@";
+"reminders.finish.title" = "Termin abschließen";
+"reminders.finish.body" = "%1$@, %2$@. Tragen Sie den Endpreis ein.";

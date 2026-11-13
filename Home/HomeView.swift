@@ -114,6 +114,21 @@ struct HomeView: View {
                     .presentationDetents([.medium, .large])
                     .presentationDragIndicator(.visible)
             }
+            .onAppear(perform: openRequestedAppointment)
+            .onChange(of: appState.openAppointmentID) {
+                openRequestedAppointment()
+            }
+        }
+    }
+
+    // Тап по нагадуванню: відкрити запис, про який воно
+    private func openRequestedAppointment() {
+        guard let id = appState.openAppointmentID else {
+            return
+        }
+        appState.openAppointmentID = nil
+        if let appointment = userAppointments.first(where: { $0.id == id }) {
+            selectedAppointment = appointment
         }
     }
 }

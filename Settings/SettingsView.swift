@@ -28,6 +28,10 @@ struct SettingsView: View {
 
     @State private var showGuide = false
 
+    // Підпис рядка «Нагадування» оновлюється одразу після змін
+    @AppStorage(ReminderSettings.beforeEnabledKey) private var remindersBefore = true
+    @AppStorage(ReminderSettings.leadKey) private var remindersLead = ReminderLead.hour1.rawValue
+
     private var colors: ThemeColors {
         theme.colors(for: theme.currentTheme)
     }
@@ -61,6 +65,10 @@ struct SettingsView: View {
                         divider
                         link(title: "settings.workingHours", icon: Image(systemName: "clock"), value: workingHoursText) {
                             WorkingHoursSettingsView()
+                        }
+                        divider
+                        link(title: "settings.reminders", icon: Image(systemName: "bell"), value: remindersText) {
+                            ReminderSettingsView()
                         }
                         divider
                         link(title: "settings.profession", icon: Image(systemName: "person.text.rectangle"), value: professionTitle) {
@@ -205,6 +213,14 @@ struct SettingsView: View {
     private var workingHoursText: String {
         let hours = DayTimeScale.workingHours(profile)
         return "\(timeText(hours.startMinute))–\(timeText(hours.endMinute))"
+    }
+
+    // «за 1 годину» або «Вимкнено»
+    private var remindersText: String {
+        guard remindersBefore else {
+            return localization.localizedString(for: "reminders.off")
+        }
+        return localization.localizedString(for: (ReminderLead(rawValue: remindersLead) ?? .hour1).titleKey)
     }
 
     private var languageTitle: String? {

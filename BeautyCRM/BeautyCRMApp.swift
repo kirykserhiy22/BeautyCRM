@@ -6,6 +6,7 @@
 //
 import SwiftUI
 import SwiftData
+import UserNotifications
 
 @main
 struct BeautyCRMApp: App {
@@ -21,6 +22,8 @@ struct BeautyCRMApp: App {
     init() {
         SyncTracking.start()
         BrandFont.register()
+        // Тап по нагадуванню відкриває запис
+        UNUserNotificationCenter.current().delegate = NotificationRouter.shared
     }
 
     var body: some Scene {
@@ -40,6 +43,7 @@ struct BeautyCRMApp: App {
                 .environmentObject(profession)
                 .onAppear {
                     currency.setLocale(localization.locale)
+                    NotificationRouter.shared.appState = appState
                 }
                 .onChange(of: localization.languageCode) {
                     currency.setLocale(localization.locale)

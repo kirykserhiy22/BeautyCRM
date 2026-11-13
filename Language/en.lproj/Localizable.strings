@@ -359,3 +359,26 @@
 
 "password.show" = "Show password";
 "password.hide" = "Hide password";
+
+// Нагадування майстру
+"settings.reminders" = "Reminders";
+"reminders.section.me" = "For me";
+"reminders.before" = "Before an appointment";
+"reminders.lead" = "When";
+"reminders.lead.min15" = "15 minutes before";
+"reminders.lead.min30" = "30 minutes before";
+"reminders.lead.hour1" = "1 hour before";
+"reminders.lead.hour2" = "2 hours before";
+"reminders.lead.eveningBefore" = "the evening before at 20:00";
+"reminders.finish" = "Remind me to complete it";
+"reminders.footer" = "Notifications arrive even when the app is closed and offline. “Complete the appointment” comes 5 minutes after it ends.";
+"reminders.off" = "Off";
+"reminders.denied" = "Notifications for Beauty Base are turned off in iPhone Settings.";
+"reminders.openSettings" = "Open Settings";
+"reminders.upcoming.min15" = "In 15 minutes — %@";
+"reminders.upcoming.min30" = "In 30 minutes — %@";
+"reminders.upcoming.hour1" = "In 1 hour — %@";
+"reminders.upcoming.hour2" = "In 2 hours — %@";
+"reminders.upcoming.eveningBefore" = "Tomorrow — %@";
+"reminders.finish.title" = "Complete the appointment";
+"reminders.finish.body" = "%1$@, %2$@. Add the final price.";
