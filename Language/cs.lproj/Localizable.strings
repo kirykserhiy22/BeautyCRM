@@ -383,3 +383,29 @@
 "reminders.upcoming.eveningBefore" = "Zítra — %@";
 "reminders.finish.title" = "Dokončete rezervaci";
 "reminders.finish.body" = "%1$@, %2$@. Zadejte konečnou cenu.";
+
+// Нагадування клієнту
+"clientMessage.button" = "Připomenout klientce";
+"clientMessage.sent" = "Připomínka odeslána %@";
+"clientMessage.sendVia" = "Odeslat přes";
+"clientMessage.other" = "Jiná aplikace";
+"clientMessage.text" = "Zpráva (před odesláním ji můžete upravit)";
+"clientMessage.pasteHint" = "U Telegramu a Viberu se text zkopíruje: v chatu klepněte na „Vložit“.";
+"clientMessage.template" = "Dobrý den, {name}! Připomínám vaši rezervaci {date} v {time}: {services}.\nAdresa: {address}\nTěším se na vás!";
+"clientMessage.dateFormat" = "d. MMMM";
+"reminders.section.clients" = "Pro klienty";
+"clientMessage.addressPlaceholder" = "Adresa salonu nebo studia";
+"clientMessage.addressFooter" = "Vkládá se do zprávy. Bez adresy se tento řádek vynechá.";
+"clientMessage.template.title" = "Šablona zprávy";
+"clientMessage.template.footer" = "Slova ve složených závorkách se nahradí údaji rezervace. Klepnutím je přidáte na konec.";
+"clientMessage.signature" = "Podpis";
+"clientMessage.reset" = "Obnovit výchozí text";
+"clientMessage.preview" = "Co uvidí klientka";
+"clientMessage.sampleName" = "Anna Nováková";
+"clientMessage.sampleService" = "Manikúra";
+"clientMessage.token.name" = "jméno";
+"clientMessage.token.date" = "datum";
+"clientMessage.token.time" = "čas";
+"clientMessage.token.services" = "služby";
+"clientMessage.token.price" = "cena";
+"clientMessage.token.address" = "adresa";

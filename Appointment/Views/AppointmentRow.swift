@@ -27,6 +27,7 @@ struct AppointmentRow: View {
     @State private var showAddService = false
     @State private var addedServiceIDs: Set<UUID> = []
     @State private var showCancelConfirm = false
+    @State private var showClientReminder = false
     @State private var showRestoreConflict = false
     @State private var finalServicePrices: [UUID: String] = [:]
     @State private var completionItems: [CompletionServiceItem] = []
@@ -207,6 +208,36 @@ struct AppointmentRow: View {
 
                     VStack(spacing: 10) {
 
+                        // Нагадати клієнту — для записів, які ще попереду або тривають
+                        if appt.status == .active && appt.endDate > Date() {
+
+                            Button {
+                                showClientReminder = true
+                            } label: {
+                                Label(
+                                    localization.localizedString(for: "clientMessage.button"),
+                                    systemImage: "paperplane.fill"
+                                )
+                                .frame(maxWidth: .infinity)
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .tint(colors.accent)
+                            .accessibilityIdentifier("appointment.remindClient")
+
+                            if let sent = appt.clientReminderSentAt {
+                                Label(
+                                    String(
+                                        format: localization.localizedString(for: "clientMessage.sent"),
+                                        AppFormatting.pattern("d MMM, HH:mm", sent, locale: localization.locale)
+                                    ),
+                                    systemImage: "checkmark.circle"
+                                )
+                                .font(.caption)
+                                .foregroundColor(colors.success)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                        }
+
                         // Перший ряд кнопок
 
                         HStack(spacing: 10) {
@@ -322,6 +353,10 @@ struct AppointmentRow: View {
                 .stroke(colors.border, lineWidth: 1)
         )
         .shadow(color: colors.shadow, radius: 6, y: 2)
+
+        .sheet(isPresented: $showClientReminder) {
+            ClientReminderView(appointment: appt)
+        }
 
         // CANCEL CONFIRMATION
 

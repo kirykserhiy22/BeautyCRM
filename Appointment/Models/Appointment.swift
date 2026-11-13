@@ -55,6 +55,9 @@ final class Appointment: SyncTrackable {
     // CACHE ONLY (НЕ business truth)
     var finalPrice: Decimal?
 
+    // Коли майстер востаннє надіслав клієнту нагадування про цей запис
+    var clientReminderSentAt: Date? = nil
+
     // MARK: - SYNC
 
     var workspaceID: UUID? = nil

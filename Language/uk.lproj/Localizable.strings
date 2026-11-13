@@ -383,3 +383,29 @@
 "reminders.upcoming.eveningBefore" = "Завтра — %@";
 "reminders.finish.title" = "Завершіть запис";
 "reminders.finish.body" = "%1$@, %2$@. Вкажіть фактичну ціну.";
+
+// Нагадування клієнту
+"clientMessage.button" = "Нагадати клієнту";
+"clientMessage.sent" = "Нагадування надіслано %@";
+"clientMessage.sendVia" = "Надіслати через";
+"clientMessage.other" = "Інший спосіб";
+"clientMessage.text" = "Текст (можна змінити перед надсиланням)";
+"clientMessage.pasteHint" = "Для Telegram і Viber текст копіюється: у чаті натисніть «Вставити».";
+"clientMessage.template" = "Доброго дня, {name}! Нагадую про ваш запис {date} о {time}: {services}.\nАдреса: {address}\nДо зустрічі!";
+"clientMessage.dateFormat" = "d MMMM";
+"reminders.section.clients" = "Клієнтам";
+"clientMessage.addressPlaceholder" = "Адреса салону чи кабінету";
+"clientMessage.addressFooter" = "Підставляється в повідомлення. Якщо адреси немає, рядок з нею пропускається.";
+"clientMessage.template.title" = "Шаблон повідомлення";
+"clientMessage.template.footer" = "Слова у фігурних дужках замінюються даними запису. Тапніть вставку, щоб додати її в кінець тексту.";
+"clientMessage.signature" = "Підпис";
+"clientMessage.reset" = "Повернути стандартний текст";
+"clientMessage.preview" = "Як побачить клієнт";
+"clientMessage.sampleName" = "Олена Коваль";
+"clientMessage.sampleService" = "Манікюр";
+"clientMessage.token.name" = "ім'я";
+"clientMessage.token.date" = "дата";
+"clientMessage.token.time" = "час";
+"clientMessage.token.services" = "послуги";
+"clientMessage.token.price" = "ціна";
+"clientMessage.token.address" = "адреса";

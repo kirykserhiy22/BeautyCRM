@@ -40,6 +40,12 @@ final class UserProfile: SyncTrackable {
     // APP
     var createdAt: Date
 
+    // Нагадування клієнтам: адреса, шаблон тексту (nil — стандартний мовою додатку)
+    // і підпис (nil — ім'я майстра)
+    var reminderAddress: String? = nil
+    var reminderTemplate: String? = nil
+    var reminderSignature: String? = nil
+
     // MARK: - SYNC
 
     var workspaceID: UUID? = nil

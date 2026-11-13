@@ -382,3 +382,29 @@
 "reminders.upcoming.eveningBefore" = "Tomorrow — %@";
 "reminders.finish.title" = "Complete the appointment";
 "reminders.finish.body" = "%1$@, %2$@. Add the final price.";
+
+// Нагадування клієнту
+"clientMessage.button" = "Remind client";
+"clientMessage.sent" = "Reminder sent %@";
+"clientMessage.sendVia" = "Send via";
+"clientMessage.other" = "Other app";
+"clientMessage.text" = "Message (you can edit it before sending)";
+"clientMessage.pasteHint" = "For Telegram and Viber the text is copied: tap “Paste” in the chat.";
+"clientMessage.template" = "Hi {name}! Just a reminder of your appointment on {date} at {time}: {services}.\nAddress: {address}\nSee you soon!";
+"clientMessage.dateFormat" = "d MMMM";
+"reminders.section.clients" = "For clients";
+"clientMessage.addressPlaceholder" = "Salon or studio address";
+"clientMessage.addressFooter" = "Added to the message. If there’s no address, that line is skipped.";
+"clientMessage.template.title" = "Message template";
+"clientMessage.template.footer" = "Words in curly brackets are replaced with the appointment details. Tap one to add it to the end.";
+"clientMessage.signature" = "Signature";
+"clientMessage.reset" = "Restore default text";
+"clientMessage.preview" = "What the client sees";
+"clientMessage.sampleName" = "Anna Smith";
+"clientMessage.sampleService" = "Manicure";
+"clientMessage.token.name" = "name";
+"clientMessage.token.date" = "date";
+"clientMessage.token.time" = "time";
+"clientMessage.token.services" = "services";
+"clientMessage.token.price" = "price";
+"clientMessage.token.address" = "address";
