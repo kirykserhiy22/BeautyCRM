@@ -56,24 +56,47 @@ final class ClientMessageTests: XCTestCase {
         XCTAssertEqual(sms?.url.absoluteString, "sms:+491512345678&body=Hi")
     }
 
-    func testTelegramAndViberOpenChatAndAskToPaste() {
-        let contact = ClientMessageChannel.Contact(phone: "+380 67 123 45 67", telegram: "@olena_k")
+    func testTelegramOpensClientChatWithText() {
+        let contact = ClientMessageChannel.Contact(telegram: "https://t.me/olena_k")
 
-        let telegram = ClientMessageChannel.telegram.link(text: "Hi", contact: contact)
-        XCTAssertEqual(telegram?.url.absoluteString, "https://t.me/olena_k")
-        XCTAssertEqual(telegram?.needsPaste, true)
-
-        let viber = ClientMessageChannel.viber.link(text: "Hi", contact: contact)
-        XCTAssertEqual(viber?.url.absoluteString, "viber://chat?number=%2B380671234567")
-        XCTAssertEqual(viber?.needsPaste, true)
+        let telegram = ClientMessageChannel.telegram.link(text: "Hi there", contact: contact)
+        XCTAssertEqual(telegram?.url.absoluteString, "tg://resolve?domain=olena_k&text=Hi%20there")
+        XCTAssertEqual(telegram?.fallback?.absoluteString, "https://t.me/olena_k?text=Hi%20there")
+        XCTAssertEqual(telegram?.needsPaste, true, "Текст ще й копіюється — на випадок старого Telegram")
     }
 
-    func testWithoutContactMessengerOffersToPickChat() {
+    func testViberAndTelegramWithoutNickPickChatWithTextInside() {
         let none = ClientMessageChannel.Contact()
 
-        XCTAssertEqual(ClientMessageChannel.telegram.link(text: "Hi", contact: none)?.url.absoluteString, "tg://msg?text=Hi")
         XCTAssertEqual(ClientMessageChannel.viber.link(text: "Hi", contact: none)?.url.absoluteString, "viber://forward?text=Hi")
+        XCTAssertEqual(ClientMessageChannel.telegram.link(text: "Hi", contact: none)?.url.absoluteString, "tg://msg?text=Hi")
         XCTAssertEqual(ClientMessageChannel.whatsapp.link(text: "Hi", contact: none)?.url.absoluteString, "https://wa.me/?text=Hi")
+    }
+
+    func testInstagramAndMessengerOpenDirectMessages() {
+        let contact = ClientMessageChannel.Contact(instagram: "@olena.nails", messenger: "olena.k")
+
+        XCTAssertEqual(ClientMessageChannel.instagram.link(text: "Hi", contact: contact)?.url.absoluteString, "https://ig.me/m/olena.nails")
+        XCTAssertEqual(ClientMessageChannel.messenger.link(text: "Hi", contact: contact)?.url.absoluteString, "https://m.me/olena.k")
+        XCTAssertNil(ClientMessageChannel.instagram.link(text: "Hi", contact: .init()), "Без ніка Instagram нікуди не відкрити")
+    }
+
+    func testClientChannelsComeFirst() {
+        let contact = ClientMessageChannel.Contact(telegram: "@olena_k", instagram: "olena.nails")
+
+        let split = ClientMessageChannel.split(for: contact)
+
+        XCTAssertEqual(split.primary, [.telegram, .instagram])
+        XCTAssertEqual(split.other, [.whatsapp, .viber, .sms], "Messenger без ніка не пропонуємо")
+    }
+
+    func testLocalNumbersGetCountryCode() {
+        XCTAssertEqual(ClientMessageChannel.international("067 123 45 67", countryCode: "380"), "380671234567")
+        XCTAssertEqual(ClientMessageChannel.international("0151 2345678", countryCode: "49"), "491512345678")
+        XCTAssertEqual(ClientMessageChannel.international("601 234 567", countryCode: "48"), "48601234567")
+        XCTAssertEqual(ClientMessageChannel.international("+380 67 123 45 67", countryCode: "49"), "380671234567", "Номер з «+» не чіпаємо")
+        XCTAssertEqual(ClientMessageChannel.international("0049 151 2345678", countryCode: "380"), "491512345678")
+        XCTAssertNil(ClientMessageChannel.international("12 34", countryCode: "380"))
     }
 
     func testEncodingKeepsOnlySafeCharacters() {

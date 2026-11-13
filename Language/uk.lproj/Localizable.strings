@@ -390,14 +390,14 @@
 "clientMessage.sendVia" = "Надіслати через";
 "clientMessage.other" = "Інший спосіб";
 "clientMessage.text" = "Текст (можна змінити перед надсиланням)";
-"clientMessage.pasteHint" = "Для Telegram і Viber текст копіюється: у чаті натисніть «Вставити».";
+"clientMessage.pasteHint" = "Для Telegram, Instagram і Messenger текст також копіюється: якщо його немає в чаті, натисніть «Вставити».";
 "clientMessage.template" = "Доброго дня, {name}! Нагадую про ваш запис {date} о {time}: {services}.\nАдреса: {address}\nДо зустрічі!";
 "clientMessage.dateFormat" = "d MMMM";
 "reminders.section.clients" = "Клієнтам";
 "clientMessage.addressPlaceholder" = "Адреса салону чи кабінету";
 "clientMessage.addressFooter" = "Підставляється в повідомлення. Якщо адреси немає, рядок з нею пропускається.";
 "clientMessage.template.title" = "Шаблон повідомлення";
-"clientMessage.template.footer" = "Слова у фігурних дужках замінюються даними запису. Тапніть вставку, щоб додати її в кінець тексту.";
+"clientMessage.template.footer" = "Слова у фігурних дужках замінюються даними запису. Тапніть вставку — вона з’явиться там, де курсор.";
 "clientMessage.signature" = "Підпис";
 "clientMessage.reset" = "Повернути стандартний текст";
 "clientMessage.preview" = "Як побачить клієнт";
@@ -409,3 +409,7 @@
 "clientMessage.token.services" = "послуги";
 "clientMessage.token.price" = "ціна";
 "clientMessage.token.address" = "адреса";
+"clientMessage.otherApps" = "Інші месенджери";
+"clientMessage.confirm.title" = "Нагадування надіслали?";
+"clientMessage.confirm.yes" = "Так, надіслано";
+"clientMessage.confirm.no" = "Ні";

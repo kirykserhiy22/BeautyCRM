@@ -25,6 +25,7 @@ struct ReminderSettingsView: View {
     @State private var template = ""
     @State private var signature = ""
     @State private var didLoad = false
+    @State private var editor = TemplateEditorController()
 
     private var profile: UserProfile? {
         profiles.first { $0.authUserID == appState.session.userID }
@@ -126,10 +127,13 @@ struct ReminderSettingsView: View {
 
         Section {
 
-            // Поле росте разом із текстом — без прокрутки всередині
-            TextField("", text: $template, axis: .vertical)
-                .lineLimit(4...14)
-                .accessibilityIdentifier("reminders.template")
+            // Поле росте разом із текстом; вставка — там, де курсор
+            TemplateEditor(
+                text: $template,
+                controller: editor,
+                textColor: UIColor(colors.textPrimary),
+                tintColor: UIColor(colors.accent)
+            )
 
             // Вставки: тап додає в кінець тексту
             ScrollView(.horizontal, showsIndicators: false) {
@@ -161,6 +165,8 @@ struct ReminderSettingsView: View {
             }
 
             Button(localization.localizedString(for: "clientMessage.reset")) {
+                // Курсор після заміни тексту — у кінці
+                editor.moveToEnd()
                 template = editableDefaultTemplate
             }
             .disabled(template == editableDefaultTemplate)
@@ -212,12 +218,7 @@ struct ReminderSettingsView: View {
     }
 
     private func insert(_ token: ClientMessageToken) {
-        let piece = "{\(tokenTitle(token))}"
-        if template.isEmpty || template.hasSuffix(" ") || template.hasSuffix("\n") {
-            template += piece
-        } else {
-            template += " " + piece
-        }
+        editor.insert("{\(tokenTitle(token))}")
     }
 
     private func loadClientSettings() {
@@ -260,5 +261,84 @@ struct ReminderSettingsView: View {
     private func refreshPermission() async {
         let status = await UNUserNotificationCenter.current().notificationSettings().authorizationStatus
         isDenied = status == .denied
+    }
+}
+
+
+// MARK: - TEMPLATE EDITOR
+
+// Багаторядкове поле, яке вміє вставити слово там, де стоїть курсор
+// (або замість виділеного). Звичайне поле SwiftUI на iOS 17 цього не вміє.
+final class TemplateEditorController {
+    fileprivate weak var textView: UITextView?
+
+    func insert(_ piece: String) {
+        guard let textView else {
+            return
+        }
+        // Курсор лишається там, де був, навіть якщо клавіатуру сховали
+        textView.insertText(piece)
+        // Поле в SwiftUI теж має дізнатися про новий текст
+        textView.delegate?.textViewDidChange?(textView)
+    }
+
+    func moveToEnd() {
+        DispatchQueue.main.async { [weak self] in
+            guard let view = self?.textView else { return }
+            view.selectedRange = NSRange(location: (view.text as NSString).length, length: 0)
+        }
+    }
+}
+
+struct TemplateEditor: UIViewRepresentable {
+
+    @Binding var text: String
+    let controller: TemplateEditorController
+    let textColor: UIColor
+    let tintColor: UIColor
+
+    func makeUIView(context: Context) -> UITextView {
+        let view = UITextView()
+        view.isScrollEnabled = false
+        view.backgroundColor = .clear
+        view.font = .preferredFont(forTextStyle: .body)
+        view.adjustsFontForContentSizeCategory = true
+        view.textContainerInset = .zero
+        view.textContainer.lineFragmentPadding = 0
+        view.delegate = context.coordinator
+        view.accessibilityIdentifier = "reminders.template"
+        // Без курсора вставка йде в кінець
+        view.text = text
+        view.selectedRange = NSRange(location: (text as NSString).length, length: 0)
+        controller.textView = view
+        return view
+    }
+
+    func updateUIView(_ view: UITextView, context: Context) {
+        view.textColor = textColor
+        view.tintColor = tintColor
+        if view.text != text {
+            view.text = text
+        }
+        controller.textView = view
+    }
+
+    func sizeThatFits(_ proposal: ProposedViewSize, uiView: UITextView, context: Context) -> CGSize? {
+        let width = proposal.width ?? 300
+        let height = uiView.sizeThatFits(CGSize(width: width, height: .greatestFiniteMagnitude)).height
+        return CGSize(width: width, height: max(height, 88))
+    }
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(text: $text)
+    }
+
+    final class Coordinator: NSObject, UITextViewDelegate {
+        let text: Binding<String>
+        init(text: Binding<String>) { self.text = text }
+
+        func textViewDidChange(_ textView: UITextView) {
+            text.wrappedValue = textView.text
+        }
     }
 }

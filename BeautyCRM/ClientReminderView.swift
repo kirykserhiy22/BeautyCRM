@@ -92,6 +92,10 @@ struct ClientReminderView: View {
     @State private var text = ""
     @State private var didLoad = false
     @State private var showShare = false
+    // Майстер пішов у месенджер — після повернення питаємо, чи надіслано
+    @State private var awaitingReturn = false
+    @State private var askSent = false
+    @Environment(\.scenePhase) private var scenePhase
 
     private var colors: ThemeColors {
         theme.colors(for: theme.currentTheme)
@@ -109,8 +113,11 @@ struct ClientReminderView: View {
         ClientMessageChannel.Contact(
             phone: client?.phone,
             telegram: client?.telegram,
+            instagram: client?.instagram,
+            whatsapp: client?.whatsapp,
             viber: client?.viber,
-            whatsapp: client?.whatsapp
+            messenger: client?.messenger,
+            countryCode: ClientMessageChannel.countryCode(region: Locale.current.region?.identifier)
         )
     }
 
@@ -127,41 +134,76 @@ struct ClientReminderView: View {
                         colors: colors
                     )
 
-                    LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 4), spacing: 8) {
-                        ForEach(ClientMessageChannel.allCases) { channel in
-                            Button {
-                                send(via: channel)
-                            } label: {
-                                VStack(spacing: 6) {
-                                    channelIcon(channel)
-                                    Text(channel.title)
-                                        .font(.caption)
-                                        .foregroundColor(colors.textPrimary)
-                                        .lineLimit(1)
-                                        .minimumScaleFactor(0.8)
+                    let channels = ClientMessageChannel.split(for: contact)
+
+                    // Контакти з картки клієнта — великими кнопками
+                    if !channels.primary.isEmpty {
+                        LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: min(channels.primary.count, 3)), spacing: 8) {
+                            ForEach(channels.primary) { channel in
+                                Button {
+                                    send(via: channel)
+                                } label: {
+                                    VStack(spacing: 6) {
+                                        channelIcon(channel, size: 26)
+                                        Text(channel.title)
+                                            .font(.subheadline.weight(.medium))
+                                            .foregroundColor(colors.textPrimary)
+                                            .lineLimit(1)
+                                            .minimumScaleFactor(0.8)
+                                    }
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 16)
+                                    .background(colors.card)
+                                    .cornerRadius(14)
                                 }
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 12)
-                                .background(colors.card)
-                                .cornerRadius(14)
+                                .buttonStyle(.plain)
+                                .accessibilityIdentifier("clientReminder.\(channel.rawValue)")
                             }
-                            .buttonStyle(.plain)
-                            .accessibilityIdentifier("clientReminder.\(channel.rawValue)")
                         }
                     }
 
-                    Button {
-                        showShare = true
-                    } label: {
-                        Label(localization.localizedString(for: "clientMessage.other"), systemImage: "square.and.arrow.up")
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 12)
-                            .foregroundColor(colors.accent)
-                            .background(colors.card)
-                            .cornerRadius(14)
+                    // Решта — дрібніше: якщо клієнт є ще десь
+                    FormSectionTitle(
+                        text: localization.localizedString(for: channels.primary.isEmpty ? "clientMessage.sendVia" : "clientMessage.otherApps"),
+                        colors: colors
+                    )
+
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 8) {
+                            ForEach(channels.other) { channel in
+                                Button {
+                                    send(via: channel)
+                                } label: {
+                                    HStack(spacing: 6) {
+                                        channelIcon(channel, size: 16)
+                                        Text(channel.title)
+                                            .font(.footnote)
+                                            .foregroundColor(colors.textPrimary)
+                                    }
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 9)
+                                    .background(colors.card)
+                                    .cornerRadius(12)
+                                }
+                                .buttonStyle(.plain)
+                                .accessibilityIdentifier("clientReminder.\(channel.rawValue)")
+                            }
+
+                            Button {
+                                showShare = true
+                            } label: {
+                                Label(localization.localizedString(for: "clientMessage.other"), systemImage: "square.and.arrow.up")
+                                    .font(.footnote)
+                                    .foregroundColor(colors.accent)
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 9)
+                                    .background(colors.card)
+                                    .cornerRadius(12)
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityIdentifier("clientReminder.other")
+                        }
                     }
-                    .buttonStyle(.plain)
-                    .accessibilityIdentifier("clientReminder.other")
 
                     FormSectionTitle(
                         text: localization.localizedString(for: "clientMessage.text"),
@@ -179,6 +221,7 @@ struct ClientReminderView: View {
 
                     Text(localization.localizedString(for: "clientMessage.pasteHint"))
                         .font(.footnote)
+                        .fixedSize(horizontal: false, vertical: true)
                         .foregroundColor(colors.textSecondary)
                         .padding(.horizontal, 4)
 
@@ -215,24 +258,43 @@ struct ClientReminderView: View {
             .sheet(isPresented: $showShare) {
                 ShareSheet(items: [text]) { completed in
                     if completed {
-                        markSent()
+                        askSent = true
                     }
                 }
+            }
+            // Повернулись із месенджера — тільки майстер знає, чи натиснув «Надіслати»
+            .onChange(of: scenePhase) { _, phase in
+                if phase == .active && awaitingReturn {
+                    awaitingReturn = false
+                    askSent = true
+                }
+            }
+            .alert(
+                localization.localizedString(for: "clientMessage.confirm.title"),
+                isPresented: $askSent
+            ) {
+                Button(localization.localizedString(for: "clientMessage.confirm.yes")) {
+                    markSent()
+                    dismiss()
+                }
+                Button(localization.localizedString(for: "clientMessage.confirm.no"), role: .cancel) {}
             }
         }
     }
 
     @ViewBuilder
-    private func channelIcon(_ channel: ClientMessageChannel) -> some View {
+    private func channelIcon(_ channel: ClientMessageChannel, size: CGFloat) -> some View {
         switch channel {
-        case .telegram: ContactNetworkIcon(network: .telegram, size: 22)
-        case .viber: ContactNetworkIcon(network: .viber, size: 22)
-        case .whatsapp: ContactNetworkIcon(network: .whatsapp, size: 22)
+        case .telegram: ContactNetworkIcon(network: .telegram, size: size)
+        case .instagram: ContactNetworkIcon(network: .instagram, size: size)
+        case .viber: ContactNetworkIcon(network: .viber, size: size)
+        case .whatsapp: ContactNetworkIcon(network: .whatsapp, size: size)
+        case .messenger: ContactNetworkIcon(network: .messenger, size: size)
         case .sms:
             Image(systemName: "message.fill")
-                .font(.system(size: 18))
+                .font(.system(size: size * 0.8))
                 .foregroundColor(colors.accent)
-                .frame(width: 22, height: 22)
+                .frame(width: size, height: size)
         }
     }
 
@@ -254,10 +316,15 @@ struct ClientReminderView: View {
             UIPasteboard.general.string = text
         }
 
-        UIApplication.shared.open(link.url) { opened in
+        open(link.url, fallback: link.fallback)
+    }
+
+    private func open(_ url: URL, fallback: URL?) {
+        UIApplication.shared.open(url) { opened in
             if opened {
-                markSent()
-                dismiss()
+                awaitingReturn = true
+            } else if let fallback {
+                open(fallback, fallback: nil)
             } else {
                 // Месенджер не встановлено — звичайне меню «Поділитися»
                 showShare = true
