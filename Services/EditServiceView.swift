@@ -42,23 +42,31 @@ struct EditServiceView: View {
         NavigationStack {
             
             Form {
-                
-                TextField("services.name", text: $name)
-                
-                if !isVariable {
-                    MoneyField(
-                        placeholder: localization.localizedString(for: "services.price"),
-                        value: $price
-                    )
+
+                Section {
+
+                    TextField("services.name", text: $name)
+
+                    if !isVariable {
+                        MoneyField(
+                            placeholder: localization.localizedString(for: "services.price"),
+                            value: $price
+                        )
+                    }
+
+                    Toggle("services.variablePrice", isOn: $isVariable)
                 }
-                
-                Toggle("services.variablePrice", isOn: $isVariable)
-                
-                Button("services.save") {
+                .brandRows(colors)
+
+                FormPrimaryButton(
+                    title: localization.localizedString(for: "services.save"),
+                    isEnabled: canSave,
+                    colors: colors
+                ) {
                     save()
                 }
-                .disabled(!canSave)
             }
+            .brandForm(colors)
             .navigationTitle("services.editTitle")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {

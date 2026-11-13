@@ -356,3 +356,6 @@
 "onboarding.5.text" = "In der Kundenkarte: Besuche, Notizen, Vorher-Nachher-Fotos. Von dort aus anrufen, schreiben oder neu buchen.";
 "onboarding.6.title" = "Starten Sie mit der Preisliste";
 "onboarding.6.text" = "Fügen Sie Leistungen und Arbeitszeiten in den Einstellungen hinzu. Dort finden Sie auch diese „Anleitung“.";
+
+"password.show" = "Passwort anzeigen";
+"password.hide" = "Passwort verbergen";

@@ -56,8 +56,10 @@ struct ServicePickerView: View {
         NavigationStack {
             
             ZStack {
-                
-                                
+
+                colors.background
+                    .ignoresSafeArea()
+
                 VStack(spacing: 0) {
                     
                     // SEARCH

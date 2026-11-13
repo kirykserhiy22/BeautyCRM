@@ -32,9 +32,12 @@ struct SignUpAccountStep: View {
                 .authField(colors)
                 .accessibilityIdentifier("signup.email")
 
-            SecureField("signup.password", text: $state.password, prompt: Text("signup.password").foregroundColor(colors.textSecondary))
-                .authField(colors)
-                .accessibilityIdentifier("signup.password")
+            PasswordField(
+                titleKey: "signup.password",
+                text: $state.password,
+                colors: colors,
+                identifier: "signup.password"
+            )
 
             Text("signup.password.hint")
                 .font(.caption)

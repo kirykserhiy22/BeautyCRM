@@ -135,6 +135,7 @@ struct CreateServiceView: View {
             }
             .padding()
             .background(colors.background)
+            .tint(colors.accent)
             .navigationTitle("services.createTitle")
         }
     }
