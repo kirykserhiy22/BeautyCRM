@@ -81,6 +81,9 @@ struct AppointmentFormView: View {
     @State private var errorMessage = ""
     @State private var showDayOffWarning = false
 
+    // Як виглядала форма відразу після відкриття — щоб знати, чи щось змінили
+    @State private var initialSnapshot: String?
+
     private var colors: ThemeColors {
         theme.colors(for: theme.currentTheme)
     }
@@ -154,10 +157,19 @@ struct AppointmentFormView: View {
             }
             .background(colors.background)
             .tint(colors.accent)
+            // Гортання ховає клавіатуру
+            .scrollDismissesKeyboard(.interactively)
+            .keyboardDoneButton()
             .navigationTitle(modeTitle)
+            .unsavedChangesGuard(hasChanges) {
+                dismiss()
+            }
             .onAppear {
                 loadAppointmentIfNeeded()
                 preselectClientIfNeeded()
+                if initialSnapshot == nil {
+                    initialSnapshot = snapshot
+                }
             }
             .alert(
                 localization.localizedString(for: "appointment.dayOff.title"),
@@ -834,5 +846,22 @@ private extension AppointmentFormView {
 
     func time(_ date: Date) -> String {
         AppFormatting.clock(date)
+    }
+
+    // Усе, що майстер може змінити у формі
+    var snapshot: String {
+        let services = serviceState.selectedServices.map(\.id.uuidString).sorted().joined(separator: ",")
+        let prices = serviceState.customPrices
+            .map { "\($0.key.uuidString)=\($0.value)" }
+            .sorted()
+            .joined(separator: ",")
+        let retained = serviceState.retainedItems.map(\.id.uuidString).sorted().joined(separator: ",")
+        return [clientSearch, services, prices, retained, "\(date.timeIntervalSince1970)", "\(duration)", notes]
+            .joined(separator: "|")
+    }
+
+    var hasChanges: Bool {
+        guard let initialSnapshot else { return false }
+        return snapshot != initialSnapshot
     }
 }

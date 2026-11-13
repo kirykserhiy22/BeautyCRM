@@ -544,6 +544,7 @@ struct AppointmentRow: View {
                     .padding()
                 }
                 .scrollDismissesKeyboard(.interactively)
+                .keyboardDoneButton()
             }
             .sheet(isPresented: $showAddService, onDismiss: syncAddedServices) {
                 ServicePickerView(

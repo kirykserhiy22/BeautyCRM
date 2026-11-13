@@ -76,7 +76,7 @@ final class ClientMessageTests: XCTestCase {
     func testInstagramAndMessengerOpenDirectMessages() {
         let contact = ClientMessageChannel.Contact(instagram: "@olena.nails", messenger: "olena.k")
 
-        XCTAssertEqual(ClientMessageChannel.instagram.link(text: "Hi", contact: contact)?.url.absoluteString, "https://ig.me/m/olena.nails")
+        XCTAssertEqual(ClientMessageChannel.instagram.link(text: "Hi", contact: contact)?.url.absoluteString, "https://ig.me/m/olena.nails?text=Hi")
         XCTAssertEqual(ClientMessageChannel.messenger.link(text: "Hi", contact: contact)?.url.absoluteString, "https://m.me/olena.k")
         XCTAssertNil(ClientMessageChannel.instagram.link(text: "Hi", contact: .init()), "Без ніка Instagram нікуди не відкрити")
     }

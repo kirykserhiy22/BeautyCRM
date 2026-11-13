@@ -412,3 +412,8 @@
 "clientMessage.confirm.title" = "Erinnerung gesendet?";
 "clientMessage.confirm.yes" = "Ja, gesendet";
 "clientMessage.confirm.no" = "Nein";
+
+// Форми: незбережені зміни
+"form.discard.title" = "Ohne Speichern schließen?";
+"form.discard.confirm" = "Verwerfen";
+"form.discard.keep" = "Weiter bearbeiten";

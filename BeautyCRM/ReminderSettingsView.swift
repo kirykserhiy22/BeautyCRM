@@ -94,6 +94,8 @@ struct ReminderSettingsView: View {
             clientSections
         }
         .brandForm(colors)
+        .scrollDismissesKeyboard(.interactively)
+        .keyboardDoneButton()
         .navigationTitle(localization.localizedString(for: "settings.reminders"))
         .task {
             await refreshPermission()
@@ -132,7 +134,8 @@ struct ReminderSettingsView: View {
                 text: $template,
                 controller: editor,
                 textColor: UIColor(colors.textPrimary),
-                tintColor: UIColor(colors.accent)
+                tintColor: UIColor(colors.accent),
+                doneTitle: localization.localizedString(for: "common.done")
             )
 
             // Вставки: тап додає в кінець тексту
@@ -296,6 +299,7 @@ struct TemplateEditor: UIViewRepresentable {
     let controller: TemplateEditorController
     let textColor: UIColor
     let tintColor: UIColor
+    let doneTitle: String
 
     func makeUIView(context: Context) -> UITextView {
         let view = UITextView()
@@ -307,6 +311,15 @@ struct TemplateEditor: UIViewRepresentable {
         view.textContainer.lineFragmentPadding = 0
         view.delegate = context.coordinator
         view.accessibilityIdentifier = "reminders.template"
+        // «Готово» над клавіатурою: у полі на кілька рядків «Return» — це новий рядок
+        let bar = UIToolbar(frame: CGRect(x: 0, y: 0, width: 320, height: 44))
+        let done = UIBarButtonItem(title: doneTitle, primaryAction: UIAction { [weak view] _ in
+            view?.resignFirstResponder()
+        })
+        done.style = .done
+        bar.items = [UIBarButtonItem(systemItem: .flexibleSpace), done]
+        bar.sizeToFit()
+        view.inputAccessoryView = bar
         // Без курсора вставка йде в кінець
         view.text = text
         view.selectedRange = NSRange(location: (text as NSString).length, length: 0)

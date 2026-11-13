@@ -170,7 +170,8 @@ nonisolated enum ClientMessageChannel: String, CaseIterable, Identifiable {
 
         case .instagram:
             guard let nick = Self.nick(contact.instagram, sites: ["instagram.com/"]) else { return nil }
-            return Self.make("https://ig.me/m/\(nick)", paste: true)
+            // «?text=» Instagram не документує: де спрацює — текст уже в полі, де ні — він у буфері
+            return Self.make("https://ig.me/m/\(nick)?text=\(body)", paste: true)
 
         case .messenger:
             guard let nick = Self.nick(contact.messenger, sites: ["m.me/", "messenger.com/t/", "facebook.com/"]) else { return nil }

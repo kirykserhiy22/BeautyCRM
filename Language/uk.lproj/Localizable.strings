@@ -413,3 +413,8 @@
 "clientMessage.confirm.title" = "Нагадування надіслали?";
 "clientMessage.confirm.yes" = "Так, надіслано";
 "clientMessage.confirm.no" = "Ні";
+
+// Форми: незбережені зміни
+"form.discard.title" = "Закрити без збереження?";
+"form.discard.confirm" = "Не зберігати";
+"form.discard.keep" = "Продовжити";

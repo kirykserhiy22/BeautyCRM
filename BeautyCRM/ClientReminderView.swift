@@ -236,6 +236,8 @@ struct ClientReminderView: View {
             }
             .background(colors.background)
             .tint(colors.accent)
+            .scrollDismissesKeyboard(.interactively)
+            .keyboardDoneButton()
             .navigationTitle(appointment.clientName)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

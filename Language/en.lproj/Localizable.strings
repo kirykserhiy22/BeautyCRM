@@ -412,3 +412,8 @@
 "clientMessage.confirm.title" = "Did you send the reminder?";
 "clientMessage.confirm.yes" = "Yes, sent";
 "clientMessage.confirm.no" = "No";
+
+// Форми: незбережені зміни
+"form.discard.title" = "Close without saving?";
+"form.discard.confirm" = "Discard";
+"form.discard.keep" = "Keep editing";

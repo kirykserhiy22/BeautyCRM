@@ -413,3 +413,8 @@
 "clientMessage.confirm.title" = "Připomínka odeslána?";
 "clientMessage.confirm.yes" = "Ano, odesláno";
 "clientMessage.confirm.no" = "Ne";
+
+// Форми: незбережені зміни
+"form.discard.title" = "Zavřít bez uložení?";
+"form.discard.confirm" = "Zahodit";
+"form.discard.keep" = "Pokračovat v úpravách";

@@ -147,3 +147,86 @@ struct FormPrimaryButton: View {
         }
     }
 }
+
+
+// MARK: - UNSAVED CHANGES
+
+// Заповнена форма не закривається випадковим свайпом униз,
+// а «Скасувати» спершу питає, чи викинути введене
+struct UnsavedChangesGuard: ViewModifier {
+
+    let hasChanges: Bool
+    let onDiscard: () -> Void
+
+    @EnvironmentObject var localization: LocalizationManager
+    @State private var askDiscard = false
+
+    func body(content: Content) -> some View {
+        content
+            .interactiveDismissDisabled(hasChanges)
+            // Відкрита як сторінка (з Головної) — замість «назад» лише «Скасувати»,
+            // щоб і кнопка, і свайп від краю теж питали про незбережене
+            .navigationBarBackButtonHidden(true)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(localization.localizedString(for: "common.cancel")) {
+                        if hasChanges {
+                            askDiscard = true
+                        } else {
+                            onDiscard()
+                        }
+                    }
+                    .accessibilityIdentifier("form.cancel")
+                }
+            }
+            .confirmationDialog(
+                localization.localizedString(for: "form.discard.title"),
+                isPresented: $askDiscard,
+                titleVisibility: .visible
+            ) {
+                Button(localization.localizedString(for: "form.discard.confirm"), role: .destructive) {
+                    onDiscard()
+                }
+                Button(localization.localizedString(for: "form.discard.keep"), role: .cancel) {}
+            }
+    }
+}
+
+extension View {
+    func unsavedChangesGuard(_ hasChanges: Bool, onDiscard: @escaping () -> Void) -> some View {
+        modifier(UnsavedChangesGuard(hasChanges: hasChanges, onDiscard: onDiscard))
+    }
+}
+
+
+// MARK: - KEYBOARD DONE
+
+// «Готово» над клавіатурою: у полях на кілька рядків (адреса, нотатки) і в цифрових
+// клавіатурах (телефон, ціна) кнопки «Return» немає — без неї клавіатуру не сховати.
+// Ставиться один раз на екран (на кожне окреме вікно), інакше кнопка подвоїться.
+struct KeyboardDoneButton: ViewModifier {
+
+    @EnvironmentObject var localization: LocalizationManager
+
+    func body(content: Content) -> some View {
+        content.toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                Spacer()
+                Button(localization.localizedString(for: "common.done")) {
+                    UIApplication.shared.sendAction(
+                        #selector(UIResponder.resignFirstResponder),
+                        to: nil, from: nil, for: nil
+                    )
+                }
+                .fontWeight(.semibold)
+                .accessibilityIdentifier("keyboard.done")
+            }
+        }
+    }
+}
+
+extension View {
+    func keyboardDoneButton() -> some View {
+        modifier(KeyboardDoneButton())
+    }
+}
