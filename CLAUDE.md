@@ -30,6 +30,8 @@
 - `BeautyCRM/Reminders.swift` — нагадування майстру (локальні сповіщення): `ReminderPlanner` (розклад, тести), `ReminderScheduler`,
   `ReminderSyncView` (перебудовує розклад при зміні записів), `NotificationRouter` (тап відкриває запис через `AppState.openAppointmentID`);
   екран — `ReminderSettingsView.swift`
+- `BeautyCRM/ClientMessage.swift` — нагадування клієнту: шаблон зі вставками `{name}` `{date}`… (`ClientMessageTemplate`) і посилання на
+  Telegram/Viber/WhatsApp/SMS (`ClientMessageChannel`); вікно — `ClientReminderView.swift`; адреса, шаблон, підпис — у `UserProfile`
 - `BeautyCRM/ContactLinks.swift` — посилання на телефон, Instagram, Telegram, WhatsApp, Viber, Messenger із будь-якого написання ніка чи номера
 - `BeautyCRM/ContactNetwork.swift` — соцмережі клієнта (назва, значок, поле в `Client`, посилання); нова соцмережа — один `case`
 - `BeautyCRM/DayTimelineView.swift` + `DayTimelineLayout.swift` — шкала дня (Головна, Календар) і розрахунок положення записів
@@ -118,7 +120,7 @@
    ✅ Дрібниці аудиту пачками, PR #76–#83. Лишились #40 (разом із синхронізацією), #54 (разом із Supabase Auth), #57.
 3. Редизайн і бренд. ✅ Палітра Dark Cherry, світла й темна тема, іконка, Splash, вхід і реєстрація, Головна, шкала дня (PR #84–#92).
    ✅ Аналітика, Клієнти, Налаштування, гід по додатку, форми у фірмових кольорах. Порядок робіт — `BACKLOG.md`, «Найближча черга».
-   Далі: нагадування (локальні сповіщення + повідомлення клієнту), потім Supabase.
+   ✅ Нагадування майстру і клієнтам (PR #102 і далі). Далі — Supabase.
 4. Supabase: проєкт у ЄС, схема БД, RLS-політики.
 5. Авторизація: email + пароль, Sign in with Apple, відновлення пароля, Keychain, видалення акаунта.
 6. Синхронізація: push/pull змін, фото в Storage, перший вхід на новому телефоні.

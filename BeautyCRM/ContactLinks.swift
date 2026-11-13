@@ -9,7 +9,7 @@
 import Foundation
 
 
-enum ContactLinks {
+nonisolated enum ContactLinks {
 
     static func phone(_ text: String) -> URL? {
         let digits = text.filter { $0.isASCII && ($0.isNumber || $0 == "+") }

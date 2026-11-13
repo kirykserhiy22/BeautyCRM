@@ -137,6 +137,10 @@ struct CreateServiceView: View {
             .background(colors.background)
             .tint(colors.accent)
             .navigationTitle("services.createTitle")
+            .keyboardDoneButton()
+            .unsavedChangesGuard(hasChanges) {
+                dismiss()
+            }
         }
     }
 }
@@ -144,7 +148,11 @@ struct CreateServiceView: View {
 // MARK: - LOGIC
 
 private extension CreateServiceView {
-    
+
+    var hasChanges: Bool {
+        name != prefilledName || !price.isEmpty || type != .fixed
+    }
+
     func create() {
         
         guard ServiceEngine.validate(name: name) else {

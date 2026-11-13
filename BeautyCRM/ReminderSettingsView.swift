@@ -8,12 +8,28 @@
 
 import SwiftUI
 import UserNotifications
+import SwiftData
 
 struct ReminderSettingsView: View {
 
     @EnvironmentObject var theme: ThemeManager
     @EnvironmentObject var localization: LocalizationManager
+    @EnvironmentObject var appState: AppState
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.modelContext) private var context
+
+    @Query private var profiles: [UserProfile]
+
+    // Нагадування клієнтам: редагуємо копію, у профіль — при виході з екрана
+    @State private var address = ""
+    @State private var template = ""
+    @State private var signature = ""
+    @State private var didLoad = false
+    @State private var editor = TemplateEditorController()
+
+    private var profile: UserProfile? {
+        profiles.first { $0.authUserID == appState.session.userID }
+    }
 
     @AppStorage(ReminderSettings.beforeEnabledKey) private var beforeEnabled = true
     @AppStorage(ReminderSettings.leadKey) private var leadRaw = ReminderLead.hour1.rawValue
@@ -74,12 +90,18 @@ struct ReminderSettingsView: View {
                 Text(localization.localizedString(for: "reminders.footer"))
             }
             .brandRows(colors)
+
+            clientSections
         }
         .brandForm(colors)
+        .scrollDismissesKeyboard(.interactively)
+        .keyboardDoneButton()
         .navigationTitle(localization.localizedString(for: "settings.reminders"))
         .task {
             await refreshPermission()
         }
+        .onAppear(perform: loadClientSettings)
+        .onDisappear(perform: saveClientSettings)
         .onChange(of: scenePhase) { _, phase in
             // Повернулись із налаштувань iPhone — перевірити ще раз
             if phase == .active {
@@ -88,8 +110,248 @@ struct ReminderSettingsView: View {
         }
     }
 
+    // MARK: - CLIENTS
+
+    @ViewBuilder
+    private var clientSections: some View {
+
+        Section {
+
+            TextField(localization.localizedString(for: "clientMessage.addressPlaceholder"), text: $address, axis: .vertical)
+                .accessibilityIdentifier("reminders.address")
+
+        } header: {
+            Text(localization.localizedString(for: "reminders.section.clients"))
+        } footer: {
+            Text(localization.localizedString(for: "clientMessage.addressFooter"))
+        }
+        .brandRows(colors)
+
+        Section {
+
+            // Поле росте разом із текстом; вставка — там, де курсор
+            TemplateEditor(
+                text: $template,
+                controller: editor,
+                textColor: UIColor(colors.textPrimary),
+                tintColor: UIColor(colors.accent),
+                doneTitle: localization.localizedString(for: "common.done")
+            )
+
+            // Вставки: тап додає в кінець тексту
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 6) {
+                    ForEach(ClientMessageToken.allCases) { token in
+                        Button {
+                            insert(token)
+                        } label: {
+                            Text(tokenTitle(token))
+                                .font(.footnote.weight(.medium))
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 6)
+                                .background(colors.cardSecondary)
+                                .foregroundColor(colors.accent)
+                                .cornerRadius(8)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+            }
+
+            HStack {
+                Text(localization.localizedString(for: "clientMessage.signature"))
+                    .foregroundColor(colors.textPrimary)
+                // Порожньо — підписуємо ім'ям майстра
+                TextField(profile?.firstName ?? "", text: $signature)
+                    .multilineTextAlignment(.trailing)
+                    .accessibilityIdentifier("reminders.signature")
+            }
+
+            Button(localization.localizedString(for: "clientMessage.reset")) {
+                // Курсор після заміни тексту — у кінці
+                editor.moveToEnd()
+                template = editableDefaultTemplate
+            }
+            .disabled(template == editableDefaultTemplate)
+
+        } header: {
+            Text(localization.localizedString(for: "clientMessage.template.title"))
+        } footer: {
+            Text(localization.localizedString(for: "clientMessage.template.footer"))
+        }
+        .brandRows(colors)
+
+        Section {
+            Text(preview)
+                .font(.subheadline)
+                .foregroundColor(colors.textSecondary)
+                .padding(.vertical, 4)
+        } header: {
+            Text(localization.localizedString(for: "clientMessage.preview"))
+        }
+        .brandRows(colors)
+    }
+
+    private func tokenTitle(_ token: ClientMessageToken) -> String {
+        localization.localizedString(for: token.titleKey)
+    }
+
+    private var editableDefaultTemplate: String {
+        ClientMessageTemplate.localized(ClientReminderText.defaultTemplate(localization), title: tokenTitle)
+    }
+
+    // Приклад: завтра о 14:00
+    private var preview: String {
+        let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: Date()) ?? Date()
+        let start = Calendar.current.date(bySettingHour: 14, minute: 0, second: 0, of: tomorrow) ?? tomorrow
+        let values = ClientReminderText.values(
+            clientName: localization.localizedString(for: "clientMessage.sampleName"),
+            start: start,
+            services: [localization.localizedString(for: "clientMessage.sampleService")],
+            price: "",
+            address: address,
+            localization: localization
+        )
+        let signatureText = signature.trimmingCharacters(in: .whitespaces).isEmpty ? profile?.firstName : signature
+        return ClientMessageTemplate.render(
+            template: ClientMessageTemplate.neutral(template, title: tokenTitle),
+            values: values,
+            signature: signatureText
+        )
+    }
+
+    private func insert(_ token: ClientMessageToken) {
+        editor.insert("{\(tokenTitle(token))}")
+    }
+
+    private func loadClientSettings() {
+        guard !didLoad else { return }
+        didLoad = true
+        address = profile?.reminderAddress ?? ""
+        signature = profile?.reminderSignature ?? ""
+        template = ClientMessageTemplate.localized(
+            ClientReminderText.template(profile: profile, localization: localization),
+            title: tokenTitle
+        )
+    }
+
+    private func saveClientSettings() {
+        guard let profile, didLoad else { return }
+
+        let trimmedAddress = address.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedSignature = signature.trimmingCharacters(in: .whitespacesAndNewlines)
+        let neutral = ClientMessageTemplate.neutral(template, title: tokenTitle)
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        // Стандартний текст не зберігаємо: тоді він міняється разом із мовою додатку
+        let isDefault = neutral.isEmpty || neutral == ClientReminderText.defaultTemplate(localization)
+
+        let newAddress = trimmedAddress.isEmpty ? nil : trimmedAddress
+        let newSignature = trimmedSignature.isEmpty ? nil : trimmedSignature
+        let newTemplate = isDefault ? nil : neutral
+
+        guard newAddress != profile.reminderAddress
+                || newSignature != profile.reminderSignature
+                || newTemplate != profile.reminderTemplate else {
+            return
+        }
+
+        profile.reminderAddress = newAddress
+        profile.reminderSignature = newSignature
+        profile.reminderTemplate = newTemplate
+        _ = context.saveReportingErrors()
+    }
+
     private func refreshPermission() async {
         let status = await UNUserNotificationCenter.current().notificationSettings().authorizationStatus
         isDenied = status == .denied
+    }
+}
+
+
+// MARK: - TEMPLATE EDITOR
+
+// Багаторядкове поле, яке вміє вставити слово там, де стоїть курсор
+// (або замість виділеного). Звичайне поле SwiftUI на iOS 17 цього не вміє.
+final class TemplateEditorController {
+    fileprivate weak var textView: UITextView?
+
+    func insert(_ piece: String) {
+        guard let textView else {
+            return
+        }
+        // Курсор лишається там, де був, навіть якщо клавіатуру сховали
+        textView.insertText(piece)
+        // Поле в SwiftUI теж має дізнатися про новий текст
+        textView.delegate?.textViewDidChange?(textView)
+    }
+
+    func moveToEnd() {
+        DispatchQueue.main.async { [weak self] in
+            guard let view = self?.textView else { return }
+            view.selectedRange = NSRange(location: (view.text as NSString).length, length: 0)
+        }
+    }
+}
+
+struct TemplateEditor: UIViewRepresentable {
+
+    @Binding var text: String
+    let controller: TemplateEditorController
+    let textColor: UIColor
+    let tintColor: UIColor
+    let doneTitle: String
+
+    func makeUIView(context: Context) -> UITextView {
+        let view = UITextView()
+        view.isScrollEnabled = false
+        view.backgroundColor = .clear
+        view.font = .preferredFont(forTextStyle: .body)
+        view.adjustsFontForContentSizeCategory = true
+        view.textContainerInset = .zero
+        view.textContainer.lineFragmentPadding = 0
+        view.delegate = context.coordinator
+        view.accessibilityIdentifier = "reminders.template"
+        // «Готово» над клавіатурою: у полі на кілька рядків «Return» — це новий рядок
+        let bar = UIToolbar(frame: CGRect(x: 0, y: 0, width: 320, height: 44))
+        let done = UIBarButtonItem(title: doneTitle, primaryAction: UIAction { [weak view] _ in
+            view?.resignFirstResponder()
+        })
+        done.style = .done
+        bar.items = [UIBarButtonItem(systemItem: .flexibleSpace), done]
+        bar.sizeToFit()
+        view.inputAccessoryView = bar
+        // Без курсора вставка йде в кінець
+        view.text = text
+        view.selectedRange = NSRange(location: (text as NSString).length, length: 0)
+        controller.textView = view
+        return view
+    }
+
+    func updateUIView(_ view: UITextView, context: Context) {
+        view.textColor = textColor
+        view.tintColor = tintColor
+        if view.text != text {
+            view.text = text
+        }
+        controller.textView = view
+    }
+
+    func sizeThatFits(_ proposal: ProposedViewSize, uiView: UITextView, context: Context) -> CGSize? {
+        let width = proposal.width ?? 300
+        let height = uiView.sizeThatFits(CGSize(width: width, height: .greatestFiniteMagnitude)).height
+        return CGSize(width: width, height: max(height, 88))
+    }
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(text: $text)
+    }
+
+    final class Coordinator: NSObject, UITextViewDelegate {
+        let text: Binding<String>
+        init(text: Binding<String>) { self.text = text }
+
+        func textViewDidChange(_ textView: UITextView) {
+            text.wrappedValue = textView.text
+        }
     }
 }

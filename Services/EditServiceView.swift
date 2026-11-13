@@ -67,15 +67,19 @@ struct EditServiceView: View {
                 }
             }
             .brandForm(colors)
+            .scrollDismissesKeyboard(.interactively)
+            .keyboardDoneButton()
             .navigationTitle("services.editTitle")
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("common.cancel") {
-                        dismiss()
-                    }
-                }
+            .unsavedChangesGuard(hasChanges) {
+                dismiss()
             }
         }
+    }
+
+    private var hasChanges: Bool {
+        name != service.name
+            || isVariable != (service.pricingType == .variable)
+            || price != service.price
     }
 
     private func save() {

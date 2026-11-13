@@ -608,6 +608,8 @@ struct ProfileSettingsView: View {
             }
         }
         .brandForm(colors)
+        .scrollDismissesKeyboard(.interactively)
+        .keyboardDoneButton()
         .navigationTitle(localization.localizedString(for: "settings.profile"))
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {

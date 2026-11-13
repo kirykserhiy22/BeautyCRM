@@ -98,6 +98,7 @@ struct ServicePickerView: View {
             .navigationTitle(
                 localization.localizedString(for: "services.selectTitle")
             )
+            .keyboardDoneButton()
             .toolbar {
                 
                 ToolbarItem(

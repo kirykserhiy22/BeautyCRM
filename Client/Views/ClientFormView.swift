@@ -33,6 +33,9 @@ struct ClientFormView: View {
     // Ім'я наявного клієнта, схожого на цього (показуємо попередження)
     @State private var possibleDuplicateName: String?
 
+    // Як виглядала форма відразу після відкриття
+    @State private var initialSnapshot: String?
+
     // MARK: - THEME
 
     private var colors: ThemeColors {
@@ -98,6 +101,11 @@ struct ClientFormView: View {
                 }
             }
             .brandForm(colors)
+            .scrollDismissesKeyboard(.interactively)
+            .keyboardDoneButton()
+            .unsavedChangesGuard(hasChanges) {
+                dismiss()
+            }
             .alert(
                 localization.localizedString(for: "clients.possibleDuplicate.title"),
                 isPresented: Binding(
@@ -120,6 +128,9 @@ struct ClientFormView: View {
             .navigationTitle(title)
             .onAppear {
                 loadClientIfNeeded()
+                if initialSnapshot == nil {
+                    initialSnapshot = snapshot
+                }
             }
         }
     }
@@ -230,6 +241,16 @@ private extension ClientFormView {
         case .edit:
             return localization.localizedString(for: "clients.saveChanges")
         }
+    }
+
+    var snapshot: String {
+        let nets = networks.map { "\($0.network.rawValue)=\($0.value)" }.joined(separator: ",")
+        return [name, phone, nets, notes].joined(separator: "|")
+    }
+
+    var hasChanges: Bool {
+        guard let initialSnapshot else { return false }
+        return snapshot != initialSnapshot
     }
 
     var editingClientID: UUID? {

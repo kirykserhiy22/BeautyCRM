@@ -382,3 +382,38 @@
 "reminders.upcoming.eveningBefore" = "Jutro — %@";
 "reminders.finish.title" = "Zakończ wizytę";
 "reminders.finish.body" = "%1$@, %2$@. Wpisz ostateczną cenę.";
+
+// Нагадування клієнту
+"clientMessage.button" = "Przypomnij klientce";
+"clientMessage.sent" = "Przypomnienie wysłane %@";
+"clientMessage.sendVia" = "Wyślij przez";
+"clientMessage.other" = "Inna aplikacja";
+"clientMessage.text" = "Wiadomość (można ją zmienić przed wysłaniem)";
+"clientMessage.pasteHint" = "W Telegramie, Instagramie i Messengerze tekst jest też kopiowany: jeśli go nie ma w czacie, stuknij „Wklej”.";
+"clientMessage.template" = "Dzień dobry, {name}! Przypominam o wizycie {date} o {time}: {services}.\nAdres: {address}\nDo zobaczenia!";
+"clientMessage.dateFormat" = "d MMMM";
+"reminders.section.clients" = "Dla klientów";
+"clientMessage.addressPlaceholder" = "Adres salonu lub gabinetu";
+"clientMessage.addressFooter" = "Wstawiany do wiadomości. Bez adresu ta linia jest pomijana.";
+"clientMessage.template.title" = "Szablon wiadomości";
+"clientMessage.template.footer" = "Słowa w nawiasach klamrowych zastępowane są danymi wizyty. Stuknij, aby wstawić w miejscu kursora.";
+"clientMessage.signature" = "Podpis";
+"clientMessage.reset" = "Przywróć domyślny tekst";
+"clientMessage.preview" = "Co zobaczy klientka";
+"clientMessage.sampleName" = "Anna Kowalska";
+"clientMessage.sampleService" = "Manicure";
+"clientMessage.token.name" = "imię";
+"clientMessage.token.date" = "data";
+"clientMessage.token.time" = "godzina";
+"clientMessage.token.services" = "usługi";
+"clientMessage.token.price" = "cena";
+"clientMessage.token.address" = "adres";
+"clientMessage.otherApps" = "Inne aplikacje";
+"clientMessage.confirm.title" = "Przypomnienie wysłane?";
+"clientMessage.confirm.yes" = "Tak, wysłane";
+"clientMessage.confirm.no" = "Nie";
+
+// Форми: незбережені зміни
+"form.discard.title" = "Zamknąć bez zapisywania?";
+"form.discard.confirm" = "Odrzuć";
+"form.discard.keep" = "Kontynuuj edycję";
