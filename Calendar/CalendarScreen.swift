@@ -32,6 +32,13 @@ struct CalendarScreen: View {
     // Календар згорнутий в один тиждень (коли список записів прокручено вгору)
     @State private var isCalendarCollapsed = false
 
+    // Палець зараз гортає список (iOS 18+). На iOS 17 системи не знає — вважаємо, що так
+    @State private var isUserScrolling = true
+
+    // Коли календар востаннє перемикався: поки триває анімація, список «пружинить»,
+    // і цей рух не має перемикати календар назад
+    @State private var lastCollapseToggle = Date.distantPast
+
     private let listSpace = "appointmentsList"
     
     private var userDayOffs: [DayOff] {
@@ -76,7 +83,7 @@ struct CalendarScreen: View {
                         workingHours: workingHours,
                         onExpand: { setCalendarCollapsed(false) }
                     )
-                    .transition(.opacity.combined(with: .move(edge: .top)))
+                    .transition(.opacity)
 
                 } else {
 
@@ -141,6 +148,12 @@ struct CalendarScreen: View {
                 .coordinateSpace(name: listSpace)
                 .onListScroll { offset in
                     handleListOffset(offset)
+                }
+                .onUserScrollingChange { isUserScrolling = $0 }
+                .onAppear {
+                    if #available(iOS 18.0, *) {
+                        isUserScrolling = false
+                    }
                 }
             }
             Button {
@@ -277,13 +290,17 @@ struct CalendarScreen: View {
     // потягнути список вниз на самому верху — розгортає назад
     private func handleListOffset(_ offset: CGFloat) {
 
-        guard !isDraggingAppointment else {
+        // Тільки жест пальцем і не одразу після попереднього перемикання —
+        // інакше пружинення списку під час анімації перемикає календар туди й назад
+        guard !isDraggingAppointment,
+              isUserScrolling,
+              Date().timeIntervalSince(lastCollapseToggle) > 0.6 else {
             return
         }
 
-        if !isCalendarCollapsed && offset < -24 {
+        if !isCalendarCollapsed && offset < -32 {
             setCalendarCollapsed(true)
-        } else if isCalendarCollapsed && offset > 48 {
+        } else if isCalendarCollapsed && offset > 64 {
             setCalendarCollapsed(false)
         }
     }
@@ -294,7 +311,9 @@ struct CalendarScreen: View {
             return
         }
 
-        withAnimation(.snappy(duration: 0.3)) {
+        lastCollapseToggle = Date()
+
+        withAnimation(.easeInOut(duration: 0.25)) {
             isCalendarCollapsed = collapsed
         }
     }
@@ -371,6 +390,19 @@ private extension View {
             self.onPreferenceChange(AppointmentListOffsetKey.self) { offset in
                 action(offset)
             }
+        }
+    }
+
+    // Чи гортає список саме палець (а не анімація чи пружинення). Є лише з iOS 18
+    @ViewBuilder
+    func onUserScrollingChange(_ action: @escaping (Bool) -> Void) -> some View {
+
+        if #available(iOS 18.0, *) {
+            self.onScrollPhaseChange { _, phase in
+                action(phase == .interacting)
+            }
+        } else {
+            self
         }
     }
 }
