@@ -21,14 +21,28 @@ final class LocalizationManager: ObservableObject {
 
     init() {
 
+        // Перший запуск — мова iPhone, якщо вона серед підтримуваних; інакше англійська
         self.languageCode =
             UserDefaults.standard.string(
                 forKey: key
             )
-            ?? "en"
+            ?? Self.deviceLanguage()
     }
 
 
+
+    // Перша мова iPhone з тих, що підтримує додаток («uk-UA» → «uk»); інакше «en»
+    static func deviceLanguage(preferred: [String] = Locale.preferredLanguages) -> String {
+        let supported = Set(SupportedLanguage.all.map(\.code))
+        for identifier in preferred {
+            let code = Locale(identifier: identifier).language.languageCode?.identifier
+                ?? String(identifier.prefix(2))
+            if supported.contains(code) {
+                return code
+            }
+        }
+        return "en"
+    }
 
     func setLanguage(
         _ code: String

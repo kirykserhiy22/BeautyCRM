@@ -171,7 +171,6 @@
 "appointment.hide" = "Skrýt";
 "appointment.finalizeServices" = "Dokončit služby";
 "appointment.confirm" = "Potvrdit";
-"appointment.notesTitle" = "Poznámky";
 "appointment.status.active" = "AKTIVNÍ";
 "appointment.status.completed" = "DOKONČENO";
 "appointment.status.cancelled" = "ZRUŠENO";
@@ -334,7 +333,6 @@
 "settings.group.work" = "Práce";
 "settings.group.app" = "Aplikace";
 "settings.group.account" = "Účet";
-"settings.appearance.system" = "Jako v iPhonu";
 "settings.appearance.light" = "Světlý";
 "settings.appearance.dark" = "Tmavý";
 "settings.appearance.description" = "Barvy značky Beauty Base ve světlé i tmavé verzi. „Jako v iPhonu“ je přepíná spolu s telefonem.";
@@ -418,3 +416,11 @@
 "form.discard.title" = "Zavřít bez uložení?";
 "form.discard.confirm" = "Zahodit";
 "form.discard.keep" = "Pokračovat v úpravách";
+
+// Видалення клієнта з майбутніми записами
+"clients.delete.upcomingMessage" = "Nadcházející rezervace vybraných klientů: %d. Zrušit je?";
+"clients.delete.cancelAndDelete" = "Zrušit a smazat";
+"clients.delete.keep" = "Nemazat";
+"currency.change.title" = "Změnit měnu na %@?";
+"currency.change.confirm" = "Změnit";
+"appointment.clientDeleted" = "Klient smazán";

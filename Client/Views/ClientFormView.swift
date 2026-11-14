@@ -340,7 +340,18 @@ private extension ClientFormView {
         case .edit(let existing):
 
             client = existing
+            let renamed = client.name != name
             client.name = name
+
+            // Нове ім'я — і в усіх записах цього клієнта
+            if renamed {
+                do {
+                    try ClientManager.syncName(of: client, context: context)
+                } catch {
+                    SaveErrorReporter.report(error)
+                    return
+                }
+            }
             client.phone = phone.isEmpty ? nil : phone
             client.notes = notes.isEmpty ? nil : notes
         }

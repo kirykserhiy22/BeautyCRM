@@ -170,7 +170,6 @@
 "appointment.hide" = "Hide";
 "appointment.finalizeServices" = "Finalize Services";
 "appointment.confirm" = "Confirm";
-"appointment.notesTitle" = "Notes";
 "appointment.status.active" = "ACTIVE";
 "appointment.status.completed" = "DONE";
 "appointment.status.cancelled" = "CANCELLED";
@@ -333,7 +332,6 @@
 "settings.group.work" = "Work";
 "settings.group.app" = "App";
 "settings.group.account" = "Account";
-"settings.appearance.system" = "Like iPhone";
 "settings.appearance.light" = "Light";
 "settings.appearance.dark" = "Dark";
 "settings.appearance.description" = "Beauty Base brand colors in light and dark. “Like iPhone” switches them together with your phone.";
@@ -417,3 +415,11 @@
 "form.discard.title" = "Close without saving?";
 "form.discard.confirm" = "Discard";
 "form.discard.keep" = "Keep editing";
+
+// Видалення клієнта з майбутніми записами
+"clients.delete.upcomingMessage" = "Upcoming appointments for the selected clients: %d. Cancel them?";
+"clients.delete.cancelAndDelete" = "Cancel and delete";
+"clients.delete.keep" = "Don’t delete";
+"currency.change.title" = "Change currency to %@?";
+"currency.change.confirm" = "Change";
+"appointment.clientDeleted" = "Client deleted";
