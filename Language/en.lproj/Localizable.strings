@@ -390,7 +390,7 @@
 "clientMessage.other" = "Other app";
 "clientMessage.text" = "Message (you can edit it before sending)";
 "clientMessage.pasteHint" = "For Telegram, Instagram and Messenger the text is also copied: if it’s not in the chat, tap “Paste”.";
-"clientMessage.template" = "Hi {name}! Just a reminder of your appointment on {date} at {time}: {services}.\nAddress: {address}\nSee you soon!";
+"clientMessage.template" = "Hi! Just a reminder of your appointment on {date} at {time}: {services}.\nAddress: {address}\nSee you soon!";
 "clientMessage.dateFormat" = "d MMMM";
 "reminders.section.clients" = "For clients";
 "clientMessage.addressPlaceholder" = "Salon or studio address";

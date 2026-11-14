@@ -391,7 +391,7 @@
 "clientMessage.other" = "Інший спосіб";
 "clientMessage.text" = "Текст (можна змінити перед надсиланням)";
 "clientMessage.pasteHint" = "Для Telegram, Instagram і Messenger текст також копіюється: якщо його немає в чаті, натисніть «Вставити».";
-"clientMessage.template" = "Доброго дня, {name}! Нагадую про ваш запис {date} о {time}: {services}.\nАдреса: {address}\nДо зустрічі!";
+"clientMessage.template" = "Доброго дня! Нагадую про ваш запис {date} о {time}: {services}.\nАдреса: {address}\nДо зустрічі!";
 "clientMessage.dateFormat" = "d MMMM";
 "reminders.section.clients" = "Клієнтам";
 "clientMessage.addressPlaceholder" = "Адреса салону чи кабінету";

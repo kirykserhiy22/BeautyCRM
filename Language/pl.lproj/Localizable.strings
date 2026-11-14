@@ -390,7 +390,7 @@
 "clientMessage.other" = "Inna aplikacja";
 "clientMessage.text" = "Wiadomość (można ją zmienić przed wysłaniem)";
 "clientMessage.pasteHint" = "W Telegramie, Instagramie i Messengerze tekst jest też kopiowany: jeśli go nie ma w czacie, stuknij „Wklej”.";
-"clientMessage.template" = "Dzień dobry, {name}! Przypominam o wizycie {date} o {time}: {services}.\nAdres: {address}\nDo zobaczenia!";
+"clientMessage.template" = "Dzień dobry! Przypominam o wizycie {date} o {time}: {services}.\nAdres: {address}\nDo zobaczenia!";
 "clientMessage.dateFormat" = "d MMMM";
 "reminders.section.clients" = "Dla klientów";
 "clientMessage.addressPlaceholder" = "Adres salonu lub gabinetu";
