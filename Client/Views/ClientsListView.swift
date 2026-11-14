@@ -18,6 +18,8 @@ struct ClientsListView: View {
     @State private var selectedClientIDs: Set<UUID> = []
     @State private var clientToOpen: Client?
     @State private var showDeleteConfirmation = false
+    // Скільки майбутніх записів у вибраних клієнтів — вони скасуються разом із клієнтами
+    @State private var upcomingToCancel = 0
 
     @Environment(\.modelContext) private var modelContext
 
@@ -153,6 +155,10 @@ struct ClientsListView: View {
                             .font(.headline)
 
                         Button(role: .destructive) {
+                            upcomingToCancel = (try? ClientManager.upcomingAppointments(
+                                clientIDs: selectedClientIDs,
+                                context: modelContext
+                            ).count) ?? 0
                             showDeleteConfirmation = true
                         } label: {
                             Label(
@@ -199,21 +205,34 @@ struct ClientsListView: View {
                 isPresented: $showDeleteConfirmation,
                 titleVisibility: .visible
             ) {
+                // Є майбутні записи — кнопки кажуть прямо, що вони скасуються
                 Button(
-                    localization.localizedString(for: "common.delete"),
+                    localization.localizedString(
+                        for: upcomingToCancel > 0 ? "clients.delete.cancelAndDelete" : "common.delete"
+                    ),
                     role: .destructive
                 ) {
                     deleteSelectedClients()
                 }
+                .accessibilityIdentifier("clients.delete.confirm")
 
                 Button(
-                    localization.localizedString(for: "common.cancel"),
+                    localization.localizedString(
+                        for: upcomingToCancel > 0 ? "clients.delete.keep" : "common.cancel"
+                    ),
                     role: .cancel
                 ) {}
             } message: {
-                Text(
-                    localization.localizedString(for: "clients.deleteConfirmationMessage")
-                )
+                if upcomingToCancel > 0 {
+                    Text(
+                        String(
+                            format: localization.localizedString(for: "clients.delete.upcomingMessage"),
+                            upcomingToCancel
+                        )
+                    )
+                } else {
+                    Text(localization.localizedString(for: "clients.deleteConfirmationMessage"))
+                }
             }
         }
     }

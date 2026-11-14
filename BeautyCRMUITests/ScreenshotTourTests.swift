@@ -6,11 +6,11 @@
 //  Запуск — лише через скрипт аудиту на чистому симуляторі:
 //    1) test01_RegisterMaster — реєструє вигаданого майстра через UI;
 //    2) AuditDemoDataSeeder (unit) — дописує демо-дані;
-//    3) test02…test04 — по одній темі на тест.
+//    3) test02_Tour — обхід екранів (тема одна; світлий і темний вигляд задає скрипт через iPhone).
 //  Без змінної AUDIT_SHOTS тести пропускаються й нічого не роблять.
 //
 //  Вхід і реєстрація шукаються за accessibilityIdentifier (#63), решта екранів —
-//  за англійськими текстами (мова додатку за замовчуванням).
+//  за англійськими текстами (мова додатку примусово англійська через аргумент запуску).
 //
 
 import XCTest
@@ -22,7 +22,7 @@ final class ScreenshotTourTests: XCTestCase {
 
     private var app: XCUIApplication!
     private var outputDir: URL!
-    private var themeFolder = "classic"
+    private var themeFolder = "light"
 
 
     override func setUpWithError() throws {
@@ -33,6 +33,8 @@ final class ScreenshotTourTests: XCTestCase {
         continueAfterFailure = true
 
         app = XCUIApplication()
+        // Пошук екранів іде за англійськими текстами — незалежно від мови iPhone
+        app.launchArguments += ["-app_language", "en"]
         app.launch()
     }
 
@@ -54,30 +56,22 @@ final class ScreenshotTourTests: XCTestCase {
         XCTAssertTrue(app.tabBars.firstMatch.waitForExistence(timeout: 6))
     }
 
-    func test02_TourClassic() {
-        tour(theme: "Classic", folder: "classic")
-    }
-
-    func test03_TourGraphite() {
-        tour(theme: "Graphite", folder: "graphite")
-    }
-
-    func test04_TourPearlIvory() {
-        tour(theme: "Pearl Ivory", folder: "pearl-ivory")
+    // Тема одна (Dark Cherry); світлий чи темний вигляд — як в iPhone, його перемикає скрипт
+    func test02_Tour() {
+        tour(folder: "light")
     }
 
 
     // MARK: - TOUR
 
-    private func tour(theme: String, folder: String) {
-        // Додатковий прогін у темному режимі iPhone пише в «<тема>-dark»
+    private func tour(folder: String) {
+        // Додатковий прогін у темному режимі iPhone пише в «light-dark»
         themeFolder = folder + (ProcessInfo.processInfo.environment["AUDIT_SUFFIX"] ?? "")
         ensureLoggedIn()
 
-        // Тема
+        // Вигляд
         tab("Settings")
         button(containing: "Appearance").tap()
-        button(containing: theme).tap()
         shot("24-settings-theme")
         back()
 

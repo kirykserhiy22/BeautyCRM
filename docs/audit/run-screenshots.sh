@@ -1,5 +1,5 @@
 #!/bin/zsh
-# Знімає скріншоти всіх екранів у 3 темах (docs/audit/screenshots/<тема>/).
+# Знімає скріншоти всіх екранів у світлому й темному вигляді (docs/audit/screenshots/light, light-dark).
 # Працює на ОКРЕМОМУ чистому симуляторі: додаток там видаляється й ставиться заново.
 # Симулятор з робочими даними (iPhone 17 Pro Max) не чіпається.
 #
@@ -40,18 +40,14 @@ TEST_RUNNER_AUDIT_SHOTS="$SHOTS" run -only-testing:BeautyCRMUITests/ScreenshotTo
 # 2. Демо-дані (вигадані клієнти, послуги, записи)
 TEST_RUNNER_AUDIT_SEED=1 run -only-testing:BeautyCRMTests/AuditDemoDataSeeder
 
-# 3. Обхід екранів у кожній темі
+# 3. Обхід екранів (світлий вигляд iPhone)
 TEST_RUNNER_AUDIT_SHOTS="$SHOTS" run \
-  -only-testing:BeautyCRMUITests/ScreenshotTourTests/test02_TourClassic \
-  -only-testing:BeautyCRMUITests/ScreenshotTourTests/test03_TourGraphite \
-  -only-testing:BeautyCRMUITests/ScreenshotTourTests/test04_TourPearlIvory
+  -only-testing:BeautyCRMUITests/ScreenshotTourTests/test02_Tour
 
-# 4. Те саме в темному режимі iPhone (теми задають кольори частково, тож перевіряємо змішування)
+# 4. Те саме в темному вигляді iPhone
 xcrun simctl ui "$SIM_ID" appearance dark
 TEST_RUNNER_AUDIT_SHOTS="$SHOTS" TEST_RUNNER_AUDIT_SUFFIX="-dark" run \
-  -only-testing:BeautyCRMUITests/ScreenshotTourTests/test02_TourClassic \
-  -only-testing:BeautyCRMUITests/ScreenshotTourTests/test03_TourGraphite \
-  -only-testing:BeautyCRMUITests/ScreenshotTourTests/test04_TourPearlIvory
+  -only-testing:BeautyCRMUITests/ScreenshotTourTests/test02_Tour
 xcrun simctl ui "$SIM_ID" appearance light
 
 xcrun simctl status_bar "$SIM_ID" clear

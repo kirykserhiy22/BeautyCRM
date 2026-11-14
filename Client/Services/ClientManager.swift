@@ -99,9 +99,47 @@ final class ClientManager {
     }
 
 
-    // Позначає клієнта і всі його фото як видалені.
+    // MARK: - RENAME
+
+    // Запис зберігає копію імені клієнта (для історії, якщо клієнта видалять).
+    // Після перейменування копія оновлюється в усіх записах клієнта — минулих і майбутніх.
+    static func syncName(of client: Client, context: ModelContext) throws {
+        let clientID = client.id
+        let name = client.name
+        let descriptor = FetchDescriptor<Appointment>(
+            predicate: #Predicate { $0.clientID == clientID }
+        )
+        for appointment in try context.fetch(descriptor) where appointment.clientName != name {
+            appointment.clientName = name
+        }
+    }
+
+    // MARK: - DELETE
+
+    // Записи, які ще попереду або тривають: їх треба скасувати разом із клієнтом.
+    // Минулі незавершені лишаються — майстер може їх завершити й отримати оплату в аналітиці.
+    static func upcomingAppointments(
+        clientIDs: Set<UUID>,
+        now: Date = Date(),
+        context: ModelContext
+    ) throws -> [Appointment] {
+        let descriptor = FetchDescriptor<Appointment>(
+            predicate: #Predicate { $0.deletedAt == nil }
+        )
+        return try context.fetch(descriptor).filter {
+            clientIDs.contains($0.clientID) && $0.status == .active && $0.endDate > now
+        }
+    }
+
+    // Позначає клієнта і всі його фото як видалені, а його майбутні записи скасовує.
     // Файли фото прибираємо одразу — на екрані вони вже не потрібні.
-    static func delete(client: Client, context: ModelContext) {
+    static func delete(client: Client, now: Date = Date(), context: ModelContext) {
+
+        if let upcoming = try? upcomingAppointments(clientIDs: [client.id], now: now, context: context) {
+            for appointment in upcoming {
+                AppointmentEngine.cancel(appointment: appointment)
+            }
+        }
 
         for photo in client.photos where photo.deletedAt == nil {
             ClientPhotoStorage.deleteImage(at: photo.fileName)

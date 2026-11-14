@@ -321,6 +321,9 @@ struct CurrencySettingsView: View {
     @Environment(\.modelContext)
     private var context
 
+    // Валюта, яку майстер вибрав, — чекає підтвердження
+    @State private var pendingCode: String?
+
     private var colors: ThemeColors {
         theme.colors(for: theme.currentTheme)
     }
@@ -341,7 +344,10 @@ struct CurrencySettingsView: View {
                 ForEach(SupportedCurrency.all) { item in
 
                     Button {
-                        choose(item.code)
+                        // Суми не перераховуються — спершу попередити
+                        if profile?.currencyCode != item.code {
+                            pendingCode = item.code
+                        }
                     } label: {
                         HStack {
                             Text("\(item.symbol)  \(localization.localizedString(for: "currency.\(item.code)"))")
@@ -363,6 +369,28 @@ struct CurrencySettingsView: View {
         .scrollContentBackground(.hidden)
         .background(colors.background)
         .navigationTitle(localization.localizedString(for: "signup.currency.label"))
+        .alert(
+            String(
+                format: localization.localizedString(for: "currency.change.title"),
+                pendingCode ?? ""
+            ),
+            isPresented: Binding(
+                get: { pendingCode != nil },
+                set: { if !$0 { pendingCode = nil } }
+            )
+        ) {
+            Button(localization.localizedString(for: "currency.change.confirm")) {
+                if let code = pendingCode {
+                    choose(code)
+                }
+                pendingCode = nil
+            }
+            Button(localization.localizedString(for: "common.cancel"), role: .cancel) {
+                pendingCode = nil
+            }
+        } message: {
+            Text(localization.localizedString(for: "settings.profile.currencyNote"))
+        }
     }
 
     private func choose(_ code: String) {

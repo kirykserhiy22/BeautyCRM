@@ -535,8 +535,8 @@ struct AppointmentRow: View {
                             Text(localization.localizedString(for: "appointment.confirm"))
                                 .frame(maxWidth: .infinity)
                                 .padding()
-                                .background(canConfirmCompletion ? colors.buttonPrimary : Color.gray.opacity(0.4))
-                                .foregroundColor(.white)
+                                .background(canConfirmCompletion ? colors.buttonPrimary : colors.buttonSecondary)
+                                .foregroundColor(canConfirmCompletion ? .white : colors.textSecondary)
                                 .cornerRadius(14)
                         }
                         .disabled(!canConfirmCompletion)

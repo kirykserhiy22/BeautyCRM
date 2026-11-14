@@ -171,7 +171,6 @@
 "appointment.hide" = "Приховати";
 "appointment.finalizeServices" = "Підсумок послуг";
 "appointment.confirm" = "Підтвердити";
-"appointment.notesTitle" = "Нотатки";
 "appointment.status.active" = "АКТИВНИЙ";
 "appointment.status.completed" = "ЗАВЕРШЕНИЙ";
 "appointment.status.cancelled" = "СКАСОВАНИЙ";
@@ -334,7 +333,6 @@
 "settings.group.work" = "Робота";
 "settings.group.app" = "Додаток";
 "settings.group.account" = "Акаунт";
-"settings.appearance.system" = "Як в iPhone";
 "settings.appearance.light" = "Світлий";
 "settings.appearance.dark" = "Темний";
 "settings.appearance.description" = "Фірмові кольори Beauty Base у світлому й темному варіанті. «Як в iPhone» перемикає їх разом із телефоном.";
@@ -418,3 +416,10 @@
 "form.discard.title" = "Закрити без збереження?";
 "form.discard.confirm" = "Не зберігати";
 "form.discard.keep" = "Продовжити";
+
+// Видалення клієнта з майбутніми записами
+"clients.delete.upcomingMessage" = "Майбутніх записів у вибраних клієнтів: %d. Скасувати їх?";
+"clients.delete.cancelAndDelete" = "Скасувати й видалити";
+"clients.delete.keep" = "Не видаляти";
+"currency.change.title" = "Змінити валюту на %@?";
+"currency.change.confirm" = "Змінити";

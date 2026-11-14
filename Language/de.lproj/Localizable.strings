@@ -170,7 +170,6 @@
 "appointment.hide" = "Ausblenden";
 "appointment.finalizeServices" = "Leistungen abschließen";
 "appointment.confirm" = "Bestätigen";
-"appointment.notesTitle" = "Notizen";
 "appointment.status.active" = "AKTIV";
 "appointment.status.completed" = "ABGESCHLOSSEN";
 "appointment.status.cancelled" = "STORNIERT";
@@ -333,7 +332,6 @@
 "settings.group.work" = "Arbeit";
 "settings.group.app" = "App";
 "settings.group.account" = "Konto";
-"settings.appearance.system" = "Wie iPhone";
 "settings.appearance.light" = "Hell";
 "settings.appearance.dark" = "Dunkel";
 "settings.appearance.description" = "Die Markenfarben von Beauty Base in Hell und Dunkel. „Wie iPhone“ wechselt sie zusammen mit dem Telefon.";
@@ -417,3 +415,10 @@
 "form.discard.title" = "Ohne Speichern schließen?";
 "form.discard.confirm" = "Verwerfen";
 "form.discard.keep" = "Weiter bearbeiten";
+
+// Видалення клієнта з майбутніми записами
+"clients.delete.upcomingMessage" = "Anstehende Termine der ausgewählten Kunden: %d. Stornieren?";
+"clients.delete.cancelAndDelete" = "Stornieren und löschen";
+"clients.delete.keep" = "Nicht löschen";
+"currency.change.title" = "Währung auf %@ ändern?";
+"currency.change.confirm" = "Ändern";

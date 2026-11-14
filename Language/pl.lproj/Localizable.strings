@@ -170,7 +170,6 @@
 "appointment.hide" = "Ukryj";
 "appointment.finalizeServices" = "Podsumuj usługi";
 "appointment.confirm" = "Potwierdź";
-"appointment.notesTitle" = "Notatki";
 "appointment.status.active" = "AKTYWNA";
 "appointment.status.completed" = "ZAKOŃCZONA";
 "appointment.status.cancelled" = "ANULOWANA";
@@ -333,7 +332,6 @@
 "settings.group.work" = "Praca";
 "settings.group.app" = "Aplikacja";
 "settings.group.account" = "Konto";
-"settings.appearance.system" = "Jak w iPhonie";
 "settings.appearance.light" = "Jasny";
 "settings.appearance.dark" = "Ciemny";
 "settings.appearance.description" = "Kolory marki Beauty Base w wersji jasnej i ciemnej. „Jak w iPhonie” przełącza je razem z telefonem.";
@@ -417,3 +415,10 @@
 "form.discard.title" = "Zamknąć bez zapisywania?";
 "form.discard.confirm" = "Odrzuć";
 "form.discard.keep" = "Kontynuuj edycję";
+
+// Видалення клієнта з майбутніми записами
+"clients.delete.upcomingMessage" = "Nadchodzące wizyty wybranych klientów: %d. Anulować je?";
+"clients.delete.cancelAndDelete" = "Anuluj i usuń";
+"clients.delete.keep" = "Nie usuwaj";
+"currency.change.title" = "Zmienić walutę na %@?";
+"currency.change.confirm" = "Zmień";
