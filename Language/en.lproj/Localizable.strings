@@ -174,8 +174,6 @@
 "appointment.status.completed" = "DONE";
 "appointment.status.cancelled" = "CANCELLED";
 "appointment.status.archived" = "ARCHIVED";
-"clients.deleteConfirmationTitle" = "Delete selected clients?";
-"clients.deleteConfirmationMessage" = "This action cannot be undone. All selected clients and their associated photos will be deleted.";
 "common.delete" = "Delete";
 "common.cancel" = "Cancel";
 
@@ -417,9 +415,11 @@
 "form.discard.keep" = "Keep editing";
 
 // Видалення клієнта з майбутніми записами
-"clients.delete.upcomingMessage" = "Upcoming appointments for the selected clients: %d. Cancel them?";
+"clients.delete.upcomingMessage" = "Upcoming appointments for this client: %d. Cancel them?";
 "clients.delete.cancelAndDelete" = "Cancel and delete";
 "clients.delete.keep" = "Don’t delete";
 "currency.change.title" = "Change currency to %@?";
 "currency.change.confirm" = "Change";
 "appointment.clientDeleted" = "Client deleted";
+"clients.deleteOne.title" = "Delete client %@?";
+"clients.deleteOne.message" = "The client card and photos will be deleted. Past appointments stay in history and analytics.";

@@ -174,8 +174,6 @@
 "appointment.status.completed" = "ZAKOŃCZONA";
 "appointment.status.cancelled" = "ANULOWANA";
 "appointment.status.archived" = "ZARCHIWIZOWANA";
-"clients.deleteConfirmationTitle" = "Usunąć wybranych klientów?";
-"clients.deleteConfirmationMessage" = "Tej operacji nie można cofnąć. Wszyscy wybrani klienci i ich powiązane zdjęcia zostaną usunięci.";
 "common.delete" = "Usuń";
 "common.cancel" = "Anuluj";
 
@@ -417,9 +415,11 @@
 "form.discard.keep" = "Kontynuuj edycję";
 
 // Видалення клієнта з майбутніми записами
-"clients.delete.upcomingMessage" = "Nadchodzące wizyty wybranych klientów: %d. Anulować je?";
+"clients.delete.upcomingMessage" = "Nadchodzące wizyty tego klienta: %d. Anulować je?";
 "clients.delete.cancelAndDelete" = "Anuluj i usuń";
 "clients.delete.keep" = "Nie usuwaj";
 "currency.change.title" = "Zmienić walutę na %@?";
 "currency.change.confirm" = "Zmień";
 "appointment.clientDeleted" = "Klient usunięty";
+"clients.deleteOne.title" = "Usunąć klienta %@?";
+"clients.deleteOne.message" = "Karta klienta i zdjęcia zostaną usunięte. Przeszłe wizyty pozostaną w historii i analityce.";
