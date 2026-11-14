@@ -83,7 +83,7 @@
 
 ## Відомі проблеми (станом на 10.11.2026)
 - Відкриті знахідки аудиту — у GitHub Issues: критичні #21, #22; дрібні #40, #54 — усі чекають Supabase (#2 і #57 закрито 11.11.2026). Подробиці — `docs/audit/REPORT.md`.
-- `.gitignore` у репозиторії немає — додати перед Supabase (див. «Секрети» нижче).
+- `.gitignore` є (15.11.2026): секрети в `Secrets.xcconfig` поза git, шаблон — `Config/Secrets.example.xcconfig`. Додаток лише для iPhone (iPad вимкнено 15.11.2026).
 - `LocalAuthService` зберігає email і пароль відкритим текстом в UserDefaults — замінити на Supabase Auth (#21).
 - Сесія (`SessionManager`) — userID в UserDefaults, без токена. Видалення акаунта й Sign in with Apple немає (#22).
 - Перевірка «email уже зайнятий» на 1-му кроці реєстрації зараз локальна; із Supabase її треба робити обережно (не розкривати чужі email).
