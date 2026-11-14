@@ -175,8 +175,6 @@
 "appointment.status.completed" = "DOKONČENO";
 "appointment.status.cancelled" = "ZRUŠENO";
 "appointment.status.archived" = "ARCHIVOVÁNO";
-"clients.deleteConfirmationTitle" = "Smazat vybrané klienty?";
-"clients.deleteConfirmationMessage" = "Tuto akci nelze vrátit zpět. Všichni vybraní klienti a jejich související fotografie budou smazáni.";
 "common.delete" = "Smazat";
 "common.cancel" = "Zrušit";
 
@@ -418,9 +416,11 @@
 "form.discard.keep" = "Pokračovat v úpravách";
 
 // Видалення клієнта з майбутніми записами
-"clients.delete.upcomingMessage" = "Nadcházející rezervace vybraných klientů: %d. Zrušit je?";
+"clients.delete.upcomingMessage" = "Nadcházející rezervace tohoto klienta: %d. Zrušit je?";
 "clients.delete.cancelAndDelete" = "Zrušit a smazat";
 "clients.delete.keep" = "Nemazat";
 "currency.change.title" = "Změnit měnu na %@?";
 "currency.change.confirm" = "Změnit";
 "appointment.clientDeleted" = "Klient smazán";
+"clients.deleteOne.title" = "Smazat klienta %@?";
+"clients.deleteOne.message" = "Karta klienta a fotky budou smazány. Minulé rezervace zůstanou v historii a analytice.";

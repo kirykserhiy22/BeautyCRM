@@ -175,8 +175,6 @@
 "appointment.status.completed" = "ЗАВЕРШЕНИЙ";
 "appointment.status.cancelled" = "СКАСОВАНИЙ";
 "appointment.status.archived" = "АРХІВНИЙ";
-"clients.deleteConfirmationTitle" = "Видалити вибраних клієнтів?";
-"clients.deleteConfirmationMessage" = "Дію неможливо скасувати. Усі дані вибраних клієнтів і пов’язані фотографії будуть видалені.";
 "common.delete" = "Видалити";
 "common.cancel" = "Скасувати";
 
@@ -418,9 +416,11 @@
 "form.discard.keep" = "Продовжити";
 
 // Видалення клієнта з майбутніми записами
-"clients.delete.upcomingMessage" = "Майбутніх записів у вибраних клієнтів: %d. Скасувати їх?";
+"clients.delete.upcomingMessage" = "Майбутніх записів клієнта: %d. Скасувати їх?";
 "clients.delete.cancelAndDelete" = "Скасувати й видалити";
 "clients.delete.keep" = "Не видаляти";
 "currency.change.title" = "Змінити валюту на %@?";
 "currency.change.confirm" = "Змінити";
 "appointment.clientDeleted" = "Клієнта видалено";
+"clients.deleteOne.title" = "Видалити клієнта %@?";
+"clients.deleteOne.message" = "Картку клієнта й фото буде видалено. Минулі записи лишаться в історії та аналітиці.";

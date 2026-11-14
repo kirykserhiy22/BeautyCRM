@@ -15,17 +15,13 @@ struct ClientsListView: View {
     private var colors: ThemeColors {
         theme.colors(for: theme.currentTheme)
     }
-    @State private var selectedClientIDs: Set<UUID> = []
     @State private var clientToOpen: Client?
-    @State private var showDeleteConfirmation = false
-    // Скільки майбутніх записів у вибраних клієнтів — вони скасуються разом із клієнтами
+    // Клієнт, якого майстер свайпом хоче видалити, — чекає підтвердження
+    @State private var clientToDelete: Client?
+    // Скільки в нього майбутніх записів — вони скасуються разом із клієнтом
     @State private var upcomingToCancel = 0
 
     @Environment(\.modelContext) private var modelContext
-
-    private var isSelectionMode: Bool {
-        !selectedClientIDs.isEmpty
-    }
     @Query(
         filter: #Predicate<Client> { $0.deletedAt == nil },
         sort: \Client.createdAt,
@@ -82,45 +78,42 @@ struct ClientsListView: View {
 
                     searchBar
 
-                    ScrollView {
+                    // List — щоб працював системний свайп «Видалити»
+                    List {
 
-                        LazyVStack(spacing: 14) {
+                        let visitCounts = visitCounts
 
-                            let visitCounts = visitCounts
-
-                            ForEach(filteredClients) { client in
+                        ForEach(filteredClients) { client in
+                            Button {
+                                clientToOpen = client
+                            } label: {
                                 ClientRowView(client: client, visits: visitCounts[client.id] ?? 0)
                                     .frame(maxWidth: .infinity, alignment: .leading)
-                                    .background(
-                                        selectedClientIDs.contains(client.id)
-                                            ? colors.accent.opacity(0.18)
-                                            : colors.card
-                                    )
+                                    .background(colors.card)
                                     .cornerRadius(18)
-                                    .overlay(alignment: .trailing) {
-                                        if selectedClientIDs.contains(client.id) {
-                                            Image(systemName: "checkmark.circle.fill")
-                                                .font(.title2)
-                                                .foregroundColor(colors.accent)
-                                                .padding(.trailing, 14)
-                                        }
-                                    }
                                     .contentShape(Rectangle())
-                                    .onTapGesture {
-                                        if isSelectionMode {
-                                            toggleSelection(for: client)
-                                        } else {
-                                            clientToOpen = client
-                                        }
-                                    }
-                                    .onLongPressGesture(minimumDuration: 0.5) {
-                                        if !isSelectionMode {
-                                            toggleSelection(for: client)
-                                        }
-                                    }
                             }
+                            .buttonStyle(.plain)
+                            .listRowInsets(EdgeInsets(top: 7, leading: 16, bottom: 7, trailing: 16))
+                            .listRowBackground(Color.clear)
+                            .listRowSeparator(.hidden)
+                            .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                                // Без role: .destructive — рядок не зникає, поки майстер не підтвердить
+                                Button {
+                                    askDelete(client)
+                                } label: {
+                                    Label(
+                                        localization.localizedString(for: "common.delete"),
+                                        systemImage: "trash"
+                                    )
+                                }
+                                .tint(colors.buttonDestructive)
+                                .accessibilityIdentifier("clients.swipeDelete")
+                            }
+                        }
 
-                            if filteredClients.isEmpty {
+                        if filteredClients.isEmpty {
+                            Group {
                                 if userClients.isEmpty {
                                     EmptyStateView(
                                         systemImage: "person.2",
@@ -135,44 +128,23 @@ struct ClientsListView: View {
                                     )
                                 }
                             }
+                            .listRowBackground(Color.clear)
+                            .listRowSeparator(.hidden)
                         }
-                        .padding(.horizontal)
-                        .padding(.top, 8)
+
+                        // Місце під плаваючою кнопкою
+                        Color.clear
+                            .frame(height: 64)
+                            .listRowBackground(Color.clear)
+                            .listRowSeparator(.hidden)
                     }
+                    .listStyle(.plain)
+                    .scrollContentBackground(.hidden)
+                    .scrollDismissesKeyboard(.interactively)
                 }
 
-                if isSelectionMode {
-                    HStack(spacing: 16) {
-                        Button {
-                            selectedClientIDs.removeAll()
-                        } label: {
-                            Text(localization.localizedString(for: "common.cancel"))
-                        }
 
-                        Spacer()
-
-                        Text("\(selectedClientIDs.count)")
-                            .font(.headline)
-
-                        Button(role: .destructive) {
-                            upcomingToCancel = (try? ClientManager.upcomingAppointments(
-                                clientIDs: selectedClientIDs,
-                                context: modelContext
-                            ).count) ?? 0
-                            showDeleteConfirmation = true
-                        } label: {
-                            Label(
-                                localization.localizedString(for: "common.delete"),
-                                systemImage: "trash"
-                            )
-                        }
-                    }
-                    .padding()
-                    .background(colors.card)
-                    .cornerRadius(18)
-                    .padding()
-                } else {
-                    Button {
+                Button {
                         showAddClient = true
                     } label: {
                         Image(systemName: "plus")
@@ -189,7 +161,6 @@ struct ClientsListView: View {
                     }
                     .accessibilityIdentifier("floating.add")
                     .padding()
-                }
             }
             .navigationTitle(localization.localizedString(for: "clients.title"))
             // Заголовок із кількістю клієнтів малює header
@@ -201,8 +172,14 @@ struct ClientsListView: View {
                 ClientProfileView(client: client)
             }
             .confirmationDialog(
-                localization.localizedString(for: "clients.deleteConfirmationTitle"),
-                isPresented: $showDeleteConfirmation,
+                String(
+                    format: localization.localizedString(for: "clients.deleteOne.title"),
+                    clientToDelete?.name ?? ""
+                ),
+                isPresented: Binding(
+                    get: { clientToDelete != nil },
+                    set: { if !$0 { clientToDelete = nil } }
+                ),
                 titleVisibility: .visible
             ) {
                 // Є майбутні записи — кнопки кажуть прямо, що вони скасуються
@@ -212,7 +189,7 @@ struct ClientsListView: View {
                     ),
                     role: .destructive
                 ) {
-                    deleteSelectedClients()
+                    deleteConfirmed()
                 }
                 .accessibilityIdentifier("clients.delete.confirm")
 
@@ -221,7 +198,9 @@ struct ClientsListView: View {
                         for: upcomingToCancel > 0 ? "clients.delete.keep" : "common.cancel"
                     ),
                     role: .cancel
-                ) {}
+                ) {
+                    clientToDelete = nil
+                }
             } message: {
                 if upcomingToCancel > 0 {
                     Text(
@@ -231,7 +210,7 @@ struct ClientsListView: View {
                         )
                     )
                 } else {
-                    Text(localization.localizedString(for: "clients.deleteConfirmationMessage"))
+                    Text(localization.localizedString(for: "clients.deleteOne.message"))
                 }
             }
         }
@@ -281,26 +260,21 @@ private extension ClientsListView {
     }
    
 
-        func toggleSelection(for client: Client) {
-            if selectedClientIDs.contains(client.id) {
-                selectedClientIDs.remove(client.id)
-            } else {
-                selectedClientIDs.insert(client.id)
-            }
-        }
-
-        func deleteSelectedClients() {
-            let clientsToDelete = userClients.filter {
-                selectedClientIDs.contains($0.id)
-            }
-
-            for client in clientsToDelete {
-                ClientManager.delete(client: client, context: modelContext)
-            }
-
-            if modelContext.saveReportingErrors() {
-                selectedClientIDs.removeAll()
-            }
-        }
+    // Свайп → питання. Майбутні записи рахуємо заздалегідь, щоб сказати про них прямо
+    func askDelete(_ client: Client) {
+        upcomingToCancel = (try? ClientManager.upcomingAppointments(
+            clientIDs: [client.id],
+            context: modelContext
+        ).count) ?? 0
+        clientToDelete = client
     }
 
+    func deleteConfirmed() {
+        guard let client = clientToDelete else {
+            return
+        }
+        ClientManager.delete(client: client, context: modelContext)
+        modelContext.saveReportingErrors()
+        clientToDelete = nil
+    }
+}
