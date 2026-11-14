@@ -11,6 +11,10 @@ struct AppointmentRow: View {
     @EnvironmentObject var currencyManager: CurrencyManager
     @EnvironmentObject var localization: LocalizationManager
     @Environment(\.modelContext) private var context
+    // Живі клієнти: запис видаленого клієнта не відновлюється
+    @Query(filter: #Predicate<Client> { $0.deletedAt == nil })
+    private var activeClients: [Client]
+
     @Query(filter: #Predicate<Service> { $0.deletedAt == nil })
     private var services: [Service]
     
@@ -296,20 +300,33 @@ struct AppointmentRow: View {
 
                             HStack(spacing: 10) {
 
-                                // Повернути випадково скасований запис
-                                Button {
-                                    restore()
-                                } label: {
+                                // Повернути випадково скасований запис —
+                                // але не коли клієнта вже видалено (видалення остаточне)
+                                if isClientDeleted {
                                     Label(
-                                        localization.localizedString(for: "appointment.restore"),
-                                        systemImage: "arrow.uturn.backward.circle"
+                                        localization.localizedString(for: "appointment.clientDeleted"),
+                                        systemImage: "person.crop.circle.badge.xmark"
                                     )
+                                    .font(.subheadline)
+                                    .foregroundColor(colors.textSecondary)
                                     .frame(maxWidth: .infinity)
                                     .multilineTextAlignment(.center)
+                                    .accessibilityIdentifier("appointment.clientDeleted")
+                                } else {
+                                    Button {
+                                        restore()
+                                    } label: {
+                                        Label(
+                                            localization.localizedString(for: "appointment.restore"),
+                                            systemImage: "arrow.uturn.backward.circle"
+                                        )
+                                        .frame(maxWidth: .infinity)
+                                        .multilineTextAlignment(.center)
+                                    }
+                                    .buttonStyle(.bordered)
+                                    .tint(colors.accent)
+                                    .frame(maxWidth: .infinity)
                                 }
-                                .buttonStyle(.bordered)
-                                .tint(colors.accent)
-                                .frame(maxWidth: .infinity)
 
                                 Button {
                                     AppointmentEngine.archive(appointment: appt)
@@ -579,7 +596,15 @@ struct AppointmentRow: View {
 private extension AppointmentRow {
 
     // Відновлення скасованого запису: якщо його час уже зайняли — пояснюємо чому ні
+    var isClientDeleted: Bool {
+        !activeClients.contains { $0.id == appt.clientID }
+    }
+
     func restore() {
+
+        guard !isClientDeleted else {
+            return
+        }
 
         let userID = appt.userID
         let descriptor = FetchDescriptor<Appointment>(

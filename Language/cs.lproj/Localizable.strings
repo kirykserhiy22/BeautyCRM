@@ -423,3 +423,4 @@
 "clients.delete.keep" = "Nemazat";
 "currency.change.title" = "Změnit měnu na %@?";
 "currency.change.confirm" = "Změnit";
+"appointment.clientDeleted" = "Klient smazán";

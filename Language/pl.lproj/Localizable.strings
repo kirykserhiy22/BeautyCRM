@@ -422,3 +422,4 @@
 "clients.delete.keep" = "Nie usuwaj";
 "currency.change.title" = "Zmienić walutę na %@?";
 "currency.change.confirm" = "Zmień";
+"appointment.clientDeleted" = "Klient usunięty";
