@@ -278,24 +278,33 @@ final class NotificationRouter: NSObject, UNUserNotificationCenterDelegate {
         appState.openAppointmentID = id
     }
 
+    // Варіанти з completionHandler, а не async: async-версію iOS завершує не з головного
+    // потоку, і UIKit аварійно закриває додаток при тапі по сповіщенню
+
     // Додаток відкритий — сповіщення все одно показуємо зверху
     nonisolated func userNotificationCenter(
         _ center: UNUserNotificationCenter,
-        willPresent notification: UNNotification
-    ) async -> UNNotificationPresentationOptions {
-        [.banner, .list, .sound]
+        willPresent notification: UNNotification,
+        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
+    ) {
+        completionHandler([.banner, .list, .sound])
     }
 
     nonisolated func userNotificationCenter(
         _ center: UNUserNotificationCenter,
-        didReceive response: UNNotificationResponse
-    ) async {
+        didReceive response: UNNotificationResponse,
+        withCompletionHandler completionHandler: @escaping () -> Void
+    ) {
         let idString = response.notification.request.content.userInfo["appointmentID"] as? String
-        guard let idString, let id = UUID(uuidString: idString) else {
-            return
-        }
-        await MainActor.run {
-            NotificationRouter.shared.open(id)
+        let id = idString.flatMap(UUID.init(uuidString:))
+
+        DispatchQueue.main.async {
+            if let id {
+                MainActor.assumeIsolated {
+                    NotificationRouter.shared.open(id)
+                }
+            }
+            completionHandler()
         }
     }
 }
