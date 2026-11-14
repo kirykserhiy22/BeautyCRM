@@ -391,7 +391,7 @@
 "clientMessage.other" = "Jiná aplikace";
 "clientMessage.text" = "Zpráva (před odesláním ji můžete upravit)";
 "clientMessage.pasteHint" = "U Telegramu, Instagramu a Messengeru se text také zkopíruje: pokud v chatu chybí, klepněte na „Vložit“.";
-"clientMessage.template" = "Dobrý den, {name}! Připomínám vaši rezervaci {date} v {time}: {services}.\nAdresa: {address}\nTěším se na vás!";
+"clientMessage.template" = "Dobrý den! Připomínám vaši rezervaci {date} v {time}: {services}.\nAdresa: {address}\nTěším se na vás!";
 "clientMessage.dateFormat" = "d. MMMM";
 "reminders.section.clients" = "Pro klienty";
 "clientMessage.addressPlaceholder" = "Adresa salonu nebo studia";
