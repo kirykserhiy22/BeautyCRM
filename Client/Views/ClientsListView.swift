@@ -162,6 +162,7 @@ struct ClientsListView: View {
                     .accessibilityIdentifier("floating.add")
                     .padding()
             }
+            .keyboardDoneButton()
             .navigationTitle(localization.localizedString(for: "clients.title"))
             // Заголовок із кількістю клієнтів малює header
             .toolbar(.hidden, for: .navigationBar)
@@ -252,6 +253,10 @@ private extension ClientsListView {
                 text: $searchText
             )
             .foregroundColor(colors.textPrimary)
+            // «Пошук» на клавіатурі ховає її — результати вже на екрані
+            .submitLabel(.search)
+            .autocorrectionDisabled()
+            .accessibilityIdentifier("clients.search")
         }
         .padding()
         .background(colors.inputBackground)
