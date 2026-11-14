@@ -1,0 +1,27 @@
+# Beauty Base — що не потрапляє в git
+
+# --- Секрети ---
+# Ключі Supabase та інші секрети — лише в цих файлах, на комп'ютері, не в git.
+# Шаблон без справжніх значень: Config/Secrets.example.xcconfig
+Secrets.xcconfig
+*.secrets.xcconfig
+.env
+.env.*
+
+# --- Особисті файли Xcode ---
+# Точки зупинки, відкриті вкладки, стан схем — у кожного свої
+xcuserdata/
+*.xcuserstate
+*.xcscmblueprint
+*.xccheckout
+
+# --- Результати збірки ---
+DerivedData/
+build/
+*.xcresult
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# --- Системне сміття macOS ---
+.DS_Store
