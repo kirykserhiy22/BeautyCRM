@@ -541,7 +541,7 @@ struct AppointmentRow: View {
                                 text: $completionNotes,
                                 axis: .vertical
                             )
-                            .lineLimit(3...6)
+                            .lineLimit(2...6)
                             .padding()
                             .background(colors.card)
                             .cornerRadius(14)
@@ -606,7 +606,8 @@ struct AppointmentRow: View {
             .onAppear {
                 loadServices()
             }
-            .presentationDetents([.medium, .large])
+            // Одразу на весь екран: ціни, нотатка й «Підтвердити» видно без гортання
+            .presentationDetents([.large])
             .presentationDragIndicator(.visible)
         }
         
