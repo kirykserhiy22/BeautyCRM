@@ -45,6 +45,7 @@ enum ClientPhotoService {
         fileName: String,
         stage: ClientPhotoStage? = nil,
         caption: String? = nil,
+        postID: UUID? = nil,
         client: Client,
         context: ModelContext
     ) {
@@ -55,6 +56,7 @@ enum ClientPhotoService {
         )
         photo.stage = stage
         photo.caption = cleanCaption(caption)
+        photo.postID = postID
 
         client.photos.append(photo)
         context.insert(photo)
@@ -130,5 +132,30 @@ enum ClientPhotoService {
         photo.markDeleted()
 
         context.saveReportingErrors()
+    }
+}
+
+
+// Фото клієнта, складені в дописи: окреме фото — допис з одного фото,
+// фото з однаковим postID — один допис-карусель
+struct ClientPhotoPost: Identifiable {
+    let photos: [ClientPhoto]
+
+    // Ідентифікатор допису = перше фото в ньому
+    var id: UUID { photos[0].id }
+    var cover: ClientPhoto { photos[0] }
+    var isCarousel: Bool { photos.count > 1 }
+
+    // Нові дописи першими; всередині допису — у порядку, в якому фото вибрали
+    static func group(_ photos: [ClientPhoto]) -> [ClientPhotoPost] {
+        let alive = photos.filter { $0.deletedAt == nil }
+        let groups = Dictionary(grouping: alive) { $0.postID ?? $0.id }
+        return groups.values
+            .map { ClientPhotoPost(photos: $0.sorted { $0.createdAt < $1.createdAt }) }
+            .sorted { lhs, rhs in
+                let l = lhs.photos.map(\.createdAt).max() ?? .distantPast
+                let r = rhs.photos.map(\.createdAt).max() ?? .distantPast
+                return l > r
+            }
     }
 }

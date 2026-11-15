@@ -57,8 +57,8 @@ struct ClientPhotoGridSection: View {
             ClientPhotoEditorView(
                 drafts: drafts,
                 showsStages: profession.config.showsPhotoStages
-            ) { ready in
-                addPhotos(ready)
+            ) { ready, asPost in
+                addPhotos(ready, asPost: asPost)
             }
         }
         .alert(
@@ -121,9 +121,10 @@ struct ClientPhotoGridSection: View {
             spacing: 4
         ) {
 
-            ForEach(sortedPhotos, id: \.id) { photo in
+            // Одна клітинка — один допис: окреме фото або карусель
+            ForEach(ClientPhotoPost.group(client.photos)) { post in
 
-                photoCell(photo)
+                photoCell(post.cover, isCarousel: post.isCarousel)
             }
         }
     }
@@ -131,13 +132,24 @@ struct ClientPhotoGridSection: View {
     // MARK: - CELL (IMPORTANT FIX)
 
     @ViewBuilder
-    private func photoCell(_ photo: ClientPhoto) -> some View {
+    private func photoCell(_ photo: ClientPhoto, isCarousel: Bool) -> some View {
 
         let key = photo.fileName
 
         if let image = thumbnails[key] {
 
             imageView(image, photo: photo)
+                .overlay(alignment: .topTrailing) {
+                    // Як в Instagram: значок, що в дописі кілька фото
+                    if isCarousel {
+                        Image(systemName: "square.fill.on.square.fill")
+                            .font(.caption.weight(.semibold))
+                            .foregroundColor(.white)
+                            .shadow(color: .black.opacity(0.5), radius: 2)
+                            .padding(6)
+                            .accessibilityIdentifier("client.photo.carousel")
+                    }
+                }
 
         } else {
 
@@ -301,11 +313,15 @@ struct ClientPhotoGridSection: View {
     }
 
     // «Додати» в редакторі: JPEG і мініатюра — у фоні (#39), запис у базу — тут.
-    // Перше вибране фото стає найновішим (першим у сітці), як в Instagram.
-    private func addPhotos(_ ready: [ClientPhotoDraft]) {
+    // Окремо: перше вибране фото стає найновішим (першим у сітці), як в Instagram.
+    // Одним дописом: спільний postID, фото в порядку вибору (так їх гортатимуть).
+    private func addPhotos(_ ready: [ClientPhotoDraft], asPost: Bool) {
+
+        let postID: UUID? = asPost ? UUID() : nil
+        let ordered = asPost ? ready : ready.reversed()
 
         Task {
-            for draft in ready.reversed() {
+            for draft in ordered {
                 let image = draft.image
                 let fileName = await Task.detached(priority: .userInitiated) {
                     ClientPhotoService.storeFiles(for: image)
@@ -316,6 +332,7 @@ struct ClientPhotoGridSection: View {
                         fileName: fileName,
                         stage: draft.stage,
                         caption: draft.caption,
+                        postID: postID,
                         client: client,
                         context: context
                     )

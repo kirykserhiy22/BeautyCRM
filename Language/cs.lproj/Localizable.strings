@@ -455,3 +455,7 @@
 "photos.edit.title" = "Upravit fotku";
 "photos.menu.edit" = "Změnit označení nebo popis";
 "photos.menu" = "Akce s fotkou";
+"photos.howToAdd.title" = "Jak přidat %d fotky?";
+"photos.howToAdd.message" = "Jedním příspěvkem — listují se v jedné miniatuře jako na Instagramu. Zvlášť — každá fotka má vlastní miniaturu.";
+"photos.howToAdd.post" = "Jedním příspěvkem";
+"photos.howToAdd.separate" = "Zvlášť";

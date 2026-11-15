@@ -26,13 +26,15 @@ struct ClientPhotoEditorView: View {
     let showsStages: Bool
     // «Нові фото» чи «Редагувати фото» — заголовок і кнопка
     var isEditingExisting = false
-    let onDone: ([ClientPhotoDraft]) -> Void
+    // asPost — true, якщо майстер вибрав «Одним дописом»
+    let onDone: ([ClientPhotoDraft], _ asPost: Bool) -> Void
 
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var theme: ThemeManager
     @EnvironmentObject var localization: LocalizationManager
 
     @State private var page = 0
+    @State private var askHowToAdd = false
 
     private var colors: ThemeColors {
         theme.colors(for: theme.currentTheme)
@@ -74,8 +76,13 @@ struct ClientPhotoEditorView: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button(localization.localizedString(for: isEditingExisting ? "common.save" : "photos.new.add")) {
-                        onDone(drafts)
-                        dismiss()
+                        // Кілька нових фото — спитати, як додати: одним дописом чи окремо
+                        if !isEditingExisting && drafts.count > 1 {
+                            askHowToAdd = true
+                        } else {
+                            onDone(drafts, false)
+                            dismiss()
+                        }
                     }
                     .fontWeight(.semibold)
                     .accessibilityIdentifier("photos.add")
@@ -84,6 +91,25 @@ struct ClientPhotoEditorView: View {
         }
         // Випадковий свайп униз не губить вибрані фото й підписи
         .interactiveDismissDisabled()
+        .confirmationDialog(
+            String(format: localization.localizedString(for: "photos.howToAdd.title"), drafts.count),
+            isPresented: $askHowToAdd,
+            titleVisibility: .visible
+        ) {
+            Button(localization.localizedString(for: "photos.howToAdd.post")) {
+                onDone(drafts, true)
+                dismiss()
+            }
+            .accessibilityIdentifier("photos.addAsPost")
+            Button(localization.localizedString(for: "photos.howToAdd.separate")) {
+                onDone(drafts, false)
+                dismiss()
+            }
+            .accessibilityIdentifier("photos.addSeparately")
+            Button(localization.localizedString(for: "common.cancel"), role: .cancel) {}
+        } message: {
+            Text(localization.localizedString(for: "photos.howToAdd.message"))
+        }
     }
 
     private func draftPage(_ index: Int) -> some View {

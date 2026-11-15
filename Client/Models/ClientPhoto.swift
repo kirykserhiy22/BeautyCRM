@@ -36,6 +36,10 @@ final class ClientPhoto: SyncTrackable {
     var caption: String? = nil
     var stageRaw: String? = nil
 
+    // Кілька фото, додані «одним дописом», мають спільний postID (як допис-карусель в Instagram).
+    // nil — фото окремим дописом
+    var postID: UUID? = nil
+
     var stage: ClientPhotoStage? {
         get { stageRaw.flatMap(ClientPhotoStage.init(rawValue:)) }
         set { stageRaw = newValue?.rawValue }

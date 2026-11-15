@@ -454,3 +454,7 @@
 "photos.edit.title" = "Edytuj zdjęcie";
 "photos.menu.edit" = "Zmień oznaczenie lub podpis";
 "photos.menu" = "Akcje zdjęcia";
+"photos.howToAdd.title" = "Jak dodać %d zdjęcia?";
+"photos.howToAdd.message" = "Jednym postem — przewijane w jednej miniaturze, jak na Instagramie. Osobno — każde zdjęcie ma własną miniaturę.";
+"photos.howToAdd.post" = "Jednym postem";
+"photos.howToAdd.separate" = "Osobno";

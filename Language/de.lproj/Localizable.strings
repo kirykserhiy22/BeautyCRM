@@ -454,3 +454,7 @@
 "photos.edit.title" = "Foto bearbeiten";
 "photos.menu.edit" = "Markierung oder Text ändern";
 "photos.menu" = "Fotoaktionen";
+"photos.howToAdd.title" = "Wie %d Fotos hinzufügen?";
+"photos.howToAdd.message" = "Als ein Beitrag – zum Wischen in einer Miniatur, wie bei Instagram. Einzeln – jedes Foto mit eigener Miniatur.";
+"photos.howToAdd.post" = "Als ein Beitrag";
+"photos.howToAdd.separate" = "Einzeln";

@@ -455,3 +455,7 @@
 "photos.edit.title" = "Редагувати фото";
 "photos.menu.edit" = "Змінити позначку чи підпис";
 "photos.menu" = "Дії з фото";
+"photos.howToAdd.title" = "Як додати %d фото?";
+"photos.howToAdd.message" = "Одним дописом — гортатимуться в одній мініатюрі, як в Instagram. Окремо — кожне фото своєю мініатюрою.";
+"photos.howToAdd.post" = "Одним дописом";
+"photos.howToAdd.separate" = "Окремо";

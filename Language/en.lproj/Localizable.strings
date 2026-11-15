@@ -454,3 +454,7 @@
 "photos.edit.title" = "Edit photo";
 "photos.menu.edit" = "Edit label or caption";
 "photos.menu" = "Photo actions";
+"photos.howToAdd.title" = "How to add %d photos?";
+"photos.howToAdd.message" = "As one post — they swipe inside one thumbnail, like on Instagram. Separately — each photo gets its own thumbnail.";
+"photos.howToAdd.post" = "As one post";
+"photos.howToAdd.separate" = "Separately";

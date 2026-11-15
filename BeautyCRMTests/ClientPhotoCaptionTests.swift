@@ -93,4 +93,28 @@ final class ClientPhotoCaptionTests: XCTestCase {
         XCTAssertNil(photo.stage)
         XCTAssertNil(photo.caption)
     }
+
+    // «Одним дописом»: фото зі спільним postID — один допис у порядку вибору;
+    // окремі фото — кожне своїм дописом; нові дописи першими
+    func testPhotosGroupIntoPosts() throws {
+        let context = try F.makeContext()
+        let client = Client(userID: F.userID, name: "Олена")
+        context.insert(client)
+
+        ClientPhotoService.addPhoto(fileName: "old.jpg", client: client, context: context)
+        let post = UUID()
+        ClientPhotoService.addPhoto(fileName: "before.jpg", stage: .before, postID: post, client: client, context: context)
+        ClientPhotoService.addPhoto(fileName: "after.jpg", stage: .after, postID: post, client: client, context: context)
+        ClientPhotoService.addPhoto(fileName: "newest.jpg", client: client, context: context)
+
+        let posts = ClientPhotoPost.group(client.photos)
+
+        XCTAssertEqual(posts.map { $0.photos.map(\.fileName) }, [["newest.jpg"], ["before.jpg", "after.jpg"], ["old.jpg"]])
+        XCTAssertEqual(posts.map(\.isCarousel), [false, true, false])
+        XCTAssertEqual(posts[1].cover.fileName, "before.jpg", "Обкладинка допису — перше вибране фото")
+
+        // Видалене фото зникає з допису, допис лишається
+        posts[1].photos[0].markDeleted()
+        XCTAssertEqual(ClientPhotoPost.group(client.photos)[1].photos.map(\.fileName), ["after.jpg"])
+    }
 }
