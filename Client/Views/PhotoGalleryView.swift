@@ -2,175 +2,284 @@
 //  PhotoGalleryView.swift
 //  BeautyCRM
 //
-//  Перегляд фото клієнта: гортання, збільшення, підпис і позначка «До/Після».
+//  Перегляд фото клієнта як стрічка Instagram: фото одне під одним,
+//  над фото позначка «До / Після» і дата, під фото підпис. Двома пальцями — збільшити.
+//  «⋯» біля фото: змінити позначку чи підпис, зберегти, поділитися, видалити.
 //
 
 import SwiftUI
 import SwiftData
 
 
-struct PhotoGalleryEntry {
-    let photo: ClientPhoto
-    let image: UIImage
-}
+struct ClientPhotoFeedView: View {
 
+    let client: Client
+    // Фото, на якому відкрити стрічку (те, по якому тапнули в сітці)
+    let startPhotoID: UUID?
 
-struct PhotoGalleryView: View {
-
-    let entries: [PhotoGalleryEntry]
-    @State var selectedIndex: Int
-
-    @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
     @EnvironmentObject var theme: ThemeManager
     @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var profession: ProfessionManager
 
-    @State private var draft = ""
-    @FocusState private var isEditing: Bool
+    // Дія з меню «⋯» стосується всього допису (для окремого фото — це допис з одного фото)
+    @State private var editing: ClientPhotoPost?
+    @State private var deleting: ClientPhotoPost?
+    @State private var didScroll = false
 
     private var colors: ThemeColors {
         theme.colors(for: theme.currentTheme)
     }
 
-    private var current: PhotoGalleryEntry? {
-        entries.indices.contains(selectedIndex) ? entries[selectedIndex] : nil
+    // Той самий порядок, що й у сітці: нові дописи першими
+    private var posts: [ClientPhotoPost] {
+        ClientPhotoPost.group(client.photos)
     }
+
+    // Яке фото зараз видно в кожному дописі-каруселі (postID → номер)
+    @State private var pages: [UUID: Int] = [:]
 
     var body: some View {
 
-        VStack(spacing: 0) {
+        ScrollViewReader { proxy in
 
-            TabView(selection: $selectedIndex) {
+            ScrollView {
 
-                ForEach(Array(entries.enumerated()), id: \.offset) { index, entry in
-
-                    ZoomableImageView(image: entry.image)
-                        .tag(index)
-                        .contentShape(Rectangle())
-                }
-            }
-            .tabViewStyle(.page(indexDisplayMode: .never))
-            .ignoresSafeArea(edges: .top)
-            .onTapGesture {
-                // Перший дотик під час введення лише ховає клавіатуру
-                if isEditing {
-                    isEditing = false
-                } else {
-                    dismiss()
-                }
-            }
-
-            if let current {
-                panel(current.photo)
-            }
-        }
-        .presentationBackground(.black)
-        .onAppear {
-            draft = current?.photo.caption ?? ""
-        }
-        .onChange(of: selectedIndex) { oldIndex, _ in
-            saveDraft(at: oldIndex)
-            draft = current?.photo.caption ?? ""
-        }
-        .onChange(of: isEditing) { _, editing in
-            if !editing {
-                saveDraft(at: selectedIndex)
-            }
-        }
-        .onDisappear {
-            saveDraft(at: selectedIndex)
-        }
-    }
-
-
-    // MARK: - PANEL
-
-    // Панель завжди темна, як і сам перегляд фото
-    private func panel(_ photo: ClientPhoto) -> some View {
-
-        VStack(alignment: .leading, spacing: 10) {
-
-            // Вже поставлену позначку показуємо навіть після зміни спеціалізації
-            if profession.config.showsPhotoStages || photo.stage != nil {
-                HStack(spacing: 8) {
-                    ForEach(ClientPhotoStage.allCases, id: \.self) { stage in
-                        stageButton(stage, photo: photo)
+                LazyVStack(spacing: 28) {
+                    ForEach(posts) { item in
+                        post(item)
+                            .id(item.id)
                     }
                 }
+                .padding(.vertical, 12)
             }
-
-            TextField(
-                "",
-                text: $draft,
-                prompt: Text(localization.localizedString(for: "clients.photo.addCaption"))
-                    .foregroundColor(.white.opacity(0.6)),
-                axis: .vertical
-            )
-            .lineLimit(1...3)
-            .focused($isEditing)
-            .submitLabel(.done)
-            .foregroundColor(.white)
-            .tint(.white)
-            .padding(.horizontal, 12)
-            .padding(.vertical, 10)
-            .background(Color.white.opacity(0.1))
-            .cornerRadius(12)
-            .accessibilityIdentifier("photo.caption")
-            .onChange(of: draft) { _, text in
-                limitDraft(text)
+            .onAppear {
+                guard !didScroll, let startPhotoID else { return }
+                didScroll = true
+                proxy.scrollTo(startPhotoID, anchor: .top)
             }
-
-            Text(AppFormatting.date(photo.createdAt, locale: localization.locale, format: .medium))
-                .font(.caption)
-                .foregroundColor(.white.opacity(0.7))
         }
-        .padding()
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color("SplashBackground").ignoresSafeArea())
-    }
-
-    private func stageButton(_ stage: ClientPhotoStage, photo: ClientPhoto) -> some View {
-
-        let isSelected = photo.stage == stage
-
-        return Button {
-            ClientPhotoService.toggleStage(stage, photo: photo, context: context)
-        } label: {
-            Text(localization.localizedString(for: stage.localizationKey))
-                .font(.subheadline.weight(.medium))
-                .foregroundColor(.white)
-                .padding(.horizontal, 16)
-                .padding(.vertical, 7)
-                .background(
-                    Capsule().fill(isSelected ? colors.buttonPrimary : Color.white.opacity(0.14))
+        .background(colors.background)
+        .navigationTitle(client.name)
+        .navigationBarTitleDisplayMode(.inline)
+        .sheet(item: $editing) { item in
+            ClientPhotoEditorView(
+                drafts: item.photos.enumerated().compactMap { index, photo in
+                    ClientPhotoStorage.loadImage(from: photo.fileName).map {
+                        ClientPhotoDraft(image: $0, stage: photo.stage, caption: index == 0 ? (item.caption ?? "") : "")
+                    }
+                },
+                showsStages: profession.config.showsPhotoStages,
+                isEditingExisting: true,
+                sharedCaption: true
+            ) { drafts, _ in
+                ClientPhotoService.updatePost(
+                    item.photos,
+                    stages: drafts.map(\.stage),
+                    caption: drafts.first?.caption,
+                    context: context
                 )
+            }
         }
-        .buttonStyle(.plain)
-        .accessibilityAddTraits(isSelected ? .isSelected : [])
-        .accessibilityIdentifier("photo.stage.\(stage.rawValue)")
+        .alert(
+            localization.localizedString(for: deleting?.isCarousel == true ? "photos.deletePost.title" : "clients.deletePhotoTitle"),
+            isPresented: Binding(get: { deleting != nil }, set: { if !$0 { deleting = nil } })
+        ) {
+            Button(localization.localizedString(for: "common.cancel"), role: .cancel) {
+                deleting = nil
+            }
+            Button(localization.localizedString(for: "common.delete"), role: .destructive) {
+                if let item = deleting {
+                    ClientPhotoService.deletePost(item.photos, client: client, context: context)
+                }
+                deleting = nil
+            }
+        } message: {
+            if let item = deleting, item.isCarousel {
+                Text(String(format: localization.localizedString(for: "photos.deletePost.message"), item.photos.count))
+            } else {
+                Text(localization.localizedString(for: "clients.deletePhotoMessage"))
+            }
+        }
     }
 
+    // MARK: - POST
 
-    // MARK: - CAPTION
+    private func post(_ item: ClientPhotoPost) -> some View {
 
-    // Клавіша «Готово» в багаторядковому полі вставляє перенос: сприймаємо її як завершення
-    private func limitDraft(_ text: String) {
+        // Позначка «До / Після» — на самому фото; підпис — один на весь допис, під фото
+        let index = min(pages[item.id] ?? 0, item.photos.count - 1)
+        let photo = item.photos[index]
 
-        if text.contains("\n") {
-            draft = text.replacingOccurrences(of: "\n", with: "")
-            isEditing = false
-        } else if text.count > ClientPhotoService.captionLimit {
-            draft = String(text.prefix(ClientPhotoService.captionLimit))
+        return VStack(alignment: .leading, spacing: 10) {
+
+            HStack(spacing: 8) {
+                Text(AppFormatting.date(item.cover.createdAt, locale: localization.locale, format: .medium))
+                    .font(.caption)
+                    .foregroundColor(colors.textSecondary)
+                Spacer()
+                if item.isCarousel {
+                    Text("\(index + 1)/\(item.photos.count)")
+                        .font(.caption.weight(.semibold))
+                        .foregroundColor(colors.textSecondary)
+                }
+                menu(item, current: photo)
+            }
+            .padding(.horizontal)
+
+            if item.isCarousel {
+                // Допис з кількох фото: гортаються вбік, як карусель в Instagram
+                TabView(selection: Binding(
+                    get: { index },
+                    set: { pages[item.id] = $0 }
+                )) {
+                    ForEach(Array(item.photos.enumerated()), id: \.element.id) { offset, photo in
+                        FeedPhotoImage(fileName: photo.fileName, fixedPortrait: true)
+                            .overlay(alignment: .topLeading) { stageBadge(photo) }
+                            .tag(offset)
+                    }
+                }
+                .tabViewStyle(.page(indexDisplayMode: .never))
+                .aspectRatio(4 / 5, contentMode: .fit)
+                .accessibilityIdentifier("photo.carousel")
+
+                // Крапки під фото
+                HStack(spacing: 5) {
+                    ForEach(item.photos.indices, id: \.self) { dot in
+                        Circle()
+                            .fill(dot == index ? colors.accent : colors.textMuted.opacity(0.5))
+                            .frame(width: 6, height: 6)
+                    }
+                }
+                .frame(maxWidth: .infinity)
+            } else {
+                FeedPhotoImage(fileName: photo.fileName)
+                    .overlay(alignment: .topLeading) { stageBadge(photo) }
+            }
+
+            if let caption = item.caption {
+                Text(caption)
+                    .font(.subheadline)
+                    .foregroundColor(colors.textPrimary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal)
+                    .accessibilityIdentifier("photo.caption")
+            }
         }
     }
 
-    private func saveDraft(at index: Int) {
+    @ViewBuilder
+    private func stageBadge(_ photo: ClientPhoto) -> some View {
+        if let stage = photo.stage {
+            ClientPhotoStageBadge(stage: stage)
+                .padding(10)
+        }
+    }
 
-        guard entries.indices.contains(index) else {
+    // Зберегти й поділитися — фото, яке зараз видно; змінити й видалити — увесь допис
+    private func menu(_ item: ClientPhotoPost, current photo: ClientPhoto) -> some View {
+        Menu {
+            Button {
+                editing = item
+            } label: {
+                Label(localization.localizedString(for: "photos.menu.edit"), systemImage: "pencil")
+            }
+            Button {
+                if let image = ClientPhotoStorage.loadImage(from: photo.fileName) {
+                    UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+                }
+            } label: {
+                Label(localization.localizedString(for: "clients.saveToPhotos"), systemImage: "square.and.arrow.down")
+            }
+            Button {
+                share(photo)
+            } label: {
+                Label(localization.localizedString(for: "clients.share"), systemImage: "square.and.arrow.up")
+            }
+            Divider()
+            Button(role: .destructive) {
+                deleting = item
+            } label: {
+                Label(
+                    localization.localizedString(for: item.isCarousel ? "photos.deletePost" : "common.delete"),
+                    systemImage: "trash"
+                )
+            }
+        } label: {
+            Image(systemName: "ellipsis")
+                .font(.body.weight(.semibold))
+                .foregroundColor(colors.textPrimary)
+                .frame(width: 36, height: 28)
+                .contentShape(Rectangle())
+        }
+        .accessibilityLabel(Text(localization.localizedString(for: "photos.menu")))
+        .accessibilityIdentifier("photo.menu")
+    }
+
+    private func share(_ photo: ClientPhoto) {
+        guard let image = ClientPhotoStorage.loadImage(from: photo.fileName) else {
             return
         }
+        let controller = UIActivityViewController(activityItems: [image], applicationActivities: nil)
+        UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .first?.windows.first?.rootViewController?
+            .present(controller, animated: true)
+    }
+}
 
-        ClientPhotoService.updateCaption(draft, photo: entries[index].photo, context: context)
+
+// Фото на всю ширину; повне зображення вантажиться у фоні, поки видно мініатюру.
+// Двома пальцями — збільшити, відпустив — повертається, як в Instagram.
+private struct FeedPhotoImage: View {
+
+    let fileName: String
+    // У каруселі всі фото в однаковій рамці 4:5 (інакше висота стрибала б при гортанні)
+    var fixedPortrait = false
+
+    @State private var image: UIImage?
+    @GestureState private var zoom: CGFloat = 1
+
+    var body: some View {
+        Group {
+            if let image, fixedPortrait {
+                Color.clear
+                    .aspectRatio(4 / 5, contentMode: .fit)
+                    .overlay {
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFill()
+                    }
+                    .clipped()
+            } else if let image {
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFit()
+            } else {
+                Rectangle()
+                    .fill(Color.gray.opacity(0.15))
+                    .aspectRatio(4 / 5, contentMode: .fit)
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .scaleEffect(zoom)
+        .zIndex(zoom > 1 ? 1 : 0)
+        .gesture(
+            MagnifyGesture()
+                .updating($zoom) { value, state, _ in
+                    state = max(1, min(value.magnification, 4))
+                }
+        )
+        .animation(.spring(response: 0.3, dampingFraction: 0.8), value: zoom == 1)
+        .task(id: fileName) {
+            if image == nil {
+                image = ClientPhotoStorage.loadThumbnail(from: fileName)
+            }
+            // Спершу мініатюра (миттєво), повне фото — наступним кроком, щоб стрічка не гальмувала
+            await Task.yield()
+            if let full = ClientPhotoStorage.loadImage(from: fileName) {
+                image = full
+            }
+        }
     }
 }

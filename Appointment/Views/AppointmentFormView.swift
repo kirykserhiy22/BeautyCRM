@@ -17,13 +17,18 @@ struct AppointmentFormView: View {
     // Клієнт, з картки якого відкрили форму
     private let preselectedClientID: UUID?
 
+    // «Записати так само»: візит, з якого беремо послуги, ціни й тривалість
+    private let repeating: Appointment?
+
     init(
         mode: AppointmentFormMode = .create,
         initialDate: Date = Date(),
-        preselectedClientID: UUID? = nil
+        preselectedClientID: UUID? = nil,
+        repeating: Appointment? = nil
     ) {
         self.mode = mode
         self.preselectedClientID = preselectedClientID
+        self.repeating = repeating
 
         _date = State(initialValue: initialDate)
 
@@ -807,6 +812,14 @@ private extension AppointmentFormView {
         selectedClient = client
         clientSearch = client.name
         showSuggestions = false
+
+        // Ті самі послуги й тривалість, що минулого разу; дату й час майстер вибирає сам
+        if let repeating {
+            let plan = ClientVisitHistory.repeatPlan(of: repeating, services: userServices)
+            serviceState.selectedServices = plan.services
+            serviceState.customPrices = plan.customPrices
+            duration = repeating.duration
+        }
     }
 
     func loadAppointmentIfNeeded() {

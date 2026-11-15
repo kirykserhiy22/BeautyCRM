@@ -29,8 +29,8 @@ final class OnboardingStoreTests: XCTestCase {
         XCTAssertFalse(OnboardingStore.isPending(userID: "new", defaults: defaults), "Вдруге гід не показується")
     }
 
-    func testSixSlidesWithTextsInEveryLanguage() throws {
-        XCTAssertEqual(OnboardingSlide.allCases.count, 6)
+    func testSevenSlidesWithTextsInEveryLanguage() throws {
+        XCTAssertEqual(OnboardingSlide.allCases.count, 7)
 
         for language in ["uk", "en", "de", "pl", "cs"] {
             let path = try XCTUnwrap(Bundle(for: LocalizationManager.self).path(forResource: language, ofType: "lproj")
@@ -41,6 +41,26 @@ final class OnboardingStoreTests: XCTestCase {
                 for key in [slide.titleKey, slide.textKey] {
                     XCTAssertNotEqual(bundle.localizedString(forKey: key, value: nil, table: nil), key, "\(language): \(key)")
                 }
+            }
+        }
+    }
+}
+
+// Тексти, ключі яких складаються в коді («settings.appearance.\(rawValue)»),
+// пошук невикористаних ключів не бачить — тому перевіряємо їх окремо в усіх мовах
+final class DynamicLocalizationKeysTests: XCTestCase {
+
+    func testAppearanceAndReminderTitlesExistInEveryLanguage() throws {
+        let keys = AppearanceMode.allCases.map(\.titleKey)
+            + ReminderLead.allCases.flatMap { [$0.titleKey, $0.notificationTitleKey] }
+            + ClientMessageToken.allCases.map(\.titleKey)
+            + ClientVisitFilter.allCases.map(\.titleKey)
+
+        for language in ["uk", "en", "de", "pl", "cs"] {
+            let path = try XCTUnwrap(Bundle.main.path(forResource: language, ofType: "lproj"))
+            let bundle = try XCTUnwrap(Bundle(path: path))
+            for key in keys {
+                XCTAssertNotEqual(bundle.localizedString(forKey: key, value: nil, table: nil), key, "\(language): \(key)")
             }
         }
     }

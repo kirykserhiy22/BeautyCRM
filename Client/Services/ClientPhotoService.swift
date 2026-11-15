@@ -43,6 +43,9 @@ enum ClientPhotoService {
     // Запис у базу — на головному потоці, коли файли вже на диску
     static func addPhoto(
         fileName: String,
+        stage: ClientPhotoStage? = nil,
+        caption: String? = nil,
+        postID: UUID? = nil,
         client: Client,
         context: ModelContext
     ) {
@@ -51,6 +54,9 @@ enum ClientPhotoService {
             clientID: client.id,
             fileName: fileName
         )
+        photo.stage = stage
+        photo.caption = cleanCaption(caption)
+        photo.postID = postID
 
         client.photos.append(photo)
         context.insert(photo)
@@ -61,6 +67,28 @@ enum ClientPhotoService {
     // MARK: - CAPTION
 
     static let captionLimit = 120
+
+    // Підпис без зайвих пробілів і не довший за ліміт; порожній — nil
+    static func cleanCaption(_ text: String?) -> String? {
+        let trimmed = String((text ?? "").trimmingCharacters(in: .whitespacesAndNewlines).prefix(captionLimit))
+        return trimmed.isEmpty ? nil : trimmed
+    }
+
+    // Зміна позначки й підпису з меню «⋯» у стрічці фото
+    static func update(
+        stage: ClientPhotoStage?,
+        caption: String?,
+        photo: ClientPhoto,
+        context: ModelContext
+    ) {
+        let caption = cleanCaption(caption)
+        guard photo.stage != stage || photo.caption != caption else {
+            return
+        }
+        photo.stage = stage
+        photo.caption = caption
+        context.saveReportingErrors()
+    }
 
     static func updateCaption(
         _ text: String,
@@ -91,6 +119,40 @@ enum ClientPhotoService {
         context.saveReportingErrors()
     }
 
+    // MARK: - POSTS
+
+    // Один підпис на допис: підписи окремих фото, з'єднані в порядку вибору.
+    // Так нічого з набраного в редакторі не губиться, коли майстер вибрав «Одним дописом»
+    static func postCaption(_ captions: [String?]) -> String? {
+        let parts = captions.compactMap { cleanCaption($0) }
+        guard !parts.isEmpty else { return nil }
+        return cleanCaption(parts.joined(separator: "\n"))
+    }
+
+    // Редагування допису з меню «⋯»: позначка — кожному фото своя, підпис — один, на першому фото
+    static func updatePost(
+        _ photos: [ClientPhoto],
+        stages: [ClientPhotoStage?],
+        caption: String?,
+        context: ModelContext
+    ) {
+        let caption = cleanCaption(caption)
+        for (index, photo) in photos.enumerated() {
+            photo.stage = index < stages.count ? stages[index] : photo.stage
+            photo.caption = index == 0 ? caption : nil
+        }
+        context.saveReportingErrors()
+    }
+
+    // Видалення допису — усі його фото разом
+    static func deletePost(_ photos: [ClientPhoto], client: Client, context: ModelContext) {
+        for photo in photos {
+            ClientPhotoStorage.deleteImage(at: photo.fileName)
+            photo.markDeleted()
+        }
+        context.saveReportingErrors()
+    }
+
     // MARK: - DELETE PHOTO
 
     static func deletePhoto(
@@ -104,5 +166,33 @@ enum ClientPhotoService {
         photo.markDeleted()
 
         context.saveReportingErrors()
+    }
+}
+
+
+// Фото клієнта, складені в дописи: окреме фото — допис з одного фото,
+// фото з однаковим postID — один допис-карусель
+struct ClientPhotoPost: Identifiable {
+    let photos: [ClientPhoto]
+
+    // Ідентифікатор допису = перше фото в ньому
+    var id: UUID { photos[0].id }
+    var cover: ClientPhoto { photos[0] }
+    var isCarousel: Bool { photos.count > 1 }
+
+    // Підпис допису — під каруселлю, не змінюється при гортанні
+    var caption: String? { ClientPhotoService.postCaption(photos.map(\.caption)) }
+
+    // Нові дописи першими; всередині допису — у порядку, в якому фото вибрали
+    static func group(_ photos: [ClientPhoto]) -> [ClientPhotoPost] {
+        let alive = photos.filter { $0.deletedAt == nil }
+        let groups = Dictionary(grouping: alive) { $0.postID ?? $0.id }
+        return groups.values
+            .map { ClientPhotoPost(photos: $0.sorted { $0.createdAt < $1.createdAt }) }
+            .sorted { lhs, rhs in
+                let l = lhs.photos.map(\.createdAt).max() ?? .distantPast
+                let r = rhs.photos.map(\.createdAt).max() ?? .distantPast
+                return l > r
+            }
     }
 }

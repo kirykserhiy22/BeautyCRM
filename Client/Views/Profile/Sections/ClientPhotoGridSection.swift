@@ -15,6 +15,7 @@ struct ClientPhotoGridSection: View {
     @EnvironmentObject var theme: ThemeManager
     @Environment(\.modelContext) private var context
     @EnvironmentObject var localization: LocalizationManager
+    @EnvironmentObject var profession: ProfessionManager
     private var colors: ThemeColors {
         theme.colors(for: theme.currentTheme)
     }
@@ -28,9 +29,13 @@ struct ClientPhotoGridSection: View {
     // MARK: - STATE
 
     @State private var selectedItems: [PhotosPickerItem] = []
-    @State private var selectedPhoto: ClientPhoto?
-    @State private var showViewer = false
-    @State private var showDeleteAlert = false
+    // Довге натискання на мініатюру → «Видалити»: видаляється весь допис (для окремого фото — саме фото)
+    @State private var postToDelete: ClientPhotoPost?
+    // Стрічка відкривається на фото, по якому тапнули
+    @State private var feedStart: ClientPhoto?
+    // Вибрані в галереї фото чекають на позначку й підпис
+    @State private var drafts: [ClientPhotoDraft] = []
+    @State private var showEditor = false
 
     @State private var thumbnails: [String: UIImage] = [:]
 
@@ -45,42 +50,47 @@ struct ClientPhotoGridSection: View {
         .onAppear {
             preloadThumbnails()
         }
-        .sheet(isPresented: $showViewer) {
-
-            let entries = sortedPhotos.compactMap { photo in
-                ClientPhotoStorage.loadImage(from: photo.fileName).map {
-                    PhotoGalleryEntry(photo: photo, image: $0)
-                }
+        .navigationDestination(item: $feedStart) { photo in
+            ClientPhotoFeedView(client: client, startPhotoID: photo.id)
+        }
+        .sheet(isPresented: $showEditor, onDismiss: { drafts = [] }) {
+            ClientPhotoEditorView(
+                drafts: drafts,
+                showsStages: profession.config.showsPhotoStages
+            ) { ready, asPost in
+                addPhotos(ready, asPost: asPost)
             }
-
-            PhotoGalleryView(
-                entries: entries,
-                selectedIndex: entries.firstIndex(where: {
-                    $0.photo.id == selectedPhoto?.id
-                }) ?? 0
-            )
         }
         .alert(
-            localization.localizedString(for: "clients.deletePhotoTitle"),
-            isPresented: $showDeleteAlert
+            localization.localizedString(
+                for: postToDelete?.isCarousel == true ? "photos.deletePost.title" : "clients.deletePhotoTitle"
+            ),
+            isPresented: Binding(get: { postToDelete != nil }, set: { if !$0 { postToDelete = nil } })
         ) {
 
             Button(
                 localization.localizedString(for: "clients.cancel"),
                 role: .cancel
-            ) { }
+            ) {
+                postToDelete = nil
+            }
 
             Button(
                 localization.localizedString(for: "clients.delete"),
                 role: .destructive
             ) {
-                if let photo = selectedPhoto {
-                    deletePhoto(photo)
+                if let post = postToDelete {
+                    ClientPhotoService.deletePost(post.photos, client: client, context: context)
                 }
+                postToDelete = nil
             }
 
         } message: {
-            Text(localization.localizedString(for: "clients.deletePhotoMessage"))
+            if let post = postToDelete, post.isCarousel {
+                Text(String(format: localization.localizedString(for: "photos.deletePost.message"), post.photos.count))
+            } else {
+                Text(localization.localizedString(for: "clients.deletePhotoMessage"))
+            }
         }
     }
 
@@ -120,9 +130,10 @@ struct ClientPhotoGridSection: View {
             spacing: 4
         ) {
 
-            ForEach(sortedPhotos, id: \.id) { photo in
+            // Одна клітинка — один допис: окреме фото або карусель
+            ForEach(ClientPhotoPost.group(client.photos)) { post in
 
-                photoCell(photo)
+                photoCell(post)
             }
         }
     }
@@ -130,13 +141,26 @@ struct ClientPhotoGridSection: View {
     // MARK: - CELL (IMPORTANT FIX)
 
     @ViewBuilder
-    private func photoCell(_ photo: ClientPhoto) -> some View {
+    private func photoCell(_ post: ClientPhotoPost) -> some View {
 
+        let photo = post.cover
+        let isCarousel = post.isCarousel
         let key = photo.fileName
 
         if let image = thumbnails[key] {
 
-            imageView(image, photo: photo)
+            imageView(image, post: post)
+                .overlay(alignment: .topTrailing) {
+                    // Як в Instagram: значок, що в дописі кілька фото
+                    if isCarousel {
+                        Image(systemName: "square.fill.on.square.fill")
+                            .font(.caption.weight(.semibold))
+                            .foregroundColor(.white)
+                            .shadow(color: .black.opacity(0.5), radius: 2)
+                            .padding(6)
+                            .accessibilityIdentifier("client.photo.carousel")
+                    }
+                }
 
         } else {
 
@@ -150,9 +174,12 @@ struct ClientPhotoGridSection: View {
         }
     }
 
-    private func imageView(_ image: UIImage, photo: ClientPhoto) -> some View {
+    private func imageView(_ image: UIImage, post: ClientPhotoPost) -> some View {
 
-        Image(uiImage: image)
+        let photo = post.cover
+
+        return 
+Image(uiImage: image)
             .resizable()
             .aspectRatio(1, contentMode: .fill)
             .frame(maxWidth: .infinity)
@@ -160,13 +187,14 @@ struct ClientPhotoGridSection: View {
             .clipShape(RoundedRectangle(cornerRadius: 8))
             .overlay(alignment: .topLeading) {
                 if let stage = photo.stage {
-                    stageBadge(stage)
+                    ClientPhotoStageBadge(stage: stage, compact: true)
+                        .padding(5)
                 }
             }
             .onTapGesture {
-                selectedPhoto = photo
-                showViewer = true
+                feedStart = photo
             }
+            .accessibilityIdentifier("client.photo")
             .contextMenu {
 
                 Button {
@@ -189,29 +217,16 @@ struct ClientPhotoGridSection: View {
 
                 Divider()
 
+                // Як і в стрічці: допис з кількох фото видаляється цілком
                 Button(role: .destructive) {
-                    selectedPhoto = photo
-                    showDeleteAlert = true
+                    postToDelete = post
                 } label: {
                     Label(
-                        localization.localizedString(for: "clients.delete"),
+                        localization.localizedString(for: post.isCarousel ? "photos.deletePost" : "clients.delete"),
                         systemImage: "trash"
                     )
                 }
             }
-    }
-
-    private func stageBadge(_ stage: ClientPhotoStage) -> some View {
-
-        Text(localization.localizedString(for: stage.localizationKey))
-            .font(.caption2.weight(.semibold))
-            .foregroundColor(.white)
-            .padding(.horizontal, 7)
-            .padding(.vertical, 3)
-            .background(
-                Capsule().fill(stage == .after ? colors.buttonPrimary : Color.black.opacity(0.6))
-            )
-            .padding(5)
     }
 
     // MARK: - THUMBNAIL LOADING (v3 CORE FIX)
@@ -242,15 +257,6 @@ struct ClientPhotoGridSection: View {
     }
 
     // MARK: - ACTIONS
-
-    private func deletePhoto(_ photo: ClientPhoto) {
-
-        ClientPhotoService.deletePhoto(
-            photo: photo,
-            client: client,
-            context: context
-        )
-    }
 
     private func sharePhoto(_ photo: ClientPhoto) {
 
@@ -284,34 +290,60 @@ struct ClientPhotoGridSection: View {
 
     // MARK: - UPLOAD
 
+    // Вибрані фото спершу йдуть у редактор (позначка «До / Після», підпис), а не одразу в сітку
     private func loadImages(from items: [PhotosPickerItem]) {
 
         guard !items.isEmpty else { return }
 
         Task {
 
-            for item in items {
+            var loaded: [ClientPhotoDraft] = []
 
-                guard let data = try? await item.loadTransferable(type: Data.self) else {
+            for item in items {
+                guard let data = try? await item.loadTransferable(type: Data.self),
+                      let image = await Task.detached(priority: .userInitiated, operation: { UIImage(data: data) }).value
+                else {
                     continue
                 }
+                loaded.append(ClientPhotoDraft(image: image, stage: nil, caption: ""))
+            }
 
-                // Розпаковка, JPEG і мініатюра — у фоні (#39)
+            selectedItems = []
+
+            if !loaded.isEmpty {
+                drafts = loaded
+                showEditor = true
+            }
+        }
+    }
+
+    // «Додати» в редакторі: JPEG і мініатюра — у фоні (#39), запис у базу — тут.
+    // Окремо: перше вибране фото стає найновішим (першим у сітці), як в Instagram.
+    // Одним дописом: спільний postID, фото в порядку вибору (так їх гортатимуть).
+    private func addPhotos(_ ready: [ClientPhotoDraft], asPost: Bool) {
+
+        let postID: UUID? = asPost ? UUID() : nil
+        let ordered = asPost ? ready : ready.reversed()
+        // Допис має один підпис — на першому фото
+        let postCaption = asPost ? ClientPhotoService.postCaption(ready.map(\.caption)) : nil
+
+        Task {
+            for (index, draft) in ordered.enumerated() {
+                let image = draft.image
                 let fileName = await Task.detached(priority: .userInitiated) {
-                    UIImage(data: data).flatMap { ClientPhotoService.storeFiles(for: $0) }
+                    ClientPhotoService.storeFiles(for: image)
                 }.value
 
                 if let fileName {
                     ClientPhotoService.addPhoto(
                         fileName: fileName,
+                        stage: draft.stage,
+                        caption: asPost ? (index == 0 ? postCaption : nil) : draft.caption,
+                        postID: postID,
                         client: client,
                         context: context
                     )
                 }
-            }
-
-            await MainActor.run {
-                selectedItems = []
             }
         }
     }

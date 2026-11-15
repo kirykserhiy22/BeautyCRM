@@ -350,8 +350,10 @@
 "onboarding.4.text" = "Tippen Sie nach dem Besuch auf „Abschließen“ und geben Sie den Endpreis ein. Er erscheint sofort in der Analyse.";
 "onboarding.5.title" = "Alles über den Kunden";
 "onboarding.5.text" = "In der Kundenkarte: Besuche, Notizen, Vorher-Nachher-Fotos. Von dort aus anrufen, schreiben oder neu buchen.";
-"onboarding.6.title" = "Starten Sie mit der Preisliste";
-"onboarding.6.text" = "Fügen Sie Leistungen und Arbeitszeiten in den Einstellungen hinzu. Dort finden Sie auch diese „Anleitung“.";
+"onboarding.6.title" = "Gleich nochmal buchen";
+"onboarding.6.text" = "Kundenkarte → „Besuche“: alle Besuche mit Datum, Preis und Notizen. Ein Tipp bucht dieselben Leistungen erneut.";
+"onboarding.7.title" = "Starten Sie mit der Preisliste";
+"onboarding.7.text" = "Fügen Sie Leistungen und Arbeitszeiten in den Einstellungen hinzu. Dort finden Sie auch diese „Anleitung“.";
 
 "password.show" = "Passwort anzeigen";
 "password.hide" = "Passwort verbergen";
@@ -423,3 +425,39 @@
 "appointment.clientDeleted" = "Kunde gelöscht";
 "clients.deleteOne.title" = "Kunde %@ löschen?";
 "clients.deleteOne.message" = "Kundenkarte und Fotos werden gelöscht. Vergangene Termine bleiben im Verlauf und in der Analyse.";
+
+// Історія візитів клієнта
+"onboarding.sample.coloring" = "Färben · Tönen";
+"onboarding.sample.note" = "Farbe 6.1, 35 Min.";
+"visits.title" = "Besuchsverlauf";
+"visits.filter.all" = "Alle";
+"visits.filter.completed" = "Abgeschlossen";
+"visits.filter.cancelled" = "Storniert";
+"visits.empty.title" = "Noch keine Besuche";
+"visits.empty.message" = "Hier erscheinen alle Termine dieses Kunden.";
+"visits.badge.cancelled" = "storniert";
+"visits.badge.upcoming" = "geplant";
+"visits.badge.notCompleted" = "nicht abgeschlossen";
+"visits.plannedPaid" = "Geplant %1$@ → bezahlt %2$@";
+"visits.planned" = "Geplant";
+"visits.paid" = "Bezahlt";
+"visits.plannedWas" = "Geplant waren %@";
+"visits.notes" = "Notizen zum Termin";
+"visits.repeat" = "Gleich nochmal buchen";
+"visits.repeatHint" = "Gleiche Leistungen und Dauer – nur Datum und Uhrzeit wählen.";
+"settings.appearance.system" = "Wie iPhone";
+
+// Фото клієнта як в Instagram
+"photos.new.titleOne" = "Neues Foto";
+"photos.new.titleMany" = "Neue Fotos · %1$d von %2$d";
+"photos.new.add" = "Hinzufügen";
+"photos.edit.title" = "Foto bearbeiten";
+"photos.menu.edit" = "Markierung oder Text ändern";
+"photos.menu" = "Fotoaktionen";
+"photos.howToAdd.title" = "Wie %d Fotos hinzufügen?";
+"photos.howToAdd.message" = "Als ein Beitrag – zum Wischen in einer Miniatur, wie bei Instagram. Einzeln – jedes Foto mit eigener Miniatur.";
+"photos.howToAdd.post" = "Als ein Beitrag";
+"photos.howToAdd.separate" = "Einzeln";
+"photos.deletePost" = "Beitrag löschen";
+"photos.deletePost.title" = "Beitrag löschen?";
+"photos.deletePost.message" = "Alle %d Fotos dieses Beitrags werden gelöscht. Das kann nicht rückgängig gemacht werden.";
