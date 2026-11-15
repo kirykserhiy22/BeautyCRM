@@ -153,6 +153,9 @@
 "appointment.addServices" = "Přidat služby";
 "appointment.price" = "Cena";
 "appointment.total" = "Celkem";
+"appointment.completionNote.title" = "Poznámka k návštěvě";
+"appointment.completionNote.placeholder" = "Např. receptura barvy, co se nelíbilo, sleva příště";
+"appointment.completionNote.hint" = "Poznámku uvidíte v historii návštěv klientky";
 "appointment.dateTime" = "Datum a čas";
 "appointment.start" = "Začátek";
 "appointment.duration" = "Délka: %d min";

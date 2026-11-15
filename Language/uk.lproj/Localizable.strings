@@ -153,6 +153,9 @@
 "appointment.addServices" = "Додати послуги";
 "appointment.price" = "Ціна";
 "appointment.total" = "Усього";
+"appointment.completionNote.title" = "Нотатка до візиту";
+"appointment.completionNote.placeholder" = "Наприклад: формула фарби, що не сподобалось, знижка наступного разу";
+"appointment.completionNote.hint" = "Нотатку видно в історії візитів клієнта";
 "appointment.dateTime" = "Дата й час";
 "appointment.start" = "Початок";
 "appointment.duration" = "Тривалість: %d хв";

@@ -152,6 +152,9 @@
 "appointment.addServices" = "Add services";
 "appointment.price" = "Price";
 "appointment.total" = "Total";
+"appointment.completionNote.title" = "Visit note";
+"appointment.completionNote.placeholder" = "E.g. colour formula, what the client didn’t like, a discount next time";
+"appointment.completionNote.hint" = "You’ll see this note in the client’s visit history";
 "appointment.dateTime" = "Date & Time";
 "appointment.start" = "Start";
 "appointment.duration" = "Duration: %d min";

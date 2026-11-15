@@ -152,6 +152,9 @@
 "appointment.addServices" = "Dienstleistungen hinzufügen";
 "appointment.price" = "Preis";
 "appointment.total" = "Gesamt";
+"appointment.completionNote.title" = "Notiz zum Besuch";
+"appointment.completionNote.placeholder" = "Z. B. Farbformel, was nicht gefallen hat, Rabatt beim nächsten Mal";
+"appointment.completionNote.hint" = "Die Notiz erscheint im Besuchsverlauf der Kundin";
 "appointment.dateTime" = "Datum und Uhrzeit";
 "appointment.start" = "Beginn";
 "appointment.duration" = "Dauer: %d Min.";
