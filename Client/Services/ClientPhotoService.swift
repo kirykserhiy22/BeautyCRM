@@ -124,7 +124,7 @@ enum ClientPhotoService {
     // Один підпис на допис: підписи окремих фото, з'єднані в порядку вибору.
     // Так нічого з набраного в редакторі не губиться, коли майстер вибрав «Одним дописом»
     static func postCaption(_ captions: [String?]) -> String? {
-        let parts = captions.compactMap(cleanCaption)
+        let parts = captions.compactMap { cleanCaption($0) }
         guard !parts.isEmpty else { return nil }
         return cleanCaption(parts.joined(separator: "\n"))
     }

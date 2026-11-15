@@ -29,8 +29,8 @@ struct ClientPhotoGridSection: View {
     // MARK: - STATE
 
     @State private var selectedItems: [PhotosPickerItem] = []
-    @State private var selectedPhoto: ClientPhoto?
-    @State private var showDeleteAlert = false
+    // Довге натискання на мініатюру → «Видалити»: видаляється весь допис (для окремого фото — саме фото)
+    @State private var postToDelete: ClientPhotoPost?
     // Стрічка відкривається на фото, по якому тапнули
     @State private var feedStart: ClientPhoto?
     // Вибрані в галереї фото чекають на позначку й підпис
@@ -62,26 +62,35 @@ struct ClientPhotoGridSection: View {
             }
         }
         .alert(
-            localization.localizedString(for: "clients.deletePhotoTitle"),
-            isPresented: $showDeleteAlert
+            localization.localizedString(
+                for: postToDelete?.isCarousel == true ? "photos.deletePost.title" : "clients.deletePhotoTitle"
+            ),
+            isPresented: Binding(get: { postToDelete != nil }, set: { if !$0 { postToDelete = nil } })
         ) {
 
             Button(
                 localization.localizedString(for: "clients.cancel"),
                 role: .cancel
-            ) { }
+            ) {
+                postToDelete = nil
+            }
 
             Button(
                 localization.localizedString(for: "clients.delete"),
                 role: .destructive
             ) {
-                if let photo = selectedPhoto {
-                    deletePhoto(photo)
+                if let post = postToDelete {
+                    ClientPhotoService.deletePost(post.photos, client: client, context: context)
                 }
+                postToDelete = nil
             }
 
         } message: {
-            Text(localization.localizedString(for: "clients.deletePhotoMessage"))
+            if let post = postToDelete, post.isCarousel {
+                Text(String(format: localization.localizedString(for: "photos.deletePost.message"), post.photos.count))
+            } else {
+                Text(localization.localizedString(for: "clients.deletePhotoMessage"))
+            }
         }
     }
 
@@ -124,7 +133,7 @@ struct ClientPhotoGridSection: View {
             // Одна клітинка — один допис: окреме фото або карусель
             ForEach(ClientPhotoPost.group(client.photos)) { post in
 
-                photoCell(post.cover, isCarousel: post.isCarousel)
+                photoCell(post)
             }
         }
     }
@@ -132,13 +141,15 @@ struct ClientPhotoGridSection: View {
     // MARK: - CELL (IMPORTANT FIX)
 
     @ViewBuilder
-    private func photoCell(_ photo: ClientPhoto, isCarousel: Bool) -> some View {
+    private func photoCell(_ post: ClientPhotoPost) -> some View {
 
+        let photo = post.cover
+        let isCarousel = post.isCarousel
         let key = photo.fileName
 
         if let image = thumbnails[key] {
 
-            imageView(image, photo: photo)
+            imageView(image, post: post)
                 .overlay(alignment: .topTrailing) {
                     // Як в Instagram: значок, що в дописі кілька фото
                     if isCarousel {
@@ -163,9 +174,12 @@ struct ClientPhotoGridSection: View {
         }
     }
 
-    private func imageView(_ image: UIImage, photo: ClientPhoto) -> some View {
+    private func imageView(_ image: UIImage, post: ClientPhotoPost) -> some View {
 
-        Image(uiImage: image)
+        let photo = post.cover
+
+        return 
+Image(uiImage: image)
             .resizable()
             .aspectRatio(1, contentMode: .fill)
             .frame(maxWidth: .infinity)
@@ -203,12 +217,12 @@ struct ClientPhotoGridSection: View {
 
                 Divider()
 
+                // Як і в стрічці: допис з кількох фото видаляється цілком
                 Button(role: .destructive) {
-                    selectedPhoto = photo
-                    showDeleteAlert = true
+                    postToDelete = post
                 } label: {
                     Label(
-                        localization.localizedString(for: "clients.delete"),
+                        localization.localizedString(for: post.isCarousel ? "photos.deletePost" : "clients.delete"),
                         systemImage: "trash"
                     )
                 }
@@ -243,15 +257,6 @@ struct ClientPhotoGridSection: View {
     }
 
     // MARK: - ACTIONS
-
-    private func deletePhoto(_ photo: ClientPhoto) {
-
-        ClientPhotoService.deletePhoto(
-            photo: photo,
-            client: client,
-            context: context
-        )
-    }
 
     private func sharePhoto(_ photo: ClientPhoto) {
 
