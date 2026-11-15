@@ -35,6 +35,8 @@ struct AppointmentRow: View {
     @State private var showRestoreConflict = false
     @State private var finalServicePrices: [UUID: String] = [:]
     @State private var completionItems: [CompletionServiceItem] = []
+    // Нотатка до візиту: що робили, що не сподобалось — потім видно в історії візитів клієнта
+    @State private var completionNotes = ""
     
     @EnvironmentObject var theme: ThemeManager
     
@@ -44,6 +46,8 @@ struct AppointmentRow: View {
     func loadServices() {
 
         let services = Array(appt.services)
+
+        completionNotes = appt.notes ?? ""
 
         completionItems = services.map {
             CompletionServiceItem(
@@ -416,6 +420,7 @@ struct AppointmentRow: View {
             onDismiss: {
                 completionItems = []
                 finalServicePrices = [:]
+                completionNotes = ""
                 addedServiceIDs = []
             }
         ) {
@@ -523,6 +528,29 @@ struct AppointmentRow: View {
                             )
                             .font(.title3.bold())
                         }
+
+                        VStack(alignment: .leading, spacing: 8) {
+
+                            FormSectionTitle(
+                                text: localization.localizedString(for: "appointment.completionNote.title"),
+                                colors: colors
+                            )
+
+                            TextField(
+                                localization.localizedString(for: "appointment.completionNote.placeholder"),
+                                text: $completionNotes,
+                                axis: .vertical
+                            )
+                            .lineLimit(3...6)
+                            .padding()
+                            .background(colors.card)
+                            .cornerRadius(14)
+                            .accessibilityIdentifier("completion.notes")
+
+                            Text(localization.localizedString(for: "appointment.completionNote.hint"))
+                                .font(.caption)
+                                .foregroundColor(colors.textSecondary)
+                        }
                         
                         Button {
                             
@@ -542,6 +570,9 @@ struct AppointmentRow: View {
                                     )
                                 }
                             )
+
+                            let notes = completionNotes.trimmingCharacters(in: .whitespacesAndNewlines)
+                            appt.notes = notes.isEmpty ? nil : notes
                             
                             context.saveReportingErrors()
                             

@@ -152,6 +152,9 @@
 "appointment.addServices" = "Dodaj usługi";
 "appointment.price" = "Cena";
 "appointment.total" = "Razem";
+"appointment.completionNote.title" = "Notatka do wizyty";
+"appointment.completionNote.placeholder" = "Np. formuła farby, co się nie spodobało, rabat następnym razem";
+"appointment.completionNote.hint" = "Notatka będzie widoczna w historii wizyt klientki";
 "appointment.dateTime" = "Data i godzina";
 "appointment.start" = "Początek";
 "appointment.duration" = "Czas trwania: %d min";
