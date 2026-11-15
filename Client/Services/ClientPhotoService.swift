@@ -119,6 +119,40 @@ enum ClientPhotoService {
         context.saveReportingErrors()
     }
 
+    // MARK: - POSTS
+
+    // Один підпис на допис: підписи окремих фото, з'єднані в порядку вибору.
+    // Так нічого з набраного в редакторі не губиться, коли майстер вибрав «Одним дописом»
+    static func postCaption(_ captions: [String?]) -> String? {
+        let parts = captions.compactMap(cleanCaption)
+        guard !parts.isEmpty else { return nil }
+        return cleanCaption(parts.joined(separator: "\n"))
+    }
+
+    // Редагування допису з меню «⋯»: позначка — кожному фото своя, підпис — один, на першому фото
+    static func updatePost(
+        _ photos: [ClientPhoto],
+        stages: [ClientPhotoStage?],
+        caption: String?,
+        context: ModelContext
+    ) {
+        let caption = cleanCaption(caption)
+        for (index, photo) in photos.enumerated() {
+            photo.stage = index < stages.count ? stages[index] : photo.stage
+            photo.caption = index == 0 ? caption : nil
+        }
+        context.saveReportingErrors()
+    }
+
+    // Видалення допису — усі його фото разом
+    static func deletePost(_ photos: [ClientPhoto], client: Client, context: ModelContext) {
+        for photo in photos {
+            ClientPhotoStorage.deleteImage(at: photo.fileName)
+            photo.markDeleted()
+        }
+        context.saveReportingErrors()
+    }
+
     // MARK: - DELETE PHOTO
 
     static func deletePhoto(
@@ -145,6 +179,9 @@ struct ClientPhotoPost: Identifiable {
     var id: UUID { photos[0].id }
     var cover: ClientPhoto { photos[0] }
     var isCarousel: Bool { photos.count > 1 }
+
+    // Підпис допису — під каруселлю, не змінюється при гортанні
+    var caption: String? { ClientPhotoService.postCaption(photos.map(\.caption)) }
 
     // Нові дописи першими; всередині допису — у порядку, в якому фото вибрали
     static func group(_ photos: [ClientPhoto]) -> [ClientPhotoPost] {

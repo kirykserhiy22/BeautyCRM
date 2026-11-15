@@ -458,3 +458,6 @@
 "photos.howToAdd.message" = "Jednym postem — przewijane w jednej miniaturze, jak na Instagramie. Osobno — każde zdjęcie ma własną miniaturę.";
 "photos.howToAdd.post" = "Jednym postem";
 "photos.howToAdd.separate" = "Osobno";
+"photos.deletePost" = "Usuń post";
+"photos.deletePost.title" = "Usunąć post?";
+"photos.deletePost.message" = "Zostaną usunięte wszystkie zdjęcia posta: %d. Tej operacji nie można cofnąć.";

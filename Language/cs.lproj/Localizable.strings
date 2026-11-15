@@ -459,3 +459,6 @@
 "photos.howToAdd.message" = "Jedním příspěvkem — listují se v jedné miniatuře jako na Instagramu. Zvlášť — každá fotka má vlastní miniaturu.";
 "photos.howToAdd.post" = "Jedním příspěvkem";
 "photos.howToAdd.separate" = "Zvlášť";
+"photos.deletePost" = "Smazat příspěvek";
+"photos.deletePost.title" = "Smazat příspěvek?";
+"photos.deletePost.message" = "Smažou se všechny fotky příspěvku: %d. Tuto akci nelze vrátit.";

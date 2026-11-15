@@ -26,6 +26,8 @@ struct ClientPhotoEditorView: View {
     let showsStages: Bool
     // «Нові фото» чи «Редагувати фото» — заголовок і кнопка
     var isEditingExisting = false
+    // Редагування допису-каруселі: підпис один на весь допис (зберігається в першому фото)
+    var sharedCaption = false
     // asPost — true, якщо майстер вибрав «Одним дописом»
     let onDone: ([ClientPhotoDraft], _ asPost: Bool) -> Void
 
@@ -147,7 +149,7 @@ struct ClientPhotoEditorView: View {
 
                 TextField(
                     localization.localizedString(for: "clients.photo.addCaption"),
-                    text: $drafts[index].caption,
+                    text: $drafts[sharedCaption ? 0 : index].caption,
                     axis: .vertical
                 )
                 .lineLimit(1...4)
@@ -156,9 +158,10 @@ struct ClientPhotoEditorView: View {
                 .background(colors.card)
                 .cornerRadius(12)
                 .accessibilityIdentifier("photos.caption")
-                .onChange(of: drafts[index].caption) { _, text in
+                .onChange(of: drafts[sharedCaption ? 0 : index].caption) { _, text in
+                    let slot = sharedCaption ? 0 : index
                     if text.count > ClientPhotoService.captionLimit {
-                        drafts[index].caption = String(text.prefix(ClientPhotoService.captionLimit))
+                        drafts[slot].caption = String(text.prefix(ClientPhotoService.captionLimit))
                     }
                 }
             }

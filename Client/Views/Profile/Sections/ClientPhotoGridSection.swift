@@ -319,9 +319,11 @@ struct ClientPhotoGridSection: View {
 
         let postID: UUID? = asPost ? UUID() : nil
         let ordered = asPost ? ready : ready.reversed()
+        // Допис має один підпис — на першому фото
+        let postCaption = asPost ? ClientPhotoService.postCaption(ready.map(\.caption)) : nil
 
         Task {
-            for draft in ordered {
+            for (index, draft) in ordered.enumerated() {
                 let image = draft.image
                 let fileName = await Task.detached(priority: .userInitiated) {
                     ClientPhotoService.storeFiles(for: image)
@@ -331,7 +333,7 @@ struct ClientPhotoGridSection: View {
                     ClientPhotoService.addPhoto(
                         fileName: fileName,
                         stage: draft.stage,
-                        caption: draft.caption,
+                        caption: asPost ? (index == 0 ? postCaption : nil) : draft.caption,
                         postID: postID,
                         client: client,
                         context: context

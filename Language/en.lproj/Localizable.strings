@@ -458,3 +458,6 @@
 "photos.howToAdd.message" = "As one post — they swipe inside one thumbnail, like on Instagram. Separately — each photo gets its own thumbnail.";
 "photos.howToAdd.post" = "As one post";
 "photos.howToAdd.separate" = "Separately";
+"photos.deletePost" = "Delete post";
+"photos.deletePost.title" = "Delete post?";
+"photos.deletePost.message" = "All %d photos in this post will be deleted. This can’t be undone.";

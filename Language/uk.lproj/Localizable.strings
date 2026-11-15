@@ -459,3 +459,6 @@
 "photos.howToAdd.message" = "Одним дописом — гортатимуться в одній мініатюрі, як в Instagram. Окремо — кожне фото своєю мініатюрою.";
 "photos.howToAdd.post" = "Одним дописом";
 "photos.howToAdd.separate" = "Окремо";
+"photos.deletePost" = "Видалити допис";
+"photos.deletePost.title" = "Видалити допис?";
+"photos.deletePost.message" = "Буде видалено всі фото допису: %d. Цю дію неможливо скасувати.";

@@ -458,3 +458,6 @@
 "photos.howToAdd.message" = "Als ein Beitrag – zum Wischen in einer Miniatur, wie bei Instagram. Einzeln – jedes Foto mit eigener Miniatur.";
 "photos.howToAdd.post" = "Als ein Beitrag";
 "photos.howToAdd.separate" = "Einzeln";
+"photos.deletePost" = "Beitrag löschen";
+"photos.deletePost.title" = "Beitrag löschen?";
+"photos.deletePost.message" = "Alle %d Fotos dieses Beitrags werden gelöscht. Das kann nicht rückgängig gemacht werden.";

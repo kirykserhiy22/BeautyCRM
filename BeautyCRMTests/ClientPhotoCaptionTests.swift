@@ -117,4 +117,28 @@ final class ClientPhotoCaptionTests: XCTestCase {
         posts[1].photos[0].markDeleted()
         XCTAssertEqual(ClientPhotoPost.group(client.photos)[1].photos.map(\.fileName), ["after.jpg"])
     }
+
+    // Допис: один підпис (з'єднані підписи фото), видалення — усі фото разом
+    func testPostCaptionAndDeleteWholePost() throws {
+        let context = try F.makeContext()
+        let client = Client(userID: F.userID, name: "Олена")
+        context.insert(client)
+        let post = UUID()
+        ClientPhotoService.addPhoto(fileName: "1.jpg", stage: .before, caption: "Холодний блонд", postID: post, client: client, context: context)
+        ClientPhotoService.addPhoto(fileName: "2.jpg", stage: .after, caption: nil, postID: post, client: client, context: context)
+        ClientPhotoService.addPhoto(fileName: "solo.jpg", client: client, context: context)
+
+        XCTAssertEqual(ClientPhotoService.postCaption(["  ", "a", nil, "b"]), "a\nb")
+
+        let carousel = try XCTUnwrap(ClientPhotoPost.group(client.photos).first { $0.isCarousel })
+        XCTAssertEqual(carousel.caption, "Холодний блонд", "Підпис допису не залежить від того, яке фото видно")
+
+        ClientPhotoService.updatePost(carousel.photos, stages: [.after, .before], caption: "Новий підпис", context: context)
+        XCTAssertEqual(carousel.photos.map(\.stage), [.after, .before])
+        XCTAssertEqual(carousel.photos.map(\.caption), ["Новий підпис", nil])
+
+        ClientPhotoService.deletePost(carousel.photos, client: client, context: context)
+        XCTAssertEqual(ClientPhotoPost.group(client.photos).map { $0.photos.map(\.fileName) }, [["solo.jpg"]],
+                       "Видалено весь допис, окреме фото лишилось")
+    }
 }

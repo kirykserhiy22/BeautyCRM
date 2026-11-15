@@ -22,8 +22,9 @@ struct ClientPhotoFeedView: View {
     @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var profession: ProfessionManager
 
-    @State private var editing: ClientPhoto?
-    @State private var deleting: ClientPhoto?
+    // Дія з меню «⋯» стосується всього допису (для окремого фото — це допис з одного фото)
+    @State private var editing: ClientPhotoPost?
+    @State private var deleting: ClientPhotoPost?
     @State private var didScroll = false
 
     private var colors: ThemeColors {
@@ -61,34 +62,44 @@ struct ClientPhotoFeedView: View {
         .background(colors.background)
         .navigationTitle(client.name)
         .navigationBarTitleDisplayMode(.inline)
-        .sheet(item: $editing) { photo in
-            if let image = ClientPhotoStorage.loadImage(from: photo.fileName) {
-                ClientPhotoEditorView(
-                    drafts: [ClientPhotoDraft(image: image, stage: photo.stage, caption: photo.caption ?? "")],
-                    showsStages: profession.config.showsPhotoStages,
-                    isEditingExisting: true
-                ) { drafts, _ in
-                    if let draft = drafts.first {
-                        ClientPhotoService.update(stage: draft.stage, caption: draft.caption, photo: photo, context: context)
+        .sheet(item: $editing) { item in
+            ClientPhotoEditorView(
+                drafts: item.photos.enumerated().compactMap { index, photo in
+                    ClientPhotoStorage.loadImage(from: photo.fileName).map {
+                        ClientPhotoDraft(image: $0, stage: photo.stage, caption: index == 0 ? (item.caption ?? "") : "")
                     }
-                }
+                },
+                showsStages: profession.config.showsPhotoStages,
+                isEditingExisting: true,
+                sharedCaption: true
+            ) { drafts, _ in
+                ClientPhotoService.updatePost(
+                    item.photos,
+                    stages: drafts.map(\.stage),
+                    caption: drafts.first?.caption,
+                    context: context
+                )
             }
         }
         .alert(
-            localization.localizedString(for: "clients.deletePhotoTitle"),
+            localization.localizedString(for: deleting?.isCarousel == true ? "photos.deletePost.title" : "clients.deletePhotoTitle"),
             isPresented: Binding(get: { deleting != nil }, set: { if !$0 { deleting = nil } })
         ) {
             Button(localization.localizedString(for: "common.cancel"), role: .cancel) {
                 deleting = nil
             }
             Button(localization.localizedString(for: "common.delete"), role: .destructive) {
-                if let photo = deleting {
-                    ClientPhotoService.deletePhoto(photo: photo, client: client, context: context)
+                if let item = deleting {
+                    ClientPhotoService.deletePost(item.photos, client: client, context: context)
                 }
                 deleting = nil
             }
         } message: {
-            Text(localization.localizedString(for: "clients.deletePhotoMessage"))
+            if let item = deleting, item.isCarousel {
+                Text(String(format: localization.localizedString(for: "photos.deletePost.message"), item.photos.count))
+            } else {
+                Text(localization.localizedString(for: "clients.deletePhotoMessage"))
+            }
         }
     }
 
@@ -96,17 +107,14 @@ struct ClientPhotoFeedView: View {
 
     private func post(_ item: ClientPhotoPost) -> some View {
 
-        // Позначка, підпис і «⋯» — того фото, яке зараз видно в каруселі
+        // Позначка «До / Після» — на самому фото; підпис — один на весь допис, під фото
         let index = min(pages[item.id] ?? 0, item.photos.count - 1)
         let photo = item.photos[index]
 
         return VStack(alignment: .leading, spacing: 10) {
 
             HStack(spacing: 8) {
-                if let stage = photo.stage {
-                    ClientPhotoStageBadge(stage: stage, compact: true)
-                }
-                Text(AppFormatting.date(photo.createdAt, locale: localization.locale, format: .medium))
+                Text(AppFormatting.date(item.cover.createdAt, locale: localization.locale, format: .medium))
                     .font(.caption)
                     .foregroundColor(colors.textSecondary)
                 Spacer()
@@ -115,7 +123,7 @@ struct ClientPhotoFeedView: View {
                         .font(.caption.weight(.semibold))
                         .foregroundColor(colors.textSecondary)
                 }
-                menu(photo)
+                menu(item, current: photo)
             }
             .padding(.horizontal)
 
@@ -127,6 +135,7 @@ struct ClientPhotoFeedView: View {
                 )) {
                     ForEach(Array(item.photos.enumerated()), id: \.element.id) { offset, photo in
                         FeedPhotoImage(fileName: photo.fileName, fixedPortrait: true)
+                            .overlay(alignment: .topLeading) { stageBadge(photo) }
                             .tag(offset)
                     }
                 }
@@ -145,9 +154,10 @@ struct ClientPhotoFeedView: View {
                 .frame(maxWidth: .infinity)
             } else {
                 FeedPhotoImage(fileName: photo.fileName)
+                    .overlay(alignment: .topLeading) { stageBadge(photo) }
             }
 
-            if let caption = photo.caption, !caption.isEmpty {
+            if let caption = item.caption {
                 Text(caption)
                     .font(.subheadline)
                     .foregroundColor(colors.textPrimary)
@@ -158,10 +168,19 @@ struct ClientPhotoFeedView: View {
         }
     }
 
-    private func menu(_ photo: ClientPhoto) -> some View {
+    @ViewBuilder
+    private func stageBadge(_ photo: ClientPhoto) -> some View {
+        if let stage = photo.stage {
+            ClientPhotoStageBadge(stage: stage)
+                .padding(10)
+        }
+    }
+
+    // Зберегти й поділитися — фото, яке зараз видно; змінити й видалити — увесь допис
+    private func menu(_ item: ClientPhotoPost, current photo: ClientPhoto) -> some View {
         Menu {
             Button {
-                editing = photo
+                editing = item
             } label: {
                 Label(localization.localizedString(for: "photos.menu.edit"), systemImage: "pencil")
             }
@@ -179,9 +198,12 @@ struct ClientPhotoFeedView: View {
             }
             Divider()
             Button(role: .destructive) {
-                deleting = photo
+                deleting = item
             } label: {
-                Label(localization.localizedString(for: "common.delete"), systemImage: "trash")
+                Label(
+                    localization.localizedString(for: item.isCarousel ? "photos.deletePost" : "common.delete"),
+                    systemImage: "trash"
+                )
             }
         } label: {
             Image(systemName: "ellipsis")
