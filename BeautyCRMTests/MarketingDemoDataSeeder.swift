@@ -36,15 +36,19 @@ final class MarketingDemoDataSeeder: XCTestCase {
         let profile = try XCTUnwrap(UserProfileManager.profile(context: context, userID: userID))
         SyncTracking.currentWorkspaceID = profile.workspaceID
 
-        // Майстриня, яку видно на екранах («Доброго ранку, Марія»)
-        profile.firstName = "Марія"
-        profile.lastName = "Коваленко"
-        profile.businessName = "Hair Studio M"
+        // Майстер без особистого імені: на Головній «Доброго дня, Майстер» —
+        // кожен глядач бачить себе, а не конкретну людину
+        let language = ProcessInfo.processInfo.environment["MARKETING_LANG"] ?? "uk"
+        let neutralNames = ["uk": "Майстер", "en": "Master", "de": "Meister", "pl": "Mistrz", "cs": "Mistr"]
+        profile.firstName = neutralNames[language] ?? "Майстер"
+        profile.lastName = ""
+        profile.businessName = "Beauty Studio"
+        profile.reminderSignature = "Beauty Studio"
         profile.workStartMinute = 9 * 60
         profile.workEndMinute = 19 * 60
         profile.reminderAddress = "вул. Шевченка 12, каб. 4"
         // Мова додатку береться з профілю при кожному запуску
-        profile.languageCode = ProcessInfo.processInfo.environment["MARKETING_LANG"] ?? "uk"
+        profile.languageCode = language
 
         // Гід уже бачили — не перекриває екрани
         OnboardingStore.markSeen(userID: userID)
