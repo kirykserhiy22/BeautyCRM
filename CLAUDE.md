@@ -32,6 +32,7 @@
   екран — `ReminderSettingsView.swift`
 - `BeautyCRM/ClientMessage.swift` — нагадування клієнту: шаблон зі вставками `{name}` `{date}`… (`ClientMessageTemplate`) і посилання на
   Telegram/Viber/WhatsApp/SMS (`ClientMessageChannel`); вікно — `ClientReminderView.swift`; адреса, шаблон, підпис — у `UserProfile`
+- `BeautyCRM/ClientVisitHistory.swift` — історія візитів клієнта (фільтр, групи за роками, «план → оплачено») і «Записати так само» (`repeatPlan`)
 - `BeautyCRM/ContactLinks.swift` — посилання на телефон, Instagram, Telegram, WhatsApp, Viber, Messenger із будь-якого написання ніка чи номера
 - `BeautyCRM/ContactNetwork.swift` — соцмережі клієнта (назва, значок, поле в `Client`, посилання); нова соцмережа — один `case`
 - `BeautyCRM/DayTimelineView.swift` + `DayTimelineLayout.swift` — шкала дня (Головна, Календар) і розрахунок положення записів

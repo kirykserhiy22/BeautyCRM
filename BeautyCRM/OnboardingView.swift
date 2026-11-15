@@ -42,6 +42,7 @@ enum OnboardingSlide: Int, CaseIterable, Identifiable {
     case reschedule
     case complete
     case client
+    case visitHistory
     case settings
 
     var id: Int { rawValue }
@@ -190,6 +191,7 @@ struct OnboardingIllustration: View {
             case .reschedule: reschedule
             case .complete: complete
             case .client: client
+            case .visitHistory: visitHistory
             case .settings: settings
             }
         }
@@ -419,6 +421,45 @@ struct OnboardingIllustration: View {
                 photo("clients.photo.after", color: colors.buttonPrimary.opacity(0.6))
             }
         }
+    }
+
+    // Історія візитів: минулий візит із ціною й нотаткою і кнопка «Записати так само»
+    private var visitHistory: some View {
+        VStack(spacing: 8) {
+            visitRow(date: "12.09", services: t("onboarding.sample.coloring"), price: "105 €", note: t("onboarding.sample.note"))
+            visitRow(date: "14.07", services: t("onboarding.sample.coloring"), price: "95 €", note: nil)
+                .opacity(0.7)
+
+            primaryButton("visits.repeat")
+                .padding(.top, 4)
+                .overlay(alignment: .trailing) {
+                    tapFinger.offset(x: -24, y: 24)
+                }
+        }
+        .frame(maxHeight: .infinity)
+    }
+
+    private func visitRow(date: String, services: String, price: String, note: String?) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack {
+                Text(date).font(.subheadline.bold())
+                Spacer()
+                Text(price).font(.subheadline.bold())
+            }
+            .foregroundColor(colors.textPrimary)
+            Text(services)
+                .font(.caption)
+                .foregroundColor(colors.textSecondary)
+            if let note {
+                Text(note)
+                    .font(.caption2)
+                    .foregroundColor(colors.accent)
+            }
+        }
+        .padding(10)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(colors.card)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 
     private func contactCircle<Content: View>(@ViewBuilder _ content: () -> Content) -> some View {

@@ -351,8 +351,10 @@
 "onboarding.4.text" = "Po návštěvě klepněte na „Dokončit“ a zadejte konečnou cenu. Hned se objeví v Analytice.";
 "onboarding.5.title" = "Vše o klientovi";
 "onboarding.5.text" = "V kartě klienta: návštěvy, poznámky, fotky před a po. Odtud zavoláte, napíšete nebo znovu objednáte.";
-"onboarding.6.title" = "Začněte ceníkem";
-"onboarding.6.text" = "Přidejte služby a pracovní dobu v Nastavení. Najdete tam i tohoto průvodce: „Jak používat“.";
+"onboarding.6.title" = "Objednat stejně";
+"onboarding.6.text" = "Karta klienta → „Návštěvy“: všechny návštěvy s daty, cenami a poznámkami. Jedním klepnutím objednáte stejné služby.";
+"onboarding.7.title" = "Začněte ceníkem";
+"onboarding.7.text" = "Přidejte služby a pracovní dobu v Nastavení. Najdete tam i tohoto průvodce: „Jak používat“.";
 
 "password.show" = "Zobrazit heslo";
 "password.hide" = "Skrýt heslo";
@@ -424,3 +426,24 @@
 "appointment.clientDeleted" = "Klient smazán";
 "clients.deleteOne.title" = "Smazat klienta %@?";
 "clients.deleteOne.message" = "Karta klienta a fotky budou smazány. Minulé rezervace zůstanou v historii a analytice.";
+
+// Історія візитів клієнта
+"onboarding.sample.coloring" = "Barvení · Tónování";
+"onboarding.sample.note" = "Barva 6.1, 35 min";
+"visits.title" = "Historie návštěv";
+"visits.filter.all" = "Vše";
+"visits.filter.completed" = "Dokončené";
+"visits.filter.cancelled" = "Zrušené";
+"visits.empty.title" = "Zatím žádné návštěvy";
+"visits.empty.message" = "Zde se zobrazí všechny rezervace tohoto klienta.";
+"visits.badge.cancelled" = "zrušeno";
+"visits.badge.upcoming" = "naplánováno";
+"visits.badge.notCompleted" = "nedokončeno";
+"visits.plannedPaid" = "Plán %1$@ → zaplaceno %2$@";
+"visits.planned" = "Naplánováno";
+"visits.paid" = "Zaplaceno";
+"visits.plannedWas" = "Plánováno %@";
+"visits.notes" = "Poznámky k rezervaci";
+"visits.repeat" = "Objednat stejně";
+"visits.repeatHint" = "Stejné služby a délka — stačí vybrat datum a čas.";
+"settings.appearance.system" = "Jako v iPhonu";

@@ -350,8 +350,10 @@
 "onboarding.4.text" = "Po wizycie dotknij „Zakończ” i wpisz cenę końcową. Od razu trafi do Analityki.";
 "onboarding.5.title" = "Wszystko o kliencie";
 "onboarding.5.text" = "W karcie klienta: wizyty, notatki, zdjęcia przed i po. Stamtąd zadzwonisz, napiszesz lub umówisz ponownie.";
-"onboarding.6.title" = "Zacznij od cennika";
-"onboarding.6.text" = "Dodaj usługi i godziny pracy w Ustawieniach. Tam też znajdziesz ten przewodnik: „Jak korzystać”.";
+"onboarding.6.title" = "Umów to samo";
+"onboarding.6.text" = "Karta klienta → „Wizyty”: wszystkie wizyty z datami, cenami i notatkami. Jednym stuknięciem umówisz te same usługi.";
+"onboarding.7.title" = "Zacznij od cennika";
+"onboarding.7.text" = "Dodaj usługi i godziny pracy w Ustawieniach. Tam też znajdziesz ten przewodnik: „Jak korzystać”.";
 
 "password.show" = "Pokaż hasło";
 "password.hide" = "Ukryj hasło";
@@ -423,3 +425,24 @@
 "appointment.clientDeleted" = "Klient usunięty";
 "clients.deleteOne.title" = "Usunąć klienta %@?";
 "clients.deleteOne.message" = "Karta klienta i zdjęcia zostaną usunięte. Przeszłe wizyty pozostaną w historii i analityce.";
+
+// Історія візитів клієнта
+"onboarding.sample.coloring" = "Koloryzacja · Tonowanie";
+"onboarding.sample.note" = "Farba 6.1, 35 min";
+"visits.title" = "Historia wizyt";
+"visits.filter.all" = "Wszystkie";
+"visits.filter.completed" = "Zakończone";
+"visits.filter.cancelled" = "Anulowane";
+"visits.empty.title" = "Brak wizyt";
+"visits.empty.message" = "Tu pojawią się wszystkie wizyty tego klienta.";
+"visits.badge.cancelled" = "anulowana";
+"visits.badge.upcoming" = "zaplanowana";
+"visits.badge.notCompleted" = "niezakończona";
+"visits.plannedPaid" = "Plan %1$@ → zapłacono %2$@";
+"visits.planned" = "Zaplanowano";
+"visits.paid" = "Zapłacono";
+"visits.plannedWas" = "Planowano %@";
+"visits.notes" = "Notatki do wizyty";
+"visits.repeat" = "Umów to samo";
+"visits.repeatHint" = "Te same usługi i czas trwania — wybierz tylko datę i godzinę.";
+"settings.appearance.system" = "Jak w iPhonie";

@@ -41,7 +41,15 @@ struct ClientAnalyticsSection: View {
 
             row("clients.lastVisit", lastVisitText(analytics.lastVisitDate))
 
-            row("clients.visits", "\(analytics.completedVisits)")
+            // Тап — уся історія візитів: що робили, скільки заплатили, нотатки
+            NavigationLink {
+                ClientVisitHistoryView(client: client)
+            } label: {
+                row("clients.visits", "\(analytics.completedVisits)", showsChevron: true)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityIdentifier("client.visits")
 
             row("clients.totalSpent", currency.format(analytics.revenue))
 
@@ -52,7 +60,7 @@ struct ClientAnalyticsSection: View {
         .cornerRadius(20)
     }
 
-    private func row(_ titleKey: String, _ value: String) -> some View {
+    private func row(_ titleKey: String, _ value: String, showsChevron: Bool = false) -> some View {
 
         HStack {
 
@@ -64,6 +72,12 @@ struct ClientAnalyticsSection: View {
             Text(value)
                 .fontWeight(.semibold)
                 .foregroundColor(colors.textPrimary)
+
+            if showsChevron {
+                Image(systemName: "chevron.right")
+                    .font(.caption.bold())
+                    .foregroundColor(colors.accent)
+            }
         }
         .font(.subheadline)
         .accessibilityElement(children: .combine)

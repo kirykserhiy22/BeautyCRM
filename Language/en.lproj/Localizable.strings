@@ -350,8 +350,10 @@
 "onboarding.4.text" = "After the visit tap “Complete” and enter the final price. It goes straight into Analytics.";
 "onboarding.5.title" = "Everything about a client";
 "onboarding.5.text" = "The client card has visits, notes and before/after photos. Call, message or book again right from there.";
-"onboarding.6.title" = "Start with your price list";
-"onboarding.6.text" = "Add your services and working hours in Settings. This guide lives there too: “How to use”.";
+"onboarding.6.title" = "Book the same again";
+"onboarding.6.text" = "Client card → “Visits”: every visit with dates, prices and notes. One tap books the same services again.";
+"onboarding.7.title" = "Start with your price list";
+"onboarding.7.text" = "Add your services and working hours in Settings. This guide lives there too: “How to use”.";
 
 "password.show" = "Show password";
 "password.hide" = "Hide password";
@@ -423,3 +425,24 @@
 "appointment.clientDeleted" = "Client deleted";
 "clients.deleteOne.title" = "Delete client %@?";
 "clients.deleteOne.message" = "The client card and photos will be deleted. Past appointments stay in history and analytics.";
+
+// Історія візитів клієнта
+"onboarding.sample.coloring" = "Coloring · Toning";
+"onboarding.sample.note" = "Dye 6.1, 35 min";
+"visits.title" = "Visit history";
+"visits.filter.all" = "All";
+"visits.filter.completed" = "Completed";
+"visits.filter.cancelled" = "Cancelled";
+"visits.empty.title" = "No visits yet";
+"visits.empty.message" = "All appointments with this client will appear here.";
+"visits.badge.cancelled" = "cancelled";
+"visits.badge.upcoming" = "upcoming";
+"visits.badge.notCompleted" = "not completed";
+"visits.plannedPaid" = "Planned %1$@ → paid %2$@";
+"visits.planned" = "Planned";
+"visits.paid" = "Paid";
+"visits.plannedWas" = "Planned %@";
+"visits.notes" = "Appointment notes";
+"visits.repeat" = "Book the same";
+"visits.repeatHint" = "Same services and duration — just pick a date and time.";
+"settings.appearance.system" = "Like iPhone";

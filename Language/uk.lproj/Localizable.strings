@@ -351,8 +351,10 @@
 "onboarding.4.text" = "Після візиту натисніть «Завершити» й вкажіть фінальну ціну. Вона одразу потрапить в Аналітику.";
 "onboarding.5.title" = "Усе про клієнта";
 "onboarding.5.text" = "У картці клієнта — візити, нотатки, фото до і після. Звідти ж можна подзвонити, написати чи записати знову.";
-"onboarding.6.title" = "Почнімо з прайсу";
-"onboarding.6.text" = "Додайте послуги й робочі години в Налаштуваннях. Цей гід завжди там же: «Як користуватися».";
+"onboarding.6.title" = "Записати так само";
+"onboarding.6.text" = "Картка клієнта → «Візити»: усі візити з датами, цінами й нотатками. Один тап — і новий запис з тими самими послугами.";
+"onboarding.7.title" = "Почнімо з прайсу";
+"onboarding.7.text" = "Додайте послуги й робочі години в Налаштуваннях. Цей гід завжди там же: «Як користуватися».";
 
 "password.show" = "Показати пароль";
 "password.hide" = "Сховати пароль";
@@ -424,3 +426,24 @@
 "appointment.clientDeleted" = "Клієнта видалено";
 "clients.deleteOne.title" = "Видалити клієнта %@?";
 "clients.deleteOne.message" = "Картку клієнта й фото буде видалено. Минулі записи лишаться в історії та аналітиці.";
+
+// Історія візитів клієнта
+"onboarding.sample.coloring" = "Фарбування · Тонування";
+"onboarding.sample.note" = "Фарба 6.1, витримка 35 хв";
+"visits.title" = "Історія візитів";
+"visits.filter.all" = "Усі";
+"visits.filter.completed" = "Завершені";
+"visits.filter.cancelled" = "Скасовані";
+"visits.empty.title" = "Візитів ще немає";
+"visits.empty.message" = "Тут з’являться всі записи цього клієнта.";
+"visits.badge.cancelled" = "скасовано";
+"visits.badge.upcoming" = "заплановано";
+"visits.badge.notCompleted" = "не завершено";
+"visits.plannedPaid" = "План %1$@ → оплачено %2$@";
+"visits.planned" = "Заплановано";
+"visits.paid" = "Оплачено";
+"visits.plannedWas" = "Планувалось %@";
+"visits.notes" = "Нотатки до запису";
+"visits.repeat" = "Записати так само";
+"visits.repeatHint" = "Ті самі послуги й тривалість — лишиться вибрати дату й час.";
+"settings.appearance.system" = "Як в iPhone";
