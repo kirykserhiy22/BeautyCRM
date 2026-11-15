@@ -446,3 +446,11 @@
 "visits.repeat" = "Umów to samo";
 "visits.repeatHint" = "Te same usługi i czas trwania — wybierz tylko datę i godzinę.";
 "settings.appearance.system" = "Jak w iPhonie";
+
+// Фото клієнта як в Instagram
+"photos.new.titleOne" = "Nowe zdjęcie";
+"photos.new.titleMany" = "Nowe zdjęcia · %1$d z %2$d";
+"photos.new.add" = "Dodaj";
+"photos.edit.title" = "Edytuj zdjęcie";
+"photos.menu.edit" = "Zmień oznaczenie lub podpis";
+"photos.menu" = "Akcje zdjęcia";

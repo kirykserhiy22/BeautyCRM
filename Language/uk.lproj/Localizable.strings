@@ -447,3 +447,11 @@
 "visits.repeat" = "Записати так само";
 "visits.repeatHint" = "Ті самі послуги й тривалість — лишиться вибрати дату й час.";
 "settings.appearance.system" = "Як в iPhone";
+
+// Фото клієнта як в Instagram
+"photos.new.titleOne" = "Нове фото";
+"photos.new.titleMany" = "Нові фото · %1$d з %2$d";
+"photos.new.add" = "Додати";
+"photos.edit.title" = "Редагувати фото";
+"photos.menu.edit" = "Змінити позначку чи підпис";
+"photos.menu" = "Дії з фото";

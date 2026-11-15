@@ -43,6 +43,8 @@ enum ClientPhotoService {
     // Запис у базу — на головному потоці, коли файли вже на диску
     static func addPhoto(
         fileName: String,
+        stage: ClientPhotoStage? = nil,
+        caption: String? = nil,
         client: Client,
         context: ModelContext
     ) {
@@ -51,6 +53,8 @@ enum ClientPhotoService {
             clientID: client.id,
             fileName: fileName
         )
+        photo.stage = stage
+        photo.caption = cleanCaption(caption)
 
         client.photos.append(photo)
         context.insert(photo)
@@ -61,6 +65,28 @@ enum ClientPhotoService {
     // MARK: - CAPTION
 
     static let captionLimit = 120
+
+    // Підпис без зайвих пробілів і не довший за ліміт; порожній — nil
+    static func cleanCaption(_ text: String?) -> String? {
+        let trimmed = String((text ?? "").trimmingCharacters(in: .whitespacesAndNewlines).prefix(captionLimit))
+        return trimmed.isEmpty ? nil : trimmed
+    }
+
+    // Зміна позначки й підпису з меню «⋯» у стрічці фото
+    static func update(
+        stage: ClientPhotoStage?,
+        caption: String?,
+        photo: ClientPhoto,
+        context: ModelContext
+    ) {
+        let caption = cleanCaption(caption)
+        guard photo.stage != stage || photo.caption != caption else {
+            return
+        }
+        photo.stage = stage
+        photo.caption = caption
+        context.saveReportingErrors()
+    }
 
     static func updateCaption(
         _ text: String,

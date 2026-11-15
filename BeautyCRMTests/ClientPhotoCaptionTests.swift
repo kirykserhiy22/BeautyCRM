@@ -66,4 +66,31 @@ final class ClientPhotoCaptionTests: XCTestCase {
         XCTAssertTrue(Profession.lashBrowArtist.config.showsPhotoStages)
         XCTAssertFalse(Profession.nailArtist.config.showsPhotoStages)
     }
+
+    // Фото з редактора: позначка й підпис зберігаються одразу при додаванні
+    func testAddPhotoKeepsStageAndCleanCaption() throws {
+        let context = try F.makeContext()
+        let client = Client(userID: F.userID, name: "Олена")
+        context.insert(client)
+
+        ClientPhotoService.addPhoto(fileName: "a.jpg", stage: .after, caption: "  Блонд 9.1 ", client: client, context: context)
+        ClientPhotoService.addPhoto(fileName: "b.jpg", stage: nil, caption: "   ", client: client, context: context)
+
+        let added = client.photos.sorted { $0.fileName < $1.fileName }
+        XCTAssertEqual(added.map(\.stage), [.after, nil])
+        XCTAssertEqual(added.map(\.caption), ["Блонд 9.1", nil])
+    }
+
+    // Меню «⋯» у стрічці: зміна позначки й підпису разом
+    func testUpdateChangesStageAndCaption() throws {
+        let (photo, context) = try makePhoto()
+
+        ClientPhotoService.update(stage: .before, caption: "До фарбування", photo: photo, context: context)
+        XCTAssertEqual(photo.stage, .before)
+        XCTAssertEqual(photo.caption, "До фарбування")
+
+        ClientPhotoService.update(stage: nil, caption: "", photo: photo, context: context)
+        XCTAssertNil(photo.stage)
+        XCTAssertNil(photo.caption)
+    }
 }

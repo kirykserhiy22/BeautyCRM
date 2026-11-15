@@ -447,3 +447,11 @@
 "visits.repeat" = "Objednat stejně";
 "visits.repeatHint" = "Stejné služby a délka — stačí vybrat datum a čas.";
 "settings.appearance.system" = "Jako v iPhonu";
+
+// Фото клієнта як в Instagram
+"photos.new.titleOne" = "Nová fotka";
+"photos.new.titleMany" = "Nové fotky · %1$d z %2$d";
+"photos.new.add" = "Přidat";
+"photos.edit.title" = "Upravit fotku";
+"photos.menu.edit" = "Změnit označení nebo popis";
+"photos.menu" = "Akce s fotkou";

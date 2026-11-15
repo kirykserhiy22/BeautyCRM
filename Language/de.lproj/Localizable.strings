@@ -446,3 +446,11 @@
 "visits.repeat" = "Gleich nochmal buchen";
 "visits.repeatHint" = "Gleiche Leistungen und Dauer – nur Datum und Uhrzeit wählen.";
 "settings.appearance.system" = "Wie iPhone";
+
+// Фото клієнта як в Instagram
+"photos.new.titleOne" = "Neues Foto";
+"photos.new.titleMany" = "Neue Fotos · %1$d von %2$d";
+"photos.new.add" = "Hinzufügen";
+"photos.edit.title" = "Foto bearbeiten";
+"photos.menu.edit" = "Markierung oder Text ändern";
+"photos.menu" = "Fotoaktionen";

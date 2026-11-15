@@ -15,6 +15,7 @@ struct ClientPhotoGridSection: View {
     @EnvironmentObject var theme: ThemeManager
     @Environment(\.modelContext) private var context
     @EnvironmentObject var localization: LocalizationManager
+    @EnvironmentObject var profession: ProfessionManager
     private var colors: ThemeColors {
         theme.colors(for: theme.currentTheme)
     }
@@ -29,8 +30,12 @@ struct ClientPhotoGridSection: View {
 
     @State private var selectedItems: [PhotosPickerItem] = []
     @State private var selectedPhoto: ClientPhoto?
-    @State private var showViewer = false
     @State private var showDeleteAlert = false
+    // Стрічка відкривається на фото, по якому тапнули
+    @State private var feedStart: ClientPhoto?
+    // Вибрані в галереї фото чекають на позначку й підпис
+    @State private var drafts: [ClientPhotoDraft] = []
+    @State private var showEditor = false
 
     @State private var thumbnails: [String: UIImage] = [:]
 
@@ -45,20 +50,16 @@ struct ClientPhotoGridSection: View {
         .onAppear {
             preloadThumbnails()
         }
-        .sheet(isPresented: $showViewer) {
-
-            let entries = sortedPhotos.compactMap { photo in
-                ClientPhotoStorage.loadImage(from: photo.fileName).map {
-                    PhotoGalleryEntry(photo: photo, image: $0)
-                }
+        .navigationDestination(item: $feedStart) { photo in
+            ClientPhotoFeedView(client: client, startPhotoID: photo.id)
+        }
+        .sheet(isPresented: $showEditor, onDismiss: { drafts = [] }) {
+            ClientPhotoEditorView(
+                drafts: drafts,
+                showsStages: profession.config.showsPhotoStages
+            ) { ready in
+                addPhotos(ready)
             }
-
-            PhotoGalleryView(
-                entries: entries,
-                selectedIndex: entries.firstIndex(where: {
-                    $0.photo.id == selectedPhoto?.id
-                }) ?? 0
-            )
         }
         .alert(
             localization.localizedString(for: "clients.deletePhotoTitle"),
@@ -160,13 +161,14 @@ struct ClientPhotoGridSection: View {
             .clipShape(RoundedRectangle(cornerRadius: 8))
             .overlay(alignment: .topLeading) {
                 if let stage = photo.stage {
-                    stageBadge(stage)
+                    ClientPhotoStageBadge(stage: stage, compact: true)
+                        .padding(5)
                 }
             }
             .onTapGesture {
-                selectedPhoto = photo
-                showViewer = true
+                feedStart = photo
             }
+            .accessibilityIdentifier("client.photo")
             .contextMenu {
 
                 Button {
@@ -199,19 +201,6 @@ struct ClientPhotoGridSection: View {
                     )
                 }
             }
-    }
-
-    private func stageBadge(_ stage: ClientPhotoStage) -> some View {
-
-        Text(localization.localizedString(for: stage.localizationKey))
-            .font(.caption2.weight(.semibold))
-            .foregroundColor(.white)
-            .padding(.horizontal, 7)
-            .padding(.vertical, 3)
-            .background(
-                Capsule().fill(stage == .after ? colors.buttonPrimary : Color.black.opacity(0.6))
-            )
-            .padding(5)
     }
 
     // MARK: - THUMBNAIL LOADING (v3 CORE FIX)
@@ -284,34 +273,53 @@ struct ClientPhotoGridSection: View {
 
     // MARK: - UPLOAD
 
+    // Вибрані фото спершу йдуть у редактор (позначка «До / Після», підпис), а не одразу в сітку
     private func loadImages(from items: [PhotosPickerItem]) {
 
         guard !items.isEmpty else { return }
 
         Task {
 
-            for item in items {
+            var loaded: [ClientPhotoDraft] = []
 
-                guard let data = try? await item.loadTransferable(type: Data.self) else {
+            for item in items {
+                guard let data = try? await item.loadTransferable(type: Data.self),
+                      let image = await Task.detached(priority: .userInitiated, operation: { UIImage(data: data) }).value
+                else {
                     continue
                 }
+                loaded.append(ClientPhotoDraft(image: image, stage: nil, caption: ""))
+            }
 
-                // Розпаковка, JPEG і мініатюра — у фоні (#39)
+            selectedItems = []
+
+            if !loaded.isEmpty {
+                drafts = loaded
+                showEditor = true
+            }
+        }
+    }
+
+    // «Додати» в редакторі: JPEG і мініатюра — у фоні (#39), запис у базу — тут.
+    // Перше вибране фото стає найновішим (першим у сітці), як в Instagram.
+    private func addPhotos(_ ready: [ClientPhotoDraft]) {
+
+        Task {
+            for draft in ready.reversed() {
+                let image = draft.image
                 let fileName = await Task.detached(priority: .userInitiated) {
-                    UIImage(data: data).flatMap { ClientPhotoService.storeFiles(for: $0) }
+                    ClientPhotoService.storeFiles(for: image)
                 }.value
 
                 if let fileName {
                     ClientPhotoService.addPhoto(
                         fileName: fileName,
+                        stage: draft.stage,
+                        caption: draft.caption,
                         client: client,
                         context: context
                     )
                 }
-            }
-
-            await MainActor.run {
-                selectedItems = []
             }
         }
     }
