@@ -1,5 +1,5 @@
 #!/bin/zsh
-# Готує ОКРЕМИЙ симулятор для контенту Instagram: свіжий додаток, майстриня «Марія»,
+# Готує ОКРЕМИЙ симулятор для контенту Instagram: свіжий додаток, майстер без імені («Доброго дня, Майстер»),
 # українські демо-дані (MarketingDemoDataSeeder), мова — українська, статус-бар 9:41.
 #
 # Робочі симулятори розробки (iPhone 17 DDF7BD9E, iPhone 17 Pro Max 5000E35E) не чіпаються.
@@ -46,5 +46,5 @@ xcrun simctl privacy "$SIM_ID" grant photos "$BUNDLE_ID" 2>/dev/null || true
 
 # 4. Відкрити додаток. Запит на сповіщення iPhone покаже один раз — натиснути «Дозволити»
 xcrun simctl launch "$SIM_ID" "$BUNDLE_ID" >/dev/null
-echo "Готово: симулятор $SIM_ID, майстриня Марія, демо-дані українською."
+echo "Готово: симулятор $SIM_ID, майстер «Майстер», демо-дані українською."
 echo "Додаток: $DD/Build/Products/Debug-iphonesimulator/BeautyCRM.app"
