@@ -84,6 +84,9 @@ struct AppointmentFormView: View {
     // MARK: - UI
 
     @State private var errorMessage = ""
+    // Запис щойно збережено, вікно закривається: щойно створений запис
+    // не повинен на мить показатися «зайнятим часом» сам для себе
+    @State private var didSave = false
     @State private var showDayOffWarning = false
 
     // Як виглядала форма відразу після відкриття — щоб знати, чи щось змінили
@@ -523,7 +526,7 @@ private extension AppointmentFormView {
             }
             .foregroundColor(colors.textPrimary)
             .formCard(colors)
-            if conflictInfo.hasConflict {
+            if hasVisibleConflict {
 
                 VStack(alignment: .leading, spacing: 6) {
 
@@ -711,7 +714,12 @@ private extension AppointmentFormView {
             return false
         }
 
-        return !conflictInfo.hasConflict
+        return !hasVisibleConflict
+    }
+
+    // Конфлікт показуємо, лише поки запис не збережено
+    var hasVisibleConflict: Bool {
+        !didSave && conflictInfo.hasConflict
     }
 
     // Є послуга зі змінною ціною без введеної суми
@@ -753,6 +761,7 @@ private extension AppointmentFormView {
             case .success:
                 // Зберігаємо одразу, а не «колись автоматично»
                 if context.saveReportingErrors() {
+                    didSave = true
                     dismiss()
                 }
 
@@ -779,6 +788,7 @@ private extension AppointmentFormView {
             case .success:
                 // Зберігаємо одразу, а не «колись автоматично»
                 if context.saveReportingErrors() {
+                    didSave = true
                     dismiss()
                 }
 
