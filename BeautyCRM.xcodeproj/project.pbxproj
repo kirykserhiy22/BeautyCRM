@@ -27,6 +27,7 @@
 		3D32E7662FA76F7200A746A5 /* AppointmentRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D32E7652FA76E9800A746A5 /* AppointmentRow.swift */; };
 		3D32E7672FA76F7600A746A5 /* AppointmentFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D32E7622FA76CCA00A746A5 /* AppointmentFormView.swift */; };
 		3D32E7682FA76F7B00A746A5 /* Appointment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D32E7612FA76BC900A746A5 /* Appointment.swift */; };
+		3D3E328430B4FBE30066063A /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 3D3E328330B4FBE30066063A /* Supabase */; };
 		3D618F27300BA9CE00D0685C /* LocalizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D618F26300BA9CD00D0685C /* LocalizationManager.swift */; };
 		3D618F2A300BAB9B00D0685C /* SupportedLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D618F29300BAB9B00D0685C /* SupportedLanguage.swift */; };
 		3D618F38300BC35100D0685C /* Localizable.strings in Sources */ = {isa = PBXBuildFile; fileRef = 3D618F37300BC35100D0685C /* Localizable.strings */; };
@@ -140,6 +141,7 @@
 		3D32E7622FA76CCA00A746A5 /* AppointmentFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppointmentFormView.swift; sourceTree = "<group>"; };
 		3D32E7632FA76E6F00A746A5 /* CalendarScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarScreen.swift; sourceTree = "<group>"; };
 		3D32E7652FA76E9800A746A5 /* AppointmentRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppointmentRow.swift; sourceTree = "<group>"; };
+		3D3E328130B4FB1E0066063A /* App.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = App.xcconfig; sourceTree = "<group>"; };
 		3D618F26300BA9CD00D0685C /* LocalizationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationManager.swift; sourceTree = "<group>"; };
 		3D618F29300BAB9B00D0685C /* SupportedLanguage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportedLanguage.swift; sourceTree = "<group>"; };
 		3D618F36300BC35100D0685C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -261,6 +263,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3D3E328430B4FBE30066063A /* Supabase in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -284,6 +287,7 @@
 		3D20234B2FA3B1D30078D26B = {
 			isa = PBXGroup;
 			children = (
+				3D3E328130B4FB1E0066063A /* App.xcconfig */,
 				3D77D184309203D4003B6D95 /* Profession */,
 				3D62D6452FCA32C000E259CF /* Analytics */,
 				3D62D61B2FC062E800E259CF /* Home */,
@@ -605,6 +609,7 @@
 			);
 			name = BeautyCRM;
 			packageProductDependencies = (
+				3D3E328330B4FBE30066063A /* Supabase */,
 			);
 			productName = BeautyCRM;
 			productReference = 3D2023542FA3B1D30078D26B /* BeautyCRM.app */;
@@ -692,6 +697,9 @@
 			);
 			mainGroup = 3D20234B2FA3B1D30078D26B;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				3D3E328230B4FBE30066063A /* XCRemoteSwiftPackageReference "supabase-swift" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 3D2023552FA3B1D30078D26B /* Products */;
 			projectDirPath = "";
@@ -885,6 +893,7 @@
 /* Begin XCBuildConfiguration section */
 		3D2023752FA3B1D30078D26B /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3D3E328130B4FB1E0066063A /* App.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -950,6 +959,7 @@
 		};
 		3D2023762FA3B1D30078D26B /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3D3E328130B4FB1E0066063A /* App.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -1008,6 +1018,7 @@
 		};
 		3D2023782FA3B1D30078D26B /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3D3E328130B4FB1E0066063A /* App.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1034,21 +1045,18 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Kiryk.BeautyCRM;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
 		3D2023792FA3B1D30078D26B /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3D3E328130B4FB1E0066063A /* App.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1075,16 +1083,12 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Kiryk.BeautyCRM;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -1208,6 +1212,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		3D3E328230B4FBE30066063A /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/supabase/supabase-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.5.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		3D3E328330B4FBE30066063A /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3D3E328230B4FBE30066063A /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 3D20234C2FA3B1D30078D26B /* Project object */;
 }
