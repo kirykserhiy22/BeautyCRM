@@ -153,8 +153,19 @@
 "appointment.price" = "Price";
 "appointment.total" = "Total";
 "appointment.completionNote.title" = "Visit note";
-"appointment.completionNote.placeholder" = "E.g. colour formula, what the client didn’t like, a discount next time";
 "appointment.completionNote.hint" = "You’ll see this note in the client’s visit history";
+"profession.generic.noteExample" = "E.g. what was done, what the client didn’t like, wishes for next time";
+"profession.generic.sampleServices" = "Treatment · Care";
+"profession.generic.sampleNote" = "Next time 15 min longer";
+"profession.nail_artist.noteExample" = "E.g. gel polish shade, shape and length, what the client didn’t like";
+"profession.nail_artist.sampleServices" = "Manicure · Gel polish";
+"profession.nail_artist.sampleNote" = "Shade 012, almond shape";
+"profession.lash_brow_artist.noteExample" = "E.g. lash curl, thickness and length, brow tint, allergies";
+"profession.lash_brow_artist.sampleServices" = "Lash extensions · Brow shaping";
+"profession.lash_brow_artist.sampleNote" = "C curl, 0.07, 9–12 mm";
+"profession.hair_stylist.noteExample" = "E.g. colour formula, what the client didn’t like, a discount next time";
+"profession.hair_stylist.sampleServices" = "Coloring · Toning";
+"profession.hair_stylist.sampleNote" = "Dye 6.1, 35 min";
 "appointment.dateTime" = "Date & Time";
 "appointment.start" = "Start";
 "appointment.duration" = "Duration: %d min";
@@ -392,6 +403,11 @@
 "clientMessage.text" = "Message (you can edit it before sending)";
 "clientMessage.pasteHint" = "For Telegram, Instagram and Messenger the text is also copied: if it’s not in the chat, tap “Paste”.";
 "clientMessage.template" = "Hi! Just a reminder of your appointment on {date} at {time}: {services}.\nAddress: {address}\nSee you soon!";
+"clientMessage.template.warm" = "Hi! 😊 Can’t wait to see you on {date} at {time} for {services}.\nAddress: {address}\nSee you soon! 💕";
+"clientMessage.template.formal" = "Good day. This is a reminder of your appointment on {date} at {time}: {services}.\nAddress: {address}\nIf your plans change, please let us know in advance.\nKind regards";
+"clientMessage.tone.warm" = "Warm";
+"clientMessage.tone.neutral" = "Neutral";
+"clientMessage.tone.formal" = "Formal";
 "clientMessage.dateFormat" = "d MMMM";
 "reminders.section.clients" = "For clients";
 "clientMessage.addressPlaceholder" = "Salon or studio address";
@@ -399,7 +415,6 @@
 "clientMessage.template.title" = "Message template";
 "clientMessage.template.footer" = "Words in curly brackets are replaced with the appointment details. Tap one to insert it at the cursor.";
 "clientMessage.signature" = "Signature";
-"clientMessage.reset" = "Restore default text";
 "clientMessage.preview" = "What the client sees";
 "clientMessage.sampleName" = "Anna Smith";
 "clientMessage.sampleService" = "Manicure";
@@ -430,8 +445,6 @@
 "clients.deleteOne.message" = "The client card and photos will be deleted. Past appointments stay in history and analytics.";
 
 // Історія візитів клієнта
-"onboarding.sample.coloring" = "Coloring · Toning";
-"onboarding.sample.note" = "Dye 6.1, 35 min";
 "visits.title" = "Visit history";
 "visits.filter.all" = "All";
 "visits.filter.completed" = "Completed";

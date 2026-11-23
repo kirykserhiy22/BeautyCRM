@@ -426,8 +426,8 @@ struct OnboardingIllustration: View {
     // Історія візитів: минулий візит із ціною й нотаткою і кнопка «Записати так само»
     private var visitHistory: some View {
         VStack(spacing: 8) {
-            visitRow(date: "12.09", services: t("onboarding.sample.coloring"), price: "105 €", note: t("onboarding.sample.note"))
-            visitRow(date: "14.07", services: t("onboarding.sample.coloring"), price: "95 €", note: nil)
+            visitRow(date: "12.09", services: t(profession.config.sampleServicesKey), price: "105 €", note: t(profession.config.sampleNoteKey))
+            visitRow(date: "14.07", services: t(profession.config.sampleServicesKey), price: "95 €", note: nil)
                 .opacity(0.7)
 
             primaryButton("visits.repeat")

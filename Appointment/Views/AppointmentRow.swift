@@ -10,6 +10,7 @@ import SwiftData
 struct AppointmentRow: View {
     @EnvironmentObject var currencyManager: CurrencyManager
     @EnvironmentObject var localization: LocalizationManager
+    @EnvironmentObject var profession: ProfessionManager
     @Environment(\.modelContext) private var context
     // Живі клієнти: запис видаленого клієнта не відновлюється
     @Query(filter: #Predicate<Client> { $0.deletedAt == nil })
@@ -537,7 +538,7 @@ struct AppointmentRow: View {
                             )
 
                             TextField(
-                                localization.localizedString(for: "appointment.completionNote.placeholder"),
+                                localization.localizedString(for: profession.config.noteExampleKey),
                                 text: $completionNotes,
                                 axis: .vertical
                             )
