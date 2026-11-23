@@ -228,9 +228,19 @@
 
 /* Cancel confirmation and restore (#27) */
 "appointment.cancelConfirm.title" = "Скасувати запис?";
-"appointment.cancelConfirm.message" = "Час звільниться для інших записів. Запис можна буде відновити, якщо цей час лишиться вільним.";
-"appointment.cancelConfirm.confirm" = "Скасувати запис";
+"appointment.cancelConfirm.message" = "«Перенести пізніше» — клієнт з’явиться в списку «Чекають перенесення» на Головній, щоб записати його першим. Час у календарі звільниться в будь-якому разі.";
+"appointment.cancelConfirm.confirm" = "Скасувати назовсім";
 "appointment.cancelConfirm.keep" = "Залишити";
+"appointment.cancelConfirm.reschedule" = "Перенести пізніше";
+"appointment.status.awaitingReschedule" = "Чекає перенесення";
+"reschedule.title" = "Чекають перенесення";
+"reschedule.banner.subtitle" = "Запишіть цих клієнтів першими";
+"reschedule.hint" = "Записи, які ви скасували з позначкою «Перенести пізніше». Натисніть «Записати» — після нового запису клієнт зникне зі списку. Свайп вліво — прибрати.";
+"reschedule.wasAt" = "Було: %@";
+"reschedule.book" = "Записати";
+"reschedule.dismiss" = "Прибрати";
+"reschedule.empty.title" = "Усіх перенесено";
+"reschedule.empty.message" = "Тут з’являться записи, які ви скасуєте з позначкою «Перенести пізніше».";
 "appointment.restore" = "Відновити";
 "appointment.restoreConflict.title" = "Час уже зайнятий";
 "appointment.restoreConflict.message" = "На цей час уже є інший запис. Створіть новий запис на вільний час.";
@@ -404,7 +414,7 @@
 "clientMessage.text" = "Текст (можна змінити перед надсиланням)";
 "clientMessage.pasteHint" = "Для Telegram, Instagram і Messenger текст також копіюється: якщо його немає в чаті, натисніть «Вставити».";
 "clientMessage.template" = "Доброго дня! Нагадую про ваш запис {date} о {time}: {services}.\nАдреса: {address}\nДо зустрічі!";
-"clientMessage.template.warm" = "Привіт! 😊 Чекаю тебе {date} о {time} на {services}.\nАдреса: {address}\nДо зустрічі! 💕";
+"clientMessage.template.warm" = "Привіт! 😊 Чекаю тебе {date} о {time}: {services}.\nАдреса: {address}\nДо зустрічі! 💕";
 "clientMessage.template.formal" = "Доброго дня. Нагадуємо про ваш запис {date} о {time}: {services}.\nАдреса: {address}\nЯкщо плани змінилися, будь ласка, повідомте заздалегідь.\nЗ повагою";
 "clientMessage.tone.warm" = "Теплий";
 "clientMessage.tone.neutral" = "Нейтральний";
@@ -418,7 +428,7 @@
 "clientMessage.signature" = "Підпис";
 "clientMessage.preview" = "Як побачить клієнт";
 "clientMessage.sampleName" = "Олена Коваль";
-"clientMessage.sampleService" = "Манікюр";
+"clientMessage.sampleService" = "Процедура";
 "clientMessage.token.name" = "ім'я";
 "clientMessage.token.date" = "дата";
 "clientMessage.token.time" = "час";

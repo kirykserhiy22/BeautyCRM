@@ -227,9 +227,19 @@
 
 /* Cancel confirmation and restore (#27) */
 "appointment.cancelConfirm.title" = "Cancel appointment?";
-"appointment.cancelConfirm.message" = "The time will be freed for other appointments. The appointment can be restored later if this time is still free.";
-"appointment.cancelConfirm.confirm" = "Cancel appointment";
+"appointment.cancelConfirm.message" = "“Reschedule later” puts the client on the “Waiting to reschedule” list on Home so you can book them first. The time slot is freed either way.";
+"appointment.cancelConfirm.confirm" = "Cancel for good";
 "appointment.cancelConfirm.keep" = "Keep";
+"appointment.cancelConfirm.reschedule" = "Reschedule later";
+"appointment.status.awaitingReschedule" = "To reschedule";
+"reschedule.title" = "Waiting to reschedule";
+"reschedule.banner.subtitle" = "Book these clients first";
+"reschedule.hint" = "Appointments you cancelled with “Reschedule later”. Tap “Book” — once the new appointment is saved, the client leaves the list. Swipe left to remove.";
+"reschedule.wasAt" = "Was: %@";
+"reschedule.book" = "Book";
+"reschedule.dismiss" = "Remove";
+"reschedule.empty.title" = "Everyone is rebooked";
+"reschedule.empty.message" = "Appointments you cancel with “Reschedule later” will appear here.";
 "appointment.restore" = "Restore";
 "appointment.restoreConflict.title" = "Time is taken";
 "appointment.restoreConflict.message" = "Another appointment already takes this time. Create a new appointment at a free time.";
@@ -417,7 +427,7 @@
 "clientMessage.signature" = "Signature";
 "clientMessage.preview" = "What the client sees";
 "clientMessage.sampleName" = "Anna Smith";
-"clientMessage.sampleService" = "Manicure";
+"clientMessage.sampleService" = "Treatment";
 "clientMessage.token.name" = "name";
 "clientMessage.token.date" = "date";
 "clientMessage.token.time" = "time";

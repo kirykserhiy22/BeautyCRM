@@ -15,6 +15,7 @@ struct ReminderSettingsView: View {
     @EnvironmentObject var theme: ThemeManager
     @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var appState: AppState
+    @EnvironmentObject var profession: ProfessionManager
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.modelContext) private var context
 
@@ -222,7 +223,7 @@ struct ReminderSettingsView: View {
         let values = ClientReminderText.values(
             clientName: localization.localizedString(for: "clientMessage.sampleName"),
             start: start,
-            services: [localization.localizedString(for: "clientMessage.sampleService")],
+            services: [localization.localizedString(for: profession.config.sampleServiceKey)],
             price: "",
             address: address,
             localization: localization

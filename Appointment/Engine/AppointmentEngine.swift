@@ -538,15 +538,26 @@ final class AppointmentEngine {
 
     // MARK: - CANCEL
 
+    // rescheduleLater — «Перенести пізніше»: клієнт потрапляє в список «Чекають перенесення»
     @discardableResult
-    static func cancel(appointment: Appointment) -> Result<Void, AppointmentError> {
+    static func cancel(
+        appointment: Appointment,
+        rescheduleLater: Bool = false,
+        now: Date = Date()
+    ) -> Result<Void, AppointmentError> {
 
         guard appointment.status.canChange(to: .cancelled) else {
             return .failure(.invalidStatus)
         }
 
         appointment.status = .cancelled
+        appointment.rescheduleRequestedAt = rescheduleLater ? now : nil
         return .success(())
+    }
+
+    // Клієнта записали знову або він відмовився — прибираємо зі списку «Чекають перенесення»
+    static func finishReschedule(appointment: Appointment) {
+        appointment.rescheduleRequestedAt = nil
     }
 
     // MARK: - RESTORE
@@ -572,6 +583,7 @@ final class AppointmentEngine {
         }
 
         appointment.status = .active
+        appointment.rescheduleRequestedAt = nil
         return .success(())
     }
 
@@ -586,6 +598,7 @@ final class AppointmentEngine {
         }
 
         appointment.status = .archived
+        appointment.rescheduleRequestedAt = nil
         return .success(())
     }
 }

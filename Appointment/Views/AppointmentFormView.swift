@@ -20,15 +20,20 @@ struct AppointmentFormView: View {
     // «Записати так само»: візит, з якого беремо послуги, ціни й тривалість
     private let repeating: Appointment?
 
+    // Запис зі списку «Чекають перенесення»: після збереження нового запису він зі списку зникає
+    private let rescheduling: Appointment?
+
     init(
         mode: AppointmentFormMode = .create,
         initialDate: Date = Date(),
         preselectedClientID: UUID? = nil,
-        repeating: Appointment? = nil
+        repeating: Appointment? = nil,
+        rescheduling: Appointment? = nil
     ) {
         self.mode = mode
         self.preselectedClientID = preselectedClientID
-        self.repeating = repeating
+        self.repeating = repeating ?? rescheduling
+        self.rescheduling = rescheduling
 
         _date = State(initialValue: initialDate)
 
@@ -759,6 +764,9 @@ private extension AppointmentFormView {
             switch result {
 
             case .success:
+                if let rescheduling {
+                    AppointmentEngine.finishReschedule(appointment: rescheduling)
+                }
                 // Зберігаємо одразу, а не «колись автоматично»
                 if context.saveReportingErrors() {
                     didSave = true

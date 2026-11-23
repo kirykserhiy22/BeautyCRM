@@ -39,6 +39,10 @@ struct ProfessionConfig {
     var sampleServicesKey: String { textKeyPrefix + ".sampleServices" }
     var sampleNoteKey: String { textKeyPrefix + ".sampleNote" }
 
+    // Послуга для прикладу «Як побачить клієнт» у нагадуванні: перша типова послуга професії
+    // (без професії — нейтральна «Процедура»)
+    var sampleServiceKey: String { suggestedServiceKeys.first ?? "clientMessage.sampleService" }
+
 
     // Нейтральна конфігурація, коли професію не обрано (іконки як раніше)
     static let generic = ProfessionConfig(

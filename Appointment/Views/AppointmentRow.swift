@@ -387,6 +387,12 @@ struct AppointmentRow: View {
             isPresented: $showCancelConfirm,
             titleVisibility: .visible
         ) {
+            // Клієнта треба записати знову — він з'явиться в списку «Чекають перенесення»
+            Button(localization.localizedString(for: "appointment.cancelConfirm.reschedule")) {
+                AppointmentEngine.cancel(appointment: appt, rescheduleLater: true)
+                context.saveReportingErrors()
+            }
+
             Button(
                 localization.localizedString(for: "appointment.cancelConfirm.confirm"),
                 role: .destructive
@@ -669,7 +675,9 @@ private extension AppointmentRow {
             return localization.localizedString(for: "appointment.status.completed")
 
         case .cancelled:
-            return localization.localizedString(for: "appointment.status.cancelled")
+            return localization.localizedString(
+                for: appt.rescheduleRequestedAt == nil ? "appointment.status.cancelled" : "appointment.status.awaitingReschedule"
+            )
 
         case .archived:
             return localization.localizedString(for: "appointment.status.archived")
@@ -687,7 +695,7 @@ private extension AppointmentRow {
             return colors.success
             
         case .cancelled:
-            return colors.danger
+            return appt.rescheduleRequestedAt == nil ? colors.danger : colors.warning
             
         case .archived:
             return .gray

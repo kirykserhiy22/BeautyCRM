@@ -227,9 +227,19 @@
 
 /* Cancel confirmation and restore (#27) */
 "appointment.cancelConfirm.title" = "Anulować wizytę?";
-"appointment.cancelConfirm.message" = "Czas zostanie zwolniony dla innych wizyt. Wizytę można później przywrócić, jeśli ten czas będzie nadal wolny.";
-"appointment.cancelConfirm.confirm" = "Anuluj wizytę";
+"appointment.cancelConfirm.message" = "„Przełóż później” dodaje klientkę do listy „Czekają na nowy termin” na stronie głównej, aby zapisać ją w pierwszej kolejności. Czas w kalendarzu i tak się zwolni.";
+"appointment.cancelConfirm.confirm" = "Odwołaj na stałe";
 "appointment.cancelConfirm.keep" = "Zostaw";
+"appointment.cancelConfirm.reschedule" = "Przełóż później";
+"appointment.status.awaitingReschedule" = "Do przełożenia";
+"reschedule.title" = "Czekają na nowy termin";
+"reschedule.banner.subtitle" = "Zapisz te klientki w pierwszej kolejności";
+"reschedule.hint" = "Wizyty odwołane z opcją „Przełóż później”. Stuknij „Zapisz” — po nowej wizycie klientka zniknie z listy. Przesuń w lewo, aby usunąć.";
+"reschedule.wasAt" = "Było: %@";
+"reschedule.book" = "Zapisz";
+"reschedule.dismiss" = "Usuń";
+"reschedule.empty.title" = "Wszyscy przełożeni";
+"reschedule.empty.message" = "Tutaj pojawią się wizyty odwołane z opcją „Przełóż później”.";
 "appointment.restore" = "Przywróć";
 "appointment.restoreConflict.title" = "Termin jest zajęty";
 "appointment.restoreConflict.message" = "W tym czasie jest już inna wizyta. Utwórz nową wizytę w wolnym terminie.";
@@ -417,7 +427,7 @@
 "clientMessage.signature" = "Podpis";
 "clientMessage.preview" = "Co zobaczy klientka";
 "clientMessage.sampleName" = "Anna Kowalska";
-"clientMessage.sampleService" = "Manicure";
+"clientMessage.sampleService" = "Zabieg";
 "clientMessage.token.name" = "imię";
 "clientMessage.token.date" = "data";
 "clientMessage.token.time" = "godzina";
