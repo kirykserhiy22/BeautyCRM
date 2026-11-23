@@ -240,6 +240,16 @@
 "reschedule.dismiss" = "Usuń";
 "reschedule.empty.title" = "Wszyscy przełożeni";
 "reschedule.empty.message" = "Tutaj pojawią się wizyty odwołane z opcją „Przełóż później”.";
+"home.action.postpone" = "Przełóż";
+"postpone.title" = "Przełóż wizyty";
+"postpone.hint" = "Choroba albo pilne sprawy? Wizyty z tych dni trafią do „Czekają na nowy termin” — po powrocie zapiszesz te klientki w pierwszej kolejności.";
+"postpone.from" = "Od";
+"postpone.to" = "Do";
+"postpone.makeDaysOff" = "Ustaw te dni jako wolne";
+"postpone.section" = "Wizyty w te dni";
+"postpone.empty" = "W te dni nie ma wizyt.";
+"postpone.button" = "Przełóż wizyty: %d";
+"postpone.daysOffOnly" = "Ustaw dni jako wolne";
 "appointment.restore" = "Przywróć";
 "appointment.restoreConflict.title" = "Termin jest zajęty";
 "appointment.restoreConflict.message" = "W tym czasie jest już inna wizyta. Utwórz nową wizytę w wolnym terminie.";

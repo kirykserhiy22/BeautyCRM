@@ -241,6 +241,16 @@
 "reschedule.dismiss" = "Odstranit";
 "reschedule.empty.title" = "Všichni přesunuti";
 "reschedule.empty.message" = "Zde se objeví rezervace zrušené s volbou „Přesunout později“.";
+"home.action.postpone" = "Odložit";
+"postpone.title" = "Odložit rezervace";
+"postpone.hint" = "Nemoc nebo něco naléhavého? Rezervace v těchto dnech se přesunou do „Čekají na nový termín“ — po návratu tyto klientky objednáte jako první.";
+"postpone.from" = "Od";
+"postpone.to" = "Do";
+"postpone.makeDaysOff" = "Nastavit tyto dny jako volno";
+"postpone.section" = "Rezervace v těchto dnech";
+"postpone.empty" = "V těchto dnech nejsou žádné rezervace.";
+"postpone.button" = "Odložit rezervace: %d";
+"postpone.daysOffOnly" = "Nastavit dny jako volno";
 "appointment.restore" = "Obnovit";
 "appointment.restoreConflict.title" = "Čas je obsazený";
 "appointment.restoreConflict.message" = "V tomto čase už je jiná rezervace. Vytvořte novou rezervaci na volný čas.";

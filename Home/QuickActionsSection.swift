@@ -45,6 +45,13 @@ struct QuickActionsSection: View {
             } label: {
                 action(title: "home.dayOff", icon: Image(systemName: "moon"))
             }
+
+            // Захворів чи невідкладні справи: відкласти всі записи за кілька днів
+            NavigationLink {
+                PostponeAppointmentsView()
+            } label: {
+                action(title: "home.action.postpone", icon: Image(systemName: "calendar.badge.clock"))
+            }
         }
     }
 

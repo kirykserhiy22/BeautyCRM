@@ -241,6 +241,16 @@
 "reschedule.dismiss" = "Прибрати";
 "reschedule.empty.title" = "Усіх перенесено";
 "reschedule.empty.message" = "Тут з’являться записи, які ви скасуєте з позначкою «Перенести пізніше».";
+"home.action.postpone" = "Відкласти";
+"postpone.title" = "Відкласти записи";
+"postpone.hint" = "Захворіли чи невідкладні справи? Записи в ці дні потраплять у «Чекають перенесення» — коли повернетеся, запишете цих клієнтів першими.";
+"postpone.from" = "З";
+"postpone.to" = "По";
+"postpone.makeDaysOff" = "Зробити ці дні вихідними";
+"postpone.section" = "Записи в ці дні";
+"postpone.empty" = "У ці дні записів немає.";
+"postpone.button" = "Відкласти записи: %d";
+"postpone.daysOffOnly" = "Зробити дні вихідними";
 "appointment.restore" = "Відновити";
 "appointment.restoreConflict.title" = "Час уже зайнятий";
 "appointment.restoreConflict.message" = "На цей час уже є інший запис. Створіть новий запис на вільний час.";
