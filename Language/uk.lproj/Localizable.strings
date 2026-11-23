@@ -414,7 +414,7 @@
 "clientMessage.text" = "Текст (можна змінити перед надсиланням)";
 "clientMessage.pasteHint" = "Для Telegram, Instagram і Messenger текст також копіюється: якщо його немає в чаті, натисніть «Вставити».";
 "clientMessage.template" = "Доброго дня! Нагадую про ваш запис {date} о {time}: {services}.\nАдреса: {address}\nДо зустрічі!";
-"clientMessage.template.warm" = "Привіт! 😊 Чекаю тебе {date} о {time} на {services}.\nАдреса: {address}\nДо зустрічі! 💕";
+"clientMessage.template.warm" = "Привіт! 😊 Чекаю тебе {date} о {time}: {services}.\nАдреса: {address}\nДо зустрічі! 💕";
 "clientMessage.template.formal" = "Доброго дня. Нагадуємо про ваш запис {date} о {time}: {services}.\nАдреса: {address}\nЯкщо плани змінилися, будь ласка, повідомте заздалегідь.\nЗ повагою";
 "clientMessage.tone.warm" = "Теплий";
 "clientMessage.tone.neutral" = "Нейтральний";
@@ -428,7 +428,7 @@
 "clientMessage.signature" = "Підпис";
 "clientMessage.preview" = "Як побачить клієнт";
 "clientMessage.sampleName" = "Олена Коваль";
-"clientMessage.sampleService" = "Манікюр";
+"clientMessage.sampleService" = "Процедура";
 "clientMessage.token.name" = "ім'я";
 "clientMessage.token.date" = "дата";
 "clientMessage.token.time" = "час";

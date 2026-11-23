@@ -428,7 +428,7 @@
 "clientMessage.signature" = "Podpis";
 "clientMessage.preview" = "Co uvidí klientka";
 "clientMessage.sampleName" = "Anna Nováková";
-"clientMessage.sampleService" = "Manikúra";
+"clientMessage.sampleService" = "Ošetření";
 "clientMessage.token.name" = "jméno";
 "clientMessage.token.date" = "datum";
 "clientMessage.token.time" = "čas";

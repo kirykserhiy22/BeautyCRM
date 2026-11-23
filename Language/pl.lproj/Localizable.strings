@@ -427,7 +427,7 @@
 "clientMessage.signature" = "Podpis";
 "clientMessage.preview" = "Co zobaczy klientka";
 "clientMessage.sampleName" = "Anna Kowalska";
-"clientMessage.sampleService" = "Manicure";
+"clientMessage.sampleService" = "Zabieg";
 "clientMessage.token.name" = "imię";
 "clientMessage.token.date" = "data";
 "clientMessage.token.time" = "godzina";
