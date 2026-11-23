@@ -266,3 +266,22 @@ nonisolated enum ClientMessageChannel: String, CaseIterable, Identifiable {
         return text.addingPercentEncoding(withAllowedCharacters: allowed) ?? ""
     }
 }
+
+
+// Готові зразки тексту нагадування: теплий (на «ти»), нейтральний (стандартний), офіційний.
+// Імені клієнта в жодному зразку немає: майстри часто записують клієнтів «Олена таксі»,
+// і таке ім'я легко випадково надіслати.
+enum ClientMessageTone: String, CaseIterable, Identifiable {
+    case warm
+    case neutral
+    case formal
+
+    var id: String { rawValue }
+    var titleKey: String { "clientMessage.tone.\(rawValue)" }
+
+    // Нейтральний — це стандартний шаблон
+    var templateKey: String {
+        self == .neutral ? "clientMessage.template" : "clientMessage.template.\(rawValue)"
+    }
+}
+

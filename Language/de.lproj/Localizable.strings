@@ -403,6 +403,11 @@
 "clientMessage.text" = "Nachricht (vor dem Senden änderbar)";
 "clientMessage.pasteHint" = "Bei Telegram, Instagram und Messenger wird der Text auch kopiert: Fehlt er im Chat, auf „Einsetzen“ tippen.";
 "clientMessage.template" = "Hallo! Ich erinnere Sie an Ihren Termin am {date} um {time}: {services}.\nAdresse: {address}\nBis bald!";
+"clientMessage.template.warm" = "Hallo! 😊 Ich freue mich auf dich am {date} um {time} – {services}.\nAdresse: {address}\nBis bald! 💕";
+"clientMessage.template.formal" = "Guten Tag. Wir erinnern Sie an Ihren Termin am {date} um {time}: {services}.\nAdresse: {address}\nFalls sich Ihre Pläne ändern, geben Sie uns bitte rechtzeitig Bescheid.\nMit freundlichen Grüßen";
+"clientMessage.tone.warm" = "Herzlich";
+"clientMessage.tone.neutral" = "Neutral";
+"clientMessage.tone.formal" = "Förmlich";
 "clientMessage.dateFormat" = "d. MMMM";
 "reminders.section.clients" = "Für Kunden";
 "clientMessage.addressPlaceholder" = "Adresse von Salon oder Studio";
@@ -410,7 +415,6 @@
 "clientMessage.template.title" = "Nachrichtenvorlage";
 "clientMessage.template.footer" = "Wörter in geschweiften Klammern werden durch Termindaten ersetzt. Tippen Sie eins an, um es an der Cursorposition einzufügen.";
 "clientMessage.signature" = "Unterschrift";
-"clientMessage.reset" = "Standardtext wiederherstellen";
 "clientMessage.preview" = "So sieht es die Kundin";
 "clientMessage.sampleName" = "Anna Müller";
 "clientMessage.sampleService" = "Maniküre";

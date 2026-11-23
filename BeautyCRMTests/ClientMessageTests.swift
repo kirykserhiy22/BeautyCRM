@@ -103,4 +103,21 @@ final class ClientMessageTests: XCTestCase {
         XCTAssertEqual(ClientMessageChannel.encode("a b\n+"), "a%20b%0A%2B")
         XCTAssertEqual(ClientMessageChannel.encode("Олена").removingPercentEncoding, "Олена")
     }
+
+    // Зразки «теплий / нейтральний / офіційний»: є всіма мовами, без імені клієнта, з датою й часом
+    func testToneTemplatesExistWithoutClientName() throws {
+        for language in ["uk", "en", "de", "pl", "cs"] {
+            let path = try XCTUnwrap(
+                Bundle.main.path(forResource: "Localizable", ofType: "strings", inDirectory: nil, forLocalization: language)
+            )
+            let strings = try XCTUnwrap(NSDictionary(contentsOfFile: path) as? [String: String])
+            for tone in ClientMessageTone.allCases {
+                XCTAssertFalse((strings[tone.titleKey] ?? "").isEmpty, "\(language): \(tone.titleKey)")
+                let text = try XCTUnwrap(strings[tone.templateKey], "\(language): \(tone.templateKey)")
+                XCTAssertFalse(text.contains(ClientMessageToken.name.placeholder), "\(language) \(tone): без імені")
+                XCTAssertTrue(text.contains(ClientMessageToken.date.placeholder), "\(language) \(tone)")
+                XCTAssertTrue(text.contains(ClientMessageToken.time.placeholder), "\(language) \(tone)")
+            }
+        }
+    }
 }

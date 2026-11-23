@@ -403,6 +403,11 @@
 "clientMessage.text" = "Wiadomość (można ją zmienić przed wysłaniem)";
 "clientMessage.pasteHint" = "W Telegramie, Instagramie i Messengerze tekst jest też kopiowany: jeśli go nie ma w czacie, stuknij „Wklej”.";
 "clientMessage.template" = "Dzień dobry! Przypominam o wizycie {date} o {time}: {services}.\nAdres: {address}\nDo zobaczenia!";
+"clientMessage.template.warm" = "Cześć! 😊 Czekam na Ciebie {date} o {time} – {services}.\nAdres: {address}\nDo zobaczenia! 💕";
+"clientMessage.template.formal" = "Dzień dobry. Przypominamy o Państwa wizycie {date} o {time}: {services}.\nAdres: {address}\nW razie zmiany planów prosimy o wcześniejszą informację.\nZ poważaniem";
+"clientMessage.tone.warm" = "Ciepły";
+"clientMessage.tone.neutral" = "Neutralny";
+"clientMessage.tone.formal" = "Oficjalny";
 "clientMessage.dateFormat" = "d MMMM";
 "reminders.section.clients" = "Dla klientów";
 "clientMessage.addressPlaceholder" = "Adres salonu lub gabinetu";
@@ -410,7 +415,6 @@
 "clientMessage.template.title" = "Szablon wiadomości";
 "clientMessage.template.footer" = "Słowa w nawiasach klamrowych zastępowane są danymi wizyty. Stuknij, aby wstawić w miejscu kursora.";
 "clientMessage.signature" = "Podpis";
-"clientMessage.reset" = "Przywróć domyślny tekst";
 "clientMessage.preview" = "Co zobaczy klientka";
 "clientMessage.sampleName" = "Anna Kowalska";
 "clientMessage.sampleService" = "Manicure";

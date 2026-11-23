@@ -403,6 +403,11 @@
 "clientMessage.text" = "Message (you can edit it before sending)";
 "clientMessage.pasteHint" = "For Telegram, Instagram and Messenger the text is also copied: if it’s not in the chat, tap “Paste”.";
 "clientMessage.template" = "Hi! Just a reminder of your appointment on {date} at {time}: {services}.\nAddress: {address}\nSee you soon!";
+"clientMessage.template.warm" = "Hi! 😊 Can’t wait to see you on {date} at {time} for {services}.\nAddress: {address}\nSee you soon! 💕";
+"clientMessage.template.formal" = "Good day. This is a reminder of your appointment on {date} at {time}: {services}.\nAddress: {address}\nIf your plans change, please let us know in advance.\nKind regards";
+"clientMessage.tone.warm" = "Warm";
+"clientMessage.tone.neutral" = "Neutral";
+"clientMessage.tone.formal" = "Formal";
 "clientMessage.dateFormat" = "d MMMM";
 "reminders.section.clients" = "For clients";
 "clientMessage.addressPlaceholder" = "Salon or studio address";
@@ -410,7 +415,6 @@
 "clientMessage.template.title" = "Message template";
 "clientMessage.template.footer" = "Words in curly brackets are replaced with the appointment details. Tap one to insert it at the cursor.";
 "clientMessage.signature" = "Signature";
-"clientMessage.reset" = "Restore default text";
 "clientMessage.preview" = "What the client sees";
 "clientMessage.sampleName" = "Anna Smith";
 "clientMessage.sampleService" = "Manicure";

@@ -129,6 +129,28 @@ struct ReminderSettingsView: View {
 
         Section {
 
+            // Готові зразки: тап підставляє текст, далі його можна змінити
+            HStack(spacing: 6) {
+                ForEach(ClientMessageTone.allCases) { tone in
+                    let isCurrent = template == editableTemplate(tone)
+                    Button {
+                        // Курсор після заміни тексту — у кінці
+                        editor.moveToEnd()
+                        template = editableTemplate(tone)
+                    } label: {
+                        Text(localization.localizedString(for: tone.titleKey))
+                            .font(.footnote.weight(.semibold))
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 8)
+                            .background(isCurrent ? colors.accent : colors.cardSecondary)
+                            .foregroundColor(isCurrent ? .white : colors.accent)
+                            .cornerRadius(8)
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityIdentifier("reminders.tone.\(tone.rawValue)")
+                }
+            }
+
             // Поле росте разом із текстом; вставка — там, де курсор
             TemplateEditor(
                 text: $template,
@@ -167,13 +189,6 @@ struct ReminderSettingsView: View {
                     .accessibilityIdentifier("reminders.signature")
             }
 
-            Button(localization.localizedString(for: "clientMessage.reset")) {
-                // Курсор після заміни тексту — у кінці
-                editor.moveToEnd()
-                template = editableDefaultTemplate
-            }
-            .disabled(template == editableDefaultTemplate)
-
         } header: {
             Text(localization.localizedString(for: "clientMessage.template.title"))
         } footer: {
@@ -196,8 +211,8 @@ struct ReminderSettingsView: View {
         localization.localizedString(for: token.titleKey)
     }
 
-    private var editableDefaultTemplate: String {
-        ClientMessageTemplate.localized(ClientReminderText.defaultTemplate(localization), title: tokenTitle)
+    private func editableTemplate(_ tone: ClientMessageTone) -> String {
+        ClientMessageTemplate.localized(localization.localizedString(for: tone.templateKey), title: tokenTitle)
     }
 
     // Приклад: завтра о 14:00
