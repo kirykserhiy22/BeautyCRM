@@ -52,14 +52,17 @@ enum ClientReminderText {
         ]
     }
 
+    // tone — готовий зразок («Теплий» тощо); без нього — шаблон майстра з Налаштувань
     static func text(
         appointment: Appointment,
         profile: UserProfile?,
         localization: LocalizationManager,
-        currency: CurrencyManager
+        currency: CurrencyManager,
+        tone: ClientMessageTone? = nil
     ) -> String {
         ClientMessageTemplate.render(
-            template: template(profile: profile, localization: localization),
+            template: tone.map { localization.localizedString(for: $0.templateKey) }
+                ?? template(profile: profile, localization: localization),
             values: values(
                 clientName: appointment.clientName,
                 start: appointment.startDate,
@@ -210,6 +213,27 @@ struct ClientReminderView: View {
                         colors: colors
                     )
 
+                    // Тон саме цього повідомлення: тап підставляє готовий текст, далі його можна змінити
+                    HStack(spacing: 6) {
+                        ForEach(ClientMessageTone.allCases) { tone in
+                            let toneText = message(tone)
+                            let isCurrent = text == toneText
+                            Button {
+                                text = toneText
+                            } label: {
+                                Text(localization.localizedString(for: tone.titleKey))
+                                    .font(.footnote.weight(.semibold))
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 8)
+                                    .background(isCurrent ? colors.accent : colors.card)
+                                    .foregroundColor(isCurrent ? .white : colors.accent)
+                                    .cornerRadius(8)
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityIdentifier("clientReminder.tone.\(tone.rawValue)")
+                        }
+                    }
+
                     TextEditor(text: $text)
                         .scrollContentBackground(.hidden)
                         .foregroundColor(colors.textPrimary)
@@ -282,6 +306,16 @@ struct ClientReminderView: View {
                 Button(localization.localizedString(for: "clientMessage.confirm.no"), role: .cancel) {}
             }
         }
+    }
+
+    private func message(_ tone: ClientMessageTone) -> String {
+        ClientReminderText.text(
+            appointment: appointment,
+            profile: profile,
+            localization: localization,
+            currency: currency,
+            tone: tone
+        )
     }
 
     @ViewBuilder
