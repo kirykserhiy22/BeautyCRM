@@ -38,6 +38,7 @@
 - `BeautyCRM/DayTimelineView.swift` + `DayTimelineLayout.swift` — шкала дня (Головна, Календар) і розрахунок положення записів
 - `BeautyCRM/OnboardingView.swift` — гід по додатку (сторіс): `OnboardingStore` (показ один раз після реєстрації), слайди й намальовані ілюстрації
 - `BeautyCRM/AnalyticsEngine.swift` — усі розрахунки аналітики (екран лише показує `AnalyticsSummary`)
+- `supabase/` — сервер: `migrations/*.sql` (схема бази, RLS, сховище фото; запускаються по черзі в SQL Editor), `README.md` — кроки для Сергія
 - `Auth/` — вхід, реєстрація (`SignUp/`, 5 кроків: акаунт, ім'я, спеціалізація, салон, валюта), сесія,
   профіль (`User/`, `UserProfileManager.update`), валюта
 - `Profession/` — спеціалізації майстра (`Profession`, `ProfessionConfig`, `ProfessionManager`)
