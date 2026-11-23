@@ -62,6 +62,9 @@ final class Appointment: SyncTrackable {
     // такий запис стоїть у списку «Чекають перенесення», доки його не перенесуть або не приберуть
     var rescheduleRequestedAt: Date? = nil
 
+    // Коли майстер повідомив клієнта про перенесення (позначка в списку «Чекають перенесення»)
+    var rescheduleNotifiedAt: Date? = nil
+
     // MARK: - SYNC
 
     var workspaceID: UUID? = nil

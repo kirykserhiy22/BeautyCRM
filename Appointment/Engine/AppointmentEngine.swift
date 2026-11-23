@@ -552,12 +552,14 @@ final class AppointmentEngine {
 
         appointment.status = .cancelled
         appointment.rescheduleRequestedAt = rescheduleLater ? now : nil
+        appointment.rescheduleNotifiedAt = nil
         return .success(())
     }
 
     // Клієнта записали знову або він відмовився — прибираємо зі списку «Чекають перенесення»
     static func finishReschedule(appointment: Appointment) {
         appointment.rescheduleRequestedAt = nil
+        appointment.rescheduleNotifiedAt = nil
     }
 
     // MARK: - RESTORE

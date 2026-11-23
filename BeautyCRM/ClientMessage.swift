@@ -285,3 +285,15 @@ enum ClientMessageTone: String, CaseIterable, Identifiable {
     }
 }
 
+
+// Причина перенесення запису — готовий текст повідомлення клієнту (без імені клієнта).
+// «Сімейні обставини» — особисте без подробиць.
+enum ClientRescheduleReason: String, CaseIterable, Identifiable {
+    case illness
+    case urgent
+    case family
+
+    var id: String { rawValue }
+    var titleKey: String { "clientMessage.reason.\(rawValue)" }
+    var templateKey: String { "clientMessage.reschedule.template.\(rawValue)" }
+}
