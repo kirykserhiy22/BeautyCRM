@@ -17,6 +17,7 @@ final class ProfessionTests: XCTestCase {
         var keys: [String] = []
         for config in Profession.allCases.map(\.config) + [ProfessionConfig.generic] {
             keys += [config.titleKey, config.descriptionKey, config.examplesKey]
+            keys += [config.noteExampleKey, config.sampleServicesKey, config.sampleNoteKey]
             keys += config.suggestedServiceKeys
         }
         keys += ["profession.picker.title", "profession.picker.subtitle"]

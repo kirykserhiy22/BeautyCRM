@@ -154,8 +154,19 @@
 "appointment.price" = "Ціна";
 "appointment.total" = "Усього";
 "appointment.completionNote.title" = "Нотатка до візиту";
-"appointment.completionNote.placeholder" = "Наприклад: формула фарби, що не сподобалось, знижка наступного разу";
 "appointment.completionNote.hint" = "Нотатку видно в історії візитів клієнта";
+"profession.generic.noteExample" = "Наприклад: що робили, що не сподобалось, побажання на наступний раз";
+"profession.generic.sampleServices" = "Процедура · Догляд";
+"profession.generic.sampleNote" = "Наступного разу — на 15 хв довше";
+"profession.nail_artist.noteExample" = "Наприклад: відтінок гель-лаку, форма й довжина, що не сподобалось";
+"profession.nail_artist.sampleServices" = "Манікюр · Гель-лак";
+"profession.nail_artist.sampleNote" = "Відтінок 012, форма мигдаль";
+"profession.lash_brow_artist.noteExample" = "Наприклад: вигин, товщина й довжина вій, фарба для брів, алергії";
+"profession.lash_brow_artist.sampleServices" = "Нарощування вій · Корекція брів";
+"profession.lash_brow_artist.sampleNote" = "Вигин C, 0.07, 9–12 мм";
+"profession.hair_stylist.noteExample" = "Наприклад: формула фарби, що не сподобалось, знижка наступного разу";
+"profession.hair_stylist.sampleServices" = "Фарбування · Тонування";
+"profession.hair_stylist.sampleNote" = "Фарба 6.1, витримка 35 хв";
 "appointment.dateTime" = "Дата й час";
 "appointment.start" = "Початок";
 "appointment.duration" = "Тривалість: %d хв";
@@ -431,8 +442,6 @@
 "clients.deleteOne.message" = "Картку клієнта й фото буде видалено. Минулі записи лишаться в історії та аналітиці.";
 
 // Історія візитів клієнта
-"onboarding.sample.coloring" = "Фарбування · Тонування";
-"onboarding.sample.note" = "Фарба 6.1, витримка 35 хв";
 "visits.title" = "Історія візитів";
 "visits.filter.all" = "Усі";
 "visits.filter.completed" = "Завершені";

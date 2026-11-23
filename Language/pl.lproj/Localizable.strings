@@ -153,8 +153,19 @@
 "appointment.price" = "Cena";
 "appointment.total" = "Razem";
 "appointment.completionNote.title" = "Notatka do wizyty";
-"appointment.completionNote.placeholder" = "Np. formuła farby, co się nie spodobało, rabat następnym razem";
 "appointment.completionNote.hint" = "Notatka będzie widoczna w historii wizyt klientki";
+"profession.generic.noteExample" = "Np. co było robione, co się nie spodobało, życzenia na następny raz";
+"profession.generic.sampleServices" = "Zabieg · Pielęgnacja";
+"profession.generic.sampleNote" = "Następnym razem 15 min dłużej";
+"profession.nail_artist.noteExample" = "Np. odcień hybrydy, kształt i długość, co się nie spodobało";
+"profession.nail_artist.sampleServices" = "Manicure · Hybryda";
+"profession.nail_artist.sampleNote" = "Odcień 012, kształt migdałowy";
+"profession.lash_brow_artist.noteExample" = "Np. skręt, grubość i długość rzęs, henna brwi, alergie";
+"profession.lash_brow_artist.sampleServices" = "Przedłużanie rzęs · Regulacja brwi";
+"profession.lash_brow_artist.sampleNote" = "Skręt C, 0,07, 9–12 mm";
+"profession.hair_stylist.noteExample" = "Np. formuła farby, co się nie spodobało, rabat następnym razem";
+"profession.hair_stylist.sampleServices" = "Koloryzacja · Tonowanie";
+"profession.hair_stylist.sampleNote" = "Farba 6.1, 35 min";
 "appointment.dateTime" = "Data i godzina";
 "appointment.start" = "Początek";
 "appointment.duration" = "Czas trwania: %d min";
@@ -430,8 +441,6 @@
 "clients.deleteOne.message" = "Karta klienta i zdjęcia zostaną usunięte. Przeszłe wizyty pozostaną w historii i analityce.";
 
 // Історія візитів клієнта
-"onboarding.sample.coloring" = "Koloryzacja · Tonowanie";
-"onboarding.sample.note" = "Farba 6.1, 35 min";
 "visits.title" = "Historia wizyt";
 "visits.filter.all" = "Wszystkie";
 "visits.filter.completed" = "Zakończone";

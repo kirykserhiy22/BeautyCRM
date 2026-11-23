@@ -28,6 +28,17 @@ struct ProfessionConfig {
     // Позначки «До/Після» на фото клієнта (для нігтів не потрібні)
     var showsPhotoStages = true
 
+    // Початок ключів текстів-прикладів цієї професії («profession.nail_artist»):
+    // підказка в нотатці до візиту, приклад візиту в гіді
+    var textKeyPrefix = "profession.generic"
+
+    // «Наприклад: …» у полі нотатки при завершенні запису
+    var noteExampleKey: String { textKeyPrefix + ".noteExample" }
+
+    // Приклад візиту в гіді по додатку: послуги й нотатка
+    var sampleServicesKey: String { textKeyPrefix + ".sampleServices" }
+    var sampleNoteKey: String { textKeyPrefix + ".sampleNote" }
+
 
     // Нейтральна конфігурація, коли професію не обрано (іконки як раніше)
     static let generic = ProfessionConfig(

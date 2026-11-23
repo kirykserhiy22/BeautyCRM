@@ -41,7 +41,8 @@ enum Profession: String, CaseIterable, Identifiable, Codable {
                     "service.suggestion.highlights",
                     "service.suggestion.styling",
                     "service.suggestion.keratin"
-                ]
+                ],
+                textKeyPrefix: "profession.hair_stylist"
             )
 
 
@@ -60,7 +61,8 @@ enum Profession: String, CaseIterable, Identifiable, Codable {
                     "service.suggestion.nailExtensions",
                     "service.suggestion.nailDesign"
                 ],
-                showsPhotoStages: false
+                showsPhotoStages: false,
+                textKeyPrefix: "profession.nail_artist"
             )
 
 
@@ -78,7 +80,8 @@ enum Profession: String, CaseIterable, Identifiable, Codable {
                     "service.suggestion.browShaping",
                     "service.suggestion.browTint",
                     "service.suggestion.browLamination"
-                ]
+                ],
+                textKeyPrefix: "profession.lash_brow_artist"
             )
         }
     }

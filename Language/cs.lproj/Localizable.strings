@@ -154,8 +154,19 @@
 "appointment.price" = "Cena";
 "appointment.total" = "Celkem";
 "appointment.completionNote.title" = "Poznámka k návštěvě";
-"appointment.completionNote.placeholder" = "Např. receptura barvy, co se nelíbilo, sleva příště";
 "appointment.completionNote.hint" = "Poznámku uvidíte v historii návštěv klientky";
+"profession.generic.noteExample" = "Např. co se dělalo, co se nelíbilo, přání na příště";
+"profession.generic.sampleServices" = "Ošetření · Péče";
+"profession.generic.sampleNote" = "Příště o 15 min déle";
+"profession.nail_artist.noteExample" = "Např. odstín gel laku, tvar a délka, co se nelíbilo";
+"profession.nail_artist.sampleServices" = "Manikúra · Gel lak";
+"profession.nail_artist.sampleNote" = "Odstín 012, tvar mandle";
+"profession.lash_brow_artist.noteExample" = "Např. ohyb, tloušťka a délka řas, barva obočí, alergie";
+"profession.lash_brow_artist.sampleServices" = "Prodlužování řas · Úprava obočí";
+"profession.lash_brow_artist.sampleNote" = "Ohyb C, 0,07, 9–12 mm";
+"profession.hair_stylist.noteExample" = "Např. receptura barvy, co se nelíbilo, sleva příště";
+"profession.hair_stylist.sampleServices" = "Barvení · Tónování";
+"profession.hair_stylist.sampleNote" = "Barva 6.1, 35 min";
 "appointment.dateTime" = "Datum a čas";
 "appointment.start" = "Začátek";
 "appointment.duration" = "Délka: %d min";
@@ -431,8 +442,6 @@
 "clients.deleteOne.message" = "Karta klienta a fotky budou smazány. Minulé rezervace zůstanou v historii a analytice.";
 
 // Історія візитів клієнта
-"onboarding.sample.coloring" = "Barvení · Tónování";
-"onboarding.sample.note" = "Barva 6.1, 35 min";
 "visits.title" = "Historie návštěv";
 "visits.filter.all" = "Vše";
 "visits.filter.completed" = "Dokončené";
