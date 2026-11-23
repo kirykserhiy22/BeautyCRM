@@ -240,6 +240,16 @@
 "reschedule.dismiss" = "Remove";
 "reschedule.empty.title" = "Everyone is rebooked";
 "reschedule.empty.message" = "Appointments you cancel with “Reschedule later” will appear here.";
+"home.action.postpone" = "Postpone";
+"postpone.title" = "Postpone appointments";
+"postpone.hint" = "Ill or something urgent? Appointments on these days go to “Waiting to reschedule” — when you’re back, book these clients first.";
+"postpone.from" = "From";
+"postpone.to" = "To";
+"postpone.makeDaysOff" = "Make these days off";
+"postpone.section" = "Appointments on these days";
+"postpone.empty" = "No appointments on these days.";
+"postpone.button" = "Postpone appointments: %d";
+"postpone.daysOffOnly" = "Make days off";
 "appointment.restore" = "Restore";
 "appointment.restoreConflict.title" = "Time is taken";
 "appointment.restoreConflict.message" = "Another appointment already takes this time. Create a new appointment at a free time.";

@@ -240,6 +240,16 @@
 "reschedule.dismiss" = "Entfernen";
 "reschedule.empty.title" = "Alle sind neu eingetragen";
 "reschedule.empty.message" = "Hier erscheinen Termine, die du mit „Später verschieben“ absagst.";
+"home.action.postpone" = "Verschieben";
+"postpone.title" = "Termine verschieben";
+"postpone.hint" = "Krank oder etwas Dringendes? Termine an diesen Tagen landen in „Warten auf neuen Termin“ – wenn du zurück bist, trägst du diese Kundinnen zuerst ein.";
+"postpone.from" = "Von";
+"postpone.to" = "Bis";
+"postpone.makeDaysOff" = "Diese Tage als frei markieren";
+"postpone.section" = "Termine an diesen Tagen";
+"postpone.empty" = "An diesen Tagen gibt es keine Termine.";
+"postpone.button" = "Termine verschieben: %d";
+"postpone.daysOffOnly" = "Tage als frei markieren";
 "appointment.restore" = "Wiederherstellen";
 "appointment.restoreConflict.title" = "Zeit bereits belegt";
 "appointment.restoreConflict.message" = "Zu dieser Zeit gibt es bereits einen anderen Termin. Bitte einen neuen Termin zu einer freien Zeit anlegen.";
