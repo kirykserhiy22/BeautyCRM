@@ -243,7 +243,13 @@
 "reschedule.notify" = "Benachrichtigen";
 "reschedule.notified" = "Benachrichtigt %@";
 "clientMessage.reschedule.text" = "Deine Nachricht an die Kundin";
-"clientMessage.reschedule.example" = "Z. B. Hallo! Ich bin krank und muss deinen Termin am %1$@ um %2$@ verschieben. Ich melde mich wegen eines neuen Termins. Entschuldige die Umstände!";
+"clientMessage.reschedule.example" = "Wähle oben einen Grund oder schreib mit eigenen Worten.";
+"clientMessage.reason.illness" = "Krankheit";
+"clientMessage.reschedule.template.illness" = "Hallo! Ich bin leider krank und muss Ihren Termin am {date} um {time} verschieben: {services}.\nIch melde mich wegen eines neuen Termins. Entschuldigen Sie die Umstände!";
+"clientMessage.reason.urgent" = "Dringendes";
+"clientMessage.reschedule.template.urgent" = "Hallo! Wegen dringender Angelegenheiten muss ich Ihren Termin am {date} um {time} verschieben: {services}.\nIch melde mich wegen eines neuen Termins. Entschuldigen Sie die Umstände!";
+"clientMessage.reason.family" = "Familiäres";
+"clientMessage.reschedule.template.family" = "Hallo! Aus familiären Gründen muss ich Ihren Termin am {date} um {time} verschieben: {services}.\nIch melde mich wegen eines neuen Termins. Entschuldigen Sie die Umstände!";
 "clientMessage.reschedule.confirm" = "Nachricht gesendet?";
 "clientMessage.reschedule.sent" = "Nachricht gesendet %@";
 "home.action.postpone" = "Verschieben";

@@ -243,7 +243,13 @@
 "reschedule.notify" = "Notify";
 "reschedule.notified" = "Notified %@";
 "clientMessage.reschedule.text" = "Your message to the client";
-"clientMessage.reschedule.example" = "E.g. Hi! I’m ill and have to move your appointment on %1$@ at %2$@. I’ll message you about a new date. Sorry for the inconvenience!";
+"clientMessage.reschedule.example" = "Pick a reason above or write in your own words.";
+"clientMessage.reason.illness" = "Illness";
+"clientMessage.reschedule.template.illness" = "Hi! I’m unwell and have to move your appointment on {date} at {time}: {services}.\nI’ll message you about a new date. Sorry for the inconvenience!";
+"clientMessage.reason.urgent" = "Urgent matters";
+"clientMessage.reschedule.template.urgent" = "Hi! Due to urgent matters I have to move your appointment on {date} at {time}: {services}.\nI’ll message you about a new date. Sorry for the inconvenience!";
+"clientMessage.reason.family" = "Family reasons";
+"clientMessage.reschedule.template.family" = "Hi! Due to family reasons I have to move your appointment on {date} at {time}: {services}.\nI’ll message you about a new date. Sorry for the inconvenience!";
 "clientMessage.reschedule.confirm" = "Did you send the message?";
 "clientMessage.reschedule.sent" = "Message sent %@";
 "home.action.postpone" = "Postpone";

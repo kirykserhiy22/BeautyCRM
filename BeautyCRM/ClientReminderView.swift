@@ -52,17 +52,16 @@ enum ClientReminderText {
         ]
     }
 
-    // tone — готовий зразок («Теплий» тощо); без нього — шаблон майстра з Налаштувань
+    // template — готовий зразок (тон чи причина перенесення); без нього — шаблон майстра з Налаштувань
     static func text(
         appointment: Appointment,
         profile: UserProfile?,
         localization: LocalizationManager,
         currency: CurrencyManager,
-        tone: ClientMessageTone? = nil
+        template custom: String? = nil
     ) -> String {
         ClientMessageTemplate.render(
-            template: tone.map { localization.localizedString(for: $0.templateKey) }
-                ?? template(profile: profile, localization: localization),
+            template: custom ?? template(profile: profile, localization: localization),
             values: values(
                 clientName: appointment.clientName,
                 start: appointment.startDate,
@@ -220,28 +219,29 @@ struct ClientReminderView: View {
                         colors: colors
                     )
 
-                    // Тон саме цього повідомлення: тап підставляє готовий текст, далі його можна змінити.
-                    // Про перенесення майстер пише сам — готових текстів немає
-                    if purpose == .reminder {
+                    // Готові зразки: для нагадування — тон, для перенесення — причина.
+                    // Тап підставляє текст саме для цього запису, далі його можна змінити
                     HStack(spacing: 6) {
-                        ForEach(ClientMessageTone.allCases) { tone in
-                            let toneText = message(tone)
-                            let isCurrent = text == toneText
+                        ForEach(presets, id: \.id) { preset in
+                            let isCurrent = text == preset.text
                             Button {
-                                text = toneText
+                                text = preset.text
                             } label: {
-                                Text(localization.localizedString(for: tone.titleKey))
+                                Text(localization.localizedString(for: preset.titleKey))
                                     .font(.footnote.weight(.semibold))
-                                    .frame(maxWidth: .infinity)
-                                    .padding(.vertical, 8)
+                                    .multilineTextAlignment(.center)
+                                    .lineLimit(2)
+                                    .minimumScaleFactor(0.85)
+                                    .frame(maxWidth: .infinity, minHeight: 34)
+                                    .padding(.vertical, 4)
+                                    .padding(.horizontal, 4)
                                     .background(isCurrent ? colors.accent : colors.card)
                                     .foregroundColor(isCurrent ? .white : colors.accent)
                                     .cornerRadius(8)
                             }
                             .buttonStyle(.plain)
-                            .accessibilityIdentifier("clientReminder.tone.\(tone.rawValue)")
+                            .accessibilityIdentifier("clientReminder.preset.\(preset.id)")
                         }
-                    }
                     }
 
                     TextEditor(text: $text)
@@ -329,13 +329,32 @@ struct ClientReminderView: View {
         }
     }
 
-    private func message(_ tone: ClientMessageTone) -> String {
+    private struct Preset {
+        let id: String
+        let titleKey: String
+        let text: String
+    }
+
+    private var presets: [Preset] {
+        switch purpose {
+        case .reminder:
+            return ClientMessageTone.allCases.map {
+                Preset(id: $0.rawValue, titleKey: $0.titleKey, text: message(templateKey: $0.templateKey))
+            }
+        case .reschedule:
+            return ClientRescheduleReason.allCases.map {
+                Preset(id: $0.rawValue, titleKey: $0.titleKey, text: message(templateKey: $0.templateKey))
+            }
+        }
+    }
+
+    private func message(templateKey: String) -> String {
         ClientReminderText.text(
             appointment: appointment,
             profile: profile,
             localization: localization,
             currency: currency,
-            tone: tone
+            template: localization.localizedString(for: templateKey)
         )
     }
 
@@ -355,17 +374,9 @@ struct ClientReminderView: View {
         }
     }
 
-    // Приклад у порожньому полі: дата й час саме цього запису
+    // Підказка в порожньому полі
     private var rescheduleExample: String {
-        String(
-            format: localization.localizedString(for: "clientMessage.reschedule.example"),
-            AppFormatting.pattern(
-                localization.localizedString(for: "clientMessage.dateFormat"),
-                appointment.startDate,
-                locale: localization.locale
-            ),
-            AppFormatting.clock(appointment.startDate)
-        )
+        localization.localizedString(for: "clientMessage.reschedule.example")
     }
 
     private func sentText(_ date: Date) -> String {

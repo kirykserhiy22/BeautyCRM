@@ -244,7 +244,13 @@
 "reschedule.notify" = "Upozornit";
 "reschedule.notified" = "Upozorněno %@";
 "clientMessage.reschedule.text" = "Vaše zpráva klientce";
-"clientMessage.reschedule.example" = "Např. Dobrý den! Kvůli nemoci musím přesunout vaši rezervaci %1$@ v %2$@. Ozvu se kvůli novému termínu. Omlouvám se za komplikace!";
+"clientMessage.reschedule.example" = "Vyberte důvod nahoře nebo napište vlastními slovy.";
+"clientMessage.reason.illness" = "Nemoc";
+"clientMessage.reschedule.template.illness" = "Dobrý den! Kvůli nemoci musím přesunout vaši rezervaci {date} v {time}: {services}.\nOzvu se kvůli novému termínu. Omlouvám se za komplikace!";
+"clientMessage.reason.urgent" = "Naléhavé věci";
+"clientMessage.reschedule.template.urgent" = "Dobrý den! Kvůli naléhavým záležitostem musím přesunout vaši rezervaci {date} v {time}: {services}.\nOzvu se kvůli novému termínu. Omlouvám se za komplikace!";
+"clientMessage.reason.family" = "Rodinné důvody";
+"clientMessage.reschedule.template.family" = "Dobrý den! Z rodinných důvodů musím přesunout vaši rezervaci {date} v {time}: {services}.\nOzvu se kvůli novému termínu. Omlouvám se za komplikace!";
 "clientMessage.reschedule.confirm" = "Zprávu jste odeslali?";
 "clientMessage.reschedule.sent" = "Zpráva odeslána %@";
 "home.action.postpone" = "Odložit";

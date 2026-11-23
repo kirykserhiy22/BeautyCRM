@@ -118,6 +118,14 @@ final class ClientMessageTests: XCTestCase {
                 XCTAssertTrue(text.contains(ClientMessageToken.date.placeholder), "\(language) \(tone)")
                 XCTAssertTrue(text.contains(ClientMessageToken.time.placeholder), "\(language) \(tone)")
             }
+            // Причини перенесення — так само: без імені, з датою й часом
+            for reason in ClientRescheduleReason.allCases {
+                XCTAssertFalse((strings[reason.titleKey] ?? "").isEmpty, "\(language): \(reason.titleKey)")
+                let text = try XCTUnwrap(strings[reason.templateKey], "\(language): \(reason.templateKey)")
+                XCTAssertFalse(text.contains(ClientMessageToken.name.placeholder), "\(language) \(reason)")
+                XCTAssertTrue(text.contains(ClientMessageToken.date.placeholder), "\(language) \(reason)")
+                XCTAssertTrue(text.contains(ClientMessageToken.time.placeholder), "\(language) \(reason)")
+            }
         }
     }
 }

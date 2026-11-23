@@ -243,7 +243,13 @@
 "reschedule.notify" = "Powiadom";
 "reschedule.notified" = "Powiadomiono %@";
 "clientMessage.reschedule.text" = "Twoja wiadomość do klientki";
-"clientMessage.reschedule.example" = "Np. Dzień dobry! Z powodu choroby muszę przełożyć Pani wizytę %1$@ o %2$@. Napiszę w sprawie nowego terminu. Przepraszam za kłopot!";
+"clientMessage.reschedule.example" = "Wybierz powód powyżej albo napisz własnymi słowami.";
+"clientMessage.reason.illness" = "Choroba";
+"clientMessage.reschedule.template.illness" = "Dzień dobry! Z powodu choroby muszę przełożyć wizytę {date} o {time}: {services}.\nNapiszę w sprawie nowego terminu. Przepraszam za kłopot!";
+"clientMessage.reason.urgent" = "Pilne sprawy";
+"clientMessage.reschedule.template.urgent" = "Dzień dobry! Z powodu pilnych spraw muszę przełożyć wizytę {date} o {time}: {services}.\nNapiszę w sprawie nowego terminu. Przepraszam za kłopot!";
+"clientMessage.reason.family" = "Sprawy rodzinne";
+"clientMessage.reschedule.template.family" = "Dzień dobry! Z powodów rodzinnych muszę przełożyć wizytę {date} o {time}: {services}.\nNapiszę w sprawie nowego terminu. Przepraszam za kłopot!";
 "clientMessage.reschedule.confirm" = "Wiadomość wysłana?";
 "clientMessage.reschedule.sent" = "Wiadomość wysłana %@";
 "home.action.postpone" = "Przełóż";
