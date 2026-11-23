@@ -103,6 +103,7 @@ struct RescheduleListView: View {
     private var clients: [Client]
 
     @State private var booking: Appointment?
+    @State private var notifying: Appointment?
 
     private var colors: ThemeColors {
         theme.colors(for: theme.currentTheme)
@@ -158,6 +159,10 @@ struct RescheduleListView: View {
         .sheet(item: $booking) { appointment in
             AppointmentFormView(preselectedClientID: appointment.clientID, rescheduling: appointment)
         }
+        // Повідомити клієнта: те саме вікно, що й нагадування, але текст майстер пише сам
+        .sheet(item: $notifying) { appointment in
+            ClientReminderView(appointment: appointment, purpose: .reschedule)
+        }
     }
 
     private func row(_ appointment: Appointment) -> some View {
@@ -184,22 +189,52 @@ struct RescheduleListView: View {
                 )
                 .font(.caption)
                 .foregroundColor(colors.warning)
+
+                if let notified = appointment.rescheduleNotifiedAt {
+                    Label(
+                        String(
+                            format: localization.localizedString(for: "reschedule.notified"),
+                            AppFormatting.pattern("d MMM, HH:mm", notified, locale: localization.locale)
+                        ),
+                        systemImage: "checkmark.circle"
+                    )
+                    .font(.caption)
+                    .foregroundColor(colors.success)
+                }
             }
 
             Spacer()
 
-            Button {
-                booking = appointment
-            } label: {
-                Text(localization.localizedString(for: "reschedule.book"))
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 14)
-                    .padding(.vertical, 9)
-                    .background(Capsule().fill(colors.buttonPrimary))
+            VStack(spacing: 8) {
+
+                Button {
+                    booking = appointment
+                } label: {
+                    Text(localization.localizedString(for: "reschedule.book"))
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundColor(.white)
+                        .frame(minWidth: 96)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 9)
+                        .background(Capsule().fill(colors.buttonPrimary))
+                }
+                .buttonStyle(.plain)
+                .accessibilityIdentifier("reschedule.book")
+
+                Button {
+                    notifying = appointment
+                } label: {
+                    Text(localization.localizedString(for: "reschedule.notify"))
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundColor(colors.accent)
+                        .frame(minWidth: 96)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 9)
+                        .background(Capsule().stroke(colors.accent, lineWidth: 1))
+                }
+                .buttonStyle(.plain)
+                .accessibilityIdentifier("reschedule.notify")
             }
-            .buttonStyle(.plain)
-            .accessibilityIdentifier("reschedule.book")
         }
         .padding(.vertical, 6)
     }

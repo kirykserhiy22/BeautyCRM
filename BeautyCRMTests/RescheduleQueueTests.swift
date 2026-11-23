@@ -68,4 +68,19 @@ final class RescheduleQueueTests: XCTestCase {
         XCTAssertEqual(restored.status, .active)
         XCTAssertTrue(RescheduleQueue.waiting([restored, archived, rebooked], activeClientIDs: [clientA]).isEmpty)
     }
+
+    // «Повідомлено» не переходить на нове скасування і зникає після перенесення
+    func testNotifiedMarkResets() {
+        let item = appointment(clientA, hoursFromNow: 24)
+        AppointmentEngine.cancel(appointment: item, rescheduleLater: true, now: now)
+        item.rescheduleNotifiedAt = now
+
+        AppointmentEngine.finishReschedule(appointment: item)
+        XCTAssertNil(item.rescheduleNotifiedAt)
+
+        AppointmentEngine.restore(appointment: item, existingAppointments: [])
+        item.rescheduleNotifiedAt = now
+        AppointmentEngine.cancel(appointment: item, rescheduleLater: true, now: now)
+        XCTAssertNil(item.rescheduleNotifiedAt)
+    }
 }

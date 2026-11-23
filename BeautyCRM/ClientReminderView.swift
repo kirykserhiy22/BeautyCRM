@@ -79,7 +79,14 @@ enum ClientReminderText {
 
 struct ClientReminderView: View {
 
+    // Навіщо пишемо клієнту: нагадати про запис або повідомити, що запис переноситься
+    enum Purpose {
+        case reminder
+        case reschedule
+    }
+
     let appointment: Appointment
+    var purpose: Purpose = .reminder
 
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
@@ -209,11 +216,13 @@ struct ClientReminderView: View {
                     }
 
                     FormSectionTitle(
-                        text: localization.localizedString(for: "clientMessage.text"),
+                        text: localization.localizedString(for: purpose == .reminder ? "clientMessage.text" : "clientMessage.reschedule.text"),
                         colors: colors
                     )
 
-                    // Тон саме цього повідомлення: тап підставляє готовий текст, далі його можна змінити
+                    // Тон саме цього повідомлення: тап підставляє готовий текст, далі його можна змінити.
+                    // Про перенесення майстер пише сам — готових текстів немає
+                    if purpose == .reminder {
                     HStack(spacing: 6) {
                         ForEach(ClientMessageTone.allCases) { tone in
                             let toneText = message(tone)
@@ -233,12 +242,23 @@ struct ClientReminderView: View {
                             .accessibilityIdentifier("clientReminder.tone.\(tone.rawValue)")
                         }
                     }
+                    }
 
                     TextEditor(text: $text)
                         .scrollContentBackground(.hidden)
                         .foregroundColor(colors.textPrimary)
                         .frame(minHeight: 170)
                         .padding(10)
+                        .overlay(alignment: .topLeading) {
+                            // Підказка, поки майстер нічого не написав
+                            if purpose == .reschedule && text.isEmpty {
+                                Text(rescheduleExample)
+                                    .foregroundColor(colors.textMuted)
+                                    .padding(.horizontal, 15)
+                                    .padding(.vertical, 18)
+                                    .allowsHitTesting(false)
+                            }
+                        }
                         .background(colors.card)
                         .cornerRadius(14)
                         .accessibilityIdentifier("clientReminder.text")
@@ -249,7 +269,7 @@ struct ClientReminderView: View {
                         .foregroundColor(colors.textSecondary)
                         .padding(.horizontal, 4)
 
-                    if let sent = appointment.clientReminderSentAt {
+                    if let sent = purpose == .reminder ? appointment.clientReminderSentAt : appointment.rescheduleNotifiedAt {
                         Label(sentText(sent), systemImage: "checkmark.circle")
                             .font(.footnote)
                             .foregroundColor(colors.success)
@@ -274,6 +294,7 @@ struct ClientReminderView: View {
             .onAppear {
                 guard !didLoad else { return }
                 didLoad = true
+                guard purpose == .reminder else { return }
                 text = ClientReminderText.text(
                     appointment: appointment,
                     profile: profile,
@@ -296,7 +317,7 @@ struct ClientReminderView: View {
                 }
             }
             .alert(
-                localization.localizedString(for: "clientMessage.confirm.title"),
+                localization.localizedString(for: purpose == .reminder ? "clientMessage.confirm.title" : "clientMessage.reschedule.confirm"),
                 isPresented: $askSent
             ) {
                 Button(localization.localizedString(for: "clientMessage.confirm.yes")) {
@@ -334,9 +355,22 @@ struct ClientReminderView: View {
         }
     }
 
+    // Приклад у порожньому полі: дата й час саме цього запису
+    private var rescheduleExample: String {
+        String(
+            format: localization.localizedString(for: "clientMessage.reschedule.example"),
+            AppFormatting.pattern(
+                localization.localizedString(for: "clientMessage.dateFormat"),
+                appointment.startDate,
+                locale: localization.locale
+            ),
+            AppFormatting.clock(appointment.startDate)
+        )
+    }
+
     private func sentText(_ date: Date) -> String {
         String(
-            format: localization.localizedString(for: "clientMessage.sent"),
+            format: localization.localizedString(for: purpose == .reminder ? "clientMessage.sent" : "clientMessage.reschedule.sent"),
             AppFormatting.pattern("d MMM, HH:mm", date, locale: localization.locale)
         )
     }
@@ -369,7 +403,10 @@ struct ClientReminderView: View {
     }
 
     private func markSent() {
-        appointment.clientReminderSentAt = Date()
+        switch purpose {
+        case .reminder: appointment.clientReminderSentAt = Date()
+        case .reschedule: appointment.rescheduleNotifiedAt = Date()
+        }
         _ = context.saveReportingErrors()
     }
 }
