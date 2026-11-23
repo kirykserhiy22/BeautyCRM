@@ -46,6 +46,10 @@ struct HomeView: View {
 
 
 
+    private var rescheduleWaiting: [Appointment] {
+        RescheduleQueue.waiting(userAppointments, activeClientIDs: Set(clients.map(\.id)))
+    }
+
     var body: some View {
 
         NavigationStack {
@@ -94,6 +98,11 @@ struct HomeView: View {
                                     totalAppointments: todayAppointments.count,
                                     completedAppointments: completedToday
                                 )
+                            }
+
+                            // Скасовані «Перенести пізніше» — записати першими
+                            if !rescheduleWaiting.isEmpty {
+                                RescheduleBanner(count: rescheduleWaiting.count)
                             }
 
                             QuickActionsSection()

@@ -227,9 +227,19 @@
 
 /* Cancel confirmation and restore (#27) */
 "appointment.cancelConfirm.title" = "Termin stornieren?";
-"appointment.cancelConfirm.message" = "Die Zeit wird für andere Termine frei. Der Termin kann später wiederhergestellt werden, wenn die Zeit noch frei ist.";
-"appointment.cancelConfirm.confirm" = "Termin stornieren";
+"appointment.cancelConfirm.message" = "„Später verschieben“ setzt die Kundin auf die Liste „Warten auf neuen Termin“ auf der Startseite, damit du sie zuerst einträgst. Die Zeit wird in jedem Fall frei.";
+"appointment.cancelConfirm.confirm" = "Endgültig absagen";
 "appointment.cancelConfirm.keep" = "Behalten";
+"appointment.cancelConfirm.reschedule" = "Später verschieben";
+"appointment.status.awaitingReschedule" = "Zu verschieben";
+"reschedule.title" = "Warten auf neuen Termin";
+"reschedule.banner.subtitle" = "Diese Kundinnen zuerst eintragen";
+"reschedule.hint" = "Termine, die du mit „Später verschieben“ abgesagt hast. Tippe auf „Eintragen“ – nach dem neuen Termin verschwindet die Kundin aus der Liste. Nach links wischen zum Entfernen.";
+"reschedule.wasAt" = "War: %@";
+"reschedule.book" = "Eintragen";
+"reschedule.dismiss" = "Entfernen";
+"reschedule.empty.title" = "Alle sind neu eingetragen";
+"reschedule.empty.message" = "Hier erscheinen Termine, die du mit „Später verschieben“ absagst.";
 "appointment.restore" = "Wiederherstellen";
 "appointment.restoreConflict.title" = "Zeit bereits belegt";
 "appointment.restoreConflict.message" = "Zu dieser Zeit gibt es bereits einen anderen Termin. Bitte einen neuen Termin zu einer freien Zeit anlegen.";

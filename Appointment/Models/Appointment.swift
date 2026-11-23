@@ -58,6 +58,10 @@ final class Appointment: SyncTrackable {
     // Коли майстер востаннє надіслав клієнту нагадування про цей запис
     var clientReminderSentAt: Date? = nil
 
+    // «Перенести пізніше»: майстер скасував запис, але клієнта треба записати знову —
+    // такий запис стоїть у списку «Чекають перенесення», доки його не перенесуть або не приберуть
+    var rescheduleRequestedAt: Date? = nil
+
     // MARK: - SYNC
 
     var workspaceID: UUID? = nil

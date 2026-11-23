@@ -228,9 +228,19 @@
 
 /* Cancel confirmation and restore (#27) */
 "appointment.cancelConfirm.title" = "Zrušit rezervaci?";
-"appointment.cancelConfirm.message" = "Čas se uvolní pro další rezervace. Rezervaci lze později obnovit, pokud bude čas stále volný.";
-"appointment.cancelConfirm.confirm" = "Zrušit rezervaci";
+"appointment.cancelConfirm.message" = "„Přesunout později“ přidá klientku do seznamu „Čekají na nový termín“ na hlavní stránce, abyste ji objednali jako první. Čas v kalendáři se uvolní v každém případě.";
+"appointment.cancelConfirm.confirm" = "Zrušit natrvalo";
 "appointment.cancelConfirm.keep" = "Ponechat";
+"appointment.cancelConfirm.reschedule" = "Přesunout později";
+"appointment.status.awaitingReschedule" = "K přesunutí";
+"reschedule.title" = "Čekají na nový termín";
+"reschedule.banner.subtitle" = "Objednejte tyto klientky jako první";
+"reschedule.hint" = "Rezervace zrušené s volbou „Přesunout později“. Klepněte na „Objednat“ — po nové rezervaci klientka ze seznamu zmizí. Přejetím doleva odstraníte.";
+"reschedule.wasAt" = "Bylo: %@";
+"reschedule.book" = "Objednat";
+"reschedule.dismiss" = "Odstranit";
+"reschedule.empty.title" = "Všichni přesunuti";
+"reschedule.empty.message" = "Zde se objeví rezervace zrušené s volbou „Přesunout později“.";
 "appointment.restore" = "Obnovit";
 "appointment.restoreConflict.title" = "Čas je obsazený";
 "appointment.restoreConflict.message" = "V tomto čase už je jiná rezervace. Vytvořte novou rezervaci na volný čas.";
