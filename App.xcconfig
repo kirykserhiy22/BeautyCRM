@@ -1,0 +1,9 @@
+// Базові налаштування збірки Beauty Base (у git).
+//
+// Підтягує секрети з Config/Secrets.xcconfig, який НЕ потрапляє в git.
+// «#include?» — необов'язковий: якщо секретів немає (інший Mac, CI),
+// проєкт однаково збирається, просто без сервера.
+//
+// У Xcode: проєкт BeautyCRM → Info → Configurations → Debug і Release → ціль BeautyCRM → «App».
+
+#include? "Config/Secrets.xcconfig"

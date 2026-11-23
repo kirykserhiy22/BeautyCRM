@@ -16,7 +16,7 @@
 ## Стек
 - SwiftUI, SwiftData (локальне сховище), Combine (`ObservableObject` + `@EnvironmentObject`)
 - iOS 17.6+, Swift 5
-- Без сторонніх бібліотек (поки що)
+- Одна стороння бібліотека: `supabase-swift` (Swift Package, з 24.11.2026) — сервер, вхід, сховище. Інші — лише після обговорення
 - Xcode-проєкт: файли поза папкою `BeautyCRM/` додані в target вручну (не synchronized group).
   Новий файл у Auth/, Client/ тощо треба додати в target в Xcode, інакше він не скомпілюється.
   Папки `BeautyCRM/` і `BeautyCRMTests/` — synchronized groups: нові файли там потрапляють у target самі.
@@ -38,6 +38,8 @@
 - `BeautyCRM/DayTimelineView.swift` + `DayTimelineLayout.swift` — шкала дня (Головна, Календар) і розрахунок положення записів
 - `BeautyCRM/OnboardingView.swift` — гід по додатку (сторіс): `OnboardingStore` (показ один раз після реєстрації), слайди й намальовані ілюстрації
 - `BeautyCRM/AnalyticsEngine.swift` — усі розрахунки аналітики (екран лише показує `AnalyticsSummary`)
+- `BeautyCRM/SupabaseConfig.swift` — адреса й публічний ключ з `Info.plist` (туди їх підставляє `App.xcconfig` ← `Config/Secrets.xcconfig`, поза git);
+  секретний ключ відкидається. `BeautyCRM/SupabaseService.swift` — єдиний `SupabaseClient` (nil, якщо ключів немає) і перевірка зв'язку
 - `supabase/` — сервер: `migrations/*.sql` (схема бази, RLS, сховище фото; запускаються по черзі в SQL Editor), `README.md` — кроки для Сергія
 - `Auth/` — вхід, реєстрація (`SignUp/`, 5 кроків: акаунт, ім'я, спеціалізація, салон, валюта), сесія,
   профіль (`User/`, `UserProfileManager.update`), валюта

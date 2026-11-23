@@ -24,6 +24,9 @@ struct BeautyCRMApp: App {
         BrandFont.register()
         // Тап по нагадуванню відкриває запис
         UNUserNotificationCenter.current().delegate = NotificationRouter.shared
+        #if DEBUG
+        SupabaseService.logConnection()
+        #endif
     }
 
     var body: some Scene {
