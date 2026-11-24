@@ -54,3 +54,9 @@ SUPABASE_ANON_KEY = sb_publishable_…
 
 `Secrets.xcconfig` у `.gitignore` — у git і в PR не потрапить. Публічний ключ безпечний для додатка: доступ
 обмежують правила RLS. **Secret / service_role** ключ не копіювати нікуди, і в чат теж.
+
+## Крок S4. Видалення акаунта
+
+SQL Editor → New query → вставити `migrations/20261124150000_delete_my_account.sql` → Run («Success. No rows returned»).
+Перевірка: **Database → Functions** — є `delete_my_account`.
+

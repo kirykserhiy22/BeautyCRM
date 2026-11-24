@@ -28,6 +28,8 @@ struct SettingsView: View {
 
     @State private var showGuide = false
 
+    @State private var showDeleteAccount = false
+
     // Підпис рядка «Нагадування» оновлюється одразу після змін
     @AppStorage(ReminderSettings.beforeEnabledKey) private var remindersBefore = true
     @AppStorage(ReminderSettings.leadKey) private var remindersLead = ReminderLead.hour1.rawValue
@@ -114,6 +116,14 @@ struct SettingsView: View {
                             row(title: "settings.logout", icon: Image(systemName: "rectangle.portrait.and.arrow.right"), value: nil, isDestructive: true)
                         }
                         .accessibilityIdentifier("settings.logout")
+                        divider
+                        // Вимога App Store: акаунт можна видалити прямо в додатку
+                        Button {
+                            showDeleteAccount = true
+                        } label: {
+                            row(title: "settings.deleteAccount", icon: Image(systemName: "trash"), value: nil, isDestructive: true)
+                        }
+                        .accessibilityIdentifier("settings.deleteAccount")
                     }
 
                     Text("\(Constants.appName) \(appVersion)")
@@ -126,6 +136,9 @@ struct SettingsView: View {
             }
             .background(colors.background)
             .navigationTitle(localization.localizedString(for: "settings.title"))
+            .sheet(isPresented: $showDeleteAccount) {
+                DeleteAccountView()
+            }
             .fullScreenCover(isPresented: $showGuide) {
                 OnboardingView {
                     showGuide = false

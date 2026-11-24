@@ -208,4 +208,16 @@ final class LocalAuthService {
             userID: user.userID
         )
     }
+
+
+
+    // MARK: DELETE ACCOUNT (тести й контент-симулятор)
+
+    func email(for userID: String) -> String? {
+        loadUsers().first { $0.userID == userID }?.email
+    }
+
+    func deleteAccount(userID: String) {
+        saveUsers(loadUsers().filter { $0.userID != userID })
+    }
 }

@@ -163,6 +163,11 @@
 "settings.workingHours.end" = "Koniec";
 "settings.workingHours.description" = "Pasek zajętości w kalendarzu pokazuje ten przedział. Wizyty poza nim też będą widoczne: skala miesiąca rozszerzy się automatycznie.";
 "settings.logout" = "Wyloguj się";
+"settings.deleteAccount" = "Usuń konto";
+"deleteAccount.title" = "Usunąć konto?";
+"deleteAccount.warning" = "Twoje konto i wszystkie dane zostaną trwale usunięte: klientki, zdjęcia, wizyty, usługi, dni wolne i ustawienia — na tym telefonie i na serwerze. Nie da się ich przywrócić.";
+"deleteAccount.typeEmail" = "Aby potwierdzić, wpisz e-mail konta: %@";
+"deleteAccount.confirm" = "Usuń na zawsze";
 "settings.language.title" = "Język";
 "settings.language.confirm.title" = "Zmienić język?";
 "settings.language.confirm.message" = "Język aplikacji zostanie zmieniony.";
