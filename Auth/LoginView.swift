@@ -28,6 +28,9 @@ struct LoginView: View {
 
     @State private var isLoading = false
 
+    // Пошту не підтверджено — екран коду з листа
+    @State private var codeEmail: String?
+
     private var colors: ThemeColors {
         theme.colors(for: theme.currentTheme)
     }
@@ -71,6 +74,24 @@ struct LoginView: View {
 
             }
             .padding()
+            .disabled(isLoading)
+
+            if isLoading {
+                ProgressView()
+            }
+        }
+        .fullScreenCover(isPresented: Binding(
+            get: { codeEmail != nil },
+            set: { if !$0 { codeEmail = nil } }
+        )) {
+            if let email = codeEmail {
+                EmailCodeView(
+                    email: email,
+                    verify: { code in await verifyCode(code, email: email) },
+                    resend: { await ServerAuth.resendSignUpCode(email: email) },
+                    onChangeEmail: { codeEmail = nil }
+                )
+            }
         }
     }
 }
@@ -208,6 +229,11 @@ private extension LoginView {
         }
 
 
+        guard !AuthMode.usesServer else {
+            loginOnServer()
+            return
+        }
+
         let result = authService.login(
             email: email,
             password: password
@@ -238,5 +264,61 @@ private extension LoginView {
 
 
         router.currentScreen = .main
+    }
+
+    func loginOnServer() {
+
+        let email = ServerAuth.normalized(self.email)
+        isLoading = true
+
+        Task {
+            let result = await ServerAuth.signIn(email: email, password: password)
+
+            switch result {
+
+            case .success(let userID):
+                if let error = await enter(userID: userID, email: email) {
+                    errorMessage = error.localizationKey
+                }
+
+            case .failure(.emailNotConfirmed):
+                // Новий код і екран для нього
+                if let error = await ServerAuth.resendSignUpCode(email: email), error != .tooManyRequests {
+                    errorMessage = error.localizationKey
+                } else {
+                    codeEmail = email
+                }
+
+            case .failure(.wrongPassword):
+                errorMessage = "login.error.failed"
+
+            case .failure(let error):
+                errorMessage = error.localizationKey
+            }
+
+            isLoading = false
+        }
+    }
+
+    func verifyCode(_ code: String, email: String) async -> AuthError? {
+        switch await ServerAuth.verifySignUp(email: email, code: code) {
+        case .success(let userID):
+            return await enter(userID: userID, email: email)
+        case .failure(let error):
+            return error
+        }
+    }
+
+    func enter(userID: String, email: String) async -> AuthError? {
+        await AccountEntry.enter(
+            userID: userID,
+            email: email,
+            context: context,
+            appState: appState,
+            router: router,
+            localization: localization,
+            currency: currency,
+            profession: profession
+        )
     }
 }

@@ -23,6 +23,13 @@ enum AuthError: Error {
 
     case wrongPassword
 
+    // Сервер (Supabase)
+    case emailNotConfirmed
+    case invalidCode
+    case tooManyRequests
+    case noConnection
+    case serverError
+
 
 
     // Ключ з Localizable.strings — текст перекладається на мову додатку
@@ -65,6 +72,21 @@ enum AuthError: Error {
         case .wrongPassword:
 
             return "auth.error.wrongPassword"
+
+        case .emailNotConfirmed:
+            return "auth.error.emailNotConfirmed"
+
+        case .invalidCode:
+            return "auth.error.invalidCode"
+
+        case .tooManyRequests:
+            return "auth.error.tooManyRequests"
+
+        case .noConnection:
+            return "auth.error.noConnection"
+
+        case .serverError:
+            return "auth.error.serverError"
         }
     }
 }

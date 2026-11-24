@@ -26,6 +26,8 @@ final class AppFlowUITests: XCTestCase {
         app = XCUIApplication()
         // Мова додатку на час тесту (той самий ключ, що в LocalizationManager)
         app.launchArguments += ["-app_language", "uk"]
+        // Вхід без сервера: тест не може читати пошту з кодом
+        app.launchArguments += ["-localAuth"]
         app.launch()
     }
 

@@ -35,6 +35,11 @@ final class SessionManager: ObservableObject {
         ReminderScheduler.removeAll()
         
         UserDefaults.standard.removeObject(forKey: key)
+
+        // Сесію сервера (Keychain) теж прибираємо
+        if AuthMode.usesServer {
+            Task { await ServerAuth.signOut() }
+        }
     }
     
     private func loadSession() {

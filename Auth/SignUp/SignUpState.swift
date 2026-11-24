@@ -131,7 +131,8 @@ final class SignUpState: ObservableObject {
                 return "signup.error.password"
             }
 
-            guard !LocalAuthService().isEmailRegistered(email) else {
+            // З сервером зайнятий email з'ясовується в кінці реєстрації (не розкриваємо чужі адреси)
+            guard AuthMode.usesServer || !LocalAuthService().isEmailRegistered(email) else {
                 return AuthError.userAlreadyExists.localizationKey
             }
 

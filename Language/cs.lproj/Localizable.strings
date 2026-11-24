@@ -55,6 +55,19 @@
 "auth.error.userAlreadyExists" = "Tato e-mailová adresa se již používá";
 "auth.error.userNotFound" = "Uživatel nebyl nalezen";
 "auth.error.wrongPassword" = "Nesprávné heslo";
+"auth.code.title" = "Zadejte kód z e-mailu";
+"auth.code.sentTo" = "Poslali jsme 6 číslic na";
+"auth.code.hint" = "Kód můžete vložit z pošty — iPhone ho také nabídne nad klávesnicí";
+"auth.code.confirm" = "Potvrdit";
+"auth.code.resendIn" = "Poslat znovu za %@";
+"auth.code.resend" = "Poslat kód znovu";
+"auth.code.resent" = "Nový kód odeslán";
+"auth.code.changeEmail" = "Změnit e-mail";
+"auth.error.emailNotConfirmed" = "E-mail ještě není potvrzený. Zadejte kód z e-mailu.";
+"auth.error.invalidCode" = "Kód je chybný nebo vypršel. Zkontrolujte e-mail nebo pošlete nový kód.";
+"auth.error.tooManyRequests" = "Příliš mnoho pokusů. Počkejte minutu a zkuste to znovu.";
+"auth.error.noConnection" = "Není připojení k internetu. Zkontrolujte připojení.";
+"auth.error.serverError" = "Server neodpovídá. Zkuste to o něco později.";
 
 /* Home */
 

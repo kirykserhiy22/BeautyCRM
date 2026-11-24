@@ -35,6 +35,8 @@ final class ScreenshotTourTests: XCTestCase {
         app = XCUIApplication()
         // Пошук екранів іде за англійськими текстами — незалежно від мови iPhone
         app.launchArguments += ["-app_language", "en"]
+        // Вхід без сервера: тест не може читати пошту з кодом
+        app.launchArguments += ["-localAuth"]
         app.launch()
     }
 

@@ -55,6 +55,19 @@
 "auth.error.userAlreadyExists" = "This email is already in use";
 "auth.error.userNotFound" = "User not found";
 "auth.error.wrongPassword" = "Wrong password";
+"auth.code.title" = "Enter the code from the email";
+"auth.code.sentTo" = "We sent 6 digits to";
+"auth.code.hint" = "You can paste the code from your mail — iPhone will also suggest it above the keyboard";
+"auth.code.confirm" = "Confirm";
+"auth.code.resendIn" = "Resend in %@";
+"auth.code.resend" = "Resend the code";
+"auth.code.resent" = "New code sent";
+"auth.code.changeEmail" = "Change email";
+"auth.error.emailNotConfirmed" = "Your email isn’t confirmed yet. Enter the code from the email.";
+"auth.error.invalidCode" = "The code is wrong or expired. Check the email or send a new code.";
+"auth.error.tooManyRequests" = "Too many attempts. Wait a minute and try again.";
+"auth.error.noConnection" = "No internet connection. Check your connection.";
+"auth.error.serverError" = "The server isn’t responding. Try again a bit later.";
 
 /* Home */
 
