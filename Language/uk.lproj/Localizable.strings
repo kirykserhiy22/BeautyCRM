@@ -68,6 +68,18 @@
 "auth.error.tooManyRequests" = "Забагато спроб. Зачекайте хвилину й спробуйте ще раз.";
 "auth.error.noConnection" = "Немає інтернету. Перевірте з’єднання.";
 "auth.error.serverError" = "Сервер не відповідає. Спробуйте трохи пізніше.";
+"auth.forgot.link" = "Забули пароль?";
+"auth.forgot.title" = "Відновлення пароля";
+"auth.forgot.subtitle" = "Введіть email акаунта — надішлемо код для нового пароля.";
+"auth.forgot.send" = "Надіслати код";
+"auth.reset.title" = "Новий пароль";
+"auth.reset.codeTo" = "Код з листа на %@";
+"auth.reset.newPassword" = "Новий пароль";
+"auth.reset.repeat" = "Повторіть пароль";
+"auth.reset.hint" = "Щонайменше 8 символів";
+"auth.reset.save" = "Зберегти й увійти";
+"auth.error.samePassword" = "Новий пароль збігається зі старим. Придумайте інший.";
+"auth.error.passwordsDontMatch" = "Паролі не збігаються.";
 
 /* Home */
 "home.dateToday" = "Сьогодні";

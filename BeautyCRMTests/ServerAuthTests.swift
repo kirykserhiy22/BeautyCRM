@@ -37,14 +37,14 @@ final class ServerAuthTests: XCTestCase {
 
     // Кожна помилка має текст усіма мовами
     func testErrorTextsExist() throws {
-        let errors: [BeautyCRM.AuthError] = [.emailNotConfirmed, .invalidCode, .tooManyRequests, .noConnection, .serverError]
+        let errors: [BeautyCRM.AuthError] = [.emailNotConfirmed, .invalidCode, .tooManyRequests, .noConnection, .serverError, .samePassword, .passwordsDontMatch]
         for language in ["uk", "en", "de", "pl", "cs"] {
             let path = try XCTUnwrap(Bundle.main.path(forResource: "Localizable", ofType: "strings", inDirectory: nil, forLocalization: language))
             let strings = try XCTUnwrap(NSDictionary(contentsOfFile: path) as? [String: String])
             for error in errors {
                 XCTAssertFalse((strings[error.localizationKey] ?? "").isEmpty, "\(language): \(error.localizationKey)")
             }
-            for key in ["auth.code.title", "auth.code.resendIn", "auth.code.changeEmail"] {
+            for key in ["auth.code.title", "auth.code.resendIn", "auth.code.changeEmail", "auth.forgot.link", "auth.forgot.send", "auth.reset.codeTo", "auth.reset.save"] {
                 XCTAssertFalse((strings[key] ?? "").isEmpty, "\(language): \(key)")
             }
         }

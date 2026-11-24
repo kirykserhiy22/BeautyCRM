@@ -24,6 +24,10 @@ struct BeautyCRMApp: App {
         BrandFont.register()
         // Тап по нагадуванню відкриває запис
         UNUserNotificationCenter.current().delegate = NotificationRouter.shared
+        // З сервером паролі на телефоні не потрібні: прибираємо старі (#21)
+        if AuthMode.usesServer {
+            LegacyAccounts.stripPasswords()
+        }
         #if DEBUG
         SupabaseService.logConnection()
         #endif

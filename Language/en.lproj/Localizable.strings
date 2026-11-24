@@ -68,6 +68,18 @@
 "auth.error.tooManyRequests" = "Too many attempts. Wait a minute and try again.";
 "auth.error.noConnection" = "No internet connection. Check your connection.";
 "auth.error.serverError" = "The server isn’t responding. Try again a bit later.";
+"auth.forgot.link" = "Forgot password?";
+"auth.forgot.title" = "Reset password";
+"auth.forgot.subtitle" = "Enter your account email — we’ll send a code for a new password.";
+"auth.forgot.send" = "Send code";
+"auth.reset.title" = "New password";
+"auth.reset.codeTo" = "Code from the email to %@";
+"auth.reset.newPassword" = "New password";
+"auth.reset.repeat" = "Repeat password";
+"auth.reset.hint" = "At least 8 characters";
+"auth.reset.save" = "Save and sign in";
+"auth.error.samePassword" = "The new password matches the old one. Choose another.";
+"auth.error.passwordsDontMatch" = "Passwords don’t match.";
 
 /* Home */
 

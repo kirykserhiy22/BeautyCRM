@@ -29,6 +29,8 @@ enum AuthError: Error {
     case tooManyRequests
     case noConnection
     case serverError
+    case samePassword
+    case passwordsDontMatch
 
 
 
@@ -87,6 +89,12 @@ enum AuthError: Error {
 
         case .serverError:
             return "auth.error.serverError"
+
+        case .samePassword:
+            return "auth.error.samePassword"
+
+        case .passwordsDontMatch:
+            return "auth.error.passwordsDontMatch"
         }
     }
 }
