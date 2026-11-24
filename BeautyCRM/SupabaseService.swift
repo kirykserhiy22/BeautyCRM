@@ -16,7 +16,15 @@ import Supabase
 enum SupabaseService {
 
     static let client: SupabaseClient? = SupabaseConfig.current.map {
-        SupabaseClient(supabaseURL: $0.url, supabaseKey: $0.publishableKey)
+        SupabaseClient(
+            supabaseURL: $0.url,
+            supabaseKey: $0.publishableKey,
+            options: SupabaseClientOptions(
+                // Нова поведінка бібліотеки: збережена сесія (Keychain) віддається одразу, навіть прострочена —
+                // без інтернету додаток відкривається, а бібліотека оновить сесію сама, коли з'явиться зв'язок
+                auth: .init(emitLocalSessionAsInitialSession: true)
+            )
+        )
     }
 
     static var isConfigured: Bool {
