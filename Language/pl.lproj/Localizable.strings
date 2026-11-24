@@ -68,6 +68,18 @@
 "auth.error.tooManyRequests" = "Zbyt wiele prób. Odczekaj minutę i spróbuj ponownie.";
 "auth.error.noConnection" = "Brak internetu. Sprawdź połączenie.";
 "auth.error.serverError" = "Serwer nie odpowiada. Spróbuj trochę później.";
+"auth.forgot.link" = "Nie pamiętasz hasła?";
+"auth.forgot.title" = "Odzyskiwanie hasła";
+"auth.forgot.subtitle" = "Wpisz e-mail konta — wyślemy kod do ustawienia nowego hasła.";
+"auth.forgot.send" = "Wyślij kod";
+"auth.reset.title" = "Nowe hasło";
+"auth.reset.codeTo" = "Kod z e-maila na %@";
+"auth.reset.newPassword" = "Nowe hasło";
+"auth.reset.repeat" = "Powtórz hasło";
+"auth.reset.hint" = "Co najmniej 8 znaków";
+"auth.reset.save" = "Zapisz i zaloguj";
+"auth.error.samePassword" = "Nowe hasło jest takie samo jak stare. Wybierz inne.";
+"auth.error.passwordsDontMatch" = "Hasła nie są takie same.";
 
 /* Home */
 

@@ -88,9 +88,12 @@
 ## Відомі проблеми (станом на 10.11.2026)
 - Відкриті знахідки аудиту — у GitHub Issues: критичні #21, #22; дрібні #40, #54 — усі чекають Supabase (#2 і #57 закрито 11.11.2026). Подробиці — `docs/audit/REPORT.md`.
 - `.gitignore` є (15.11.2026): секрети в `Secrets.xcconfig` поза git, шаблон — `Config/Secrets.example.xcconfig`. Додаток лише для iPhone (iPad вимкнено 15.11.2026).
-- `LocalAuthService` зберігає email і пароль відкритим текстом в UserDefaults — замінити на Supabase Auth (#21).
-- Сесія (`SessionManager`) — userID в UserDefaults, без токена. Видалення акаунта й Sign in with Apple немає (#22).
-- Перевірка «email уже зайнятий» на 1-му кроці реєстрації зараз локальна; із Supabase її треба робити обережно (не розкривати чужі email).
+- Вхід через Supabase (S3, 24.11.2026): `BeautyCRM/ServerAuth.swift` (реєстрація з кодом з листа, вхід, вихід, «Забули пароль?»),
+  сесія — у Keychain (supabase-swift); старі паролі з UserDefaults видаляються при запуску (`LegacyAccounts`), дані старого
+  локального акаунта з тим самим email переходять до серверного. `LocalAuthService` лишився тільки для автотестів і
+  контент-симулятора: Debug + аргумент `-localAuth` або `defaults write Kiryk.BeautyCRM localAuth -bool YES`.
+- Листи: власний SMTP Resend (домен getbeautybase.com, EU), шаблони з `{{ .Token }}` у Supabase → Authentication → Emails.
+- Видалення акаунта й Sign in with Apple ще немає (#22, крок S4).
 - Тема одна — Dark Cherry (`AppTheme.darkCherry`); вигляд `ThemeManager.appearance`: як в iPhone, світлий або темний. Старі теми прибрано 11.11.2026.
 - **Unit-тести падають на iOS 18.x і 26.2** (`malloc: pointer being freed was not allocated` у
   `swift_task_deinitOnExecutorMainActorBackDeploy` → `TaskLocal::StopLookupScope`): вада рантайму Swift,

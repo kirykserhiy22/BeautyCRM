@@ -68,6 +68,18 @@
 "auth.error.tooManyRequests" = "Příliš mnoho pokusů. Počkejte minutu a zkuste to znovu.";
 "auth.error.noConnection" = "Není připojení k internetu. Zkontrolujte připojení.";
 "auth.error.serverError" = "Server neodpovídá. Zkuste to o něco později.";
+"auth.forgot.link" = "Zapomenuté heslo?";
+"auth.forgot.title" = "Obnovení hesla";
+"auth.forgot.subtitle" = "Zadejte e-mail účtu — pošleme kód pro nové heslo.";
+"auth.forgot.send" = "Poslat kód";
+"auth.reset.title" = "Nové heslo";
+"auth.reset.codeTo" = "Kód z e-mailu na %@";
+"auth.reset.newPassword" = "Nové heslo";
+"auth.reset.repeat" = "Zopakujte heslo";
+"auth.reset.hint" = "Alespoň 8 znaků";
+"auth.reset.save" = "Uložit a přihlásit";
+"auth.error.samePassword" = "Nové heslo je stejné jako staré. Zvolte jiné.";
+"auth.error.passwordsDontMatch" = "Hesla se neshodují.";
 
 /* Home */
 

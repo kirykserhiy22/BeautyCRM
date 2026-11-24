@@ -37,6 +37,9 @@ run() {
 TEST_RUNNER_AUDIT_SHOTS="${TMPDIR:-/tmp}/beautycrm-marketing-register" \
   run -only-testing:BeautyCRMUITests/ScreenshotTourTests/test01_RegisterMaster
 
+# Вхід без сервера на цьому симуляторі: демо-майстер — локальний акаунт (лише Debug-збірка)
+xcrun simctl spawn "$SIM_ID" defaults write "$BUNDLE_ID" localAuth -bool YES
+
 # 2. Українські демо-дані
 TEST_RUNNER_MARKETING_SEED=1 TEST_RUNNER_MARKETING_LANG="${LANG_CODE:-uk}" run -only-testing:BeautyCRMTests/MarketingDemoDataSeeder
 

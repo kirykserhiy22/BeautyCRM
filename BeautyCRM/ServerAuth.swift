@@ -20,10 +20,12 @@ import Supabase
 
 enum AuthMode {
 
-    // Сервер, якщо є ключі. У Debug автоматичні тести вмикають локальний вхід аргументом -localAuth.
+    // Сервер, якщо є ключі. У Debug автоматичні тести й контент-симулятор вмикають локальний вхід:
+    // аргументом запуску -localAuth або налаштуванням localAuth = YES (simctl … defaults write).
     static var usesServer: Bool {
         #if DEBUG
-        if ProcessInfo.processInfo.arguments.contains("-localAuth") {
+        if ProcessInfo.processInfo.arguments.contains("-localAuth")
+            || UserDefaults.standard.bool(forKey: "localAuth") {
             return false
         }
         #endif
@@ -92,6 +94,30 @@ enum ServerAuth {
         }
     }
 
+    // «Забули пароль?»: лист із кодом. Для невідомого email сервер теж відповідає «надіслано» —
+    // так чужі адреси не перевірити.
+    static func sendPasswordReset(email: String) async -> AuthError? {
+        guard let auth else { return .serverError }
+        do {
+            try await auth.resetPasswordForEmail(normalized(email))
+            return nil
+        } catch {
+            return map(error)
+        }
+    }
+
+    // Код з листа → сесія → новий пароль. Повертає userID.
+    static func resetPassword(email: String, code: String, newPassword: String) async -> Result<String, AuthError> {
+        guard let auth else { return .failure(.serverError) }
+        do {
+            let response = try await auth.verifyOTP(email: normalized(email), token: code, type: .recovery)
+            _ = try await auth.update(user: UserAttributes(password: newPassword))
+            return .success(response.user.id.uuidString)
+        } catch {
+            return .failure(map(error))
+        }
+    }
+
     // Без інтернету — лише локально: сесію з Keychain однаково прибираємо
     static func signOut() async {
         guard let auth else { return }
@@ -137,6 +163,8 @@ enum ServerAuth {
             return .userAlreadyExists
         case .weakPassword:
             return .weakPassword
+        case .samePassword:
+            return .samePassword
         case .validationFailed:
             return .invalidEmail
         default:
@@ -349,6 +377,12 @@ enum AccountEntry {
         currency: CurrencyManager,
         profession: ProfessionManager
     ) async -> AuthError? {
+
+        // Дані старого локального акаунта з тим самим email переходять до цього акаунта
+        let movedLegacyData = LegacyAccounts.migrate(email: email, to: userID, context: context)
+        if movedLegacyData {
+            PendingSignUp.clear()
+        }
 
         let isNewAccount = PendingSignUp.load(email: email) != nil
 

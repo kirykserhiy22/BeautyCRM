@@ -31,6 +31,8 @@ struct LoginView: View {
     // Пошту не підтверджено — екран коду з листа
     @State private var codeEmail: String?
 
+    @State private var showForgotPassword = false
+
     private var colors: ThemeColors {
         theme.colors(for: theme.currentTheme)
     }
@@ -57,6 +59,18 @@ struct LoginView: View {
 
 
                 loginButton
+
+                // Відновлення пароля — лише з сервером (локальні акаунти лишились тільки для тестів)
+                if AuthMode.usesServer {
+                    Button {
+                        showForgotPassword = true
+                    } label: {
+                        Text("auth.forgot.link")
+                            .font(.subheadline)
+                            .foregroundColor(colors.textSecondary)
+                    }
+                    .accessibilityIdentifier("login.forgot")
+                }
 
 
                 signupButton
@@ -91,6 +105,11 @@ struct LoginView: View {
                     resend: { await ServerAuth.resendSignUpCode(email: email) },
                     onChangeEmail: { codeEmail = nil }
                 )
+            }
+        }
+        .fullScreenCover(isPresented: $showForgotPassword) {
+            ForgotPasswordView(initialEmail: email) {
+                showForgotPassword = false
             }
         }
     }

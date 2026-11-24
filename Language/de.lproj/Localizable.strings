@@ -68,6 +68,18 @@
 "auth.error.tooManyRequests" = "Zu viele Versuche. Warte eine Minute und versuche es erneut.";
 "auth.error.noConnection" = "Keine Internetverbindung. Prüfe deine Verbindung.";
 "auth.error.serverError" = "Der Server antwortet nicht. Versuche es etwas später.";
+"auth.forgot.link" = "Passwort vergessen?";
+"auth.forgot.title" = "Passwort zurücksetzen";
+"auth.forgot.subtitle" = "Gib die E-Mail deines Kontos ein — wir senden einen Code für ein neues Passwort.";
+"auth.forgot.send" = "Code senden";
+"auth.reset.title" = "Neues Passwort";
+"auth.reset.codeTo" = "Code aus der E-Mail an %@";
+"auth.reset.newPassword" = "Neues Passwort";
+"auth.reset.repeat" = "Passwort wiederholen";
+"auth.reset.hint" = "Mindestens 8 Zeichen";
+"auth.reset.save" = "Speichern und anmelden";
+"auth.error.samePassword" = "Das neue Passwort ist dasselbe wie das alte. Wähle ein anderes.";
+"auth.error.passwordsDontMatch" = "Die Passwörter stimmen nicht überein.";
 
 /* Home */
 

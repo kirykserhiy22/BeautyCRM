@@ -130,44 +130,15 @@ struct EmailCodeView: View {
         }
     }
 
-    // Шість клітинок поверх невидимого поля: друк, вставка й підказка iPhone працюють як звичайно
     private var codeBoxes: some View {
-
-        ZStack {
-
-            TextField("", text: $code)
-                .keyboardType(.numberPad)
-                .textContentType(.oneTimeCode)
-                .focused($isFocused)
-                .foregroundColor(.clear)
-                .tint(.clear)
-                .accessibilityIdentifier("code.field")
-                .onChange(of: code) { _, newValue in
-                    let digits = String(newValue.filter(\.isNumber).prefix(Self.codeLength))
-                    if digits != newValue { code = digits }
-                    errorKey = nil
-                    if digits.count == Self.codeLength { submit() }
-                }
-
-            HStack(spacing: 8) {
-                ForEach(0..<Self.codeLength, id: \.self) { index in
-                    let digits = Array(code)
-                    let isCurrent = index == digits.count && isFocused
-                    Text(index < digits.count ? String(digits[index]) : "")
-                        .font(.title2.weight(.semibold))
-                        .foregroundColor(colors.textPrimary)
-                        .frame(maxWidth: .infinity, minHeight: 52)
-                        .background(RoundedRectangle(cornerRadius: 12).fill(colors.card))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 12)
-                                .stroke(errorKey != nil ? colors.danger : (isCurrent ? colors.accent : .clear), lineWidth: 1.5)
-                        )
-                }
-            }
-            .allowsHitTesting(false)
-        }
-        .contentShape(Rectangle())
-        .onTapGesture { isFocused = true }
+        CodeBoxes(
+            code: $code,
+            isFocused: $isFocused,
+            hasError: errorKey != nil,
+            colors: colors,
+            onChange: { errorKey = nil },
+            onComplete: { submit() }
+        )
     }
 
     private var resendTitle: String {
@@ -209,3 +180,55 @@ struct EmailCodeView: View {
         }
     }
 }
+
+
+// Шість клітинок поверх невидимого поля: друк, вставка й підказка iPhone працюють як звичайно
+struct CodeBoxes: View {
+
+    @Binding var code: String
+    var isFocused: FocusState<Bool>.Binding
+    let hasError: Bool
+    let colors: ThemeColors
+    var onChange: () -> Void = {}
+    var onComplete: () -> Void = {}
+
+    var body: some View {
+
+        ZStack {
+
+            TextField("", text: $code)
+                .keyboardType(.numberPad)
+                .textContentType(.oneTimeCode)
+                .focused(isFocused)
+                .foregroundColor(.clear)
+                .tint(.clear)
+                .accessibilityIdentifier("code.field")
+                .onChange(of: code) { _, newValue in
+                    let digits = String(newValue.filter(\.isNumber).prefix(EmailCodeView.codeLength))
+                    if digits != newValue { code = digits }
+                    onChange()
+                    if digits.count == EmailCodeView.codeLength { onComplete() }
+                }
+
+            HStack(spacing: 8) {
+                ForEach(0..<EmailCodeView.codeLength, id: \.self) { index in
+                    let digits = Array(code)
+                    let isCurrent = index == digits.count && isFocused.wrappedValue
+                    Text(index < digits.count ? String(digits[index]) : "")
+                        .font(.title2.weight(.semibold))
+                        .foregroundColor(colors.textPrimary)
+                        .frame(maxWidth: .infinity, minHeight: 52)
+                        .background(RoundedRectangle(cornerRadius: 12).fill(colors.card))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(hasError ? colors.danger : (isCurrent ? colors.accent : .clear), lineWidth: 1.5)
+                        )
+                }
+            }
+            .allowsHitTesting(false)
+        }
+        .contentShape(Rectangle())
+        .onTapGesture { isFocused.wrappedValue = true }
+    }
+}
+
