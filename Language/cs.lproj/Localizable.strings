@@ -163,6 +163,11 @@
 "settings.workingHours.end" = "Konec";
 "settings.workingHours.description" = "Lišta obsazenosti v kalendáři ukazuje tento čas. Rezervace mimo něj budou také vidět: měsíční škála se automaticky rozšíří.";
 "settings.logout" = "Odhlásit se";
+"settings.deleteAccount" = "Smazat účet";
+"deleteAccount.title" = "Smazat účet?";
+"deleteAccount.warning" = "Váš účet a všechna data budou trvale smazána: klientky, fotky, rezervace, služby, volné dny a nastavení — v tomto telefonu i na serveru. Nepůjde je obnovit.";
+"deleteAccount.typeEmail" = "Pro potvrzení zadejte e-mail účtu: %@";
+"deleteAccount.confirm" = "Smazat navždy";
 "settings.language.title" = "Jazyk";
 "settings.language.confirm.title" = "Změnit jazyk?";
 "settings.language.confirm.message" = "Jazyk aplikace bude změněn.";

@@ -164,6 +164,11 @@
 "settings.workingHours.end" = "Кінець";
 "settings.workingHours.description" = "Смужка зайнятості в календарі показує цей час. Записи поза ним теж буде видно: шкала місяця розшириться сама.";
 "settings.logout" = "Вийти";
+"settings.deleteAccount" = "Видалити акаунт";
+"deleteAccount.title" = "Видалити акаунт?";
+"deleteAccount.warning" = "Буде остаточно видалено ваш акаунт і всі дані: клієнтів, фото, записи, послуги, вихідні та налаштування — на цьому телефоні й на сервері. Відновити їх буде неможливо.";
+"deleteAccount.typeEmail" = "Щоб підтвердити, введіть пошту акаунта: %@";
+"deleteAccount.confirm" = "Видалити назавжди";
 "settings.language.title" = "Мова";
 "settings.language.confirm.title" = "Змінити мову?";
 "settings.language.confirm.message" = "Мову застосунку буде змінено.";
