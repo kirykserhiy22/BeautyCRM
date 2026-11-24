@@ -89,6 +89,11 @@ struct MainTabView: View {
                 }
 
                 showGuide = OnboardingStore.isPending(userID: userID)
+
+                // Робочий простір і профіль на сервері (якщо без інтернету — наступного разу)
+                if let profile = UserProfileManager.profile(context: context, userID: userID) {
+                    await ServerAccount.push(profile: profile)
+                }
             }
         }
         // Поверх вкладок, а не окремим вікном: не конфліктує з вибором спеціалізації

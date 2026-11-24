@@ -147,6 +147,13 @@ struct SplashView: View {
 
     private func route() {
 
+        // З сервером вхід дійсний, лише коли є його сесія (Keychain) для того самого користувача
+        if AuthMode.usesServer,
+           appState.session.isLoggedIn,
+           appState.session.userID != ServerAuth.currentUserID {
+            appState.session.logout()
+        }
+
         if appState.session.isLoggedIn,
            let userID = appState.session.userID {
 

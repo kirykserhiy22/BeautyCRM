@@ -55,6 +55,19 @@
 "auth.error.userAlreadyExists" = "Ця електронна адреса вже використовується";
 "auth.error.userNotFound" = "Користувача не знайдено";
 "auth.error.wrongPassword" = "Неправильний пароль";
+"auth.code.title" = "Введіть код з листа";
+"auth.code.sentTo" = "Ми надіслали 6 цифр на";
+"auth.code.hint" = "Код можна вставити з пошти — iPhone також підкаже його над клавіатурою";
+"auth.code.confirm" = "Підтвердити";
+"auth.code.resendIn" = "Надіслати ще раз через %@";
+"auth.code.resend" = "Надіслати код ще раз";
+"auth.code.resent" = "Новий код надіслано";
+"auth.code.changeEmail" = "Змінити email";
+"auth.error.emailNotConfirmed" = "Пошту ще не підтверджено. Введіть код з листа.";
+"auth.error.invalidCode" = "Код неправильний або застарів. Перевірте лист чи надішліть новий код.";
+"auth.error.tooManyRequests" = "Забагато спроб. Зачекайте хвилину й спробуйте ще раз.";
+"auth.error.noConnection" = "Немає інтернету. Перевірте з’єднання.";
+"auth.error.serverError" = "Сервер не відповідає. Спробуйте трохи пізніше.";
 
 /* Home */
 "home.dateToday" = "Сьогодні";

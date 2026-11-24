@@ -55,6 +55,19 @@
 "auth.error.userAlreadyExists" = "Ten adres e-mail jest już używany";
 "auth.error.userNotFound" = "Nie znaleziono użytkownika";
 "auth.error.wrongPassword" = "Nieprawidłowe hasło";
+"auth.code.title" = "Wpisz kod z e-maila";
+"auth.code.sentTo" = "Wysłaliśmy 6 cyfr na";
+"auth.code.hint" = "Możesz wkleić kod z poczty — iPhone podpowie go też nad klawiaturą";
+"auth.code.confirm" = "Potwierdź";
+"auth.code.resendIn" = "Wyślij ponownie za %@";
+"auth.code.resend" = "Wyślij kod ponownie";
+"auth.code.resent" = "Nowy kod wysłany";
+"auth.code.changeEmail" = "Zmień e-mail";
+"auth.error.emailNotConfirmed" = "E-mail nie jest jeszcze potwierdzony. Wpisz kod z wiadomości.";
+"auth.error.invalidCode" = "Kod jest błędny lub wygasł. Sprawdź e-mail albo wyślij nowy kod.";
+"auth.error.tooManyRequests" = "Zbyt wiele prób. Odczekaj minutę i spróbuj ponownie.";
+"auth.error.noConnection" = "Brak internetu. Sprawdź połączenie.";
+"auth.error.serverError" = "Serwer nie odpowiada. Spróbuj trochę później.";
 
 /* Home */
 

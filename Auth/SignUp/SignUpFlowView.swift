@@ -26,6 +26,10 @@ struct SignUpFlowView: View {
     @StateObject private var state =
     SignUpState()
 
+    // Екран коду з листа (сервер)
+    @State private var codeEmail: String?
+    @State private var isWorking = false
+
 
 
 
@@ -101,6 +105,28 @@ struct SignUpFlowView: View {
         }
         .padding()
         .background(colors.background.ignoresSafeArea())
+        .disabled(isWorking)
+        .overlay {
+            if isWorking {
+                ProgressView()
+            }
+        }
+        .fullScreenCover(isPresented: Binding(
+            get: { codeEmail != nil },
+            set: { if !$0 { codeEmail = nil } }
+        )) {
+            if let email = codeEmail {
+                EmailCodeView(
+                    email: email,
+                    verify: { code in await verifyCode(code, email: email) },
+                    resend: { await ServerAuth.resendSignUpCode(email: email) },
+                    onChangeEmail: {
+                        codeEmail = nil
+                        state.step = .account
+                    }
+                )
+            }
+        }
     }
 }
 
@@ -184,6 +210,68 @@ private extension SignUpFlowView {
 
 
     func finishRegistration() {
+
+        guard AuthMode.usesServer else {
+            finishLocally()
+            return
+        }
+
+        let pending = PendingSignUp(
+            email: ServerAuth.normalized(state.email),
+            firstName: state.firstName,
+            lastName: state.lastName,
+            businessName: state.businessName.isEmpty ? nil : state.businessName,
+            currencyCode: state.currencyCode,
+            languageCode: localization.languageCode,
+            professionRaw: state.profession?.rawValue
+        )
+
+        isWorking = true
+        state.errorMessage = ""
+
+        Task {
+            let result = await ServerAuth.signUp(email: state.email, password: state.password)
+            isWorking = false
+
+            switch result {
+
+            case .success(.codeSent):
+                pending.save()
+                codeEmail = pending.email
+
+            case .success(.alreadyRegistered):
+                state.errorMessage = AuthError.userAlreadyExists.localizationKey
+                state.step = .account
+
+            case .failure(let error):
+                state.errorMessage = error.localizationKey
+                if [.invalidEmail, .weakPassword, .userAlreadyExists].contains(error) {
+                    state.step = .account
+                }
+            }
+        }
+    }
+
+    func verifyCode(_ code: String, email: String) async -> AuthError? {
+        switch await ServerAuth.verifySignUp(email: email, code: code) {
+        case .success(let userID):
+            return await AccountEntry.enter(
+                userID: userID,
+                email: email,
+                context: context,
+                appState: appState,
+                router: router,
+                localization: localization,
+                currency: currency,
+                profession: profession
+            )
+        case .failure(let error):
+            return error
+        }
+    }
+
+    // Без сервера — лише автоматичні тести (-localAuth) або збірка без ключів
+    func finishLocally() {
 
 
         let authService = LocalAuthService()
