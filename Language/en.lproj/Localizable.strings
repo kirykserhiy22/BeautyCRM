@@ -163,6 +163,10 @@
 "settings.workingHours.end" = "End";
 "settings.workingHours.description" = "The occupancy bar in the calendar shows this time range. Appointments outside it are still shown: the month scale extends automatically.";
 "settings.logout" = "Log Out";
+"settings.group.about" = "About";
+"settings.privacy" = "Privacy Policy";
+"settings.terms" = "Terms of Use";
+"settings.support" = "Support";
 "settings.deleteAccount" = "Delete account";
 "deleteAccount.title" = "Delete account?";
 "deleteAccount.warning" = "Your account and all data will be permanently deleted: clients, photos, appointments, services, days off and settings — on this phone and on the server. They can’t be restored.";
