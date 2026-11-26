@@ -16,6 +16,11 @@ struct ClientPhotoFeedView: View {
     let client: Client
     // Фото, на якому відкрити стрічку (те, по якому тапнули в сітці)
     let startPhotoID: UUID?
+    // Роботи чи референси — окремі стрічки
+    var kind: ClientPhotoKind = .work
+
+    // Для референсів — дата запису, до якого їх надіслали
+    @Query private var appointments: [Appointment]
 
     @Environment(\.modelContext) private var context
     @EnvironmentObject var theme: ThemeManager
@@ -33,7 +38,7 @@ struct ClientPhotoFeedView: View {
 
     // Той самий порядок, що й у сітці: нові дописи першими
     private var posts: [ClientPhotoPost] {
-        ClientPhotoPost.group(client.photos)
+        ClientPhotoPost.group(client.photos, kind: kind)
     }
 
     // Яке фото зараз видно в кожному дописі-каруселі (postID → номер)
@@ -69,7 +74,7 @@ struct ClientPhotoFeedView: View {
                         ClientPhotoDraft(image: $0, stage: photo.stage, caption: index == 0 ? (item.caption ?? "") : "")
                     }
                 },
-                showsStages: profession.config.showsPhotoStages,
+                showsStages: profession.config.showsPhotoStages && kind == .work,
                 isEditingExisting: true,
                 sharedCaption: true
             ) { drafts, _ in
@@ -160,6 +165,14 @@ struct ClientPhotoFeedView: View {
                     Text(AppFormatting.date(item.cover.createdAt, locale: localization.locale, format: .medium))
                         .font(.caption)
                         .foregroundColor(colors.textSecondary)
+                    if let visit = visit(for: item.cover) {
+                        Text("· " + String(
+                            format: localization.localizedString(for: "photos.references.forVisit"),
+                            AppFormatting.template("dMMMM", visit.startDate, locale: localization.locale)
+                        ))
+                        .font(.caption)
+                        .foregroundColor(colors.accent)
+                    }
                     Spacer()
                     menu(item, current: photo)
                 }
@@ -180,6 +193,11 @@ struct ClientPhotoFeedView: View {
                 .frame(height: 1)
                 .padding(.top, 10)
         }
+    }
+
+    private func visit(for photo: ClientPhoto) -> Appointment? {
+        guard photo.kind == .reference, let id = photo.appointmentID else { return nil }
+        return appointments.first { $0.id == id }
     }
 
     @ViewBuilder

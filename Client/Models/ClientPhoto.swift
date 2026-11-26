@@ -20,6 +20,15 @@ enum ClientPhotoStage: String, CaseIterable {
     }
 }
 
+// Вид фото: готова робота майстра (основна галерея) чи референс — фото бажаного результату від клієнта
+enum ClientPhotoKind: String, CaseIterable, Identifiable {
+    case work
+    case reference
+
+    var id: String { rawValue }
+    var titleKey: String { "photos.kind.\(rawValue)" }
+}
+
 @Model
 final class ClientPhoto: SyncTrackable {
 
@@ -39,6 +48,17 @@ final class ClientPhoto: SyncTrackable {
     // Кілька фото, додані «одним дописом», мають спільний postID (як допис-карусель в Instagram).
     // nil — фото окремим дописом
     var postID: UUID? = nil
+
+    // nil — робота (усі старі фото); "reference" — референс від клієнта
+    var kindRaw: String? = nil
+
+    // Запис, до якого клієнт надіслав референс (nil — додано просто в профіль)
+    var appointmentID: UUID? = nil
+
+    var kind: ClientPhotoKind {
+        get { kindRaw.flatMap(ClientPhotoKind.init(rawValue:)) ?? .work }
+        set { kindRaw = newValue == .work ? nil : newValue.rawValue }
+    }
 
     var stage: ClientPhotoStage? {
         get { stageRaw.flatMap(ClientPhotoStage.init(rawValue:)) }

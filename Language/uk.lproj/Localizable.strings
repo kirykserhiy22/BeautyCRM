@@ -203,6 +203,13 @@
 "appointment.timeOccupied" = "Обраний час зайнятий";
 "appointment.nearestFreeSlot" = "Найближчий вільний час: %@ - %@";
 "appointment.notes" = "Нотатки";
+"photos.kind.work" = "Роботи";
+"photos.kind.reference" = "Референси";
+"photos.references.empty" = "Тут будуть фото бажаного результату від клієнтки — додаються в записі або кнопкою «+».";
+"photos.references.forVisit" = "до запису %@";
+"appointment.references" = "Референси від клієнта";
+"appointment.references.hint" = "Фото бажаного результату. Вони з’являться в профілі клієнта, вкладка «Референси».";
+"appointment.references.short" = "Референси";
 "appointment.notesPlaceholder" = "Необов’язкові нотатки...";
 "appointment.createTitle" = "Новий запис";
 "appointment.editTitle" = "Редагувати запис";

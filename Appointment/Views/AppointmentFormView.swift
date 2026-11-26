@@ -6,6 +6,7 @@
 //
 import SwiftUI
 import SwiftData
+import PhotosUI
 
 struct AppointmentFormView: View {
     @EnvironmentObject var currency: CurrencyManager
@@ -86,6 +87,11 @@ struct AppointmentFormView: View {
     @State private var duration = 60
     @State private var notes = ""
 
+    // Референси від клієнта: нові фото (ще не збережені) і вже додані, які майстер прибрав
+    @State private var newReferences: [UIImage] = []
+    @State private var removedReferenceIDs: Set<UUID> = []
+    @State private var referenceItems: [PhotosPickerItem] = []
+
     // MARK: - UI
 
     @State private var errorMessage = ""
@@ -159,6 +165,8 @@ struct AppointmentFormView: View {
                     dateTimeSection
 
                     notesSection
+
+                    referencesSection
 
                     if !errorMessage.isEmpty {
                         errorSection
@@ -587,6 +595,138 @@ private extension AppointmentFormView {
     }
 }
 
+// MARK: - REFERENCES SECTION
+
+private extension AppointmentFormView {
+
+    // Уже збережені референси цього запису (під час редагування), без прибраних майстром
+    var existingReferences: [ClientPhoto] {
+        guard case .edit(let appointment) = mode, let client = selectedClient else {
+            return []
+        }
+        return ClientPhotoService.references(for: appointment.id, in: client.photos)
+            .filter { !removedReferenceIDs.contains($0.id) }
+    }
+
+    var referencesSection: some View {
+
+        VStack(alignment: .leading, spacing: 8) {
+
+            FormSectionTitle(
+                text: localization.localizedString(for: "appointment.references"),
+                colors: colors
+            )
+
+            ScrollView(.horizontal, showsIndicators: false) {
+
+                HStack(spacing: 8) {
+
+                    ForEach(existingReferences) { photo in
+                        referenceTile(ClientPhotoStorage.loadThumbnail(from: photo.fileName)) {
+                            removedReferenceIDs.insert(photo.id)
+                        }
+                    }
+
+                    ForEach(Array(newReferences.enumerated()), id: \.offset) { index, image in
+                        referenceTile(image) {
+                            newReferences.remove(at: index)
+                        }
+                    }
+
+                    PhotosPicker(selection: $referenceItems, matching: .images) {
+                        Image(systemName: "plus")
+                            .font(.title3)
+                            .foregroundColor(colors.accent)
+                            .frame(width: 64, height: 80)
+                            .background(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .strokeBorder(colors.accent, style: StrokeStyle(lineWidth: 1.5, dash: [5]))
+                            )
+                    }
+                    .accessibilityIdentifier("appointment.references.add")
+                    .onChange(of: referenceItems) { _, items in
+                        loadReferences(items)
+                    }
+                }
+                .padding(.vertical, 2)
+            }
+
+            Text(localization.localizedString(for: "appointment.references.hint"))
+                .font(.caption)
+                .foregroundColor(colors.textSecondary)
+        }
+    }
+
+    func referenceTile(_ image: UIImage?, onRemove: @escaping () -> Void) -> some View {
+        Group {
+            if let image {
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFill()
+            } else {
+                colors.card
+            }
+        }
+        .frame(width: 64, height: 80)
+        .clipShape(RoundedRectangle(cornerRadius: 10))
+        .overlay(alignment: .topTrailing) {
+            Button(action: onRemove) {
+                Image(systemName: "xmark.circle.fill")
+                    .font(.body)
+                    .foregroundStyle(.white, .black.opacity(0.6))
+            }
+            .padding(3)
+            .accessibilityLabel(Text(localization.localizedString(for: "common.delete")))
+        }
+    }
+
+    func loadReferences(_ items: [PhotosPickerItem]) {
+        guard !items.isEmpty else { return }
+        Task {
+            for item in items {
+                guard let data = try? await item.loadTransferable(type: Data.self),
+                      let image = await Task.detached(priority: .userInitiated, operation: { UIImage(data: data) }).value
+                else {
+                    continue
+                }
+                newReferences.append(image)
+            }
+            referenceItems = []
+        }
+    }
+
+    // Після збереження запису: прибрані — видалити, нові — у профіль клієнта (вкладка «Референси»)
+    func saveReferences(appointmentID: UUID, client: Client) {
+
+        if case .edit = mode {
+            for photo in ClientPhotoService.references(for: appointmentID, in: client.photos)
+            where removedReferenceIDs.contains(photo.id) {
+                ClientPhotoService.deletePhoto(photo: photo, client: client, context: context)
+            }
+        }
+
+        let images = newReferences
+        guard !images.isEmpty else { return }
+
+        Task {
+            for image in images {
+                let fileName = await Task.detached(priority: .userInitiated) {
+                    ClientPhotoService.storeFiles(for: image)
+                }.value
+                if let fileName {
+                    ClientPhotoService.addPhoto(
+                        fileName: fileName,
+                        kind: .reference,
+                        appointmentID: appointmentID,
+                        client: client,
+                        context: context
+                    )
+                }
+            }
+        }
+    }
+}
+
 // MARK: - ERROR SECTION
 
 private extension AppointmentFormView {
@@ -763,7 +903,8 @@ private extension AppointmentFormView {
 
             switch result {
 
-            case .success:
+            case .success(let created):
+                saveReferences(appointmentID: created.id, client: client)
                 if let rescheduling {
                     AppointmentEngine.finishReschedule(appointment: rescheduling)
                 }
@@ -794,6 +935,7 @@ private extension AppointmentFormView {
             switch result {
 
             case .success:
+                saveReferences(appointmentID: appointment.id, client: client)
                 // Зберігаємо одразу, а не «колись автоматично»
                 if context.saveReportingErrors() {
                     didSave = true
@@ -887,7 +1029,8 @@ private extension AppointmentFormView {
             .sorted()
             .joined(separator: ",")
         let retained = serviceState.retainedItems.map(\.id.uuidString).sorted().joined(separator: ",")
-        return [clientSearch, services, prices, retained, "\(date.timeIntervalSince1970)", "\(duration)", notes]
+        let references = "\(newReferences.count)-\(removedReferenceIDs.count)"
+        return [clientSearch, services, prices, retained, "\(date.timeIntervalSince1970)", "\(duration)", notes, references]
             .joined(separator: "|")
     }
 

@@ -39,11 +39,29 @@ struct ClientPhotoGridSection: View {
 
     @State private var thumbnails: [String: UIImage] = [:]
 
+    // Як вкладки в Instagram: готові роботи майстра або референси від клієнта
+    @State private var tab: ClientPhotoKind = .work
+
     var body: some View {
 
         VStack(alignment: .leading, spacing: 14) {
 
             header
+
+            Picker("", selection: $tab) {
+                ForEach(ClientPhotoKind.allCases) { kind in
+                    Text(localization.localizedString(for: kind.titleKey)).tag(kind)
+                }
+            }
+            .pickerStyle(.segmented)
+            .accessibilityIdentifier("client.photos.tab")
+
+            if ClientPhotoPost.group(client.photos, kind: tab).isEmpty && tab == .reference {
+                Text(localization.localizedString(for: "photos.references.empty"))
+                    .font(.subheadline)
+                    .foregroundColor(colors.textSecondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
 
             grid
         }
@@ -51,12 +69,13 @@ struct ClientPhotoGridSection: View {
             preloadThumbnails()
         }
         .navigationDestination(item: $feedStart) { photo in
-            ClientPhotoFeedView(client: client, startPhotoID: photo.id)
+            ClientPhotoFeedView(client: client, startPhotoID: photo.id, kind: photo.kind)
         }
         .sheet(isPresented: $showEditor, onDismiss: { drafts = [] }) {
             ClientPhotoEditorView(
                 drafts: drafts,
-                showsStages: profession.config.showsPhotoStages
+                // «До / Після» — лише для робіт майстра
+                showsStages: profession.config.showsPhotoStages && tab == .work
             ) { ready, asPost in
                 addPhotos(ready, asPost: asPost)
             }
@@ -131,7 +150,7 @@ struct ClientPhotoGridSection: View {
         ) {
 
             // Одна клітинка — один допис: окреме фото або карусель
-            ForEach(ClientPhotoPost.group(client.photos)) { post in
+            ForEach(ClientPhotoPost.group(client.photos, kind: tab)) { post in
 
                 photoCell(post)
             }
@@ -323,6 +342,7 @@ Image(uiImage: image)
     private func addPhotos(_ ready: [ClientPhotoDraft], asPost: Bool) {
 
         let postID: UUID? = asPost ? UUID() : nil
+        let kind = tab
         let ordered = asPost ? ready : ready.reversed()
         // Допис має один підпис — на першому фото
         let postCaption = asPost ? ClientPhotoService.postCaption(ready.map(\.caption)) : nil
@@ -340,6 +360,7 @@ Image(uiImage: image)
                         stage: draft.stage,
                         caption: asPost ? (index == 0 ? postCaption : nil) : draft.caption,
                         postID: postID,
+                        kind: kind,
                         client: client,
                         context: context
                     )
