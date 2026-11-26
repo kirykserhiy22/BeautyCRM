@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Beauty Base — усе на своїх місцях</title>
+<meta name="description" content="Записи, клієнти з історією візитів, референси й нагадування — додаток для майстрів краси.">
+<meta name="theme-color" content="#2A0814">
+<meta property="og:title" content="Beauty Base — усе на своїх місцях">
+<meta property="og:description" content="Додаток для майстрів краси: записи, клієнти, нагадування.">
+<meta property="og:type" content="website">
+<link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/site.css">
+</head>
+<body>
+
+<header class="top" id="top">
+  <a class="wordmark" href="/">BEAUTY BASE</a>
+  <div class="top-right">
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-set-lang="uk" aria-pressed="true">UA</button>
+      <button type="button" data-set-lang="en" aria-pressed="false">EN</button>
+    </div>
+    <a class="pill" href="mailto:hello@getbeautybase.com?subject=Beta" data-i18n="cta.beta">Стати бета-тестером</a>
+  </div>
+</header>
+
+<main>
+
+<!-- НІЧ -->
+<section class="hero">
+  <div class="hero-inner">
+    <svg class="mark" viewBox="0 0 200 200" role="img" aria-label="Beauty Base">
+      <defs>
+        <mask id="brush-mask">
+          <path class="brush-reveal" d="M30 10 L40 84" stroke="#fff" stroke-width="22" stroke-linecap="round" fill="none"/>
+        </mask>
+      </defs>
+      <g transform="translate(4 6)">
+        <path class="letters" d="M40 74a26 26 0 1 0 52 0a26 26 0 1 0 -52 0
+          M108 74a26 26 0 1 0 52 0a26 26 0 1 0 -52 0 M160 48 L160 100
+          M87 123 C76 110 46 111 46 128 C46 146 86 134 86 152 C86 169 56 170 45 157
+          M108 140 L160 140 A26 26 0 1 0 150.7 159.9"/>
+        <g mask="url(#brush-mask)">
+          <path class="brush" d="M26.55 16.56 L33.09 79.11 L46.91 76.89 L33.45 15.44 Z"/>
+          <circle class="brush" cx="30" cy="16" r="3.5"/>
+          <circle class="brush" cx="40" cy="78" r="7"/>
+        </g>
+      </g>
+    </svg>
+    <p class="eyebrow">BEAUTY BASE</p>
+    <h1 data-i18n="hero.title">Усе на своїх <em>місцях.</em></h1>
+    <p class="lead" data-i18n="hero.lead">Записи, клієнти з історією візитів, референси й нагадування — один додаток замість нотаток, месенджерів і пам'яті.</p>
+    <div class="actions">
+      <a class="btn primary" href="mailto:hello@getbeautybase.com?subject=Beta" data-i18n="cta.beta">Стати бета-тестером</a>
+      <a class="btn ghost" href="#day" data-i18n="hero.how">Як це працює</a>
+    </div>
+  </div>
+  <div class="scroll-hint" data-i18n="hero.scroll">Гортай — день починається</div>
+</section>
+
+<!-- ДЕНЬ -->
+<section class="day" id="day">
+  <div class="day-intro">
+    <h2 data-i18n="day.title">Один день майстрині.</h2>
+    <p data-i18n="day.lead">Гортай — і подивись, як усе стає на свої місця.</p>
+  </div>
+
+  <div class="day-grid">
+    <aside class="rail" aria-hidden="true">
+      <div class="rail-line"></div>
+      <div class="rail-fill"></div>
+      <div class="rail-now"></div>
+      <div class="rail-hours"><span>09:00</span><span>11:00</span><span>13:00</span><span>15:00</span><span>17:00</span><span>19:00</span></div>
+    </aside>
+
+    <div class="hours">
+
+      <article class="hour" data-hour="0.05">
+        <div class="text">
+          <div class="time">09:00</div>
+          <h3 data-i18n="h1.title">Відкрила додаток — і весь день перед очима.</h3>
+          <p data-i18n="h1.text">Шкала дня, як у календарі iPhone. Хто, о котрій, на що й скільки — без гортання переписок.</p>
+        </div>
+        <div class="stage">
+          <div class="card appt" data-from="left"><div class="row"><span class="c-title">Олена Коваль</span><span class="c-time">10:00 – 12:00</span></div><div class="c-sub" data-i18n="h1.c1">Фарбування корінь · Тонування</div></div>
+          <div class="card appt" data-from="right"><div class="row"><span class="c-title">Марина Шевчук</span><span class="c-time">12:30 – 14:00</span></div><div class="c-sub" data-i18n="h1.c2">Стрижка · Укладка</div></div>
+          <div class="card appt" data-from="left"><div class="row"><span class="c-title">Ірина Бондар</span><span class="c-time">15:00 – 18:00</span></div><div class="c-sub">AirTouch</div></div>
+        </div>
+      </article>
+
+      <article class="hour" data-hour="0.28">
+        <div class="text">
+          <div class="time">11:00</div>
+          <h3 data-i18n="h2.title">«А що ми минулого разу робили?»</h3>
+          <p data-i18n="h2.text">Уся історія візитів клієнтки: формула фарби, скільки планували і скільки заплатила. «Записати так само» — і лишається вибрати дату.</p>
+        </div>
+        <div class="stage">
+          <div class="card" data-from="top">
+            <div class="row"><span class="c-title" data-i18n="h2.date">8 жовтня</span><span class="price"><span class="strike">75 €</span>115 €</span></div>
+            <div class="c-sub" data-i18n="h1.c1">Фарбування корінь · Тонування</div>
+            <div class="note" data-i18n="h2.note">Фарба 6.1 + 30 г освітлювача, витримка 35 хв</div>
+            <div class="mini-btn" data-i18n="h2.repeat">↻ Записати так само</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="hour" data-hour="0.47">
+        <div class="text">
+          <div class="time">13:00</div>
+          <h3 data-i18n="h3.title">Клієнтка надіслала референс.</h3>
+          <p data-i18n="h3.text">Фото бажаного результату додаються прямо в запис і живуть у профілі клієнтки окремою вкладкою — поруч з твоїми роботами «до / після».</p>
+        </div>
+        <div class="stage">
+          <div class="card" data-from="right">
+            <div class="row"><span class="c-title">Ірина Бондар</span><span class="badge" data-i18n="h3.badge">Референси · 3</span></div>
+            <div class="refs"><div class="ref a"></div><div class="ref b"></div><div class="ref c"></div></div>
+          </div>
+          <div class="card" data-from="bottom"><div class="row"><span class="c-sub" data-i18n="h3.tabs">Роботи · <b style="color:#fff">Референси</b></span><span class="badge ok" data-i18n="h3.saved">у профілі</span></div></div>
+        </div>
+      </article>
+
+      <article class="hour" data-hour="0.66">
+        <div class="text">
+          <div class="time">15:00</div>
+          <h3 data-i18n="h4.title">Нагадати про завтрашній запис — один дотик.</h3>
+          <p data-i18n="h4.text">Готовий текст з датою, часом і адресою. Обери тон — теплий, нейтральний чи офіційний — і надішли в Telegram, Viber, WhatsApp чи SMS.</p>
+        </div>
+        <div class="stage">
+          <div class="card" data-from="left">
+            <div class="tones"><span class="tone on" data-i18n="h4.warm">Теплий</span><span class="tone" data-i18n="h4.neutral">Нейтральний</span><span class="tone" data-i18n="h4.formal">Офіційний</span></div>
+            <div class="bubble" data-i18n="h4.msg">Привіт! 😊 Чекаю тебе завтра о 10:00: Фарбування корінь. До зустрічі! 💕</div>
+            <div class="channels"><span class="chip">Telegram</span><span class="chip">Viber</span><span class="chip">WhatsApp</span><span class="chip">SMS</span></div>
+          </div>
+          <div class="card" data-from="right"><div class="row"><span class="c-sub" data-i18n="h4.sent">Нагадування надіслано</span><span class="badge ok">✓ 15:04</span></div></div>
+        </div>
+      </article>
+
+      <article class="hour" data-hour="0.84">
+        <div class="text">
+          <div class="time">17:00</div>
+          <h3 data-i18n="h5.title">Захворіла? Відклади два дні за хвилину.</h3>
+          <p data-i18n="h5.text">Обираєш дати — записи стають у чергу «Чекають перенесення», дні — вихідними. Повідомити клієнток можна готовою причиною або своїми словами.</p>
+        </div>
+        <div class="stage">
+          <div class="card" data-from="top">
+            <div class="check"><i>✓</i><span data-i18n="h5.r1">Олена · пт, 10:00</span></div>
+            <div class="check"><i>✓</i><span data-i18n="h5.r2">Марина · пт, 12:30</span></div>
+            <div class="check"><i>✓</i><span data-i18n="h5.r3">Юлія · сб, 11:00</span></div>
+            <div class="row" style="margin-top:8px"><span class="c-sub" data-i18n="h5.dayoff">Зробити дні вихідними</span><span class="toggle"></span></div>
+          </div>
+          <div class="card" data-from="bottom"><div class="row"><span class="c-title" data-i18n="h5.queue">Чекають перенесення</span><span class="badge warn">3</span></div></div>
+        </div>
+      </article>
+
+      <article class="hour" data-hour="1">
+        <div class="text">
+          <div class="time">19:00</div>
+          <h3 data-i18n="h6.title">Скільки я сьогодні заробила?</h3>
+          <p data-i18n="h6.text">Завершуєш запис — вводиш фактичну ціну. Дохід, середній чек і найприбутковіші послуги рахуються самі.</p>
+        </div>
+        <div class="stage">
+          <div class="card" data-from="scale">
+            <div class="c-sub" data-i18n="h6.week">Цей тиждень</div>
+            <div class="big-num">1 240 €</div>
+            <div class="bars"><span style="height:45%"></span><span style="height:70%"></span><span style="height:55%"></span><span class="hi" style="height:100%"></span><span style="height:80%"></span></div>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ДЕНЬ ЗАКРИТО -->
+<section class="close" id="beta">
+  <h2 data-i18n="close.title">День <em>закрито.</em></h2>
+  <p data-i18n="close.text">Жодного забутого запису, жодної загубленої формули. Beauty Base зараз у закритій бета-версії — приєднуйся і допоможи зробити його ще кращим.</p>
+  <div class="stats">
+    <div class="stat"><b>6</b><span data-i18n="close.s1">клієнток</span></div>
+    <div class="stat"><b>0</b><span data-i18n="close.s2">забутих записів</span></div>
+    <div class="stat"><b>12 с</b><span data-i18n="close.s3">на нагадування</span></div>
+  </div>
+  <div class="actions">
+    <a class="btn primary" href="mailto:hello@getbeautybase.com?subject=Beta" data-i18n="cta.beta">Стати бета-тестером</a>
+    <a class="btn ghost" href="https://www.instagram.com/beauty.base.app/" data-i18n="close.ig" rel="noopener">Instagram</a>
+  </div>
+  <div class="soon" data-i18n="close.soon">Скоро в App Store · iPhone · 5 мов</div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <span class="wordmark">BEAUTY BASE</span>
+    <nav>
+      <a href="/privacy/" data-i18n="foot.privacy">Політика конфіденційності</a>
+      <a href="/terms/" data-i18n="foot.terms">Умови користування</a>
+      <a href="/support/" data-i18n="foot.support">Підтримка</a>
+      <a href="mailto:hello@getbeautybase.com">hello@getbeautybase.com</a>
+    </nav>
+    <small>© 2026 Beauty Base</small>
+  </div>
+</footer>
+
+<script src="/assets/site.js"></script>
+</body>
+</html>
