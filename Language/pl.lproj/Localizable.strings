@@ -202,6 +202,13 @@
 "appointment.timeOccupied" = "Wybrany termin jest zajęty";
 "appointment.nearestFreeSlot" = "Najbliższy wolny termin: %@ - %@";
 "appointment.notes" = "Notatki";
+"photos.kind.work" = "Prace";
+"photos.kind.reference" = "Inspiracje";
+"photos.references.empty" = "Tu pojawią się zdjęcia efektu, jakiego chce klientka — dodaj je w wizycie albo przyciskiem „+”.";
+"photos.references.forVisit" = "do wizyty %@";
+"appointment.references" = "Inspiracje od klientki";
+"appointment.references.hint" = "Zdjęcia oczekiwanego efektu. Pojawią się w profilu klientki w zakładce „Inspiracje”.";
+"appointment.references.short" = "Inspiracje";
 "appointment.notesPlaceholder" = "Opcjonalne notatki...";
 "appointment.createTitle" = "Nowa wizyta";
 "appointment.editTitle" = "Edytuj wizytę";

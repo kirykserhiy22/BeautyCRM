@@ -202,6 +202,13 @@
 "appointment.timeOccupied" = "Die ausgewählte Zeit ist belegt";
 "appointment.nearestFreeSlot" = "Nächster freier Termin: %@ - %@";
 "appointment.notes" = "Notizen";
+"photos.kind.work" = "Arbeiten";
+"photos.kind.reference" = "Referenzen";
+"photos.references.empty" = "Hier erscheinen Fotos vom Wunschergebnis der Kundin — im Termin oder mit „+“ hinzufügen.";
+"photos.references.forVisit" = "für den Termin am %@";
+"appointment.references" = "Referenzen der Kundin";
+"appointment.references.hint" = "Fotos vom Wunschergebnis. Sie erscheinen im Profil der Kundin unter „Referenzen“.";
+"appointment.references.short" = "Referenzen";
 "appointment.notesPlaceholder" = "Optionale Notizen...";
 "appointment.createTitle" = "Neuer Termin";
 "appointment.editTitle" = "Termin bearbeiten";

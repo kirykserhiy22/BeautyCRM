@@ -36,6 +36,8 @@ struct AppointmentRow: View {
     @State private var showRestoreConflict = false
     @State private var finalServicePrices: [UUID: String] = [:]
     @State private var completionItems: [CompletionServiceItem] = []
+    // Референс, відкритий на весь екран
+    @State private var referenceStart: ReferenceViewerStart?
     // Нотатка до візиту: що робили, що не сподобалось — потім видно в історії візитів клієнта
     @State private var completionNotes = ""
     
@@ -210,6 +212,18 @@ struct AppointmentRow: View {
                                     alignment: .leading
                                 )
                         }
+
+                        // Референси від клієнта — лише якщо вони є
+                        if !references.isEmpty {
+                            ReferenceStrip(
+                                photos: references,
+                                colors: colors,
+                                title: localization.localizedString(for: "appointment.references.short")
+                            ) { index in
+                                referenceStart = ReferenceViewerStart(index: index)
+                            }
+                            .padding(.top, 4)
+                        }
                     }
                     
                     
@@ -376,6 +390,9 @@ struct AppointmentRow: View {
         )
         .shadow(color: colors.shadow, radius: 6, y: 2)
 
+        .fullScreenCover(item: $referenceStart) { start in
+            ReferenceViewer(photos: references, index: start.index)
+        }
         .sheet(isPresented: $showClientReminder) {
             ClientReminderView(appointment: appt)
         }
@@ -633,6 +650,14 @@ struct AppointmentRow: View {
 
 
 private extension AppointmentRow {
+
+    // Референси, які клієнт надіслав до цього запису
+    var references: [ClientPhoto] {
+        guard let client = activeClients.first(where: { $0.id == appt.clientID }) else {
+            return []
+        }
+        return ClientPhotoService.references(for: appt.id, in: client.photos)
+    }
 
     // Відновлення скасованого запису: якщо його час уже зайняли — пояснюємо чому ні
     var isClientDeleted: Bool {

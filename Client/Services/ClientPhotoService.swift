@@ -46,6 +46,8 @@ enum ClientPhotoService {
         stage: ClientPhotoStage? = nil,
         caption: String? = nil,
         postID: UUID? = nil,
+        kind: ClientPhotoKind = .work,
+        appointmentID: UUID? = nil,
         client: Client,
         context: ModelContext
     ) {
@@ -54,7 +56,9 @@ enum ClientPhotoService {
             clientID: client.id,
             fileName: fileName
         )
-        photo.stage = stage
+        photo.kind = kind
+        photo.appointmentID = appointmentID
+        photo.stage = kind == .reference ? nil : stage
         photo.caption = cleanCaption(caption)
         photo.postID = postID
 
@@ -155,6 +159,13 @@ enum ClientPhotoService {
 
     // MARK: - DELETE PHOTO
 
+    // Референси, надіслані до конкретного запису (у порядку додавання)
+    static func references(for appointmentID: UUID, in photos: [ClientPhoto]) -> [ClientPhoto] {
+        photos
+            .filter { $0.deletedAt == nil && $0.kind == .reference && $0.appointmentID == appointmentID }
+            .sorted { $0.createdAt < $1.createdAt }
+    }
+
     static func deletePhoto(
         photo: ClientPhoto,
         client: Client,
@@ -183,9 +194,10 @@ struct ClientPhotoPost: Identifiable {
     // Підпис допису — під каруселлю, не змінюється при гортанні
     var caption: String? { ClientPhotoService.postCaption(photos.map(\.caption)) }
 
-    // Нові дописи першими; всередині допису — у порядку, в якому фото вибрали
-    static func group(_ photos: [ClientPhoto]) -> [ClientPhotoPost] {
-        let alive = photos.filter { $0.deletedAt == nil }
+    // Нові дописи першими; всередині допису — у порядку, в якому фото вибрали.
+    // Роботи й референси — окремі стрічки
+    static func group(_ photos: [ClientPhoto], kind: ClientPhotoKind = .work) -> [ClientPhotoPost] {
+        let alive = photos.filter { $0.deletedAt == nil && $0.kind == kind }
         let groups = Dictionary(grouping: alive) { $0.postID ?? $0.id }
         return groups.values
             .map { ClientPhotoPost(photos: $0.sorted { $0.createdAt < $1.createdAt }) }

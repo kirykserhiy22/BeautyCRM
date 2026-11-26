@@ -203,6 +203,13 @@
 "appointment.timeOccupied" = "Vybraný čas je obsazený";
 "appointment.nearestFreeSlot" = "Nejbližší volný termín: %@ - %@";
 "appointment.notes" = "Poznámky";
+"photos.kind.work" = "Práce";
+"photos.kind.reference" = "Inspirace";
+"photos.references.empty" = "Zde se objeví fotky výsledku, který si klientka přeje — přidejte je v rezervaci nebo tlačítkem „+“.";
+"photos.references.forVisit" = "k rezervaci %@";
+"appointment.references" = "Inspirace od klientky";
+"appointment.references.hint" = "Fotky požadovaného výsledku. Objeví se v profilu klientky v záložce „Inspirace“.";
+"appointment.references.short" = "Inspirace";
 "appointment.notesPlaceholder" = "Volitelné poznámky...";
 "appointment.createTitle" = "Nová rezervace";
 "appointment.editTitle" = "Upravit rezervaci";
