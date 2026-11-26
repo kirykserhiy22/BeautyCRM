@@ -31,4 +31,4 @@ Our liability is limited to the extent permitted by law.
 We may change these terms and will announce material changes in advance. You can stop using the service at any time by deleting your account.
 
 ## 8. Law
-These terms are governed by the law of [country]. Contact: hello@getbeautybase.com.
+These terms are governed by the law of Germany. Contact: hello@getbeautybase.com.

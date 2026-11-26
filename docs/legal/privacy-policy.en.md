@@ -6,7 +6,7 @@ Beauty Base is a mobile app for beauty professionals: appointments, client recor
 This policy explains what data we process, why, and what your rights are.
 
 ## 1. Who we are
-The app is developed by Serhii Kiryk (individual), [city, country]. Data contact: **hello@getbeautybase.com**.
+The app is developed by Serhii Kiryk (individual), Germany. Data contact: **hello@getbeautybase.com**.
 
 ## 2. What data we process
 
@@ -42,7 +42,7 @@ These services process data only on our instructions.
 
 ## 5. How long we keep it
 As long as your account exists. When you delete your account, data is erased from the server and the phone.
-Server backups are deleted automatically within [a few weeks].
+Server backups are deleted automatically within a few weeks.
 
 ## 6. Your rights
 You can get a copy of your data, correct it, delete it, restrict or object to processing, and port it.
