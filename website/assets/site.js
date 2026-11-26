@@ -14,6 +14,8 @@
     "hero.scroll": "Scroll — the day begins",
     "day.title": "One day of a beauty pro.",
     "day.lead": "Scroll and watch everything fall into place.",
+    "day.app": "Today",
+    "hero.platform": "An app for iPhone",
     "h1.title": "Open the app — the whole day at a glance.",
     "h1.text": "A day timeline, like the iPhone calendar. Who, when, what and for how much — no scrolling through chats.",
     "h1.c1": "Root colour · Toning",
@@ -96,23 +98,24 @@
   var closeSection = document.querySelector(".close");
   var docPage = document.body.classList.contains("doc-page");
 
-  // ---------- День ----------
+  // ---------- День у телефоні ----------
 
   var root = document.documentElement;
-  var hours = Array.prototype.slice.call(document.querySelectorAll(".hour"));
-  var hourLabels = Array.prototype.slice.call(document.querySelectorAll(".rail-hours span"));
-  var dayGrid = document.querySelector(".day-grid");
+  var theater = document.querySelector(".theater");
+  var caps = Array.prototype.slice.call(document.querySelectorAll(".cap"));
+  var scrs = Array.prototype.slice.call(document.querySelectorAll(".scr"));
+  var clock = document.querySelector(".clock");
+  var current = -1;
 
-  if ("IntersectionObserver" in window && hours.length) {
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (e.isIntersecting) e.target.classList.add("in");
-      });
-    }, { threshold: 0.35, rootMargin: "0px 0px -10% 0px" });
-    hours.forEach(function (h) { io.observe(h); });
-  } else {
-    hours.forEach(function (h) { h.classList.add("in"); });
+  function show(i) {
+    if (i === current) return;
+    current = i;
+    caps.forEach(function (c, k) { c.classList.toggle("on", k === i); });
+    scrs.forEach(function (c, k) { c.classList.toggle("on", k === i); });
+    var t = caps[i] && caps[i].querySelector(".time");
+    if (clock && t) clock.textContent = t.textContent;
   }
+  if (caps.length) show(0);
 
   var ticking = false;
   function onScroll() {
@@ -126,14 +129,17 @@
         var light = docPage || (closeSection && closeSection.getBoundingClientRect().top < 60);
         top.classList.toggle("light", !!light);
       }
-      if (dayGrid) {
-        var r = dayGrid.getBoundingClientRect();
-        var vh = window.innerHeight;
-        var p = (vh * 0.5 - r.top) / Math.max(1, r.height - vh * 0.3);
-        p = Math.min(1, Math.max(0, p));
+      if (theater && caps.length) {
+        var r = theater.getBoundingClientRect();
+        var run = Math.max(1, r.height - window.innerHeight);
+        var p = Math.min(1, Math.max(0, -r.top / run));
         root.style.setProperty("--day", p.toFixed(4));
-        var passed = Math.round(p * (hourLabels.length - 1));
-        hourLabels.forEach(function (s, i) { s.classList.toggle("passed", i <= passed); });
+        var n = caps.length;
+        var i = Math.min(n - 1, Math.floor(p * n));
+        show(i);
+        // усередині екрана — легке «гортання», як у справжньому телефоні
+        var local = p * n - i;
+        if (scrs[i]) scrs[i].style.setProperty("--local", Math.min(1, local).toFixed(3));
       }
     });
   }

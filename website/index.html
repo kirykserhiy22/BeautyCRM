@@ -52,6 +52,7 @@
       </g>
     </svg>
     <p class="eyebrow">BEAUTY BASE</p>
+    <p class="platform" data-i18n="hero.platform">Додаток для iPhone</p>
     <h1 data-i18n="hero.title">Усе на своїх <em>місцях.</em></h1>
     <p class="lead" data-i18n="hero.lead">Записи, клієнти з історією візитів, референси й нагадування — один додаток замість нотаток, месенджерів і пам'яті.</p>
     <div class="actions">
@@ -69,83 +70,90 @@
     <p data-i18n="day.lead">Гортай — і подивись, як усе стає на свої місця.</p>
   </div>
 
-  <div class="day-grid">
-    <aside class="rail" aria-hidden="true">
-      <div class="rail-line"></div>
-      <div class="rail-fill"></div>
-      <div class="rail-now"></div>
-      <div class="rail-hours"><span>09:00</span><span>11:00</span><span>13:00</span><span>15:00</span><span>17:00</span><span>19:00</span></div>
-    </aside>
-
-    <div class="hours">
-
-      <article class="hour" data-hour="0.05">
-        <div class="text">
+  <!-- Телефон «залипає» посередині екрана, а сторінка гортає день у ньому -->
+  <div class="theater" style="--n: 6">
+    <div class="theater-sticky">
+      <div class="captions">
+        <div class="cap" data-i="0">
           <div class="time">09:00</div>
           <h3 data-i18n="h1.title">Відкрила додаток — і весь день перед очима.</h3>
           <p data-i18n="h1.text">Шкала дня, як у календарі iPhone. Хто, о котрій, на що й скільки — без гортання переписок.</p>
         </div>
-        <div class="stage">
-          <div class="card appt" data-from="left"><div class="row"><span class="c-title">Олена Коваль</span><span class="c-time">10:00 – 12:00</span></div><div class="c-sub" data-i18n="h1.c1">Фарбування корінь · Тонування</div></div>
-          <div class="card appt" data-from="right"><div class="row"><span class="c-title">Марина Шевчук</span><span class="c-time">12:30 – 14:00</span></div><div class="c-sub" data-i18n="h1.c2">Стрижка · Укладка</div></div>
-          <div class="card appt" data-from="left"><div class="row"><span class="c-title">Ірина Бондар</span><span class="c-time">15:00 – 18:00</span></div><div class="c-sub">AirTouch</div></div>
-        </div>
-      </article>
-
-      <article class="hour" data-hour="0.28">
-        <div class="text">
+        <div class="cap" data-i="1">
           <div class="time">11:00</div>
           <h3 data-i18n="h2.title">«А що ми минулого разу робили?»</h3>
           <p data-i18n="h2.text">Уся історія візитів клієнтки: формула фарби, скільки планували і скільки заплатила. «Записати так само» — і лишається вибрати дату.</p>
         </div>
-        <div class="stage">
+        <div class="cap" data-i="2">
+          <div class="time">13:00</div>
+          <h3 data-i18n="h3.title">Клієнтка надіслала референс.</h3>
+          <p data-i18n="h3.text">Фото бажаного результату додаються прямо в запис і живуть у профілі клієнтки окремою вкладкою — поруч з твоїми роботами «до / після».</p>
+        </div>
+        <div class="cap" data-i="3">
+          <div class="time">15:00</div>
+          <h3 data-i18n="h4.title">Нагадати про завтрашній запис — один дотик.</h3>
+          <p data-i18n="h4.text">Готовий текст з датою, часом і адресою. Обери тон — теплий, нейтральний чи офіційний — і надішли в Telegram, Viber, WhatsApp чи SMS.</p>
+        </div>
+        <div class="cap" data-i="4">
+          <div class="time">17:00</div>
+          <h3 data-i18n="h5.title">Захворіла? Відклади два дні за хвилину.</h3>
+          <p data-i18n="h5.text">Обираєш дати — записи стають у чергу «Чекають перенесення», дні — вихідними. Повідомити клієнток можна готовою причиною або своїми словами.</p>
+        </div>
+        <div class="cap" data-i="5">
+          <div class="time">19:00</div>
+          <h3 data-i18n="h6.title">Скільки я сьогодні заробила?</h3>
+          <p data-i18n="h6.text">Завершуєш запис — вводиш фактичну ціну. Дохід, середній чек і найприбутковіші послуги рахуються самі.</p>
+        </div>
+      </div>
+      <div class="phone" aria-hidden="true">
+        <div class="phone-screen">
+          <div class="status"><span class="clock">09:00</span><span class="island"></span><span class="bars-icons">●●● ▮</span></div>
+          <div class="app-head"><span class="app-title" data-i18n="day.app">Сьогодні</span><span class="app-dot"></span></div>
+          <div class="app-progress"><span></span></div>
+          <div class="scrs">
+          <div class="scr" data-i="0">
+            <div class="scr-inner">
+
+          <div class="card appt" data-from="left"><div class="row"><span class="c-title">Олена Коваль</span><span class="c-time">10:00 – 12:00</span></div><div class="c-sub" data-i18n="h1.c1">Фарбування корінь · Тонування</div></div>
+          <div class="card appt" data-from="right"><div class="row"><span class="c-title">Марина Шевчук</span><span class="c-time">12:30 – 14:00</span></div><div class="c-sub" data-i18n="h1.c2">Стрижка · Укладка</div></div>
+          <div class="card appt" data-from="left"><div class="row"><span class="c-title">Ірина Бондар</span><span class="c-time">15:00 – 18:00</span></div><div class="c-sub">AirTouch</div></div>
+            </div>
+          </div>
+          <div class="scr" data-i="1">
+            <div class="scr-inner">
+
           <div class="card" data-from="top">
             <div class="row"><span class="c-title" data-i18n="h2.date">8 жовтня</span><span class="price"><span class="strike">75 €</span>115 €</span></div>
             <div class="c-sub" data-i18n="h1.c1">Фарбування корінь · Тонування</div>
             <div class="note" data-i18n="h2.note">Фарба 6.1 + 30 г освітлювача, витримка 35 хв</div>
             <div class="mini-btn" data-i18n="h2.repeat">↻ Записати так само</div>
           </div>
-        </div>
-      </article>
+            </div>
+          </div>
+          <div class="scr" data-i="2">
+            <div class="scr-inner">
 
-      <article class="hour" data-hour="0.47">
-        <div class="text">
-          <div class="time">13:00</div>
-          <h3 data-i18n="h3.title">Клієнтка надіслала референс.</h3>
-          <p data-i18n="h3.text">Фото бажаного результату додаються прямо в запис і живуть у профілі клієнтки окремою вкладкою — поруч з твоїми роботами «до / після».</p>
-        </div>
-        <div class="stage">
           <div class="card" data-from="right">
             <div class="row"><span class="c-title">Ірина Бондар</span><span class="badge" data-i18n="h3.badge">Референси · 3</span></div>
             <div class="refs"><div class="ref a"></div><div class="ref b"></div><div class="ref c"></div></div>
           </div>
           <div class="card" data-from="bottom"><div class="row"><span class="c-sub" data-i18n="h3.tabs">Роботи · <b style="color:#fff">Референси</b></span><span class="badge ok" data-i18n="h3.saved">у профілі</span></div></div>
-        </div>
-      </article>
+            </div>
+          </div>
+          <div class="scr" data-i="3">
+            <div class="scr-inner">
 
-      <article class="hour" data-hour="0.66">
-        <div class="text">
-          <div class="time">15:00</div>
-          <h3 data-i18n="h4.title">Нагадати про завтрашній запис — один дотик.</h3>
-          <p data-i18n="h4.text">Готовий текст з датою, часом і адресою. Обери тон — теплий, нейтральний чи офіційний — і надішли в Telegram, Viber, WhatsApp чи SMS.</p>
-        </div>
-        <div class="stage">
           <div class="card" data-from="left">
             <div class="tones"><span class="tone on" data-i18n="h4.warm">Теплий</span><span class="tone" data-i18n="h4.neutral">Нейтральний</span><span class="tone" data-i18n="h4.formal">Офіційний</span></div>
             <div class="bubble" data-i18n="h4.msg">Привіт! 😊 Чекаю тебе завтра о 10:00: Фарбування корінь. До зустрічі! 💕</div>
             <div class="channels"><span class="chip">Telegram</span><span class="chip">Viber</span><span class="chip">WhatsApp</span><span class="chip">SMS</span></div>
           </div>
           <div class="card" data-from="right"><div class="row"><span class="c-sub" data-i18n="h4.sent">Нагадування надіслано</span><span class="badge ok">✓ 15:04</span></div></div>
-        </div>
-      </article>
+            </div>
+          </div>
+          <div class="scr" data-i="4">
+            <div class="scr-inner">
 
-      <article class="hour" data-hour="0.84">
-        <div class="text">
-          <div class="time">17:00</div>
-          <h3 data-i18n="h5.title">Захворіла? Відклади два дні за хвилину.</h3>
-          <p data-i18n="h5.text">Обираєш дати — записи стають у чергу «Чекають перенесення», дні — вихідними. Повідомити клієнток можна готовою причиною або своїми словами.</p>
-        </div>
-        <div class="stage">
           <div class="card" data-from="top">
             <div class="check"><i>✓</i><span data-i18n="h5.r1">Олена · пт, 10:00</span></div>
             <div class="check"><i>✓</i><span data-i18n="h5.r2">Марина · пт, 12:30</span></div>
@@ -153,24 +161,22 @@
             <div class="row" style="margin-top:8px"><span class="c-sub" data-i18n="h5.dayoff">Зробити дні вихідними</span><span class="toggle"></span></div>
           </div>
           <div class="card" data-from="bottom"><div class="row"><span class="c-title" data-i18n="h5.queue">Чекають перенесення</span><span class="badge warn">3</span></div></div>
-        </div>
-      </article>
+            </div>
+          </div>
+          <div class="scr" data-i="5">
+            <div class="scr-inner">
 
-      <article class="hour" data-hour="1">
-        <div class="text">
-          <div class="time">19:00</div>
-          <h3 data-i18n="h6.title">Скільки я сьогодні заробила?</h3>
-          <p data-i18n="h6.text">Завершуєш запис — вводиш фактичну ціну. Дохід, середній чек і найприбутковіші послуги рахуються самі.</p>
-        </div>
-        <div class="stage">
           <div class="card" data-from="scale">
             <div class="c-sub" data-i18n="h6.week">Цей тиждень</div>
             <div class="big-num">1 240 €</div>
             <div class="bars"><span style="height:45%"></span><span style="height:70%"></span><span style="height:55%"></span><span class="hi" style="height:100%"></span><span style="height:80%"></span></div>
           </div>
+            </div>
+          </div>
+          </div>
+          <div class="tabbar"><i></i><i></i><i></i><i></i><i></i></div>
         </div>
-      </article>
-
+      </div>
     </div>
   </div>
 </section>
