@@ -45,7 +45,7 @@ struct ClientPhotoFeedView: View {
 
             ScrollView {
 
-                LazyVStack(spacing: 28) {
+                LazyVStack(spacing: 18) {
                     ForEach(posts) { item in
                         post(item)
                             .id(item.id)
@@ -107,25 +107,12 @@ struct ClientPhotoFeedView: View {
 
     private func post(_ item: ClientPhotoPost) -> some View {
 
-        // Позначка «До / Після» — на самому фото; підпис — один на весь допис, під фото
+        // Як в Instagram: спершу фото, під ним — дата, «⋯» і підпис цього ж допису,
+        // далі роздільна лінія — тож одразу видно, до якого фото що належить
         let index = min(pages[item.id] ?? 0, item.photos.count - 1)
         let photo = item.photos[index]
 
         return VStack(alignment: .leading, spacing: 10) {
-
-            HStack(spacing: 8) {
-                Text(AppFormatting.date(item.cover.createdAt, locale: localization.locale, format: .medium))
-                    .font(.caption)
-                    .foregroundColor(colors.textSecondary)
-                Spacer()
-                if item.isCarousel {
-                    Text("\(index + 1)/\(item.photos.count)")
-                        .font(.caption.weight(.semibold))
-                        .foregroundColor(colors.textSecondary)
-                }
-                menu(item, current: photo)
-            }
-            .padding(.horizontal)
 
             if item.isCarousel {
                 // Допис з кількох фото: гортаються вбік, як карусель в Instagram
@@ -141,6 +128,16 @@ struct ClientPhotoFeedView: View {
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
                 .aspectRatio(4 / 5, contentMode: .fit)
+                // «2/3» — на самому фото, як в Instagram
+                .overlay(alignment: .topTrailing) {
+                    Text("\(index + 1)/\(item.photos.count)")
+                        .font(.caption.weight(.semibold))
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(Capsule().fill(Color.black.opacity(0.55)))
+                        .padding(10)
+                }
                 .accessibilityIdentifier("photo.carousel")
 
                 // Крапки під фото
@@ -157,14 +154,31 @@ struct ClientPhotoFeedView: View {
                     .overlay(alignment: .topLeading) { stageBadge(photo) }
             }
 
-            if let caption = item.caption {
-                Text(caption)
-                    .font(.subheadline)
-                    .foregroundColor(colors.textPrimary)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.horizontal)
-                    .accessibilityIdentifier("photo.caption")
+            VStack(alignment: .leading, spacing: 6) {
+
+                HStack(spacing: 8) {
+                    Text(AppFormatting.date(item.cover.createdAt, locale: localization.locale, format: .medium))
+                        .font(.caption)
+                        .foregroundColor(colors.textSecondary)
+                    Spacer()
+                    menu(item, current: photo)
+                }
+
+                if let caption = item.caption {
+                    Text(caption)
+                        .font(.subheadline)
+                        .foregroundColor(colors.textPrimary)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .accessibilityIdentifier("photo.caption")
+                }
             }
+            .padding(.horizontal)
+
+            // Межа між дописами
+            Rectangle()
+                .fill(colors.divider)
+                .frame(height: 1)
+                .padding(.top, 10)
         }
     }
 
