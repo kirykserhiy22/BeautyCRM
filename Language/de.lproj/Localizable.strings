@@ -163,6 +163,10 @@
 "settings.workingHours.end" = "Ende";
 "settings.workingHours.description" = "Die Auslastungsleiste im Kalender zeigt diesen Zeitraum. Termine außerhalb werden trotzdem angezeigt: Die Monatsskala erweitert sich automatisch.";
 "settings.logout" = "Abmelden";
+"settings.group.about" = "Über die App";
+"settings.privacy" = "Datenschutzerklärung";
+"settings.terms" = "Nutzungsbedingungen";
+"settings.support" = "Support";
 "settings.deleteAccount" = "Konto löschen";
 "deleteAccount.title" = "Konto löschen?";
 "deleteAccount.warning" = "Dein Konto und alle Daten werden endgültig gelöscht: Kundinnen, Fotos, Termine, Leistungen, freie Tage und Einstellungen — auf diesem Telefon und auf dem Server. Sie können nicht wiederhergestellt werden.";

@@ -105,6 +105,26 @@ struct SettingsView: View {
                         .accessibilityIdentifier("settings.guide")
                     }
 
+                    // Політика, умови, підтримка — вимога App Store і зручність для майстра
+                    groupTitle("settings.group.about")
+
+                    group {
+                        Link(destination: Constants.privacyPolicyURL) {
+                            row(title: "settings.privacy", icon: Image(systemName: "hand.raised"), value: nil, isDestructive: false)
+                        }
+                        .accessibilityIdentifier("settings.privacy")
+                        divider
+                        Link(destination: Constants.termsURL) {
+                            row(title: "settings.terms", icon: Image(systemName: "doc.text"), value: nil, isDestructive: false)
+                        }
+                        .accessibilityIdentifier("settings.terms")
+                        divider
+                        Link(destination: Constants.supportURL) {
+                            row(title: "settings.support", icon: Image(systemName: "envelope"), value: Constants.supportEmail, isDestructive: false)
+                        }
+                        .accessibilityIdentifier("settings.support")
+                    }
+
                     groupTitle("settings.group.account")
 
                     group {
