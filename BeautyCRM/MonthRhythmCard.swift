@@ -191,7 +191,7 @@ struct MonthRhythmCard: View {
                     ForEach(days.indices.filter { days[$0].isDayOff }, id: \.self) { index in
                         if let x = proxy.position(forX: String(index)) {
                             RoundedRectangle(cornerRadius: 3)
-                                .strokeBorder(dayOffColor, lineWidth: 1.2)
+                                .strokeBorder(dayOffColor, lineWidth: 0.6)
                                 .frame(width: width, height: frame.height)
                                 .position(x: frame.minX + x, y: frame.midY)
                                 .opacity(selectedDay != nil && selectedDay != days[index].day ? 0.35 : 1)
@@ -232,7 +232,7 @@ struct MonthRhythmCard: View {
     private func legend(color: Color, key: String, outlined: Bool = false) -> some View {
         HStack(spacing: 5) {
             if outlined {
-                RoundedRectangle(cornerRadius: 2).strokeBorder(color, lineWidth: 1.2).frame(width: 10, height: 10)
+                RoundedRectangle(cornerRadius: 2).strokeBorder(color, lineWidth: 0.8).frame(width: 10, height: 10)
             } else {
                 RoundedRectangle(cornerRadius: 2).fill(color).frame(width: 10, height: 10)
             }
@@ -240,8 +240,9 @@ struct MonthRhythmCard: View {
         }
     }
 
+    // Тонкий приглушений контур: помітний, але не вибивається з теми (і в світлому стилі)
     private var dayOffColor: Color {
-        colors.textSecondary.opacity(0.8)
+        colors.textSecondary.opacity(0.5)
     }
 
     private func maxHours(_ days: [DayLoad]) -> Double {
