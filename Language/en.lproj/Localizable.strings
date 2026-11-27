@@ -586,3 +586,6 @@
 "history.status.completed" = "Completed";
 "history.status.cancelled" = "Cancelled";
 "refund.amountPlaceholder" = "How much was refunded";
+"visits.refunded" = "Refunded";
+"visits.received" = "Received";
+"visits.refundReason" = "Refund reason";

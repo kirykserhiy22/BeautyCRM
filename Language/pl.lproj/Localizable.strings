@@ -586,3 +586,6 @@
 "history.status.completed" = "Zakończona";
 "history.status.cancelled" = "Odwołana";
 "refund.amountPlaceholder" = "Ile zwrócono";
+"visits.refunded" = "Zwrócono";
+"visits.received" = "Otrzymano";
+"visits.refundReason" = "Powód zwrotu";

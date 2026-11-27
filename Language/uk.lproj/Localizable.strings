@@ -587,3 +587,6 @@
 "history.status.completed" = "Завершено";
 "history.status.cancelled" = "Скасовано";
 "refund.amountPlaceholder" = "Скільки повернули";
+"visits.refunded" = "Повернено";
+"visits.received" = "Отримано";
+"visits.refundReason" = "Причина повернення";

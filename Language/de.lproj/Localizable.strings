@@ -586,3 +586,6 @@
 "history.status.completed" = "Erledigt";
 "history.status.cancelled" = "Abgesagt";
 "refund.amountPlaceholder" = "Wie viel erstattet wurde";
+"visits.refunded" = "Erstattet";
+"visits.received" = "Erhalten";
+"visits.refundReason" = "Grund der Rückerstattung";

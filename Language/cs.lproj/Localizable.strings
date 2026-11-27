@@ -587,3 +587,6 @@
 "history.status.completed" = "Dokončeno";
 "history.status.cancelled" = "Zrušeno";
 "refund.amountPlaceholder" = "Kolik bylo vráceno";
+"visits.refunded" = "Vráceno";
+"visits.received" = "Obdrženo";
+"visits.refundReason" = "Důvod vrácení";
