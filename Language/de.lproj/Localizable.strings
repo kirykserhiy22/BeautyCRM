@@ -604,3 +604,13 @@
 "analytics.clientBase.returningDetail" = "%1$d von %2$d kamen erneut";
 "analytics.clientBase.dormant" = "Lange nicht da";
 "analytics.clientBase.dormantDetail" = "über 3 Monate, kein Termin";
+
+// Ритм місяця на Головній
+"home.rhythm.title" = "Monatsrhythmus";
+"home.rhythm.previous" = "Vorheriger Monat";
+"home.rhythm.next" = "Nächster Monat";
+"home.rhythm.busy" = "%@ der Arbeitszeit belegt";
+"home.rhythm.booked" = "Termine";
+"home.rhythm.free" = "Frei";
+"home.rhythm.dayOff" = "freier Tag";
+"home.rhythm.dayBooked" = "%1$@ von %2$@ belegt";

@@ -26,6 +26,8 @@ struct HomeView: View {
     @Environment(\.modelContext) private var context
 
     @Query private var profiles: [UserProfile]
+    @Query(filter: #Predicate<DayOff> { $0.deletedAt == nil })
+    private var dayOffs: [DayOff]
     @Query(filter: #Predicate<Client> { $0.deletedAt == nil })
     private var clients: [Client]
 
@@ -130,6 +132,15 @@ struct HomeView: View {
                                 .background(RoundedRectangle(cornerRadius: 16).fill(colors.card))
                             }
                             .accessibilityIdentifier("home.history")
+
+                            // Ритм місяця: наскільки заповнений кожен день
+                            MonthRhythmCard(
+                                appointments: userAppointments,
+                                dayOffKeys: Set(dayOffs.filter { $0.userID == appState.session.userID }.map(\.dayKey)),
+                                workingHours: .workingHours(
+                                    profiles.first { $0.authUserID == appState.session.userID }
+                                )
+                            )
                         }
                     }
 
