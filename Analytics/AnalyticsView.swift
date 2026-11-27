@@ -740,20 +740,10 @@ struct AnalyticsView: View {
 
             GeometryReader { geometry in
 
-                Rectangle()
-                    .fill(.clear)
-                    .contentShape(Rectangle())
-                    .gesture(
-                        SpatialTapGesture()
-                            .onEnded { tap in
-                                selectBar(
-                                    at: tap.location,
-                                    proxy: proxy,
-                                    geometry: geometry,
-                                    items: items
-                                )
-                            }
-                    )
+                ChartScrubGesture(
+                    onTap: { selectBar(at: $0, proxy: proxy, geometry: geometry, items: items) },
+                    onScrub: { scrubBar(at: $0, proxy: proxy, geometry: geometry, items: items) }
+                )
             }
         }
         .frame(
@@ -828,6 +818,24 @@ struct AnalyticsView: View {
             selectedChartDate == date ? nil : date
     }
 
+
+
+    // Провели пальцем по графіку — показати стовпчик під ним
+    private func scrubBar(
+        at location: CGPoint,
+        proxy: ChartProxy,
+        geometry: GeometryProxy,
+        items: [AnalyticsChartItem]
+    ) -> String? {
+        guard let plotFrame = proxy.plotFrame else { return nil }
+        let frame = geometry[plotFrame]
+        let x = min(max(location.x - frame.origin.x, 0), frame.width - 1)
+        guard let key: String = proxy.value(atX: x), let index = Int(key), items.indices.contains(index) else {
+            return nil
+        }
+        selectedChartDate = items[index].date
+        return key
+    }
 
 
     private func selectionTitle(for date: Date) -> String {
