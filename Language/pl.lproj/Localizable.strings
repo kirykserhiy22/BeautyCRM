@@ -589,3 +589,5 @@
 "visits.refunded" = "Zwrócono";
 "visits.received" = "Otrzymano";
 "visits.refundReason" = "Powód zwrotu";
+"appointment.hideConfirm.title" = "Ukryć wizytę?";
+"appointment.hideConfirm.message" = "Zniknie wszędzie: z kalendarza, „Wszystkich wizyt”, historii wizyt i podsumowań klienta. Nie da się tego cofnąć.";

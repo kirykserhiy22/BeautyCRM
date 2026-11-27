@@ -590,3 +590,5 @@
 "visits.refunded" = "Vráceno";
 "visits.received" = "Obdrženo";
 "visits.refundReason" = "Důvod vrácení";
+"appointment.hideConfirm.title" = "Skrýt termín?";
+"appointment.hideConfirm.message" = "Zmizí všude: z kalendáře, „Všech termínů“, historie návštěv i přehledu klienta. Nelze to vrátit.";

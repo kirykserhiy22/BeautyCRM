@@ -27,14 +27,14 @@ enum ClientVisitFilter: String, CaseIterable, Identifiable {
 enum ClientVisitHistory {
 
     // Записи клієнта для історії: від нових до старих.
-    // «Приховані» (archived) — це теж скасовані, тож показуємо їх разом зі скасованими.
+    // «Приховані» (archived) майстер прибрав свідомо — їх немає ніде, і тут теж.
     static func visits(
         clientID: UUID,
         appointments: [Appointment],
         filter: ClientVisitFilter
     ) -> [Appointment] {
         appointments
-            .filter { $0.clientID == clientID && $0.deletedAt == nil }
+            .filter { $0.clientID == clientID && $0.deletedAt == nil && $0.status != .archived }
             .filter { appointment in
                 switch filter {
                 case .all: return true
@@ -52,7 +52,7 @@ enum ClientVisitHistory {
     }
 
     static func isCancelled(_ appointment: Appointment) -> Bool {
-        appointment.status == .cancelled || appointment.status == .archived
+        appointment.status == .cancelled
     }
 
     // Скільки заплачено — лише для завершених (як у підсумках картки клієнта)

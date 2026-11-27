@@ -590,3 +590,5 @@
 "visits.refunded" = "Повернено";
 "visits.received" = "Отримано";
 "visits.refundReason" = "Причина повернення";
+"appointment.hideConfirm.title" = "Приховати запис?";
+"appointment.hideConfirm.message" = "Запис зникне звідусіль: з календаря, «Усіх записів», історії візитів і підсумків клієнта. Повернути його не вийде.";

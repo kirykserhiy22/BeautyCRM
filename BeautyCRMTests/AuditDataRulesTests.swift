@@ -254,9 +254,10 @@ final class AuditDataRulesTests: XCTestCase {
             ]
         )
 
-        XCTAssertEqual(result.totalVisits, 5)
+        // Прихований (archived) не рахується ніде
+        XCTAssertEqual(result.totalVisits, 4)
         XCTAssertEqual(result.completedVisits, 2)
-        XCTAssertEqual(result.cancelledVisits, 2)
+        XCTAssertEqual(result.cancelledVisits, 1)
         XCTAssertEqual(result.revenue, Decimal(string: "75.50"))
         XCTAssertEqual(result.averageCheck, Decimal(string: "37.75"))
         XCTAssertEqual(result.lastVisitDate, F.date(2026, 11, 3, 10))

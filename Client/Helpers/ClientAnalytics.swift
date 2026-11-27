@@ -47,8 +47,9 @@ enum ClientAnalyticsCalculator {
 
         // appointments for this client
 
+        // Приховані записи майстер прибрав — у підсумках клієнта їх не рахуємо
         let clientAppointments = appointments.filter {
-            $0.clientID == client.id
+            $0.clientID == client.id && $0.status != .archived
         }
 
         // completed
@@ -58,13 +59,9 @@ enum ClientAnalyticsCalculator {
         }
 
         // cancelled
-        // Archived appointments were cancelled before archiving
 
         let cancelled = clientAppointments.filter {
-
-            $0.status == .cancelled ||
-            $0.status == .archived
-
+            $0.status == .cancelled
         }
 
         // revenue

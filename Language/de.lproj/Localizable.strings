@@ -589,3 +589,5 @@
 "visits.refunded" = "Erstattet";
 "visits.received" = "Erhalten";
 "visits.refundReason" = "Grund der Rückerstattung";
+"appointment.hideConfirm.title" = "Termin ausblenden?";
+"appointment.hideConfirm.message" = "Er verschwindet überall: aus dem Kalender, „Alle Termine“, dem Besuchsverlauf und den Kundenstatistiken. Das lässt sich nicht rückgängig machen.";

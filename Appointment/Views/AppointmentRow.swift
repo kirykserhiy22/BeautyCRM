@@ -45,6 +45,8 @@ struct AppointmentRow: View {
     @State private var isEditingAmount = false
     @State private var showRefund = false
     @State private var showReopenConfirm = false
+    // «Приховати» прибирає скасований запис звідусіль — спершу питаємо
+    @State private var showHideConfirm = false
     
     @EnvironmentObject var theme: ThemeManager
     
@@ -385,8 +387,7 @@ struct AppointmentRow: View {
                                 }
 
                                 Button {
-                                    AppointmentEngine.archive(appointment: appt)
-                                    context.saveReportingErrors()
+                                    showHideConfirm = true
                                 } label: {
                                     Label(
                                         localization.localizedString(for: "appointment.hide"),
@@ -500,6 +501,19 @@ struct AppointmentRow: View {
             RefundSheet(appointment: appt)
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)
+        }
+
+        .alert(
+            localization.localizedString(for: "appointment.hideConfirm.title"),
+            isPresented: $showHideConfirm
+        ) {
+            Button(localization.localizedString(for: "common.cancel"), role: .cancel) { }
+            Button(localization.localizedString(for: "appointment.hide"), role: .destructive) {
+                AppointmentEngine.archive(appointment: appt)
+                context.saveReportingErrors()
+            }
+        } message: {
+            Text(localization.localizedString(for: "appointment.hideConfirm.message"))
         }
 
         // RESTORE CONFLICT

@@ -589,3 +589,5 @@
 "visits.refunded" = "Refunded";
 "visits.received" = "Received";
 "visits.refundReason" = "Refund reason";
+"appointment.hideConfirm.title" = "Hide this appointment?";
+"appointment.hideConfirm.message" = "It will disappear everywhere: the calendar, All appointments, the client’s visit history and totals. This can’t be undone.";
