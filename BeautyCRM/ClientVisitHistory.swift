@@ -27,14 +27,14 @@ enum ClientVisitFilter: String, CaseIterable, Identifiable {
 enum ClientVisitHistory {
 
     // Записи клієнта для історії: від нових до старих.
-    // «Приховані» (archived) — це теж скасовані, тож показуємо їх разом зі скасованими.
+    // «Приховані» (archived) майстер прибрав свідомо — їх немає ніде, і тут теж.
     static func visits(
         clientID: UUID,
         appointments: [Appointment],
         filter: ClientVisitFilter
     ) -> [Appointment] {
         appointments
-            .filter { $0.clientID == clientID && $0.deletedAt == nil }
+            .filter { $0.clientID == clientID && $0.deletedAt == nil && $0.status != .archived }
             .filter { appointment in
                 switch filter {
                 case .all: return true
@@ -52,7 +52,7 @@ enum ClientVisitHistory {
     }
 
     static func isCancelled(_ appointment: Appointment) -> Bool {
-        appointment.status == .cancelled || appointment.status == .archived
+        appointment.status == .cancelled
     }
 
     // Скільки заплачено — лише для завершених (як у підсумках картки клієнта)
@@ -60,7 +60,7 @@ enum ClientVisitHistory {
         guard appointment.status == .completed else {
             return nil
         }
-        return appointment.finalPrice ?? appointment.totalFinalPrice
+        return appointment.netPrice ?? appointment.totalFinalPrice
     }
 
     // Ціна послуги у візиті: фактична для завершених, інакше погоджена
@@ -194,17 +194,27 @@ struct ClientVisitHistoryView: View {
                 .foregroundColor(colors.textSecondary)
                 .lineLimit(2)
 
-            // Заплатили не стільки, скільки планували — видно одразу
-            if let paid, paid != visit.totalPlannedPrice {
+            // Заплатили не стільки, скільки планували — видно одразу.
+            // Було повернення — тут повна оплата, а повернення окремим рядком нижче
+            let fullPaid = visit.refundAmount != nil ? (visit.finalPrice ?? paid) : paid
+            if let fullPaid, fullPaid != visit.totalPlannedPrice {
                 Text(
                     String(
                         format: localization.localizedString(for: "visits.plannedPaid"),
                         currency.format(visit.totalPlannedPrice),
-                        currency.format(paid)
+                        currency.format(fullPaid)
                     )
                 )
                 .font(.caption)
                 .foregroundColor(colors.textSecondary)
+            }
+
+            // Повернення і причина — як у картці запису
+            if visit.status == .completed, let refund = visit.refundAmount {
+                Text(refundLine(refund, reason: visit.refundReason))
+                    .font(.caption)
+                    .foregroundColor(colors.warning)
+                    .lineLimit(2)
             }
 
             if let notes = visit.notes?.trimmingCharacters(in: .whitespacesAndNewlines), !notes.isEmpty {
@@ -220,6 +230,12 @@ struct ClientVisitHistoryView: View {
         .cornerRadius(16)
         .opacity(cancelled ? 0.75 : 1)
         .contentShape(Rectangle())
+    }
+
+    private func refundLine(_ refund: Decimal, reason: String?) -> String {
+        let amount = String(format: localization.localizedString(for: "refund.line"), currency.format(refund))
+        guard let reason, !reason.isEmpty else { return amount }
+        return "\(amount) · \(reason)"
     }
 
     private func badge(_ key: String, color: Color) -> some View {
@@ -253,6 +269,7 @@ struct ClientVisitDetailView: View {
     var body: some View {
 
         let paid = ClientVisitHistory.paid(appointment)
+        let refund = appointment.status == .completed ? appointment.refundAmount : nil
 
         ScrollView {
 
@@ -282,8 +299,33 @@ struct ClientVisitDetailView: View {
                         Divider().overlay(colors.divider)
                     }
 
+                    // Повернення: спершу скільки заплатили, потім скільки повернули
+                    if let refund = refund, let fullPrice = appointment.finalPrice {
+                        HStack {
+                            Text(localization.localizedString(for: "visits.paid"))
+                            Spacer()
+                            Text(currency.format(fullPrice))
+                        }
+                        .font(.subheadline)
+                        .foregroundColor(colors.textPrimary)
+                        .padding(.vertical, 10)
+
+                        HStack {
+                            Text(localization.localizedString(for: "visits.refunded"))
+                            Spacer()
+                            Text("−" + currency.format(refund))
+                        }
+                        .font(.subheadline)
+                        .foregroundColor(colors.warning)
+                        .padding(.bottom, 10)
+
+                        Divider().overlay(colors.divider)
+                    }
+
                     HStack {
-                        Text(localization.localizedString(for: paid == nil ? "visits.planned" : "visits.paid"))
+                        Text(localization.localizedString(
+                            for: paid == nil ? "visits.planned" : (refund == nil ? "visits.paid" : "visits.received")
+                        ))
                             .fontWeight(.semibold)
                         Spacer()
                         Text(currency.format(paid ?? appointment.totalPlannedPrice))
@@ -308,6 +350,21 @@ struct ClientVisitDetailView: View {
                 .padding(.horizontal)
                 .background(colors.card)
                 .cornerRadius(16)
+
+                if let reason = appointment.refundReason, refund != nil {
+                    Text(localization.localizedString(for: "visits.refundReason"))
+                        .font(.footnote.weight(.semibold))
+                        .foregroundColor(colors.textSecondary)
+                        .padding(.horizontal, 4)
+
+                    Text(reason)
+                        .foregroundColor(colors.textPrimary)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding()
+                        .background(colors.card)
+                        .cornerRadius(16)
+                        .accessibilityIdentifier("visits.refundReason")
+                }
 
                 if let notes = appointment.notes?.trimmingCharacters(in: .whitespacesAndNewlines), !notes.isEmpty {
                     Text(localization.localizedString(for: "visits.notes"))

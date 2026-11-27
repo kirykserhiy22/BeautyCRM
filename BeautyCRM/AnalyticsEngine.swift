@@ -133,7 +133,7 @@ enum AnalyticsEngine {
                 && $0.startDate < interval.end
         }
 
-        let revenue = completed.reduce(Decimal(0)) { $0 + ($1.finalPrice ?? 0) }
+        let revenue = completed.reduce(Decimal(0)) { $0 + ($1.netPrice ?? 0) }
 
         // Активні записи ще не завершені, тож у дохід не входять
         let expectedRevenue = appointments
@@ -217,7 +217,7 @@ enum AnalyticsEngine {
 
         let previous = allCompleted
             .filter { $0.startDate >= previousStart && $0.startDate < previousEnd }
-            .reduce(Decimal(0)) { $0 + ($1.finalPrice ?? 0) }
+            .reduce(Decimal(0)) { $0 + ($1.netPrice ?? 0) }
 
         guard previous > 0 else {
             return nil
@@ -317,7 +317,7 @@ enum AnalyticsEngine {
             for item in appointment.services {
                 var entry = grouped[item.serviceID] ?? (item.serviceName, 0, 0)
                 entry.name = item.serviceName
-                entry.revenue += item.finalPrice ?? item.plannedPrice
+                entry.revenue += (item.finalPrice ?? item.plannedPrice) * appointment.keptShare
                 entry.count += 1
                 grouped[item.serviceID] = entry
             }
@@ -352,7 +352,7 @@ enum AnalyticsEngine {
         for appointment in completed.sorted(by: { $0.startDate < $1.startDate }) {
             var entry = grouped[appointment.clientID] ?? (appointment.clientName, 0, 0)
             entry.name = appointment.clientName
-            entry.spent += appointment.finalPrice ?? 0
+            entry.spent += appointment.netPrice ?? 0
             entry.visits += 1
             grouped[appointment.clientID] = entry
         }
@@ -390,7 +390,7 @@ enum AnalyticsEngine {
             guard let bucket = calendar.dateInterval(of: unit, for: appointment.startDate)?.start else {
                 continue
             }
-            buckets[bucket, default: (0, 0)].revenue += appointment.finalPrice ?? 0
+            buckets[bucket, default: (0, 0)].revenue += appointment.netPrice ?? 0
             buckets[bucket, default: (0, 0)].count += 1
         }
 

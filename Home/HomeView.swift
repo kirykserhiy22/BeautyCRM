@@ -110,6 +110,26 @@ struct HomeView: View {
                             if !todayAppointments.isEmpty {
                                 scheduleSection
                             }
+
+                            // Усі записи: знайти старий запис, виправити суму чи оформити повернення
+                            NavigationLink {
+                                AppointmentHistoryView()
+                            } label: {
+                                HStack(spacing: 12) {
+                                    Image(systemName: "list.bullet.rectangle")
+                                        .foregroundColor(colors.accent)
+                                    Text(localization.localizedString(for: "history.title"))
+                                        .font(.subheadline.weight(.semibold))
+                                        .foregroundColor(colors.textPrimary)
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                        .font(.caption.bold())
+                                        .foregroundColor(colors.textSecondary)
+                                }
+                                .padding()
+                                .background(RoundedRectangle(cornerRadius: 16).fill(colors.card))
+                            }
+                            .accessibilityIdentifier("home.history")
                         }
                     }
 

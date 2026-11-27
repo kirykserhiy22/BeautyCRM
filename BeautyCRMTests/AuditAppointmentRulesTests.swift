@@ -581,7 +581,7 @@ final class AuditAppointmentRulesTests: XCTestCase {
 
     func testAllowedStatusTransitions() {
         let all: [AppointmentStatus] = [.active, .completed, .cancelled, .archived]
-        let allowed: Set<String> = ["active→completed", "active→cancelled", "cancelled→active", "cancelled→archived"]
+        let allowed: Set<String> = ["active→completed", "active→cancelled", "completed→active", "cancelled→active", "cancelled→archived"]
 
         for from in all {
             for to in all {

@@ -136,6 +136,7 @@ struct AppointmentDetailScreen: View {
     let appointment: Appointment
 
     @EnvironmentObject var theme: ThemeManager
+    @Environment(\.dismiss) private var dismiss
     @State private var expandedID: UUID?
 
     var body: some View {
@@ -151,6 +152,12 @@ struct AppointmentDetailScreen: View {
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             expandedID = appointment.id
+        }
+        // Прихований запис зникає звідусіль — і це вікно теж закривається
+        .onChange(of: appointment.status) { _, status in
+            if status == .archived {
+                dismiss()
+            }
         }
     }
 }

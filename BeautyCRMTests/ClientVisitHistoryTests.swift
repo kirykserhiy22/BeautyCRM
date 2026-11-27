@@ -50,11 +50,12 @@ final class ClientVisitHistoryTests: XCTestCase {
         let all = try context.fetch(FetchDescriptor<Appointment>())
 
         XCTAssertEqual(ClientVisitHistory.visits(clientID: olena, appointments: all, filter: .all).map(\.id),
-                       [recent.id, cancelled.id, hidden.id, old.id])
+                       [recent.id, cancelled.id, old.id], "Прихованого немає")
         XCTAssertEqual(ClientVisitHistory.visits(clientID: olena, appointments: all, filter: .completed).map(\.id),
                        [recent.id, old.id])
         XCTAssertEqual(ClientVisitHistory.visits(clientID: olena, appointments: all, filter: .cancelled).map(\.id),
-                       [cancelled.id, hidden.id], "Приховані — теж скасовані")
+                       [cancelled.id], "Приховані не показуються й серед скасованих")
+        XCTAssertFalse(ClientVisitHistory.visits(clientID: olena, appointments: all, filter: .all).contains { $0.id == hidden.id })
 
         let groups = ClientVisitHistory.byYear(ClientVisitHistory.visits(clientID: olena, appointments: all, filter: .all))
         XCTAssertEqual(groups.map(\.year), [2026, 2025])
