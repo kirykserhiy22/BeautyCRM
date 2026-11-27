@@ -33,6 +33,14 @@ final class UserProfile: SyncTrackable {
     var workStartMinute: Int? = nil
     var workEndMinute: Int? = nil
 
+    // Вільний графік: години вище — лише рамка шкали дня (за замовчуванням 8:00–20:00), а не правило.
+    // nil — старий профіль: вказав години → фіксований, ні → вільний
+    var flexibleSchedule: Bool? = nil
+
+    var isFlexibleSchedule: Bool {
+        flexibleSchedule ?? (workStartMinute == nil)
+    }
+
     // PROFESSION — зберігається rawValue; nil = не обрано (старі акаунти)
     var professionRaw: String? = nil
     

@@ -618,3 +618,14 @@
 "home.rhythm.dayOffLegend" = "Volné dny";
 "timeline.freeGap" = "Volno %1$@–%2$@";
 "home.rhythm.open" = "Zobrazit";
+
+// Вільний / фіксований графік
+"settings.schedule.flexible" = "Volná pracovní doba";
+"settings.schedule.flexible.hint" = "Pracuji, kdy se mi hodí. Kalendář ukazuje den od 8:00 do 20:00 — je to jen rámec, objednávat lze kdykoli.";
+"settings.schedule.fixed" = "Pevná pracovní doba";
+"settings.schedule.fixed.hint" = "Pracuji podle rozvrhu, jako v salonu nebo vlastním studiu.";
+"settings.schedule.windowHeader" = "Rámec dne v kalendáři";
+"settings.schedule.hoursHeader" = "Pracovní doba";
+"settings.schedule.flexibleFooter" = "Mění to jen zobrazení kalendáře: rámec lze rozšířit nebo zúžit. Termíny dříve či později jsou stále možné — stupnice se sama rozšíří.";
+"home.rhythm.bookedHours" = "Objednáno %@ tento měsíc";
+"home.rhythm.dayBookedFlexible" = "obsazeno %@";

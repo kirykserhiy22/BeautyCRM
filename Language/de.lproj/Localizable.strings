@@ -617,3 +617,14 @@
 "home.rhythm.dayOffLegend" = "Freie Tage";
 "timeline.freeGap" = "Frei %1$@–%2$@";
 "home.rhythm.open" = "Ansehen";
+
+// Вільний / фіксований графік
+"settings.schedule.flexible" = "Flexible Arbeitszeit";
+"settings.schedule.flexible.hint" = "Ich arbeite, wann es passt. Der Kalender zeigt den Tag von 8:00 bis 20:00 – nur ein Rahmen, Termine sind jederzeit möglich.";
+"settings.schedule.fixed" = "Feste Arbeitszeit";
+"settings.schedule.fixed.hint" = "Ich arbeite nach Plan, wie im Salon oder im eigenen Studio.";
+"settings.schedule.windowHeader" = "Tagesrahmen im Kalender";
+"settings.schedule.hoursHeader" = "Arbeitszeit";
+"settings.schedule.flexibleFooter" = "Das ändert nur die Kalenderansicht: Rahmen breiter oder schmaler machen. Termine früher oder später sind trotzdem möglich – die Skala wächst mit.";
+"home.rhythm.bookedHours" = "%@ diesen Monat gebucht";
+"home.rhythm.dayBookedFlexible" = "%@ belegt";

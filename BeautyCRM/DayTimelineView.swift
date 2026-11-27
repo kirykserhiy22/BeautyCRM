@@ -112,10 +112,13 @@ struct DayTimelineView: View {
     // MARK: - DRAG
 
     private func hourRange(_ items: [TimelineItem], compact: Bool) -> ClosedRange<Int> {
-        DayTimelineLayout.hourRange(
+        // Вільний графік: під час перетягування рамка ширша на 3 години з кожного боку —
+        // години лише рамка, тож запис можна перенести й раніше, й пізніше
+        let margin = workingHours.isFlexible && !compact ? 3 * 60 : 0
+        return DayTimelineLayout.hourRange(
             items: items,
-            workStartMinute: workingHours.startMinute,
-            workEndMinute: workingHours.endMinute,
+            workStartMinute: max(workingHours.startMinute - margin, 0),
+            workEndMinute: min(workingHours.endMinute + margin, 24 * 60),
             // Порожній ранок тепер стискається в «Вільно 9:00–11:00», тож шкала завжди з початку робочого дня
             startsAtFirstItem: false
         )
@@ -151,7 +154,8 @@ struct DayTimelineView: View {
         let hours = hourRange(items, compact: false)
         let duration = item.endMinute - item.startMinute
 
-        drag?.isBeyondScale = DayTimelineLayout.isBeyondScale(
+        // Вільний графік: без підказки «поза робочими годинами» — запис просто впирається в край шкали
+        drag?.isBeyondScale = !workingHours.isFlexible && DayTimelineLayout.isBeyondScale(
             original: item.startMinute,
             dragPoints: points,
             pointsPerHour: hourHeight,
