@@ -37,6 +37,16 @@ struct AppointmentHistoryMonth: Identifiable {
 
 enum AppointmentHistory {
 
+    // Скільки записів у кожному фільтрі (з урахуванням пошуку) — для плиток над списком
+    static func counts(
+        _ appointments: [Appointment],
+        search: String
+    ) -> [AppointmentHistoryFilter: Int] {
+        Dictionary(uniqueKeysWithValues: AppointmentHistoryFilter.allCases.map { filter in
+            (filter, months(appointments, filter: filter, search: search).reduce(0) { $0 + $1.appointments.count })
+        })
+    }
+
     // Найновіші зверху; приховані (архів) не показуємо
     static func months(
         _ appointments: [Appointment],
@@ -106,13 +116,7 @@ struct AppointmentHistoryView: View {
 
             LazyVStack(alignment: .leading, spacing: 14, pinnedViews: []) {
 
-                Picker("", selection: $filter) {
-                    ForEach(AppointmentHistoryFilter.allCases) { item in
-                        Text(localization.localizedString(for: item.titleKey)).tag(item)
-                    }
-                }
-                .pickerStyle(.segmented)
-                .accessibilityIdentifier("history.filter")
+                filterTiles
 
                 if months.isEmpty {
                     Text(localization.localizedString(for: "history.empty"))
@@ -126,10 +130,15 @@ struct AppointmentHistoryView: View {
 
                     VStack(alignment: .leading, spacing: 0) {
 
-                        Text(monthTitle(month.month))
-                            .font(.subheadline.weight(.semibold))
-                            .foregroundColor(colors.textSecondary)
-                            .padding(.bottom, 8)
+                        HStack {
+                            Text(monthTitle(month.month))
+                            Spacer()
+                            Text(CountFormatting.appointments(month.appointments.count, locale: localization.locale))
+                                .font(.caption)
+                        }
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundColor(colors.textSecondary)
+                        .padding(.bottom, 8)
 
                         VStack(spacing: 0) {
                             ForEach(Array(month.appointments.enumerated()), id: \.element.id) { index, appointment in
@@ -164,6 +173,42 @@ struct AppointmentHistoryView: View {
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)
         }
+    }
+
+    // Фільтр плитками: кожна показує, скільки в ній записів («Усі 125», «Заплановані 36»…)
+    private var filterTiles: some View {
+
+        let userID = appState.session.userID
+        let counts = AppointmentHistory.counts(appointments.filter { $0.userID == userID }, search: search)
+
+        return HStack(spacing: 6) {
+            ForEach(AppointmentHistoryFilter.allCases) { item in
+                let isSelected = filter == item
+                Button {
+                    withAnimation(.easeOut(duration: 0.15)) { filter = item }
+                } label: {
+                    VStack(spacing: 2) {
+                        Text("\(counts[item] ?? 0)")
+                            .font(.headline)
+                            .monospacedDigit()
+                        Text(localization.localizedString(for: item.titleKey))
+                            .font(.caption2)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.7)
+                    }
+                    .foregroundColor(isSelected ? .white : colors.textPrimary)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 9)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(isSelected ? colors.buttonPrimary : colors.card)
+                    )
+                }
+                .buttonStyle(.plain)
+                .accessibilityAddTraits(isSelected ? .isSelected : [])
+            }
+        }
+        .accessibilityIdentifier("history.filter")
     }
 
     private func row(_ appointment: Appointment) -> some View {
