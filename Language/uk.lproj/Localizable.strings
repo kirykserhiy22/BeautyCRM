@@ -592,3 +592,16 @@
 "visits.refundReason" = "Причина повернення";
 "appointment.hideConfirm.title" = "Приховати запис?";
 "appointment.hideConfirm.message" = "Запис зникне звідусіль: з календаря, «Усіх записів», історії візитів і підсумків клієнта. Повернути його не вийде.";
+
+// Аналітика: послуги й клієнтська база
+"analytics.byService" = "Дохід за послугами";
+"analytics.byService.total" = "Усього";
+"analytics.byService.other" = "Інші";
+"analytics.clientBase" = "Клієнти";
+"analytics.clientBase.hint" = "Уся база — не залежить від періоду";
+"analytics.clientBase.total" = "Усього в базі";
+"analytics.clientBase.newThisMonth" = "Нових цього місяця";
+"analytics.clientBase.returning" = "Повертаються";
+"analytics.clientBase.returningDetail" = "%1$d з %2$d прийшли ще раз";
+"analytics.clientBase.dormant" = "Давно не були";
+"analytics.clientBase.dormantDetail" = "понад 3 місяці, без запису";

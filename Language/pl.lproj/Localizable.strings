@@ -591,3 +591,16 @@
 "visits.refundReason" = "Powód zwrotu";
 "appointment.hideConfirm.title" = "Ukryć wizytę?";
 "appointment.hideConfirm.message" = "Zniknie wszędzie: z kalendarza, „Wszystkich wizyt”, historii wizyt i podsumowań klienta. Nie da się tego cofnąć.";
+
+// Аналітика: послуги й клієнтська база
+"analytics.byService" = "Przychód według usług";
+"analytics.byService.total" = "Razem";
+"analytics.byService.other" = "Inne";
+"analytics.clientBase" = "Klienci";
+"analytics.clientBase.hint" = "Cała baza — niezależnie od okresu";
+"analytics.clientBase.total" = "W bazie";
+"analytics.clientBase.newThisMonth" = "Nowi w tym miesiącu";
+"analytics.clientBase.returning" = "Wracają";
+"analytics.clientBase.returningDetail" = "%1$d z %2$d przyszło ponownie";
+"analytics.clientBase.dormant" = "Dawno nie byli";
+"analytics.clientBase.dormantDetail" = "ponad 3 miesiące, bez wizyty";

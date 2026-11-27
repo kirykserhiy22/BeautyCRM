@@ -160,6 +160,17 @@ struct AnalyticsView: View {
     }
 
 
+    // Клієнтська база загалом: не обнуляється з новим роком і не залежить від перемикача періоду
+    private func makeClientBase() -> AnalyticsClientBase {
+
+        let userID = appState.session.userID
+        let ownClients = clients.filter { $0.userID == userID && $0.deletedAt == nil }
+        let own = appointments.filter { $0.userID == userID && $0.status != .archived }
+
+        return AnalyticsInsights.clientBase(clients: ownClients, appointments: own, now: now, calendar: calendar)
+    }
+
+
     // MARK: - BODY
 
     var body: some View {
@@ -174,6 +185,7 @@ struct AnalyticsView: View {
 
                     if let summary = makeSummary() {
 
+                        // ГРОШІ — за вибраний період
                         revenueCard(summary)
 
                         if summary.appointmentCount == 0 {
@@ -185,8 +197,29 @@ struct AnalyticsView: View {
                         } else {
                             statsGrid(summary)
 
-                            insightsCard(summary)
+                            let slices = AnalyticsInsights.serviceSlices(summary.topServices)
+                            if !slices.isEmpty {
+                                ServiceDonutCard(slices: slices, periodTitle: periodDescription)
+                                    .id(slices.map(\.id).joined() + periodDescription)
+                            }
+
+                            if let client = summary.topClientBySpending {
+                                topRow(
+                                    title: "analytics.topClient",
+                                    name: client.name,
+                                    detail: currency(client.spent)
+                                )
+                                .padding()
+                                .background(colors.card)
+                                .cornerRadius(18)
+                            }
                         }
+                    }
+
+                    // КЛІЄНТИ — уся база, не залежить від періоду
+                    let base = makeClientBase()
+                    if base.total > 0 {
+                        ClientBaseCard(base: base)
                     }
                 }
                 .padding()
@@ -615,136 +648,6 @@ struct AnalyticsView: View {
         .padding(14)
         .background(colors.card)
         .cornerRadius(18)
-    }
-
-
-    // MARK: - INSIGHTS
-
-    private func insightsCard(_ summary: AnalyticsSummary) -> some View {
-
-        VStack(alignment: .leading, spacing: 12) {
-
-            clientsInsight(summary)
-
-            if let leader = summary.leadingService {
-                insightRow(
-                    icon: "chart.pie",
-                    text: String(
-                        format: localized("analytics.serviceShare"),
-                        leader.name,
-                        percentText(leader.percent)
-                    )
-                )
-            }
-
-            Divider()
-                .overlay(colors.divider)
-
-            VStack(alignment: .leading, spacing: 6) {
-
-                Text(localized("analytics.topServices"))
-                    .font(.caption)
-                    .foregroundColor(colors.textSecondary)
-
-                ForEach(summary.topServices.prefix(3)) { service in
-                    rankRow(
-                        name: service.name,
-                        detail: CountFormatting.appointments(service.count, locale: localization.locale)
-                    )
-                }
-            }
-
-            clientsRanking(summary)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding()
-        .background(colors.card)
-        .cornerRadius(18)
-    }
-
-
-    // За рік важливо, чи клієнти повертаються; за тиждень чи місяць — скільки нових
-    @ViewBuilder
-    private func clientsInsight(_ summary: AnalyticsSummary) -> some View {
-
-        if selectedPeriod == .year {
-            insightRow(
-                icon: "person.2",
-                text: String(
-                    format: localized("analytics.yearClients"),
-                    summary.clientCount,
-                    percentText(summary.returningClientPercent)
-                )
-            )
-        } else {
-            insightRow(
-                icon: "person.badge.plus",
-                text: String(format: localized("analytics.newClients"), summary.newClientCount)
-            )
-        }
-    }
-
-
-    // Постійним клієнт стає за довший час, тому за тиждень чи місяць — лише хто приніс більше
-    @ViewBuilder
-    private func clientsRanking(_ summary: AnalyticsSummary) -> some View {
-
-        if selectedPeriod == .year {
-
-            VStack(alignment: .leading, spacing: 6) {
-
-                Text(localized("analytics.loyalClients"))
-                    .font(.caption)
-                    .foregroundColor(colors.textSecondary)
-
-                ForEach(summary.topClients.prefix(3)) { client in
-                    rankRow(
-                        name: client.name,
-                        detail: CountFormatting.visits(client.visits, locale: localization.locale)
-                    )
-                }
-            }
-
-        } else if let client = summary.topClientBySpending {
-
-            topRow(
-                title: "analytics.topClient",
-                name: client.name,
-                detail: currency(client.spent)
-            )
-        }
-    }
-
-
-    private func rankRow(name: String, detail: String) -> some View {
-
-        HStack(alignment: .firstTextBaseline) {
-
-            Text(name)
-                .font(.headline)
-                .foregroundColor(colors.textPrimary)
-                .lineLimit(1)
-
-            Spacer()
-
-            Text(detail)
-                .font(.subheadline)
-                .foregroundColor(colors.textSecondary)
-        }
-        .accessibilityElement(children: .combine)
-    }
-
-
-    private func insightRow(icon: String, text: String) -> some View {
-
-        Label {
-            Text(text)
-                .font(.subheadline)
-                .foregroundColor(colors.textPrimary)
-        } icon: {
-            Image(systemName: icon)
-                .foregroundColor(colors.accent)
-        }
     }
 
 

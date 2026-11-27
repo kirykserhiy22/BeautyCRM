@@ -592,3 +592,16 @@
 "visits.refundReason" = "Důvod vrácení";
 "appointment.hideConfirm.title" = "Skrýt termín?";
 "appointment.hideConfirm.message" = "Zmizí všude: z kalendáře, „Všech termínů“, historie návštěv i přehledu klienta. Nelze to vrátit.";
+
+// Аналітика: послуги й клієнтська база
+"analytics.byService" = "Tržby podle služeb";
+"analytics.byService.total" = "Celkem";
+"analytics.byService.other" = "Ostatní";
+"analytics.clientBase" = "Klienti";
+"analytics.clientBase.hint" = "Celá databáze — nezávisle na období";
+"analytics.clientBase.total" = "V databázi";
+"analytics.clientBase.newThisMonth" = "Noví tento měsíc";
+"analytics.clientBase.returning" = "Vracejí se";
+"analytics.clientBase.returningDetail" = "%1$d z %2$d přišlo znovu";
+"analytics.clientBase.dormant" = "Dlouho nebyli";
+"analytics.clientBase.dormantDetail" = "přes 3 měsíce, bez termínu";

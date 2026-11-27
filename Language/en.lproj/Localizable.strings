@@ -591,3 +591,16 @@
 "visits.refundReason" = "Refund reason";
 "appointment.hideConfirm.title" = "Hide this appointment?";
 "appointment.hideConfirm.message" = "It will disappear everywhere: the calendar, All appointments, the client’s visit history and totals. This can’t be undone.";
+
+// Аналітика: послуги й клієнтська база
+"analytics.byService" = "Revenue by service";
+"analytics.byService.total" = "Total";
+"analytics.byService.other" = "Other";
+"analytics.clientBase" = "Clients";
+"analytics.clientBase.hint" = "Whole base — doesn’t depend on the period";
+"analytics.clientBase.total" = "In your base";
+"analytics.clientBase.newThisMonth" = "New this month";
+"analytics.clientBase.returning" = "Come back";
+"analytics.clientBase.returningDetail" = "%1$d of %2$d came again";
+"analytics.clientBase.dormant" = "Haven’t been in a while";
+"analytics.clientBase.dormantDetail" = "over 3 months, nothing booked";
