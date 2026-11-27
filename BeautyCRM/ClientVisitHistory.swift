@@ -60,7 +60,7 @@ enum ClientVisitHistory {
         guard appointment.status == .completed else {
             return nil
         }
-        return appointment.finalPrice ?? appointment.totalFinalPrice
+        return appointment.netPrice ?? appointment.totalFinalPrice
     }
 
     // Ціна послуги у візиті: фактична для завершених, інакше погоджена

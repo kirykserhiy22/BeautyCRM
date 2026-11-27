@@ -554,3 +554,35 @@
 "duration.minutes" = "%d min";
 "duration.hours" = "%d h";
 "duration.hoursMinutes" = "%d h %d min";
+
+// Виправлення завершених записів і «Усі записи»
+"appointment.fix" = "Fix";
+"appointment.fix.title" = "Fix appointment";
+"appointment.fix.amount" = "Change amount";
+"appointment.fix.refund" = "Refund";
+"appointment.fix.reopen" = "Move back to planned";
+"appointment.editAmount.title" = "Change amount";
+"appointment.reopen.title" = "Move the appointment back to planned?";
+"appointment.reopen.message" = "The payment (%@) will be removed from analytics. You can complete the appointment again later.";
+"appointment.reopen.confirm" = "Move back";
+"appointment.error.refundTooLarge" = "A refund can’t be larger than the payment";
+"refund.title" = "Refund";
+"refund.paid" = "Paid: %@";
+"refund.amount" = "Refund amount";
+"refund.reason" = "Reason (optional)";
+"refund.reasonPlaceholder" = "For example: unhappy with the tone";
+"refund.kept" = "Remaining";
+"refund.remove" = "Remove refund";
+"refund.line" = "Refunded %@";
+"history.title" = "All appointments";
+"history.search" = "Client or service";
+"history.empty" = "No appointments found";
+"history.filter.all" = "All";
+"history.filter.planned" = "Planned";
+"history.filter.completed" = "Completed";
+"history.filter.cancelled" = "Cancelled";
+"history.status.refunded" = "Refunded";
+"history.status.planned" = "Planned";
+"history.status.completed" = "Completed";
+"history.status.cancelled" = "Cancelled";
+"refund.amountPlaceholder" = "How much was refunded";

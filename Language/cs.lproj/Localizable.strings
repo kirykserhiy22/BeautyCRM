@@ -555,3 +555,35 @@
 "duration.minutes" = "%d min";
 "duration.hours" = "%d h";
 "duration.hoursMinutes" = "%d h %d min";
+
+// Виправлення завершених записів і «Усі записи»
+"appointment.fix" = "Opravit";
+"appointment.fix.title" = "Opravit termín";
+"appointment.fix.amount" = "Změnit částku";
+"appointment.fix.refund" = "Vrácení peněz";
+"appointment.fix.reopen" = "Vrátit mezi plánované";
+"appointment.editAmount.title" = "Změnit částku";
+"appointment.reopen.title" = "Vrátit termín mezi plánované?";
+"appointment.reopen.message" = "Platba (%@) zmizí z analýzy. Termín bude možné dokončit znovu.";
+"appointment.reopen.confirm" = "Vrátit";
+"appointment.error.refundTooLarge" = "Vrácená částka nemůže být vyšší než platba";
+"refund.title" = "Vrácení peněz";
+"refund.paid" = "Zaplaceno: %@";
+"refund.amount" = "Vrácená částka";
+"refund.reason" = "Důvod (nepovinné)";
+"refund.reasonPlaceholder" = "Například: reklamace odstínu";
+"refund.kept" = "Zůstává";
+"refund.remove" = "Zrušit vrácení";
+"refund.line" = "Vráceno %@";
+"history.title" = "Všechny termíny";
+"history.search" = "Klient nebo služba";
+"history.empty" = "Žádné termíny nenalezeny";
+"history.filter.all" = "Vše";
+"history.filter.planned" = "Plánované";
+"history.filter.completed" = "Dokončené";
+"history.filter.cancelled" = "Zrušené";
+"history.status.refunded" = "Vráceno";
+"history.status.planned" = "Plánováno";
+"history.status.completed" = "Dokončeno";
+"history.status.cancelled" = "Zrušeno";
+"refund.amountPlaceholder" = "Kolik bylo vráceno";

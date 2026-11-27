@@ -18,6 +18,8 @@ enum AppointmentError: Error {
     case missingPrice
     // Запис не можна перенести на час, що вже минув
     case pastTime
+    // Повернення більше, ніж заплатили
+    case refundTooLarge
 
 
     // Ключ з Localizable.strings — текст перекладається на мову додатку
@@ -35,6 +37,8 @@ enum AppointmentError: Error {
             return "appointment.error.missingPrice"
         case .pastTime:
             return "appointment.error.pastTime"
+        case .refundTooLarge:
+            return "appointment.error.refundTooLarge"
         }
     }
 }
@@ -398,6 +402,105 @@ final class AppointmentEngine {
         return .success(())
     }
 
+    // MARK: - FIX COMPLETED
+
+    // Помилилися з сумою (1000 замість 100): нові фактичні ціни послуг.
+    // Дата завершення не змінюється — запис лишається в тому самому місяці аналітики
+    static func editCompleted(
+        appointment: Appointment,
+        finalServicePrices: [UUID: Decimal]
+    ) -> Result<Void, AppointmentError> {
+
+        guard appointment.status == .completed else {
+            return .failure(.invalidStatus)
+        }
+
+        var total: Decimal = 0
+
+        for index in appointment.services.indices {
+            let item = appointment.services[index]
+            let final = finalServicePrices[item.serviceID] ?? item.finalPrice ?? item.plannedPrice
+            appointment.services[index].finalPrice = final
+            total += final
+        }
+
+        appointment.finalPrice = total
+
+        // Повернення не може бути більшим за нову суму
+        if let refund = appointment.refundAmount, refund > total {
+            appointment.refundAmount = total
+        }
+
+        return .success(())
+    }
+
+    // Повернення коштів: сума й причина. nil або 0 — прибрати повернення
+    static func refund(
+        appointment: Appointment,
+        amount: Decimal?,
+        reason: String?,
+        now: Date = Date()
+    ) -> Result<Void, AppointmentError> {
+
+        guard appointment.status == .completed else {
+            return .failure(.invalidStatus)
+        }
+
+        guard let amount, amount > 0 else {
+            appointment.refundAmount = nil
+            appointment.refundReason = nil
+            appointment.refundedAt = nil
+            return .success(())
+        }
+
+        guard amount <= (appointment.finalPrice ?? appointment.totalFinalPrice) else {
+            return .failure(.refundTooLarge)
+        }
+
+        let trimmed = reason?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+
+        appointment.refundAmount = amount
+        appointment.refundReason = trimmed.isEmpty ? nil : trimmed
+        appointment.refundedAt = now
+
+        return .success(())
+    }
+
+    // Випадково завершили: запис знову запланований, з плановими цінами.
+    // Оплата й повернення стираються, щоб при новому завершенні не змішались старі цифри
+    static func reopen(
+        appointment: Appointment,
+        existingAppointments: [Appointment]
+    ) -> Result<Void, AppointmentError> {
+
+        guard appointment.status == .completed,
+              appointment.status.canChange(to: .active) else {
+            return .failure(.invalidStatus)
+        }
+
+        if hasConflict(
+            newStart: appointment.startDate,
+            newEnd: appointment.endDate,
+            existing: existingAppointments,
+            ignoring: appointment.id
+        ) {
+            return .failure(.timeConflict)
+        }
+
+        for index in appointment.services.indices {
+            appointment.services[index].finalPrice = nil
+        }
+
+        appointment.status = .active
+        appointment.finalPrice = nil
+        appointment.completedAt = nil
+        appointment.refundAmount = nil
+        appointment.refundReason = nil
+        appointment.refundedAt = nil
+
+        return .success(())
+    }
+
     // MARK: - RESCHEDULE
 
     // Перенесення зі шкали: змінюється лише час початку
@@ -571,7 +674,7 @@ final class AppointmentEngine {
         existingAppointments: [Appointment]
     ) -> Result<Void, AppointmentError> {
 
-        guard appointment.status.canChange(to: .active) else {
+        guard appointment.status == .cancelled else {
             return .failure(.invalidStatus)
         }
 

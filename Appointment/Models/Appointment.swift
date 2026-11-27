@@ -18,12 +18,14 @@ enum AppointmentStatus: String, Codable {
     // Дозволені переходи між статусами — одне місце для всього додатку
     // (екрани, а пізніше синхронізація і веб-версія):
     //   active    → completed, cancelled
+    //   completed → active (випадково завершили — «Повернути в заплановані»)
     //   cancelled → active (відновити), archived (приховати)
-    // Завершений і прихований записи — кінцеві.
+    // Прихований запис — кінцевий.
     func canChange(to newStatus: AppointmentStatus) -> Bool {
         switch (self, newStatus) {
         case (.active, .completed),
              (.active, .cancelled),
+             (.completed, .active),
              (.cancelled, .active),
              (.cancelled, .archived):
             return true
@@ -64,6 +66,11 @@ final class Appointment: SyncTrackable {
 
     // Коли майстер повідомив клієнта про перенесення (позначка в списку «Чекають перенесення»)
     var rescheduleNotifiedAt: Date? = nil
+
+    // Повернення коштів після завершення (скарга тощо): частина або вся оплата
+    var refundAmount: Decimal? = nil
+    var refundReason: String? = nil
+    var refundedAt: Date? = nil
 
     // MARK: - SYNC
 
@@ -109,4 +116,19 @@ extension Appointment {
         services.reduce(0) {
             $0 + ($1.finalPrice ?? $1.plannedPrice)
         }
-    }}
+    }
+
+    // Скільки майстер отримав насправді: оплата мінус повернення (не менше 0)
+    var netPrice: Decimal? {
+        finalPrice.map { max($0 - (refundAmount ?? 0), 0) }
+    }
+
+    // Яка частка оплати лишилась після повернення (1 — повернень не було).
+    // Нею зменшуємо суми окремих послуг в аналітиці
+    var keptShare: Decimal {
+        guard let finalPrice, finalPrice > 0, let refundAmount, refundAmount > 0 else {
+            return 1
+        }
+        return max(finalPrice - refundAmount, 0) / finalPrice
+    }
+}

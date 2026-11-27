@@ -40,6 +40,11 @@ struct AppointmentRow: View {
     @State private var referenceStart: ReferenceViewerStart?
     // Нотатка до візиту: що робили, що не сподобалось — потім видно в історії візитів клієнта
     @State private var completionNotes = ""
+    // Завершений запис: «Виправити» → змінити суму, повернення, повернути в заплановані
+    @State private var showFixMenu = false
+    @State private var isEditingAmount = false
+    @State private var showRefund = false
+    @State private var showReopenConfirm = false
     
     @EnvironmentObject var theme: ThemeManager
     
@@ -190,6 +195,14 @@ struct AppointmentRow: View {
                             )
                             .font(.subheadline)
                             .foregroundColor(colors.textPrimary)
+
+                            // Було повернення — поруч закреслена повна оплата
+                            if appt.status == .completed, appt.refundAmount != nil, let paid = appt.finalPrice {
+                                Text(currencyManager.format(paid))
+                                    .font(.caption)
+                                    .strikethrough()
+                                    .foregroundColor(colors.textSecondary)
+                            }
                             Spacer()
                             
                             if hasNotes {
@@ -199,6 +212,14 @@ struct AppointmentRow: View {
                             }
                         }
                         
+                        if appt.status == .completed, let refund = appt.refundAmount {
+                            Text(refundLine(refund))
+                                .font(.caption)
+                                .foregroundColor(colors.warning)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .accessibilityIdentifier("appointment.refundLine")
+                        }
+
                         if let notes = appt.notes,
                            !notes.trimmingCharacters(
                                 in: .whitespacesAndNewlines
@@ -294,6 +315,22 @@ struct AppointmentRow: View {
                                 .buttonStyle(.bordered)
                                 .frame(maxWidth: .infinity)
                             }
+                        }
+
+                        // Завершений запис: одна тиха кнопка, дії — у меню
+                        if appt.status == .completed {
+                            Button {
+                                showFixMenu = true
+                            } label: {
+                                Label(
+                                    localization.localizedString(for: "appointment.fix"),
+                                    systemImage: "square.and.pencil"
+                                )
+                                .frame(maxWidth: .infinity)
+                            }
+                            .buttonStyle(.bordered)
+                            .tint(colors.accent)
+                            .accessibilityIdentifier("appointment.fix")
                         }
 
                         // Другий ряд — скасування або архівування
@@ -426,6 +463,45 @@ struct AppointmentRow: View {
             Text(localization.localizedString(for: "appointment.cancelConfirm.message"))
         }
 
+        // FIX COMPLETED
+
+        .confirmationDialog(
+            localization.localizedString(for: "appointment.fix.title"),
+            isPresented: $showFixMenu,
+            titleVisibility: .visible
+        ) {
+            Button(localization.localizedString(for: "appointment.fix.amount")) {
+                isEditingAmount = true
+                showComplete = true
+            }
+            Button(localization.localizedString(for: "appointment.fix.refund")) {
+                showRefund = true
+            }
+            Button(localization.localizedString(for: "appointment.fix.reopen")) {
+                showReopenConfirm = true
+            }
+            Button(localization.localizedString(for: "common.cancel"), role: .cancel) { }
+        }
+        .alert(
+            localization.localizedString(for: "appointment.reopen.title"),
+            isPresented: $showReopenConfirm
+        ) {
+            Button(localization.localizedString(for: "common.cancel"), role: .cancel) { }
+            Button(localization.localizedString(for: "appointment.reopen.confirm")) {
+                reopen()
+            }
+        } message: {
+            Text(String(
+                format: localization.localizedString(for: "appointment.reopen.message"),
+                currencyManager.format(displayPrice(appt))
+            ))
+        }
+        .sheet(isPresented: $showRefund) {
+            RefundSheet(appointment: appt)
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
+        }
+
         // RESTORE CONFLICT
 
         .alert(
@@ -446,6 +522,7 @@ struct AppointmentRow: View {
                 finalServicePrices = [:]
                 completionNotes = ""
                 addedServiceIDs = []
+                isEditingAmount = false
             }
         ) {
             
@@ -459,7 +536,9 @@ struct AppointmentRow: View {
                     ) {
                         
                         Text(
-                            localization.localizedString(for: "appointment.finalizeServices")
+                            localization.localizedString(
+                                for: isEditingAmount ? "appointment.editAmount.title" : "appointment.finalizeServices"
+                            )
                         )
                         .font(.title2.bold())
                         
@@ -526,6 +605,7 @@ struct AppointmentRow: View {
                             }
                         }
 
+                        if !isEditingAmount {
                         Button {
                             showAddService = true
                         } label: {
@@ -537,6 +617,7 @@ struct AppointmentRow: View {
                             .foregroundColor(colors.accent)
                         }
                         .accessibilityIdentifier("completion.addService")
+                        }
 
                         Divider()
                         
@@ -583,17 +664,24 @@ struct AppointmentRow: View {
                                 AppFormatting.parseMoney($0)
                             }
                             
-                            AppointmentEngine.complete(
-                                appointment: appt,
-                                finalServicePrices: mapped,
-                                addedServices: completionItems.filter(\.isAdded).map {
-                                    AppointmentServiceItem(
-                                        serviceID: $0.serviceID,
-                                        serviceName: $0.serviceName,
-                                        plannedPrice: mapped[$0.serviceID] ?? $0.plannedPrice
-                                    )
-                                }
-                            )
+                            if isEditingAmount {
+                                AppointmentEngine.editCompleted(
+                                    appointment: appt,
+                                    finalServicePrices: mapped
+                                )
+                            } else {
+                                AppointmentEngine.complete(
+                                    appointment: appt,
+                                    finalServicePrices: mapped,
+                                    addedServices: completionItems.filter(\.isAdded).map {
+                                        AppointmentServiceItem(
+                                            serviceID: $0.serviceID,
+                                            serviceName: $0.serviceName,
+                                            plannedPrice: mapped[$0.serviceID] ?? $0.plannedPrice
+                                        )
+                                    }
+                                )
+                            }
 
                             let notes = completionNotes.trimmingCharacters(in: .whitespacesAndNewlines)
                             appt.notes = notes.isEmpty ? nil : notes
@@ -689,6 +777,40 @@ private extension AppointmentRow {
         }
     }
 
+    // «Повернути в заплановані»: якщо цей час уже зайняли — пояснюємо, як при відновленні
+    func reopen() {
+
+        let userID = appt.userID
+        let descriptor = FetchDescriptor<Appointment>(
+            predicate: #Predicate { $0.userID == userID }
+        )
+        let existing = (try? context.fetch(descriptor)) ?? []
+
+        switch AppointmentEngine.reopen(appointment: appt, existingAppointments: existing) {
+
+        case .success:
+            context.saveReportingErrors()
+
+        case .failure(.timeConflict):
+            showRestoreConflict = true
+
+        case .failure:
+            break
+        }
+    }
+
+    // «Повернено 30 € · скарга на тон»
+    func refundLine(_ refund: Decimal) -> String {
+        let amount = String(
+            format: localization.localizedString(for: "refund.line"),
+            currencyManager.format(refund)
+        )
+        guard let reason = appt.refundReason, !reason.isEmpty else {
+            return amount
+        }
+        return "\(amount) · \(reason)"
+    }
+
     var statusText: String {
 
         switch appt.status {
@@ -731,7 +853,7 @@ private extension AppointmentRow {
         
         if appt.status == .completed {
             
-            return appt.finalPrice
+            return appt.netPrice
             ?? appt.services.reduce(0) {
                 $0 + ($1.finalPrice ?? $1.plannedPrice)
             }

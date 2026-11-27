@@ -70,7 +70,7 @@ enum ClientAnalyticsCalculator {
         // revenue
 
         let revenue = completed.reduce(Decimal(0)) {
-            $0 + ($1.finalPrice ?? 0)
+            $0 + ($1.netPrice ?? 0)
         }
 
         // average

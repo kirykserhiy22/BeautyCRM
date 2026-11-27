@@ -554,3 +554,35 @@
 "duration.minutes" = "%d Min.";
 "duration.hours" = "%d Std.";
 "duration.hoursMinutes" = "%d Std. %d Min.";
+
+// Виправлення завершених записів і «Усі записи»
+"appointment.fix" = "Korrigieren";
+"appointment.fix.title" = "Termin korrigieren";
+"appointment.fix.amount" = "Betrag ändern";
+"appointment.fix.refund" = "Rückerstattung";
+"appointment.fix.reopen" = "Zurück zu geplant";
+"appointment.editAmount.title" = "Betrag ändern";
+"appointment.reopen.title" = "Termin zurück zu geplant?";
+"appointment.reopen.message" = "Die Zahlung (%@) wird aus der Analyse entfernt. Der Termin kann später erneut abgeschlossen werden.";
+"appointment.reopen.confirm" = "Zurücksetzen";
+"appointment.error.refundTooLarge" = "Die Rückerstattung darf nicht höher als die Zahlung sein";
+"refund.title" = "Rückerstattung";
+"refund.paid" = "Bezahlt: %@";
+"refund.amount" = "Rückerstattungsbetrag";
+"refund.reason" = "Grund (optional)";
+"refund.reasonPlaceholder" = "Zum Beispiel: Farbton reklamiert";
+"refund.kept" = "Verbleibt";
+"refund.remove" = "Rückerstattung entfernen";
+"refund.line" = "Erstattet %@";
+"history.title" = "Alle Termine";
+"history.search" = "Kunde oder Leistung";
+"history.empty" = "Keine Termine gefunden";
+"history.filter.all" = "Alle";
+"history.filter.planned" = "Geplant";
+"history.filter.completed" = "Erledigt";
+"history.filter.cancelled" = "Abgesagt";
+"history.status.refunded" = "Erstattet";
+"history.status.planned" = "Geplant";
+"history.status.completed" = "Erledigt";
+"history.status.cancelled" = "Abgesagt";
+"refund.amountPlaceholder" = "Wie viel erstattet wurde";

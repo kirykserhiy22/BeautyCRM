@@ -555,3 +555,35 @@
 "duration.minutes" = "%d хв";
 "duration.hours" = "%d год";
 "duration.hoursMinutes" = "%d год %d хв";
+
+// Виправлення завершених записів і «Усі записи»
+"appointment.fix" = "Виправити";
+"appointment.fix.title" = "Виправити запис";
+"appointment.fix.amount" = "Змінити суму";
+"appointment.fix.refund" = "Повернення коштів";
+"appointment.fix.reopen" = "Повернути в заплановані";
+"appointment.editAmount.title" = "Змінити суму";
+"appointment.reopen.title" = "Повернути запис у заплановані?";
+"appointment.reopen.message" = "Оплата (%@) зникне з аналітики. Запис можна буде завершити знову.";
+"appointment.reopen.confirm" = "Повернути";
+"appointment.error.refundTooLarge" = "Повернення не може бути більшим за оплату";
+"refund.title" = "Повернення коштів";
+"refund.paid" = "Оплачено: %@";
+"refund.amount" = "Сума повернення";
+"refund.reason" = "Причина (необов’язково)";
+"refund.reasonPlaceholder" = "Наприклад: скарга на тон";
+"refund.kept" = "Лишається";
+"refund.remove" = "Прибрати повернення";
+"refund.line" = "Повернено %@";
+"history.title" = "Усі записи";
+"history.search" = "Клієнт або послуга";
+"history.empty" = "Записів не знайдено";
+"history.filter.all" = "Усі";
+"history.filter.planned" = "Заплановані";
+"history.filter.completed" = "Завершені";
+"history.filter.cancelled" = "Скасовані";
+"history.status.refunded" = "Повернення";
+"history.status.planned" = "Заплановано";
+"history.status.completed" = "Завершено";
+"history.status.cancelled" = "Скасовано";
+"refund.amountPlaceholder" = "Скільки повернули";
