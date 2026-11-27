@@ -202,14 +202,10 @@ struct MonthRhythmCard: View {
         }
         .chartOverlay { proxy in
             GeometryReader { geometry in
-                Rectangle()
-                    .fill(Color.clear)
-                    .contentShape(Rectangle())
-                    .gesture(
-                        SpatialTapGesture().onEnded { tap in
-                            select(at: tap.location, proxy: proxy, geometry: geometry, days: days)
-                        }
-                    )
+                ChartScrubGesture(
+                    onTap: { select(at: $0, proxy: proxy, geometry: geometry, days: days) },
+                    onScrub: { scrub(at: $0, proxy: proxy, geometry: geometry, days: days) }
+                )
             }
         }
         .frame(height: 110)
@@ -227,6 +223,18 @@ struct MonthRhythmCard: View {
         withAnimation(.easeOut(duration: 0.15)) {
             selectedDay = selectedDay == day ? nil : day
         }
+    }
+
+    // Провели пальцем — вибрати день під ним (без зняття вибору)
+    private func scrub(at location: CGPoint, proxy: ChartProxy, geometry: GeometryProxy, days: [DayLoad]) -> String? {
+        guard let plotFrame = proxy.plotFrame else { return nil }
+        let frame = geometry[plotFrame]
+        let x = min(max(location.x - frame.origin.x, 0), frame.width - 1)
+        guard let key: String = proxy.value(atX: x), let index = Int(key), days.indices.contains(index) else {
+            return nil
+        }
+        selectedDay = days[index].day
+        return key
     }
 
     private func legend(color: Color, key: String, outlined: Bool = false) -> some View {
