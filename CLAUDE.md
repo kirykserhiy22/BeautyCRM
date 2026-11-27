@@ -41,6 +41,7 @@
 - `BeautyCRM/SupabaseConfig.swift` — адреса й публічний ключ з `Info.plist` (туди їх підставляє `App.xcconfig` ← `Config/Secrets.xcconfig`, поза git);
   секретний ключ відкидається. `BeautyCRM/SupabaseService.swift` — єдиний `SupabaseClient` (nil, якщо ключів немає) і перевірка зв'язку
 - `supabase/` — сервер: `migrations/*.sql` (схема бази, RLS, сховище фото; запускаються по черзі в SQL Editor), `README.md` — кроки для Сергія
+  і «Журнал міграцій» (що вже запущено; новий файл — новий рядок, інакше падає `MigrationsJournalTests`; перед S5 запустити всі ⏳)
 - `Auth/` — вхід, реєстрація (`SignUp/`, 5 кроків: акаунт, ім'я, спеціалізація, салон, валюта), сесія,
   профіль (`User/`, `UserProfileManager.update`), валюта
 - `Profession/` — спеціалізації майстра (`Profession`, `ProfessionConfig`, `ProfessionManager`)
