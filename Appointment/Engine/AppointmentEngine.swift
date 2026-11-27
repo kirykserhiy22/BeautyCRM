@@ -406,6 +406,7 @@ final class AppointmentEngine {
 
     // Помилилися з сумою (1000 замість 100): нові фактичні ціни послуг.
     // Дата завершення не змінюється — запис лишається в тому самому місяці аналітики
+    @discardableResult
     static func editCompleted(
         appointment: Appointment,
         finalServicePrices: [UUID: Decimal]
