@@ -530,7 +530,7 @@ private extension AppointmentFormView {
                     String(
                         format: localization.localizedString(for: "appointment.duration"),
                         locale: localization.locale,
-                        duration
+                        DurationText.text(duration, locale: localization.locale, localized: localization.localizedString(for:))
                     ),
                     value: $duration,
                     in: 15...600,

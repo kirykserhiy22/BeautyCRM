@@ -50,7 +50,7 @@ struct ClientPhotoFeedView: View {
 
             ScrollView {
 
-                LazyVStack(spacing: 18) {
+                LazyVStack(spacing: 20) {
                     ForEach(posts) { item in
                         post(item)
                             .id(item.id)
@@ -112,8 +112,8 @@ struct ClientPhotoFeedView: View {
 
     private func post(_ item: ClientPhotoPost) -> some View {
 
-        // Як в Instagram: спершу фото, під ним — дата, «⋯» і підпис цього ж допису,
-        // далі роздільна лінія — тож одразу видно, до якого фото що належить
+        // Картка: фото, під ним дата, «⋯» і підпис — в одній рамці,
+        // тож одразу видно, до якого фото що належить
         let index = min(pages[item.id] ?? 0, item.photos.count - 1)
         let photo = item.photos[index]
 
@@ -163,8 +163,8 @@ struct ClientPhotoFeedView: View {
 
                 HStack(spacing: 8) {
                     Text(AppFormatting.date(item.cover.createdAt, locale: localization.locale, format: .medium))
-                        .font(.caption)
-                        .foregroundColor(colors.textSecondary)
+                        .font(.caption.weight(.semibold))
+                        .foregroundColor(colors.textPrimary)
                     if let visit = visit(for: item.cover) {
                         Text("· " + String(
                             format: localization.localizedString(for: "photos.references.forVisit"),
@@ -185,14 +185,12 @@ struct ClientPhotoFeedView: View {
                         .accessibilityIdentifier("photo.caption")
                 }
             }
-            .padding(.horizontal)
-
-            // Межа між дописами
-            Rectangle()
-                .fill(colors.divider)
-                .frame(height: 1)
-                .padding(.top, 10)
+            .padding(.horizontal, 14)
+            .padding(.bottom, 14)
         }
+        .background(colors.card)
+        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .padding(.horizontal)
     }
 
     private func visit(for photo: ClientPhoto) -> Appointment? {

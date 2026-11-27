@@ -301,9 +301,9 @@ private extension HomeView {
 
         if appointment.startDate <= now {
             let left = String(
-                format: localization.localizedString(for: "home.endsInMinutes"),
+                format: localization.localizedString(for: "home.endsIn"),
                 locale: localization.locale,
-                HomeTiming.minutes(from: now, to: appointment.endDate)
+                duration(HomeTiming.minutes(from: now, to: appointment.endDate))
             )
             return "\(localization.localizedString(for: "home.inProgress")) · \(left)"
         }
@@ -312,22 +312,26 @@ private extension HomeView {
 
         case .minutes(let minutes):
             return String(
-                format: localization.localizedString(for: "home.startsInMinutes"),
+                format: localization.localizedString(for: "home.startsIn"),
                 locale: localization.locale,
-                minutes
+                duration(minutes)
             )
 
         case .hours(let hours, let minutes):
             return String(
-                format: localization.localizedString(for: "home.startsInHours"),
+                format: localization.localizedString(for: "home.startsIn"),
                 locale: localization.locale,
-                hours,
-                minutes
+                duration(hours * 60 + minutes)
             )
 
         case .otherDay:
             return dateText(appointment)
         }
+    }
+
+
+    func duration(_ minutes: Int) -> String {
+        DurationText.text(minutes, locale: localization.locale, localized: localization.localizedString(for:))
     }
 
 

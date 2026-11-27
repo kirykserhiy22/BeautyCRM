@@ -202,7 +202,7 @@
 "profession.hair_stylist.sampleNote" = "Farbe 6.1, 35 Min.";
 "appointment.dateTime" = "Datum und Uhrzeit";
 "appointment.start" = "Beginn";
-"appointment.duration" = "Dauer: %d Min.";
+"appointment.duration" = "Dauer: %@";
 "appointment.timeOccupied" = "Die ausgewählte Zeit ist belegt";
 "appointment.nearestFreeSlot" = "Nächster freier Termin: %@ - %@";
 "appointment.notes" = "Notizen";
@@ -353,9 +353,8 @@
 "home.greeting.morning" = "Guten Morgen, %@";
 "home.greeting.afternoon" = "Guten Tag, %@";
 "home.greeting.evening" = "Guten Abend, %@";
-"home.startsInMinutes" = "in %d Min.";
-"home.startsInHours" = "in %d Std. %d Min.";
-"home.endsInMinutes" = "noch %d Min.";
+"home.startsIn" = "in %@";
+"home.endsIn" = "noch %@";
 "home.progress" = "%d von %d Terminen";
 "home.open" = "Öffnen";
 "home.action.appointment" = "Termin";
@@ -550,3 +549,8 @@
 "photos.deletePost" = "Beitrag löschen";
 "photos.deletePost.title" = "Beitrag löschen?";
 "photos.deletePost.message" = "Alle %d Fotos dieses Beitrags werden gelöscht. Das kann nicht rückgängig gemacht werden.";
+
+// Тривалість
+"duration.minutes" = "%d Min.";
+"duration.hours" = "%d Std.";
+"duration.hoursMinutes" = "%d Std. %d Min.";
