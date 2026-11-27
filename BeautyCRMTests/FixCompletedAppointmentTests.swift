@@ -176,6 +176,13 @@ final class FixCompletedAppointmentTests: XCTestCase {
         XCTAssertEqual(AppointmentHistory.months(all, filter: .planned, search: "").flatMap(\.appointments).map(\.id), [october.id])
 
         XCTAssertEqual(AppointmentHistory.months(all, filter: .all, search: "kera").flatMap(\.appointments).map(\.id), [october.id], "Пошук за послугою")
+
+        let counts = AppointmentHistory.counts(all, search: "")
+        XCTAssertEqual(counts[.all], 3, "Приховані не рахуються")
+        XCTAssertEqual(counts[.planned], 1)
+        XCTAssertEqual(counts[.completed], 1)
+        XCTAssertEqual(counts[.cancelled], 1)
+        XCTAssertEqual(AppointmentHistory.counts(all, search: "olena")[.all], 1, "Лічильники враховують пошук")
         XCTAssertEqual(AppointmentHistory.months(all, filter: .all, search: " olena ").flatMap(\.appointments).map(\.id), [october.id], "Пошук за клієнтом")
     }
 }

@@ -187,7 +187,8 @@ struct CalendarScreen: View {
                 .presentationDragIndicator(.visible)
         }
         .onAppear {
-            selectedDate = Date()
+            selectedDate = appState.openCalendarDay ?? Date()
+            appState.openCalendarDay = nil
         }
     }
     

@@ -15,6 +15,9 @@ final class AppState: ObservableObject {
     // Запис, який треба відкрити (тап по сповіщенню). Головна відкриває його й скидає
     @Published var openAppointmentID: UUID?
 
+    // День, який треба відкрити в Календарі («Переглянути» в «Ритмі місяця»). Календар відкриває його й скидає
+    @Published var openCalendarDay: Date?
+
     init() {
         session = SessionManager()
     }

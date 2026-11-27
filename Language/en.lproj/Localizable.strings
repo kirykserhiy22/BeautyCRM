@@ -604,3 +604,16 @@
 "analytics.clientBase.returningDetail" = "%1$d of %2$d came again";
 "analytics.clientBase.dormant" = "Haven’t been in a while";
 "analytics.clientBase.dormantDetail" = "over 3 months, nothing booked";
+
+// Ритм місяця на Головній
+"home.rhythm.title" = "Month rhythm";
+"home.rhythm.previous" = "Previous month";
+"home.rhythm.next" = "Next month";
+"home.rhythm.busy" = "%@ of working time booked";
+"home.rhythm.booked" = "Booked";
+"home.rhythm.free" = "Free";
+"home.rhythm.dayOff" = "day off";
+"home.rhythm.dayBooked" = "%1$@ of %2$@ booked";
+"home.rhythm.dayOffLegend" = "Days off";
+"timeline.freeGap" = "Free %1$@–%2$@";
+"home.rhythm.open" = "View";

@@ -605,3 +605,16 @@
 "analytics.clientBase.returningDetail" = "%1$d з %2$d прийшли ще раз";
 "analytics.clientBase.dormant" = "Давно не були";
 "analytics.clientBase.dormantDetail" = "понад 3 місяці, без запису";
+
+// Ритм місяця на Головній
+"home.rhythm.title" = "Ритм місяця";
+"home.rhythm.previous" = "Попередній місяць";
+"home.rhythm.next" = "Наступний місяць";
+"home.rhythm.busy" = "Зайнято %@ робочого часу";
+"home.rhythm.booked" = "Записи";
+"home.rhythm.free" = "Вільно";
+"home.rhythm.dayOff" = "вихідний";
+"home.rhythm.dayBooked" = "зайнято %1$@ з %2$@";
+"home.rhythm.dayOffLegend" = "Вихідні";
+"timeline.freeGap" = "Вільно %1$@–%2$@";
+"home.rhythm.open" = "Переглянути";

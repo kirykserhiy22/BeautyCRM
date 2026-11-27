@@ -605,3 +605,16 @@
 "analytics.clientBase.returningDetail" = "%1$d z %2$d přišlo znovu";
 "analytics.clientBase.dormant" = "Dlouho nebyli";
 "analytics.clientBase.dormantDetail" = "přes 3 měsíce, bez termínu";
+
+// Ритм місяця на Головній
+"home.rhythm.title" = "Rytmus měsíce";
+"home.rhythm.previous" = "Předchozí měsíc";
+"home.rhythm.next" = "Další měsíc";
+"home.rhythm.busy" = "Obsazeno %@ pracovní doby";
+"home.rhythm.booked" = "Termíny";
+"home.rhythm.free" = "Volno";
+"home.rhythm.dayOff" = "volný den";
+"home.rhythm.dayBooked" = "obsazeno %1$@ z %2$@";
+"home.rhythm.dayOffLegend" = "Volné dny";
+"timeline.freeGap" = "Volno %1$@–%2$@";
+"home.rhythm.open" = "Zobrazit";

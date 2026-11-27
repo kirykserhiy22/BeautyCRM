@@ -604,3 +604,16 @@
 "analytics.clientBase.returningDetail" = "%1$d z %2$d przyszło ponownie";
 "analytics.clientBase.dormant" = "Dawno nie byli";
 "analytics.clientBase.dormantDetail" = "ponad 3 miesiące, bez wizyty";
+
+// Ритм місяця на Головній
+"home.rhythm.title" = "Rytm miesiąca";
+"home.rhythm.previous" = "Poprzedni miesiąc";
+"home.rhythm.next" = "Następny miesiąc";
+"home.rhythm.busy" = "Zajęte %@ czasu pracy";
+"home.rhythm.booked" = "Wizyty";
+"home.rhythm.free" = "Wolne";
+"home.rhythm.dayOff" = "dzień wolny";
+"home.rhythm.dayBooked" = "zajęte %1$@ z %2$@";
+"home.rhythm.dayOffLegend" = "Dni wolne";
+"timeline.freeGap" = "Wolne %1$@–%2$@";
+"home.rhythm.open" = "Zobacz";
