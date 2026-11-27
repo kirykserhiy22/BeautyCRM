@@ -107,6 +107,13 @@ struct MainTabView: View {
                 tab = .home
             }
         }
+        // «Переглянути» день з Головної — перейти в Календар (Головна скидається, як при звичайному перемиканні)
+        .onChange(of: appState.openCalendarDay) { _, day in
+            if day != nil, tab != .calendar {
+                reset(tab)
+                tab = .calendar
+            }
+        }
         .task {
             if let userID = appState.session.userID {
                 SyncTracking.prepareWorkspace(

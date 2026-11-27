@@ -19,6 +19,7 @@ struct MonthRhythmCard: View {
 
     @EnvironmentObject var theme: ThemeManager
     @EnvironmentObject var localization: LocalizationManager
+    @EnvironmentObject var appState: AppState
 
     // 0 — поточний місяць, 1 — наступний…
     @State private var monthOffset = 0
@@ -82,10 +83,23 @@ struct MonthRhythmCard: View {
             }
             .tint(colors.accent)
 
-            // Підпис: загальна заповненість або вибраний день
+            // Підпис: загальна заповненість або вибраний день з посиланням на нього в Календарі
             Group {
                 if let selected {
-                    Text(dayText(selected))
+                    Button {
+                        appState.openCalendarDay = selected.day
+                    } label: {
+                        (
+                            Text(dayText(selected) + "  ")
+                                .foregroundColor(colors.textSecondary)
+                            + Text(localized("home.rhythm.open") + " →")
+                                .foregroundColor(colors.accent)
+                                .fontWeight(.semibold)
+                        )
+                        .multilineTextAlignment(.leading)
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityIdentifier("home.rhythm.open")
                 } else {
                     Text(String(
                         format: localized("home.rhythm.busy"),
@@ -223,6 +237,7 @@ struct MonthRhythmCard: View {
         let total = DurationText.text(day.workingMinutes, locale: localization.locale, localized: localized)
         return "\(date) · " + String(format: localized("home.rhythm.dayBooked"), booked, total)
             + " · " + CountFormatting.appointments(day.appointmentCount, locale: localization.locale)
+                .replacingOccurrences(of: " ", with: "\u{00A0}")
     }
 
     private var monthTitle: String {

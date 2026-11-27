@@ -617,3 +617,4 @@
 "home.rhythm.dayBooked" = "obsazeno %1$@ z %2$@";
 "home.rhythm.dayOffLegend" = "Volné dny";
 "timeline.freeGap" = "Volno %1$@–%2$@";
+"home.rhythm.open" = "Zobrazit";

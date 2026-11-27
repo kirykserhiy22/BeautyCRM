@@ -616,3 +616,4 @@
 "home.rhythm.dayBooked" = "%1$@ of %2$@ booked";
 "home.rhythm.dayOffLegend" = "Days off";
 "timeline.freeGap" = "Free %1$@–%2$@";
+"home.rhythm.open" = "View";

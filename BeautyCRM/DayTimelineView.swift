@@ -116,7 +116,8 @@ struct DayTimelineView: View {
             items: items,
             workStartMinute: workingHours.startMinute,
             workEndMinute: workingHours.endMinute,
-            startsAtFirstItem: compact
+            // Порожній ранок тепер стискається в «Вільно 9:00–11:00», тож шкала завжди з початку робочого дня
+            startsAtFirstItem: false
         )
     }
 
