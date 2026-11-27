@@ -591,3 +591,16 @@
 "visits.refundReason" = "Grund der Rückerstattung";
 "appointment.hideConfirm.title" = "Termin ausblenden?";
 "appointment.hideConfirm.message" = "Er verschwindet überall: aus dem Kalender, „Alle Termine“, dem Besuchsverlauf und den Kundenstatistiken. Das lässt sich nicht rückgängig machen.";
+
+// Аналітика: послуги й клієнтська база
+"analytics.byService" = "Umsatz nach Leistung";
+"analytics.byService.total" = "Gesamt";
+"analytics.byService.other" = "Sonstige";
+"analytics.clientBase" = "Kunden";
+"analytics.clientBase.hint" = "Gesamter Kundenstamm – unabhängig vom Zeitraum";
+"analytics.clientBase.total" = "Im Kundenstamm";
+"analytics.clientBase.newThisMonth" = "Neu diesen Monat";
+"analytics.clientBase.returning" = "Kommen wieder";
+"analytics.clientBase.returningDetail" = "%1$d von %2$d kamen erneut";
+"analytics.clientBase.dormant" = "Lange nicht da";
+"analytics.clientBase.dormantDetail" = "über 3 Monate, kein Termin";
