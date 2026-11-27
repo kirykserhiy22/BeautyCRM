@@ -117,7 +117,7 @@ struct MonthRhythmCard: View {
             HStack(spacing: 14) {
                 legend(color: colors.accent, key: "home.rhythm.booked")
                 legend(color: colors.accent.opacity(0.18), key: "home.rhythm.free")
-                legend(color: dayOffColor, key: "home.rhythm.dayOffLegend")
+                legend(color: dayOffColor, key: "home.rhythm.dayOffLegend", outlined: true)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -137,15 +137,14 @@ struct MonthRhythmCard: View {
             let booked = Double(min(day.bookedMinutes, day.workingMinutes)) / 60
 
             if day.isDayOff {
-                // Вихідний — сірий стовпчик на всю висоту
+                // Вихідний — прозорий стовпчик; контур малює chartBackground нижче
                 BarMark(
                     x: .value("day", String(index)),
                     yStart: .value("start", 0),
                     yEnd: .value("end", maxHours(days)),
                     width: .ratio(0.7)
                 )
-                .foregroundStyle(dayOffColor.opacity(dimmed ? 0.3 : 1))
-                .cornerRadius(3)
+                .foregroundStyle(Color.clear)
             } else {
                 // «Тінь» — увесь робочий день
                 BarMark(
@@ -183,6 +182,24 @@ struct MonthRhythmCard: View {
         }
         .chartYAxis(.hidden)
         .chartYScale(domain: 0...max(maxHours(days), 1))
+        // Вихідні — лише світлий контур, щоб не зливались з «тінню» вільного часу
+        .chartBackground { proxy in
+            GeometryReader { geometry in
+                if let plotFrame = proxy.plotFrame {
+                    let frame = geometry[plotFrame]
+                    let width = frame.width / CGFloat(max(days.count, 1)) * 0.7
+                    ForEach(days.indices.filter { days[$0].isDayOff }, id: \.self) { index in
+                        if let x = proxy.position(forX: String(index)) {
+                            RoundedRectangle(cornerRadius: 3)
+                                .strokeBorder(dayOffColor, lineWidth: 1.2)
+                                .frame(width: width, height: frame.height)
+                                .position(x: frame.minX + x, y: frame.midY)
+                                .opacity(selectedDay != nil && selectedDay != days[index].day ? 0.35 : 1)
+                        }
+                    }
+                }
+            }
+        }
         .chartOverlay { proxy in
             GeometryReader { geometry in
                 Rectangle()
@@ -212,15 +229,19 @@ struct MonthRhythmCard: View {
         }
     }
 
-    private func legend(color: Color, key: String) -> some View {
+    private func legend(color: Color, key: String, outlined: Bool = false) -> some View {
         HStack(spacing: 5) {
-            RoundedRectangle(cornerRadius: 2).fill(color).frame(width: 10, height: 10)
+            if outlined {
+                RoundedRectangle(cornerRadius: 2).strokeBorder(color, lineWidth: 1.2).frame(width: 10, height: 10)
+            } else {
+                RoundedRectangle(cornerRadius: 2).fill(color).frame(width: 10, height: 10)
+            }
             Text(localized(key)).font(.caption).foregroundColor(colors.textSecondary)
         }
     }
 
     private var dayOffColor: Color {
-        colors.textMuted.opacity(0.45)
+        colors.textSecondary.opacity(0.8)
     }
 
     private func maxHours(_ days: [DayLoad]) -> Double {
