@@ -21,6 +21,7 @@ struct DayTimelineView: View {
     var onDragActive: (Bool) -> Void = { _ in }
 
     @EnvironmentObject var theme: ThemeManager
+    @EnvironmentObject var localization: LocalizationManager
 
     private struct Drag: Equatable {
         let id: UUID
@@ -38,9 +39,15 @@ struct DayTimelineView: View {
     private let hourHeight: CGFloat = 60
     private let labelWidth: CGFloat = 48
     private let topInset: CGFloat = 8
+    // Висота стиснутого порожнього проміжку «Вільно 10:00–18:00»
+    private let gapHeight: CGFloat = 44
 
     private var colors: ThemeColors {
         theme.colors(for: theme.currentTheme)
+    }
+
+    private var localizedFree: String {
+        localization.localizedString(for: "timeline.freeGap")
     }
 
     private var items: [TimelineItem] {
@@ -53,6 +60,8 @@ struct DayTimelineView: View {
 
         let items = items
         let hours = hourRange(items, compact: drag == nil)
+        // Під час перетягування — увесь день без стискання
+        let gaps = drag == nil ? DayTimelineLayout.freeGaps(items: items, hours: hours) : []
         let placements = DayTimelineLayout.placements(for: items)
 
         GeometryReader { geo in
@@ -62,7 +71,14 @@ struct DayTimelineView: View {
             ZStack(alignment: .topLeading) {
 
                 ForEach(Array(hours), id: \.self) { hour in
-                    hourLine(hour, lowerHour: hours.lowerBound, width: geo.size.width)
+                    // Години всередині стиснутого проміжку не малюємо
+                    if !gaps.contains(where: { hour > $0.lowerBound && hour < $0.upperBound }) {
+                        hourLine(hour, lowerHour: hours.lowerBound, gaps: gaps, width: geo.size.width)
+                    }
+                }
+
+                ForEach(gaps, id: \.lowerBound) { gap in
+                    gapRow(gap, lowerHour: hours.lowerBound, gaps: gaps, width: geo.size.width)
                 }
 
                 ForEach(appointments) { appointment in
@@ -73,6 +89,7 @@ struct DayTimelineView: View {
                             item: item,
                             placement: placement,
                             lowerHour: hours.lowerBound,
+                            gaps: gaps,
                             laneWidth: laneWidth
                         )
                         .zIndex(drag?.id == appointment.id ? 1 : 0)
@@ -82,13 +99,13 @@ struct DayTimelineView: View {
                 if Calendar.current.isDateInToday(day) {
                     // Раз на хвилину пересуває лінію «зараз»
                     TimelineView(.periodic(from: .now, by: 60)) { context in
-                        nowLine(at: context.date, hours: hours, width: geo.size.width)
+                        nowLine(at: context.date, hours: hours, gaps: gaps, width: geo.size.width)
                     }
                     .allowsHitTesting(false)
                 }
             }
         }
-        .frame(height: CGFloat(hours.count - 1) * hourHeight + topInset * 2)
+        .frame(height: y(minute: hours.upperBound * 60, lowerHour: hours.lowerBound, gaps: gaps) + topInset)
     }
 
 
@@ -107,12 +124,21 @@ struct DayTimelineView: View {
 
         let items = items
 
+        let grown = expandedShift(items: items, minute: item.startMinute)
+
         drag = Drag(id: appointment.id, startMinute: item.startMinute)
         onDragActive(true)
 
-        let hours = hourRange(items, compact: true).lowerBound - hourRange(items, compact: false).lowerBound
+        return grown
+    }
 
-        return CGFloat(hours) * hourHeight
+    // На скільки виростає шкала над хвилиною, коли стиснута стає повною (на весь день без стискань)
+    private func expandedShift(items: [TimelineItem], minute: Int) -> CGFloat {
+        let compact = hourRange(items, compact: true)
+        let full = hourRange(items, compact: false)
+        let gaps = DayTimelineLayout.freeGaps(items: items, hours: compact)
+        return y(minute: minute, lowerHour: full.lowerBound, gaps: [])
+            - y(minute: minute, lowerHour: compact.lowerBound, gaps: gaps)
     }
 
     private func updateDrag(item: TimelineItem, points: CGFloat) {
@@ -148,7 +174,17 @@ struct DayTimelineView: View {
 
     private func endDrag(_ appointment: Appointment, item: TimelineItem, cancelled: Bool) -> CGFloat {
 
-        let fullLower = hourRange(items, compact: false).lowerBound
+        // Шкала знову стискається: рахуємо так, ніби запис уже стоїть на новому місці
+        var finalMinute = item.startMinute
+        if let current = drag, !cancelled, !current.isBeyondScale {
+            finalMinute = current.startMinute
+        }
+        let moved = items.map {
+            $0.id == item.id
+                ? TimelineItem(id: $0.id, startMinute: finalMinute, endMinute: finalMinute + item.endMinute - item.startMinute)
+                : $0
+        }
+        let shrunk = expandedShift(items: moved, minute: finalMinute)
 
         if let current = drag, !cancelled {
 
@@ -163,7 +199,7 @@ struct DayTimelineView: View {
         drag = nil
         onDragActive(false)
 
-        return CGFloat(hourRange(items, compact: true).lowerBound - fullLower) * hourHeight
+        return shrunk
     }
 
     private func date(minute: Int, of appointment: Appointment) -> Date? {
@@ -201,13 +237,44 @@ struct DayTimelineView: View {
 
     // MARK: - HOURS
 
-    private func y(minute: Int, lowerHour: Int) -> CGFloat {
-        CGFloat(minute - lowerHour * 60) / 60 * hourHeight + topInset
+    private func y(minute: Int, lowerHour: Int, gaps: [Range<Int>]) -> CGFloat {
+        DayTimelineLayout.offset(
+            minute: minute,
+            lowerHour: lowerHour,
+            gaps: gaps,
+            hourHeight: hourHeight,
+            gapHeight: gapHeight
+        ) + topInset
     }
 
-    private func hourLine(_ hour: Int, lowerHour: Int, width: CGFloat) -> some View {
+    // «Вільно 10:00–18:00» замість восьми порожніх годин
+    private func gapRow(_ gap: Range<Int>, lowerHour: Int, gaps: [Range<Int>], width: CGFloat) -> some View {
 
-        let top = y(minute: hour * 60, lowerHour: lowerHour)
+        let top = y(minute: gap.lowerBound * 60, lowerHour: lowerHour, gaps: gaps)
+
+        return HStack(spacing: 6) {
+            Image(systemName: "moon.zzz")
+                .font(.caption)
+            Text(String(
+                format: localizedFree,
+                String(format: "%02d:00", gap.lowerBound),
+                String(format: "%02d:00", gap.upperBound)
+            ))
+            .font(.caption.weight(.medium))
+        }
+        .foregroundColor(colors.textSecondary)
+        .frame(width: max(width - labelWidth - 8, 0), height: gapHeight - 12)
+        .background(
+            RoundedRectangle(cornerRadius: 8)
+                .strokeBorder(colors.divider, style: StrokeStyle(lineWidth: 1, dash: [4, 3]))
+        )
+        .offset(x: labelWidth + 4, y: top + 6)
+        .accessibilityIdentifier("timeline.freeGap")
+    }
+
+    private func hourLine(_ hour: Int, lowerHour: Int, gaps: [Range<Int>], width: CGFloat) -> some View {
+
+        let top = y(minute: hour * 60, lowerHour: lowerHour, gaps: gaps)
 
         return ZStack(alignment: .topLeading) {
 
@@ -232,12 +299,14 @@ struct DayTimelineView: View {
         item: TimelineItem,
         placement: TimelinePlacement,
         lowerHour: Int,
+        gaps: [Range<Int>],
         laneWidth: CGFloat
     ) -> some View {
 
         let columnWidth = laneWidth / CGFloat(placement.columnCount)
         let minutes = max(item.endMinute - item.startMinute, DayTimelineLayout.minimumVisualMinutes)
-        let height = CGFloat(minutes) / 60 * hourHeight - 2
+        let height = y(minute: item.startMinute + minutes, lowerHour: lowerHour, gaps: gaps)
+            - y(minute: item.startMinute, lowerHour: lowerHour, gaps: gaps) - 2
         let isCompleted = appointment.status == .completed
         let services = appointment.services.map(\.serviceName).joined(separator: " · ")
         let timeRange = "\(AppFormatting.clock(appointment.startDate)) – \(AppFormatting.clock(appointment.endDate))"
@@ -338,7 +407,7 @@ struct DayTimelineView: View {
         .accessibilityIdentifier("timeline.appointment")
         .offset(
             x: labelWidth + CGFloat(placement.column) * columnWidth,
-            y: y(minute: dragMinute ?? item.startMinute, lowerHour: lowerHour) + 1
+            y: y(minute: dragMinute ?? item.startMinute, lowerHour: lowerHour, gaps: gaps) + 1
         )
     }
 
@@ -355,14 +424,14 @@ struct DayTimelineView: View {
     // MARK: - NOW
 
     @ViewBuilder
-    private func nowLine(at date: Date, hours: ClosedRange<Int>, width: CGFloat) -> some View {
+    private func nowLine(at date: Date, hours: ClosedRange<Int>, gaps: [Range<Int>], width: CGFloat) -> some View {
 
         let parts = Calendar.current.dateComponents([.hour, .minute], from: date)
         let minute = (parts.hour ?? 0) * 60 + (parts.minute ?? 0)
 
         if minute >= hours.lowerBound * 60 && minute <= hours.upperBound * 60 {
 
-            let top = y(minute: minute, lowerHour: hours.lowerBound)
+            let top = y(minute: minute, lowerHour: hours.lowerBound, gaps: gaps)
 
             ZStack(alignment: .topLeading) {
 

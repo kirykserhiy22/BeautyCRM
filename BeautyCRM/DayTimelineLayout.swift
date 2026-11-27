@@ -147,4 +147,66 @@ enum DayTimelineLayout {
 
         return result
     }
+
+    // MARK: - FREE GAPS
+
+    // Порожні години без жодного запису, від `minimumHours` поспіль — їх шкала стискає
+    // в один рядок «Вільно 10:00–18:00», щоб не гортати порожній день.
+    // Повертає діапазони годин: lowerBound — початок, upperBound — кінець (не включно).
+    static func freeGaps(
+        items: [TimelineItem],
+        hours: ClosedRange<Int>,
+        minimumHours: Int = 2
+    ) -> [Range<Int>] {
+
+        func isFree(_ hour: Int) -> Bool {
+            let start = hour * 60, end = start + 60
+            return !items.contains { item in
+                let visualEnd = max(item.endMinute, item.startMinute + minimumVisualMinutes)
+                return item.startMinute < end && visualEnd > start
+            }
+        }
+
+        var gaps: [Range<Int>] = []
+        var runStart: Int?
+
+        for hour in hours.lowerBound..<hours.upperBound {
+            if isFree(hour) {
+                if runStart == nil { runStart = hour }
+            } else if let start = runStart {
+                if hour - start >= minimumHours { gaps.append(start..<hour) }
+                runStart = nil
+            }
+        }
+        if let start = runStart, hours.upperBound - start >= minimumHours {
+            gaps.append(start..<hours.upperBound)
+        }
+
+        return gaps
+    }
+
+    // Відстань від верху шкали до хвилини: години по `hourHeight`, стиснутий проміжок — `gapHeight`
+    static func offset(
+        minute: Int,
+        lowerHour: Int,
+        gaps: [Range<Int>],
+        hourHeight: CGFloat,
+        gapHeight: CGFloat
+    ) -> CGFloat {
+
+        var result = CGFloat(minute - lowerHour * 60) / 60 * hourHeight
+
+        for gap in gaps {
+            let gapStart = gap.lowerBound * 60, gapEnd = gap.upperBound * 60
+            let gapMinutes = CGFloat(gapEnd - gapStart)
+            if minute >= gapEnd {
+                result -= gapMinutes / 60 * hourHeight - gapHeight
+            } else if minute > gapStart {
+                let inside = CGFloat(minute - gapStart)
+                result -= inside / 60 * hourHeight - inside / gapMinutes * gapHeight
+            }
+        }
+
+        return result
+    }
 }

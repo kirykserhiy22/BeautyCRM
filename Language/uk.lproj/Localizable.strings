@@ -615,3 +615,5 @@
 "home.rhythm.free" = "Вільно";
 "home.rhythm.dayOff" = "вихідний";
 "home.rhythm.dayBooked" = "зайнято %1$@ з %2$@";
+"home.rhythm.dayOffLegend" = "Вихідні";
+"timeline.freeGap" = "Вільно %1$@–%2$@";

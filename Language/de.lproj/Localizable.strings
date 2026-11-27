@@ -614,3 +614,5 @@
 "home.rhythm.free" = "Frei";
 "home.rhythm.dayOff" = "freier Tag";
 "home.rhythm.dayBooked" = "%1$@ von %2$@ belegt";
+"home.rhythm.dayOffLegend" = "Freie Tage";
+"timeline.freeGap" = "Frei %1$@–%2$@";

@@ -103,6 +103,7 @@ struct MonthRhythmCard: View {
             HStack(spacing: 14) {
                 legend(color: colors.accent, key: "home.rhythm.booked")
                 legend(color: colors.accent.opacity(0.18), key: "home.rhythm.free")
+                legend(color: dayOffColor, key: "home.rhythm.dayOffLegend")
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -122,14 +123,14 @@ struct MonthRhythmCard: View {
             let booked = Double(min(day.bookedMinutes, day.workingMinutes)) / 60
 
             if day.isDayOff {
-                // Вихідний — низька сіра позначка
+                // Вихідний — сірий стовпчик на всю висоту
                 BarMark(
                     x: .value("day", String(index)),
                     yStart: .value("start", 0),
-                    yEnd: .value("end", maxHours(days) * 0.08),
+                    yEnd: .value("end", maxHours(days)),
                     width: .ratio(0.7)
                 )
-                .foregroundStyle(colors.textMuted.opacity(0.35))
+                .foregroundStyle(dayOffColor.opacity(dimmed ? 0.3 : 1))
                 .cornerRadius(3)
             } else {
                 // «Тінь» — увесь робочий день
@@ -202,6 +203,10 @@ struct MonthRhythmCard: View {
             RoundedRectangle(cornerRadius: 2).fill(color).frame(width: 10, height: 10)
             Text(localized(key)).font(.caption).foregroundColor(colors.textSecondary)
         }
+    }
+
+    private var dayOffColor: Color {
+        colors.textMuted.opacity(0.45)
     }
 
     private func maxHours(_ days: [DayLoad]) -> Double {

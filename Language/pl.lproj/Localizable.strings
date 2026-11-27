@@ -614,3 +614,5 @@
 "home.rhythm.free" = "Wolne";
 "home.rhythm.dayOff" = "dzień wolny";
 "home.rhythm.dayBooked" = "zajęte %1$@ z %2$@";
+"home.rhythm.dayOffLegend" = "Dni wolne";
+"timeline.freeGap" = "Wolne %1$@–%2$@";
