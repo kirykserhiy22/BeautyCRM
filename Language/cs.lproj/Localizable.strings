@@ -203,7 +203,7 @@
 "profession.hair_stylist.sampleNote" = "Barva 6.1, 35 min";
 "appointment.dateTime" = "Datum a čas";
 "appointment.start" = "Začátek";
-"appointment.duration" = "Délka: %d min";
+"appointment.duration" = "Délka: %@";
 "appointment.timeOccupied" = "Vybraný čas je obsazený";
 "appointment.nearestFreeSlot" = "Nejbližší volný termín: %@ - %@";
 "appointment.notes" = "Poznámky";
@@ -354,9 +354,8 @@
 "home.greeting.morning" = "Dobré ráno, %@";
 "home.greeting.afternoon" = "Dobré odpoledne, %@";
 "home.greeting.evening" = "Dobrý večer, %@";
-"home.startsInMinutes" = "za %d min";
-"home.startsInHours" = "za %d h %d min";
-"home.endsInMinutes" = "ještě %d min";
+"home.startsIn" = "za %@";
+"home.endsIn" = "ještě %@";
 "home.progress" = "%d z %d termínů";
 "home.open" = "Otevřít";
 "home.action.appointment" = "Termín";
@@ -551,3 +550,8 @@
 "photos.deletePost" = "Smazat příspěvek";
 "photos.deletePost.title" = "Smazat příspěvek?";
 "photos.deletePost.message" = "Smažou se všechny fotky příspěvku: %d. Tuto akci nelze vrátit.";
+
+// Тривалість
+"duration.minutes" = "%d min";
+"duration.hours" = "%d h";
+"duration.hoursMinutes" = "%d h %d min";

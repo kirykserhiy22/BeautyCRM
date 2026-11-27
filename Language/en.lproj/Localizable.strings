@@ -202,7 +202,7 @@
 "profession.hair_stylist.sampleNote" = "Dye 6.1, 35 min";
 "appointment.dateTime" = "Date & Time";
 "appointment.start" = "Start";
-"appointment.duration" = "Duration: %d min";
+"appointment.duration" = "Duration: %@";
 "appointment.timeOccupied" = "Selected time is occupied";
 "appointment.nearestFreeSlot" = "Nearest free slot: %@ - %@";
 "appointment.notes" = "Notes";
@@ -353,9 +353,8 @@
 "home.greeting.morning" = "Good morning, %@";
 "home.greeting.afternoon" = "Good afternoon, %@";
 "home.greeting.evening" = "Good evening, %@";
-"home.startsInMinutes" = "in %d min";
-"home.startsInHours" = "in %d h %d min";
-"home.endsInMinutes" = "%d min left";
+"home.startsIn" = "in %@";
+"home.endsIn" = "%@ left";
 "home.progress" = "%d of %d appointments";
 "home.open" = "Open";
 "home.action.appointment" = "Appointment";
@@ -550,3 +549,8 @@
 "photos.deletePost" = "Delete post";
 "photos.deletePost.title" = "Delete post?";
 "photos.deletePost.message" = "All %d photos in this post will be deleted. This can’t be undone.";
+
+// Тривалість
+"duration.minutes" = "%d min";
+"duration.hours" = "%d h";
+"duration.hoursMinutes" = "%d h %d min";

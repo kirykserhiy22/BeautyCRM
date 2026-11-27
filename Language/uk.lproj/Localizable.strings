@@ -203,7 +203,7 @@
 "profession.hair_stylist.sampleNote" = "Фарба 6.1, витримка 35 хв";
 "appointment.dateTime" = "Дата й час";
 "appointment.start" = "Початок";
-"appointment.duration" = "Тривалість: %d хв";
+"appointment.duration" = "Тривалість: %@";
 "appointment.timeOccupied" = "Обраний час зайнятий";
 "appointment.nearestFreeSlot" = "Найближчий вільний час: %@ - %@";
 "appointment.notes" = "Нотатки";
@@ -354,9 +354,8 @@
 "home.greeting.morning" = "Доброго ранку, %@";
 "home.greeting.afternoon" = "Доброго дня, %@";
 "home.greeting.evening" = "Доброго вечора, %@";
-"home.startsInMinutes" = "через %d хв";
-"home.startsInHours" = "через %d год %d хв";
-"home.endsInMinutes" = "ще %d хв";
+"home.startsIn" = "через %@";
+"home.endsIn" = "ще %@";
 "home.progress" = "%d з %d записів";
 "home.open" = "Відкрити";
 "home.action.appointment" = "Запис";
@@ -551,3 +550,8 @@
 "photos.deletePost" = "Видалити допис";
 "photos.deletePost.title" = "Видалити допис?";
 "photos.deletePost.message" = "Буде видалено всі фото допису: %d. Цю дію неможливо скасувати.";
+
+// Тривалість
+"duration.minutes" = "%d хв";
+"duration.hours" = "%d год";
+"duration.hoursMinutes" = "%d год %d хв";

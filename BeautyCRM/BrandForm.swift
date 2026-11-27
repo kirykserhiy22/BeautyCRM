@@ -164,6 +164,7 @@ struct UnsavedChangesGuard: ViewModifier {
     func body(content: Content) -> some View {
         content
             .interactiveDismissDisabled(hasChanges)
+            .modifier(ReportsUnsavedChanges(hasChanges: hasChanges))
             // Відкрита як сторінка (з Головної) — замість «назад» лише «Скасувати»,
             // щоб і кнопка, і свайп від краю теж питали про незбережене
             .navigationBarBackButtonHidden(true)

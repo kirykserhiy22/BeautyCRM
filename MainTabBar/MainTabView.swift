@@ -23,11 +23,32 @@ struct MainTabView: View {
     // Гід по додатку — один раз після реєстрації
     @State private var showGuide = false
 
-    private enum Tab: Hashable {
+    private enum Tab: String, Hashable {
         case home, clients, calendar, analytics, settings
     }
 
     @State private var tab: Tab = .home
+
+    // Зміна номера перебудовує вкладку з головного екрана (див. TabReset.swift)
+    @State private var resets: [Tab: Int] = [:]
+
+    // Тап по вкладці: покинута скидається; повторний тап по поточній — теж
+    private var selection: Binding<Tab> {
+        Binding(
+            get: { tab },
+            set: { newTab in
+                reset(tab)
+                tab = newTab
+            }
+        )
+    }
+
+    private func reset(_ old: Tab) {
+        guard !UnsavedForms.shared.hasUnsaved(in: old.rawValue) else {
+            return
+        }
+        resets[old, default: 0] += 1
+    }
 
     private var colors: ThemeColors {
         theme.colors(for: theme.currentTheme)
@@ -36,32 +57,42 @@ struct MainTabView: View {
 
     var body: some View {
 
-        TabView(selection: $tab) {
+        TabView(selection: selection) {
             HomeView()
+                .environment(\.formTab, Tab.home.rawValue)
+                .id(resets[.home, default: 0])
                 .tabItem {
                     Label("tab.home", systemImage: "house")
                 }
                 .tag(Tab.home)
 
             ClientsListView()
+                .environment(\.formTab, Tab.clients.rawValue)
+                .id(resets[.clients, default: 0])
                 .tabItem {
                     Label("tab.clients", systemImage: "person.3")
                 }
                 .tag(Tab.clients)
 
             CalendarScreen()
+                .environment(\.formTab, Tab.calendar.rawValue)
+                .id(resets[.calendar, default: 0])
                 .tabItem {
                     Label("tab.calendar", systemImage: "calendar")
                 }
                 .tag(Tab.calendar)
 
             AnalyticsView()
+                .environment(\.formTab, Tab.analytics.rawValue)
+                .id(resets[.analytics, default: 0])
                 .tabItem {
                     Label("tab.analytics", systemImage: "chart.bar")
                 }
                 .tag(Tab.analytics)
 
             SettingsView()
+                .environment(\.formTab, Tab.settings.rawValue)
+                .id(resets[.settings, default: 0])
                 .tabItem {
                     Label("tab.settings", systemImage: "gear")
                 }
