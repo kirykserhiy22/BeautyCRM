@@ -618,3 +618,14 @@
 "home.rhythm.dayOffLegend" = "Вихідні";
 "timeline.freeGap" = "Вільно %1$@–%2$@";
 "home.rhythm.open" = "Переглянути";
+
+// Вільний / фіксований графік
+"settings.schedule.flexible" = "Вільний графік";
+"settings.schedule.flexible.hint" = "Працюю, коли зручно. Календар показує день з 8:00 до 20:00 — це лише рамка, записувати можна на будь-який час.";
+"settings.schedule.fixed" = "Фіксований графік";
+"settings.schedule.fixed.hint" = "Працюю за розкладом, як у салоні чи власному кабінеті.";
+"settings.schedule.windowHeader" = "Рамка дня в календарі";
+"settings.schedule.hoursHeader" = "Робочі години";
+"settings.schedule.flexibleFooter" = "Це лише те, що видно в календарі: рамку можна розширити чи звузити. Записи раніше чи пізніше теж можна робити — шкала розшириться сама.";
+"home.rhythm.bookedHours" = "Записано %@ за місяць";
+"home.rhythm.dayBookedFlexible" = "зайнято %@";

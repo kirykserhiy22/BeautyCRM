@@ -101,10 +101,7 @@ struct MonthRhythmCard: View {
                     .buttonStyle(.plain)
                     .accessibilityIdentifier("home.rhythm.open")
                 } else {
-                    Text(String(
-                        format: localized("home.rhythm.busy"),
-                        HomeInsights.percent(days).formatted(.percent.locale(localization.locale))
-                    ))
+                    Text(summaryText(days))
                 }
             }
             .font(.subheadline)
@@ -116,7 +113,9 @@ struct MonthRhythmCard: View {
 
             HStack(spacing: 14) {
                 legend(color: colors.accent, key: "home.rhythm.booked")
-                legend(color: colors.accent.opacity(0.18), key: "home.rhythm.free")
+                if !workingHours.isFlexible {
+                    legend(color: colors.accent.opacity(0.18), key: "home.rhythm.free")
+                }
                 legend(color: dayOffColor, key: "home.rhythm.dayOffLegend", outlined: true)
             }
         }
@@ -264,10 +263,30 @@ struct MonthRhythmCard: View {
             return "\(date) · \(localized("home.rhythm.dayOff"))"
         }
         let booked = DurationText.text(day.bookedMinutes, locale: localization.locale, localized: localized)
+        if workingHours.isFlexible {
+            return "\(date) · " + String(format: localized("home.rhythm.dayBookedFlexible"), booked)
+                + " · " + CountFormatting.appointments(day.appointmentCount, locale: localization.locale)
+                    .replacingOccurrences(of: " ", with: "\u{00A0}")
+        }
         let total = DurationText.text(day.workingMinutes, locale: localization.locale, localized: localized)
         return "\(date) · " + String(format: localized("home.rhythm.dayBooked"), booked, total)
             + " · " + CountFormatting.appointments(day.appointmentCount, locale: localization.locale)
                 .replacingOccurrences(of: " ", with: "\u{00A0}")
+    }
+
+    // Фіксований графік — відсоток робочого часу; вільний — скільки годин записано (без «правила»)
+    private func summaryText(_ days: [DayLoad]) -> String {
+        guard workingHours.isFlexible else {
+            return String(
+                format: localized("home.rhythm.busy"),
+                HomeInsights.percent(days).formatted(.percent.locale(localization.locale))
+            )
+        }
+        let minutes = days.reduce(0) { $0 + $1.bookedMinutes }
+        return String(
+            format: localized("home.rhythm.bookedHours"),
+            DurationText.text(minutes, locale: localization.locale, localized: localized)
+        )
     }
 
     private var monthTitle: String {

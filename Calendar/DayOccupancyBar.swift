@@ -16,6 +16,9 @@ struct DayTimeScale: nonisolated Equatable {
     var showsEarlyZone = false
     var showsLateZone = false
 
+    // Вільний графік: години — лише рамка, «вільного робочого часу» не рахуємо
+    var isFlexible = false
+
     // Частка ширини смужки на кожну крайню зону
     static let edgeZoneShare: CGFloat = 0.12
 
@@ -25,21 +28,30 @@ struct DayTimeScale: nonisolated Equatable {
         endMinute: 19 * 60
     )
 
+    // Рамка дня для вільного графіка
+    static let defaultFlexibleWindow = DayTimeScale(
+        startMinute: 8 * 60,
+        endMinute: 20 * 60,
+        isFlexible: true
+    )
+
 
     // Робочі години майстра з профілю (або за замовчуванням)
     static func workingHours(
         _ profile: UserProfile?
     ) -> DayTimeScale {
 
+        let flexible = profile?.isFlexibleSchedule ?? true
+
         guard
             let start = profile?.workStartMinute,
             let end = profile?.workEndMinute,
             end > start
         else {
-            return defaultWorkingHours
+            return flexible ? defaultFlexibleWindow : defaultWorkingHours
         }
 
-        return DayTimeScale(startMinute: start, endMinute: end)
+        return DayTimeScale(startMinute: start, endMinute: end, isFlexible: flexible)
     }
 
 

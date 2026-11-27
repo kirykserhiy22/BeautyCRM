@@ -245,6 +245,9 @@ struct SettingsView: View {
 
     private var workingHoursText: String {
         let hours = DayTimeScale.workingHours(profile)
+        if hours.isFlexible {
+            return localization.localizedString(for: "settings.schedule.flexible")
+        }
         return "\(timeText(hours.startMinute))–\(timeText(hours.endMinute))"
     }
 
@@ -465,6 +468,7 @@ struct WorkingHoursSettingsView: View {
 
     @State private var startMinute = DayTimeScale.defaultWorkingHours.startMinute
     @State private var endMinute = DayTimeScale.defaultWorkingHours.endMinute
+    @State private var isFlexible = true
 
     private var colors: ThemeColors {
         theme.colors(for: theme.currentTheme)
@@ -483,6 +487,15 @@ struct WorkingHoursSettingsView: View {
     var body: some View {
 
         Form {
+
+            // Вільний чи фіксований графік — картками, щоб майстер упізнав свій варіант
+            Section {
+                scheduleCard(flexible: true)
+                scheduleCard(flexible: false)
+            }
+            .listRowBackground(Color.clear)
+            .listRowInsets(EdgeInsets(top: 4, leading: 0, bottom: 4, trailing: 0))
+            .listRowSeparator(.hidden)
 
             Section {
 
@@ -504,9 +517,10 @@ struct WorkingHoursSettingsView: View {
                     }
                 }
 
+            } header: {
+                Text(localization.localizedString(for: isFlexible ? "settings.schedule.windowHeader" : "settings.schedule.hoursHeader"))
             } footer: {
-
-                Text(localization.localizedString(for: "settings.workingHours.description"))
+                Text(localization.localizedString(for: isFlexible ? "settings.schedule.flexibleFooter" : "settings.workingHours.description"))
             }
             .brandRows(colors)
         }
@@ -524,6 +538,10 @@ struct WorkingHoursSettingsView: View {
             let hours = DayTimeScale.workingHours(profile)
             startMinute = hours.startMinute
             endMinute = hours.endMinute
+            isFlexible = hours.isFlexible
+        }
+        .onChange(of: isFlexible) {
+            save()
         }
         .onChange(of: startMinute) {
             if endMinute <= startMinute {
@@ -542,7 +560,51 @@ struct WorkingHoursSettingsView: View {
         }
         profile.workStartMinute = startMinute
         profile.workEndMinute = endMinute
+        profile.flexibleSchedule = isFlexible
         context.saveReportingErrors()
+    }
+
+    private func scheduleCard(flexible: Bool) -> some View {
+
+        let isSelected = isFlexible == flexible
+        let key = flexible ? "settings.schedule.flexible" : "settings.schedule.fixed"
+
+        return Button {
+            guard !isSelected else { return }
+            withAnimation(.easeOut(duration: 0.15)) {
+                isFlexible = flexible
+                // Вільний графік починається зі звичної рамки 8:00–20:00
+                if flexible {
+                    startMinute = DayTimeScale.defaultFlexibleWindow.startMinute
+                    endMinute = DayTimeScale.defaultFlexibleWindow.endMinute
+                }
+            }
+        } label: {
+            HStack(alignment: .top, spacing: 12) {
+                Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+                    .font(.title3)
+                    .foregroundColor(isSelected ? colors.accent : colors.textMuted)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(localization.localizedString(for: key))
+                        .font(.headline)
+                        .foregroundColor(colors.textPrimary)
+                    Text(localization.localizedString(for: key + ".hint"))
+                        .font(.subheadline)
+                        .foregroundColor(colors.textSecondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                Spacer(minLength: 0)
+            }
+            .padding(14)
+            .background(RoundedRectangle(cornerRadius: 16).fill(colors.card))
+            .overlay(
+                RoundedRectangle(cornerRadius: 16)
+                    .stroke(isSelected ? colors.accent : Color.clear, lineWidth: 1.5)
+            )
+        }
+        .buttonStyle(.plain)
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
+        .accessibilityIdentifier(flexible ? "schedule.flexible" : "schedule.fixed")
     }
 
     private func timeText(_ minute: Int) -> String {

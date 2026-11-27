@@ -617,3 +617,14 @@
 "home.rhythm.dayOffLegend" = "Dni wolne";
 "timeline.freeGap" = "Wolne %1$@–%2$@";
 "home.rhythm.open" = "Zobacz";
+
+// Вільний / фіксований графік
+"settings.schedule.flexible" = "Elastyczny grafik";
+"settings.schedule.flexible.hint" = "Pracuję, kiedy mi pasuje. Kalendarz pokazuje dzień od 8:00 do 20:00 — to tylko ramka, wizyty można zapisywać o każdej porze.";
+"settings.schedule.fixed" = "Stały grafik";
+"settings.schedule.fixed.hint" = "Pracuję według grafiku, jak w salonie lub własnym gabinecie.";
+"settings.schedule.windowHeader" = "Ramka dnia w kalendarzu";
+"settings.schedule.hoursHeader" = "Godziny pracy";
+"settings.schedule.flexibleFooter" = "To zmienia tylko widok kalendarza: ramkę można poszerzyć lub zwęzić. Wizyty wcześniej lub później też są możliwe — skala sama się rozszerzy.";
+"home.rhythm.bookedHours" = "Zapisano %@ w tym miesiącu";
+"home.rhythm.dayBookedFlexible" = "zajęte %@";
