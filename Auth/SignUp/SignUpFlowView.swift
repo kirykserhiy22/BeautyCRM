@@ -328,6 +328,14 @@ private extension SignUpFlowView {
                 profession: profession
             )
 
+            // Стандартний прайс під спеціалізацію
+            StarterServices.createIfNeeded(
+                userID: userID,
+                profession: state.profession,
+                context: context,
+                localized: localization.localizedString(for:)
+            )
+
             router.currentScreen = .main
 
 
