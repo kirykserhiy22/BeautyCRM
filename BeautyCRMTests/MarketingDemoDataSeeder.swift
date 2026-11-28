@@ -77,15 +77,15 @@ final class MarketingDemoDataSeeder: XCTestCase {
             return item
         }
 
-        let olena = client("Олена Коваль", phone: "+380 67 123 45 01", instagram: "olena.koval", telegram: "@olena_k",
+        let olena = client("Олена Коваль", phone: "+44 7700 900101", instagram: nil, telegram: nil,
                            notes: "Холодні відтінки. Чутлива шкіра голови.")
-        let maryna = client("Марина Шевчук", phone: "+380 50 123 45 02", instagram: "maryna.sh")
-        let iryna = client("Ірина Бондар", phone: "+49 151 2345 0103", telegram: "@iryna_b", notes: "Завжди приходить на 10 хв раніше.")
-        let anna = client("Анна Ткаченко", phone: "+380 93 123 45 04", instagram: "anna.tk")
-        let sofia = client("Софія Мельник", phone: "+48 501 234 105")
-        let kateryna = client("Катерина Литвин", phone: "+380 66 123 45 06", instagram: "kate.lytvyn")
-        let daryna = client("Дарина Кравець", phone: "+380 97 123 45 07", telegram: "@daryna_k")
-        let yulia = client("Юлія Мороз", phone: "+420 601 234 108")
+        let maryna = client("Марина Шевчук", phone: "+44 7700 900102", instagram: nil)
+        let iryna = client("Ірина Бондар", phone: "+44 7700 900103", telegram: nil, notes: "Завжди приходить на 10 хв раніше.")
+        let anna = client("Анна Ткаченко", phone: "+44 7700 900104", instagram: nil)
+        let sofia = client("Софія Мельник", phone: "+44 7700 900105")
+        let kateryna = client("Катерина Литвин", phone: "+44 7700 900106", instagram: nil)
+        let daryna = client("Дарина Кравець", phone: "+44 7700 900107", telegram: nil)
+        let yulia = client("Юлія Мороз", phone: "+44 7700 900108")
         let clients = [olena, maryna, iryna, anna, sofia, kateryna, daryna, yulia]
         try context.save()
 

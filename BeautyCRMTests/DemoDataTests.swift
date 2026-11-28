@@ -58,3 +58,17 @@ final class DemoDataTests: XCTestCase {
         XCTAssertTrue(try context.fetch(FetchDescriptor<DayOff>()).isEmpty)
     }
 }
+
+@MainActor
+final class DemoDataPrivacyTests: XCTestCase {
+
+    // Ніки в соцмережах можуть належати реальним людям; телефони — лише з вигаданого діапазону
+    func testDemoClientsHaveNoSocialHandlesAndFictionalPhones() {
+        for profession in Profession.allCases {
+            for client in DemoContent.forProfession(profession).clients {
+                XCTAssertNil(client.instagram, "\(profession): \(client.name)")
+                XCTAssertTrue(client.phone.hasPrefix("+44 7700 900"), "\(profession): \(client.name)")
+            }
+        }
+    }
+}
