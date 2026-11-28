@@ -649,3 +649,19 @@
 "contacts.offer.message" = "Wybierz je z kontaktów telefonu — imię i numer dodadzą się same. Aplikacja widzi tylko wybrane kontakty.";
 "contacts.offer.pick" = "Wybierz z kontaktów";
 "contacts.offer.later" = "Później";
+
+// Сортування клієнтів
+"clients.sort.title" = "Sortowanie";
+"clients.sort.group.name" = "Według imienia";
+"clients.sort.group.visit" = "Według wizyty";
+"clients.sort.group.added" = "Według daty dodania";
+"clients.sort.nameAscending" = "Imię A–Z";
+"clients.sort.nameDescending" = "Imię Z–A";
+"clients.sort.recentVisit" = "Najpierw ostatnie";
+"clients.sort.oldestVisit" = "Najpierw dawne";
+"clients.sort.noVisits" = "Bez wizyt";
+"clients.sort.recentlyAdded" = "Ostatnio dodane";
+"clients.section.upcoming" = "Najbliższe";
+"clients.section.all" = "Wszystkie klientki";
+"clients.when.today" = "Dziś";
+"clients.when.tomorrow" = "Jutro";
