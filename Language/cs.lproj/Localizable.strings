@@ -640,3 +640,13 @@
 "demo.start.title" = "Začít pracovat?";
 "demo.start.message" = "Ukázkové klientky, termíny a fotky budou smazány. Co jsi přidala sama, zůstane.";
 "demo.start.confirm" = "Smazat příklad a začít";
+
+// Клієнти з контактів
+"clients.add.title" = "Přidat klientku";
+"clients.add.manual" = "Zadat ručně";
+"clients.add.contacts" = "Vybrat z kontaktů";
+"clients.add.imported" = "Přidáno klientek: %d";
+"contacts.offer.title" = "Přidej stálé klientky";
+"contacts.offer.message" = "Vyber je z kontaktů v telefonu — jméno a číslo se přidají samy. Aplikace vidí jen vybrané kontakty.";
+"contacts.offer.pick" = "Vybrat z kontaktů";
+"contacts.offer.later" = "Později";

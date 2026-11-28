@@ -639,3 +639,13 @@
 "demo.start.title" = "Loslegen?";
 "demo.start.message" = "Beispiel-Kundinnen, -Termine und -Fotos werden gelöscht. Was du selbst hinzugefügt hast, bleibt.";
 "demo.start.confirm" = "Beispiel löschen und loslegen";
+
+// Клієнти з контактів
+"clients.add.title" = "Kundin hinzufügen";
+"clients.add.manual" = "Manuell eingeben";
+"clients.add.contacts" = "Aus Kontakten wählen";
+"clients.add.imported" = "Kundinnen hinzugefügt: %d";
+"contacts.offer.title" = "Stammkundinnen hinzufügen";
+"contacts.offer.message" = "Wähle sie aus den Kontakten – Name und Nummer werden übernommen. Die App sieht nur die gewählten Kontakte.";
+"contacts.offer.pick" = "Aus Kontakten wählen";
+"contacts.offer.later" = "Später";

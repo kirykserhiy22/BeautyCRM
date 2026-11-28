@@ -128,3 +128,69 @@ struct DemoBanner: View {
         }
     }
 }
+
+
+// Перед справжньою роботою: додати постійних клієнток з контактів (можна пропустити)
+struct ContactsOfferView: View {
+
+    let onPick: () -> Void
+    let onLater: () -> Void
+
+    @EnvironmentObject var theme: ThemeManager
+    @EnvironmentObject var localization: LocalizationManager
+
+    private var colors: ThemeColors {
+        theme.colors(for: theme.currentTheme)
+    }
+
+    var body: some View {
+
+        VStack(spacing: 22) {
+
+            Spacer()
+
+            Image(systemName: "person.crop.circle.badge.plus")
+                .font(.system(size: 48, weight: .regular))
+                .foregroundColor(colors.accent)
+
+            VStack(spacing: 10) {
+                Text(localization.localizedString(for: "contacts.offer.title"))
+                    .font(.title.bold())
+                    .multilineTextAlignment(.center)
+                    .foregroundColor(colors.textPrimary)
+                Text(localization.localizedString(for: "contacts.offer.message"))
+                    .font(.body)
+                    .multilineTextAlignment(.center)
+                    .foregroundColor(colors.textSecondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .padding(.horizontal, 8)
+
+            Spacer()
+
+            VStack(spacing: 12) {
+                Button(action: onPick) {
+                    Text(localization.localizedString(for: "contacts.offer.pick"))
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(RoundedRectangle(cornerRadius: 16).fill(colors.buttonPrimary))
+                }
+                .accessibilityIdentifier("contacts.pick")
+
+                Button(action: onLater) {
+                    Text(localization.localizedString(for: "contacts.offer.later"))
+                        .font(.headline)
+                        .foregroundColor(colors.accent)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                }
+                .accessibilityIdentifier("contacts.later")
+            }
+        }
+        .padding(24)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(colors.background.ignoresSafeArea())
+    }
+}

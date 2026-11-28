@@ -26,6 +26,8 @@ struct MainTabView: View {
     // Після першого гіда — «Спробувати на прикладі?»; плашка, поки ввімкнено демо
     @State private var showDemoOffer = false
     @State private var demoActive = false
+    // Перед справжньою роботою — «Додайте постійних клієнток» з контактів
+    @State private var showContactsOffer = false
 
     private enum Tab: String, Hashable {
         case home, clients, calendar, analytics, settings
@@ -68,7 +70,10 @@ struct MainTabView: View {
                     if let userID = appState.session.userID {
                         DemoData.clear(userID: userID, context: context)
                     }
-                    withAnimation(.easeOut(duration: 0.25)) { demoActive = false }
+                    withAnimation(.easeOut(duration: 0.25)) {
+                        demoActive = false
+                        showContactsOffer = true
+                    }
                 }
                 .transition(.move(edge: .top).combined(with: .opacity))
             }
@@ -183,7 +188,27 @@ struct MainTabView: View {
                         }
                     },
                     onStartClean: {
-                        withAnimation(.easeOut(duration: 0.25)) { showDemoOffer = false }
+                        withAnimation(.easeOut(duration: 0.25)) {
+                            showDemoOffer = false
+                            showContactsOffer = true
+                        }
+                    }
+                )
+                .transition(.opacity)
+            }
+
+            if showContactsOffer {
+                ContactsOfferView(
+                    onPick: {
+                        ContactPickerPresenter.shared.present { picked in
+                            if let userID = appState.session.userID {
+                                ContactImport.create(picked, userID: userID, context: context)
+                            }
+                        }
+                        withAnimation(.easeOut(duration: 0.25)) { showContactsOffer = false }
+                    },
+                    onLater: {
+                        withAnimation(.easeOut(duration: 0.25)) { showContactsOffer = false }
                     }
                 )
                 .transition(.opacity)

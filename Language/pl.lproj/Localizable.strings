@@ -639,3 +639,13 @@
 "demo.start.title" = "Zacząć pracę?";
 "demo.start.message" = "Przykładowe klientki, wizyty i zdjęcia zostaną usunięte. To, co dodałaś sama, zostanie.";
 "demo.start.confirm" = "Usuń przykład i zacznij";
+
+// Клієнти з контактів
+"clients.add.title" = "Dodaj klientkę";
+"clients.add.manual" = "Wpisz ręcznie";
+"clients.add.contacts" = "Wybierz z kontaktów";
+"clients.add.imported" = "Dodano klientek: %d";
+"contacts.offer.title" = "Dodaj stałe klientki";
+"contacts.offer.message" = "Wybierz je z kontaktów telefonu — imię i numer dodadzą się same. Aplikacja widzi tylko wybrane kontakty.";
+"contacts.offer.pick" = "Wybierz z kontaktów";
+"contacts.offer.later" = "Później";

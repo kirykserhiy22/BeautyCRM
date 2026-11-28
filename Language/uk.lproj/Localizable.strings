@@ -640,3 +640,13 @@
 "demo.start.title" = "Почати роботу?";
 "demo.start.message" = "Приклад — клієнтки, записи й фото — буде видалено. Те, що ви додали самі, лишиться.";
 "demo.start.confirm" = "Видалити приклад і почати";
+
+// Клієнти з контактів
+"clients.add.title" = "Додати клієнтку";
+"clients.add.manual" = "Ввести вручну";
+"clients.add.contacts" = "Вибрати з контактів";
+"clients.add.imported" = "Додано клієнток: %d";
+"contacts.offer.title" = "Додайте постійних клієнток";
+"contacts.offer.message" = "Виберіть їх у контактах телефону — ім'я й номер додадуться самі. Додаток бачить лише тих, кого ви виберете.";
+"contacts.offer.pick" = "Вибрати з контактів";
+"contacts.offer.later" = "Пізніше";

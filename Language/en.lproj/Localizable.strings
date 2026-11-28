@@ -639,3 +639,13 @@
 "demo.start.title" = "Start working?";
 "demo.start.message" = "The sample clients, appointments and photos will be deleted. Anything you added yourself stays.";
 "demo.start.confirm" = "Delete sample and start";
+
+// Клієнти з контактів
+"clients.add.title" = "Add a client";
+"clients.add.manual" = "Enter manually";
+"clients.add.contacts" = "Choose from contacts";
+"clients.add.imported" = "Clients added: %d";
+"contacts.offer.title" = "Add your regular clients";
+"contacts.offer.message" = "Pick them from your phone’s contacts — name and number are added automatically. The app only sees the contacts you choose.";
+"contacts.offer.pick" = "Choose from contacts";
+"contacts.offer.later" = "Later";

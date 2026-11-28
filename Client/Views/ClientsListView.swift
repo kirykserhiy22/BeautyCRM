@@ -40,6 +40,9 @@ struct ClientsListView: View {
 
     @State private var searchText = ""
     @State private var showAddClient = false
+    // «+» — ввести вручну чи вибрати з контактів
+    @State private var showAddChoice = false
+    @State private var importedCount: Int?
 
     private var userClients: [Client] {
 
@@ -145,7 +148,7 @@ struct ClientsListView: View {
 
 
                 Button {
-                        showAddClient = true
+                        showAddChoice = true
                     } label: {
                         Image(systemName: "plus")
                             .font(.title2.bold())
@@ -168,6 +171,28 @@ struct ClientsListView: View {
             .toolbar(.hidden, for: .navigationBar)
             .sheet(isPresented: $showAddClient) {
                 ClientFormView(mode: .create)
+            }
+            .confirmationDialog(
+                localization.localizedString(for: "clients.add.title"),
+                isPresented: $showAddChoice,
+                titleVisibility: .visible
+            ) {
+                Button(localization.localizedString(for: "clients.add.manual")) {
+                    showAddClient = true
+                }
+                Button(localization.localizedString(for: "clients.add.contacts")) {
+                    ContactPickerPresenter.shared.present { picked in
+                        guard let userID = appState.session.userID else { return }
+                        importedCount = ContactImport.create(picked, userID: userID, context: modelContext)
+                    }
+                }
+                Button(localization.localizedString(for: "common.cancel"), role: .cancel) { }
+            }
+            .alert(
+                String(format: localization.localizedString(for: "clients.add.imported"), importedCount ?? 0),
+                isPresented: Binding(get: { importedCount != nil }, set: { if !$0 { importedCount = nil } })
+            ) {
+                Button(localization.localizedString(for: "common.ok"), role: .cancel) { }
             }
             .navigationDestination(item: $clientToOpen) { client in
                 ClientProfileView(client: client)
