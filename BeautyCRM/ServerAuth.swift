@@ -410,6 +410,16 @@ enum AccountEntry {
             profession: profession
         )
 
+        // Стандартний прайс під спеціалізацію — щоб не починати з порожнього
+        if isNewAccount {
+            StarterServices.createIfNeeded(
+                userID: userID,
+                profession: profession.current,
+                context: context,
+                localized: localization.localizedString(for:)
+            )
+        }
+
         router.currentScreen = .main
         return nil
     }

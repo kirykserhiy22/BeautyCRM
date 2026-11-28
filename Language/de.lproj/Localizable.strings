@@ -628,3 +628,24 @@
 "settings.schedule.flexibleFooter" = "Das ändert nur die Kalenderansicht: Rahmen breiter oder schmaler machen. Termine früher oder später sind trotzdem möglich – die Skala wächst mit.";
 "home.rhythm.bookedHours" = "%@ diesen Monat gebucht";
 "home.rhythm.dayBookedFlexible" = "%@ belegt";
+
+// Демо-режим
+"demo.offer.title" = "Mit Beispieldaten ausprobieren?";
+"demo.offer.message" = "Sieh dir die App mit Kundinnen, Terminen, Fotos und Analyse für deine Spezialisierung an. Tippe alles an: abschließen, absagen, verschieben. Wenn du bereit bist, tippe „Loslegen“ – das Beispiel verschwindet.";
+"demo.offer.try" = "Mit Beispiel ausprobieren";
+"demo.offer.clean" = "Von vorne beginnen";
+"demo.banner" = "Du siehst Beispieldaten";
+"demo.banner.start" = "Loslegen";
+"demo.start.title" = "Loslegen?";
+"demo.start.message" = "Beispiel-Kundinnen, -Termine und -Fotos werden gelöscht. Was du selbst hinzugefügt hast, bleibt.";
+"demo.start.confirm" = "Beispiel löschen und loslegen";
+
+// Клієнти з контактів
+"clients.add.title" = "Kundin hinzufügen";
+"clients.add.manual" = "Manuell eingeben";
+"clients.add.contacts" = "Aus Kontakten wählen";
+"clients.add.imported" = "Kundinnen hinzugefügt: %d";
+"contacts.offer.title" = "Stammkundinnen hinzufügen";
+"contacts.offer.message" = "Wähle sie aus den Kontakten – Name und Nummer werden übernommen. Die App sieht nur die gewählten Kontakte.";
+"contacts.offer.pick" = "Aus Kontakten wählen";
+"contacts.offer.later" = "Später";

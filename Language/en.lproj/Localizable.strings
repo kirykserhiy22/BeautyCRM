@@ -628,3 +628,24 @@
 "settings.schedule.flexibleFooter" = "This only changes what the calendar shows: make the frame wider or narrower. You can still book earlier or later — the scale grows by itself.";
 "home.rhythm.bookedHours" = "%@ booked this month";
 "home.rhythm.dayBookedFlexible" = "%@ booked";
+
+// Демо-режим
+"demo.offer.title" = "Try it with sample data?";
+"demo.offer.message" = "See the app filled with clients, appointments, photos and analytics for your specialization. Tap anything: complete, cancel, reschedule. When you’re ready, tap “Start working” and the sample disappears.";
+"demo.offer.try" = "Try with sample data";
+"demo.offer.clean" = "Start from scratch";
+"demo.banner" = "You’re viewing sample data";
+"demo.banner.start" = "Start working";
+"demo.start.title" = "Start working?";
+"demo.start.message" = "The sample clients, appointments and photos will be deleted. Anything you added yourself stays.";
+"demo.start.confirm" = "Delete sample and start";
+
+// Клієнти з контактів
+"clients.add.title" = "Add a client";
+"clients.add.manual" = "Enter manually";
+"clients.add.contacts" = "Choose from contacts";
+"clients.add.imported" = "Clients added: %d";
+"contacts.offer.title" = "Add your regular clients";
+"contacts.offer.message" = "Pick them from your phone’s contacts — name and number are added automatically. The app only sees the contacts you choose.";
+"contacts.offer.pick" = "Choose from contacts";
+"contacts.offer.later" = "Later";
