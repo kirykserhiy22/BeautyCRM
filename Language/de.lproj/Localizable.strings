@@ -649,3 +649,19 @@
 "contacts.offer.message" = "Wähle sie aus den Kontakten – Name und Nummer werden übernommen. Die App sieht nur die gewählten Kontakte.";
 "contacts.offer.pick" = "Aus Kontakten wählen";
 "contacts.offer.later" = "Später";
+
+// Сортування клієнтів
+"clients.sort.title" = "Sortieren";
+"clients.sort.group.name" = "Nach Name";
+"clients.sort.group.visit" = "Nach Besuch";
+"clients.sort.group.added" = "Nach Datum hinzugefügt";
+"clients.sort.nameAscending" = "Name A–Z";
+"clients.sort.nameDescending" = "Name Z–A";
+"clients.sort.recentVisit" = "Letzte Besuche zuerst";
+"clients.sort.oldestVisit" = "Am längsten nicht da";
+"clients.sort.noVisits" = "Noch kein Besuch";
+"clients.sort.recentlyAdded" = "Zuletzt hinzugefügt";
+"clients.section.upcoming" = "Demnächst";
+"clients.section.all" = "Alle Kundinnen";
+"clients.when.today" = "Heute";
+"clients.when.tomorrow" = "Morgen";

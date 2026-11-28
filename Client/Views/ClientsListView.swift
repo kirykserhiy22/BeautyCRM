@@ -44,6 +44,20 @@ struct ClientsListView: View {
     @State private var showAddChoice = false
     @State private var importedCount: Int?
 
+    // Сортування (запам'ятовується) і екран вибору
+    @AppStorage("clients.sort") private var sortRaw = ClientSort.nameAscending.rawValue
+    @State private var showSort = false
+
+    private var sort: ClientSort {
+        ClientSort(rawValue: sortRaw) ?? .nameAscending
+    }
+
+    // «Найближчі» — у кого запис протягом тижня (лише без пошуку)
+    private var upcoming: [(client: Client, start: Date)] {
+        guard searchText.isEmpty else { return [] }
+        return ClientSorting.upcoming(userClients, appointments: appointments)
+    }
+
     private var userClients: [Client] {
 
         guard let userID = appState.session.userID else {
@@ -57,13 +71,16 @@ struct ClientsListView: View {
 
     private var filteredClients: [Client] {
 
-        guard !searchText.isEmpty else {
-            return userClients
-        }
+        let found = searchText.isEmpty
+            ? userClients
+            : userClients.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
 
-        return userClients.filter {
-            $0.name.localizedCaseInsensitiveContains(searchText)
-        }
+        return ClientSorting.sorted(
+            found,
+            by: sort,
+            lastVisits: ClientSorting.lastVisits(appointments),
+            locale: localization.locale
+        )
     }
 
     var body: some View {
@@ -85,6 +102,23 @@ struct ClientsListView: View {
                     List {
 
                         let visitCounts = visitCounts
+                        let upcoming = upcoming
+
+                        if !upcoming.isEmpty {
+                            sectionTitle("clients.section.upcoming")
+                            ForEach(upcoming, id: \.client.id) { item in
+                                Button {
+                                    clientToOpen = item.client
+                                } label: {
+                                    upcomingRow(item.client, start: item.start)
+                                }
+                                .buttonStyle(.plain)
+                                .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
+                                .listRowBackground(Color.clear)
+                                .listRowSeparator(.hidden)
+                            }
+                            sectionTitle("clients.section.all")
+                        }
 
                         ForEach(filteredClients) { client in
                             Button {
@@ -260,10 +294,78 @@ private extension ClientsListView {
             }
 
             Spacer()
+
+            if userClients.count > 1 {
+                Button {
+                    showSort = true
+                } label: {
+                    Image(systemName: "line.3.horizontal.decrease")
+                        .font(.title3.weight(.semibold))
+                        .foregroundColor(colors.accent)
+                        .frame(width: 40, height: 40)
+                }
+                .accessibilityLabel(localization.localizedString(for: "clients.sort.title"))
+                .accessibilityIdentifier("clients.sort")
+            }
         }
         .padding(.horizontal)
         .padding(.top, 8)
-        .accessibilityElement(children: .combine)
+        .sheet(isPresented: $showSort) {
+            ClientSortSheet(selection: $sortRaw)
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
+        }
+    }
+
+    private func sectionTitle(_ key: String) -> some View {
+        Text(localization.localizedString(for: key))
+            .font(.footnote.weight(.semibold))
+            .textCase(.uppercase)
+            .foregroundColor(colors.textSecondary)
+            .padding(.top, 6)
+            .listRowInsets(EdgeInsets(top: 4, leading: 20, bottom: 0, trailing: 16))
+            .listRowBackground(Color.clear)
+            .listRowSeparator(.hidden)
+    }
+
+    // «Найближчі»: ім'я й коли запис («Завтра, 10:00»)
+    private func upcomingRow(_ client: Client, start: Date) -> some View {
+        HStack(spacing: 12) {
+            Circle()
+                .fill(colors.accent.opacity(0.18))
+                .frame(width: 38, height: 38)
+                .overlay(
+                    Text(String(client.name.prefix(1)))
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundColor(colors.accent)
+                )
+            Text(client.name)
+                .font(.subheadline.weight(.semibold))
+                .foregroundColor(colors.textPrimary)
+                .lineLimit(1)
+            Spacer()
+            Text(whenText(start))
+                .font(.subheadline)
+                .foregroundColor(colors.accent)
+                .monospacedDigit()
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 10)
+        .background(RoundedRectangle(cornerRadius: 14).fill(colors.cardSecondary))
+        .contentShape(Rectangle())
+        .accessibilityIdentifier("clients.upcoming")
+    }
+
+    private func whenText(_ date: Date) -> String {
+        let calendar = Calendar.current
+        let time = AppFormatting.clock(date)
+        if calendar.isDateInToday(date) {
+            return localization.localizedString(for: "clients.when.today") + ", " + time
+        }
+        if calendar.isDateInTomorrow(date) {
+            return localization.localizedString(for: "clients.when.tomorrow") + ", " + time
+        }
+        return AppFormatting.template("EEEdMMM", date, locale: localization.locale) + ", " + time
     }
 
     var searchBar: some View {

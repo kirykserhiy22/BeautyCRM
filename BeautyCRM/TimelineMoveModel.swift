@@ -215,7 +215,8 @@ private struct TimelineNoticeModifier: ViewModifier {
                 localization.localizedString(for: "timeline.swap.title"),
                 isPresented: Binding(
                     get: { model.pendingSwap != nil },
-                    set: { if !$0 { model.cancelSwap() } }
+                    // Закриття вікна змінює модель після оновлення екрана, а не під час нього
+                    set: { if !$0 { DispatchQueue.main.async { model.cancelSwap() } } }
                 ),
                 presenting: model.pendingSwap
             ) { _ in

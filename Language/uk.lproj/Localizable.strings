@@ -650,3 +650,19 @@
 "contacts.offer.message" = "Виберіть їх у контактах телефону — ім'я й номер додадуться самі. Додаток бачить лише тих, кого ви виберете.";
 "contacts.offer.pick" = "Вибрати з контактів";
 "contacts.offer.later" = "Пізніше";
+
+// Сортування клієнтів
+"clients.sort.title" = "Сортування";
+"clients.sort.group.name" = "За іменем";
+"clients.sort.group.visit" = "За візитом";
+"clients.sort.group.added" = "За датою додавання";
+"clients.sort.nameAscending" = "Ім'я А–Я";
+"clients.sort.nameDescending" = "Ім'я Я–А";
+"clients.sort.recentVisit" = "Спочатку нещодавні";
+"clients.sort.oldestVisit" = "Спочатку давні";
+"clients.sort.noVisits" = "Без візитів";
+"clients.sort.recentlyAdded" = "Нещодавно додані";
+"clients.section.upcoming" = "Найближчі";
+"clients.section.all" = "Усі клієнти";
+"clients.when.today" = "Сьогодні";
+"clients.when.tomorrow" = "Завтра";

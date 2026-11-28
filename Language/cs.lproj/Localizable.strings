@@ -650,3 +650,19 @@
 "contacts.offer.message" = "Vyber je z kontaktů v telefonu — jméno a číslo se přidají samy. Aplikace vidí jen vybrané kontakty.";
 "contacts.offer.pick" = "Vybrat z kontaktů";
 "contacts.offer.later" = "Později";
+
+// Сортування клієнтів
+"clients.sort.title" = "Řazení";
+"clients.sort.group.name" = "Podle jména";
+"clients.sort.group.visit" = "Podle návštěvy";
+"clients.sort.group.added" = "Podle data přidání";
+"clients.sort.nameAscending" = "Jméno A–Z";
+"clients.sort.nameDescending" = "Jméno Z–A";
+"clients.sort.recentVisit" = "Nejdřív nedávné";
+"clients.sort.oldestVisit" = "Nejdřív dávné";
+"clients.sort.noVisits" = "Bez návštěv";
+"clients.sort.recentlyAdded" = "Nedávno přidané";
+"clients.section.upcoming" = "Nejbližší";
+"clients.section.all" = "Všechny klientky";
+"clients.when.today" = "Dnes";
+"clients.when.tomorrow" = "Zítra";
