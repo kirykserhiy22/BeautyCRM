@@ -628,3 +628,14 @@
 "settings.schedule.flexibleFooter" = "To zmienia tylko widok kalendarza: ramkę można poszerzyć lub zwęzić. Wizyty wcześniej lub później też są możliwe — skala sama się rozszerzy.";
 "home.rhythm.bookedHours" = "Zapisano %@ w tym miesiącu";
 "home.rhythm.dayBookedFlexible" = "zajęte %@";
+
+// Демо-режим
+"demo.offer.title" = "Wypróbować na przykładzie?";
+"demo.offer.message" = "Pokażemy aplikację z klientkami, wizytami, zdjęciami i analityką dla Twojej specjalizacji. Klikaj wszystko: kończ, odwołuj, przenoś. Gdy będziesz gotowa, «Zacznij pracę» — przykład zniknie.";
+"demo.offer.try" = "Wypróbuj na przykładzie";
+"demo.offer.clean" = "Zacznij od zera";
+"demo.banner" = "Przeglądasz przykład";
+"demo.banner.start" = "Zacznij pracę";
+"demo.start.title" = "Zacząć pracę?";
+"demo.start.message" = "Przykładowe klientki, wizyty i zdjęcia zostaną usunięte. To, co dodałaś sama, zostanie.";
+"demo.start.confirm" = "Usuń przykład i zacznij";

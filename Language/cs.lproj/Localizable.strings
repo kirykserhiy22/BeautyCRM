@@ -629,3 +629,14 @@
 "settings.schedule.flexibleFooter" = "Mění to jen zobrazení kalendáře: rámec lze rozšířit nebo zúžit. Termíny dříve či později jsou stále možné — stupnice se sama rozšíří.";
 "home.rhythm.bookedHours" = "Objednáno %@ tento měsíc";
 "home.rhythm.dayBookedFlexible" = "obsazeno %@";
+
+// Демо-режим
+"demo.offer.title" = "Vyzkoušet na příkladu?";
+"demo.offer.message" = "Ukážeme aplikaci s klientkami, termíny, fotkami a analýzou pro tvou specializaci. Klikej na cokoli: dokonči, zruš, přesuň. Až budeš připravená, «Začít pracovat» — příklad zmizí.";
+"demo.offer.try" = "Vyzkoušet na příkladu";
+"demo.offer.clean" = "Začít od nuly";
+"demo.banner" = "Prohlížíš příklad";
+"demo.banner.start" = "Začít pracovat";
+"demo.start.title" = "Začít pracovat?";
+"demo.start.message" = "Ukázkové klientky, termíny a fotky budou smazány. Co jsi přidala sama, zůstane.";
+"demo.start.confirm" = "Smazat příklad a začít";

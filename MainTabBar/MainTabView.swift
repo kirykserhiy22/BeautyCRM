@@ -23,6 +23,10 @@ struct MainTabView: View {
     // Гід по додатку — один раз після реєстрації
     @State private var showGuide = false
 
+    // Після першого гіда — «Спробувати на прикладі?»; плашка, поки ввімкнено демо
+    @State private var showDemoOffer = false
+    @State private var demoActive = false
+
     private enum Tab: String, Hashable {
         case home, clients, calendar, analytics, settings
     }
@@ -56,6 +60,23 @@ struct MainTabView: View {
 
 
     var body: some View {
+
+        // Плашка демо-режиму — над вкладками, тож нічого не перекриває
+        VStack(spacing: 0) {
+            if demoActive {
+                DemoBanner {
+                    if let userID = appState.session.userID {
+                        DemoData.clear(userID: userID, context: context)
+                    }
+                    withAnimation(.easeOut(duration: 0.25)) { demoActive = false }
+                }
+                .transition(.move(edge: .top).combined(with: .opacity))
+            }
+            tabs
+        }
+    }
+
+    private var tabs: some View {
 
         TabView(selection: selection) {
             HomeView()
@@ -127,6 +148,7 @@ struct MainTabView: View {
                 }
 
                 showGuide = OnboardingStore.isPending(userID: userID)
+                demoActive = DemoStore.isActive(userID: userID)
 
                 // Робочий простір і профіль на сервері (якщо без інтернету — наступного разу)
                 if let profile = UserProfileManager.profile(context: context, userID: userID) {
@@ -143,8 +165,27 @@ struct MainTabView: View {
                     }
                     withAnimation(.easeOut(duration: 0.25)) {
                         showGuide = false
+                        showDemoOffer = true
                     }
                 }
+                .transition(.opacity)
+            }
+
+            if showDemoOffer {
+                DemoOfferView(
+                    onTryDemo: {
+                        if let userID = appState.session.userID {
+                            DemoData.load(userID: userID, profession: profession.current, context: context)
+                        }
+                        withAnimation(.easeOut(duration: 0.25)) {
+                            demoActive = true
+                            showDemoOffer = false
+                        }
+                    },
+                    onStartClean: {
+                        withAnimation(.easeOut(duration: 0.25)) { showDemoOffer = false }
+                    }
+                )
                 .transition(.opacity)
             }
         }
